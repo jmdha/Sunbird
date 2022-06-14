@@ -1,8 +1,6 @@
-#include <iostream>
+#include "Classes/Headers/engine.h"
 
-#include "classes/headers/board_OO.h"
-
-int main(int, char**) {
-    Board_OO board = Board_OO();
-    board.Initialize();
+int main(int argc, char* argv[]) {
+	RunDefaultEngine(atoi(argv[1]), argv[2]);
+	return 0;
 }
