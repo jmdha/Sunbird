@@ -1,4 +1,4 @@
-#include "Classes/Headers/engine.h"
+#include "Classes/Headers/Engine.h"
 
 int main(int argc, char* argv[]) {
 	RunDefaultEngine(atoi(argv[1]), argv[2]);

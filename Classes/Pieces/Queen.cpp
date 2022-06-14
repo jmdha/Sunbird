@@ -1,4 +1,4 @@
-#include "Headers/queen.h"
+#include "Headers/Queen.h"
 
 Queen::Queen(Color color) : Piece(color) {
 	this->color = color;

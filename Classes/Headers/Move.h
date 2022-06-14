@@ -4,7 +4,7 @@
 class Piece;
 
 #include <string>
-#include "piece.h"
+#include "Piece.h"
 
 
 

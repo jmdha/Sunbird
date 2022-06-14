@@ -1,4 +1,4 @@
-#include "Headers/king.h"
+#include "Headers/King.h"
 
 King::King(Color color) : Piece(color) {
 	this->color = color;

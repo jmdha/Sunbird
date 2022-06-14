@@ -2,7 +2,7 @@
 #define Generic_Helper_Functions_H
 
 #include <string>
-#include "move.h"
+#include "Move.h"
 
 bool IsNumber(char charToCheck);
 

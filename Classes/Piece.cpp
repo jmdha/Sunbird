@@ -1,4 +1,4 @@
-#include "Headers/piece.h"
+#include "Headers/Piece.h"
 #include <iostream>
 
 Piece::Piece(Color color) {

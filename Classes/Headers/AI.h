@@ -5,10 +5,10 @@
 #include <chrono>
 #include <math.h>
 
-#include "move.h"
-#include "point.h"
-#include "board.h"
-#include "constants.h"
+#include "Move.h"
+#include "Point.h"
+#include "Board.h"
+#include "Constants.h"
 
 Move GetValidMove(Board board, Point endPos, PieceIndex promotionType, PieceChar pieceChar);
 Move GetValidMove(Board board, Point endPos, PieceChar pieceChar);

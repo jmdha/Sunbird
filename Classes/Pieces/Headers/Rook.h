@@ -1,12 +1,12 @@
-#ifndef Pawn_H
-#define Pawn_H
+#ifndef Rook_H
+#define Rook_H
 
-#include "../../Headers/piece.h"
-#include "../../Headers/move.h"
+#include "../../Headers/Piece.h"
+#include "../../Headers/Move.h"
 
-class Pawn : public Piece {
+class Rook : public Piece {
 public:
-	Pawn(Color color);
+	Rook(Color color);
 	PieceChar GetPieceChar();
 	std::vector<Move> GetPossibleMoves(Board board);
 	Move GetMoveIfPossible(Board board, Point endPos);

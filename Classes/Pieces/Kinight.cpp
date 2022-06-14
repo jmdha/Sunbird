@@ -1,4 +1,4 @@
-#include "Headers/knight.h"
+#include "Headers/Knight.h"
 
 Knight::Knight(Color color) : Piece(color) {
 	this->color = color;

@@ -1,12 +1,12 @@
-#include "Headers/board.h"
-#include "Pieces/Headers/pawn.h"
-#include "Pieces/Headers/rook.h"
-#include "Pieces/Headers/knight.h"
-#include "Pieces/Headers/bishop.h"
-#include "Pieces/Headers/king.h"
-#include "Pieces/Headers/queen.h"
+#include "Headers/Board.h"
+#include "Pieces/Headers/Pawn.h"
+#include "Pieces/Headers/Rook.h"
+#include "Pieces/Headers/Knight.h"
+#include "Pieces/Headers/Bishop.h"
+#include "Pieces/Headers/King.h"
+#include "Pieces/Headers/Queen.h"
 #include <iostream>
-#include "Headers/ai.h"
+#include "Headers/AI.h"
 
 // used for minimax
 #include <cstdlib>
@@ -19,7 +19,7 @@
 #include <chrono>
 
 // used for import of PGN
-#include "Headers/utilities.h"
+#include "Headers/Utilities.h"
 
 Board::Board() {
 	SetStartPos();
