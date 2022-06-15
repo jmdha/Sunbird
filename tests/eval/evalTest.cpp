@@ -1,4 +1,4 @@
-/*#include <stdexcept>
+#include <stdexcept>
 #include <string>
 #include <stdlib.h>
 
@@ -17,4 +17,4 @@ int main(int argc, char* argv[]) {
         exit(EXIT_SUCCESS);
     else
         throw std::logic_error("Incorrect evaluation | Expected " + (std::string)argv[1] + " - Actual " + std::to_string(eval));
-}*/
+}
