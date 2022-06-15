@@ -15,6 +15,8 @@ public:
     static Square GetSquare(int x, int y);
     static int GetPieceValue(PieceType type);
 
+    // Returns the amount of bits set to 1
+    // e.g. 0110 => 2 and 1000 => 1
     static int PopCount(U64 x);
 
 private:
