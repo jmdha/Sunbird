@@ -85,6 +85,8 @@ int Utilities::GetPieceValue(PieceType type) {
     }
 }
 
+// This implementation is from https://www.chessprogramming.org/Population_Count
+// Specifically the one titled "Brian Kerninghan"
 int Utilities::PopCount(U64 x) {
     int count = 0;
     while (x) {
