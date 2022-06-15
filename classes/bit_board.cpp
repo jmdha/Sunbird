@@ -20,26 +20,26 @@ void BitBoard::Initialize() {
 		PlacePiece(Utilities::GetSquare(x, PAWNROWBLACK), PieceType::Pawn, Color::Black);
 	}
 
-    PlacePiece(Square::A1, PieceType::Rook, Color::White);
-    PlacePiece(Square::H1, PieceType::Rook, Color::White);
-    PlacePiece(Square::A8, PieceType::Rook, Color::Black);
-    PlacePiece(Square::H8, PieceType::Rook, Color::Black);
+	PlacePiece(Square::A1, PieceType::Rook, Color::White);
+	PlacePiece(Square::H1, PieceType::Rook, Color::White);
+	PlacePiece(Square::A8, PieceType::Rook, Color::Black);
+	PlacePiece(Square::H8, PieceType::Rook, Color::Black);
 
 	PlacePiece(Square::B1, PieceType::Knight, Color::White);
-    PlacePiece(Square::G1, PieceType::Knight, Color::White);
-    PlacePiece(Square::B8, PieceType::Knight, Color::Black);
-    PlacePiece(Square::G8, PieceType::Knight, Color::Black);
+	PlacePiece(Square::G1, PieceType::Knight, Color::White);
+	PlacePiece(Square::B8, PieceType::Knight, Color::Black);
+	PlacePiece(Square::G8, PieceType::Knight, Color::Black);
 
 	PlacePiece(Square::C1, PieceType::Bishop, Color::White);
-    PlacePiece(Square::F1, PieceType::Bishop, Color::White);
-    PlacePiece(Square::C8, PieceType::Bishop, Color::Black);
-    PlacePiece(Square::F8, PieceType::Bishop, Color::Black);
+	PlacePiece(Square::F1, PieceType::Bishop, Color::White);
+	PlacePiece(Square::C8, PieceType::Bishop, Color::Black);
+	PlacePiece(Square::F8, PieceType::Bishop, Color::Black);
 	
 	PlacePiece(Square::D1, PieceType::Queen, Color::White);
-    PlacePiece(Square::D8, PieceType::Queen, Color::Black);
+	PlacePiece(Square::D8, PieceType::Queen, Color::Black);
 
 	PlacePiece(Square::E1, PieceType::King, Color::White);
-    PlacePiece(Square::E8, PieceType::King, Color::Black);
+	PlacePiece(Square::E8, PieceType::King, Color::Black);
 }
 
 PieceChar BitBoard::GetPiece(Square square) {
