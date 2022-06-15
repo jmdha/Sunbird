@@ -4,6 +4,25 @@ PieceChar Utilities::GetPieceChar(char c) {
     return (PieceChar) c;
 }
 
+PieceChar Utilities::GetPieceChar(PieceType type, Color color) {
+    switch(type) {
+        case PieceType::Bishop:
+            return (color == Color::White) ? PieceChar::BishopWhite : PieceChar::BishopBlack;
+        case PieceType::King:
+            return (color == Color::White) ? PieceChar::KingWhite : PieceChar::KingBlack;
+        case PieceType::Knight:
+            return (color == Color::White) ? PieceChar::KnightWhite : PieceChar::KnightBlack;
+        case PieceType::Pawn:
+            return (color == Color::White) ? PieceChar::PawnWhite : PieceChar::PawnBlack;
+        case PieceType::Queen:
+            return (color == Color::White) ? PieceChar::QueenWhite : PieceChar::QueenBlack;
+        case PieceType::Rook:
+            return (color == Color::White) ? PieceChar::RookWhite : PieceChar::RookBlack;
+        default:
+            return PieceChar::None;
+    }
+}
+
 PieceType Utilities::GetPieceType(PieceChar pieceChar) {
     switch (pieceChar)
     {

@@ -16,8 +16,8 @@ void BitBoard::ClearBoard() {
 void BitBoard::Initialize() {
     ClearBoard();
 	for (int x = 0; x < WIDTH; x++) {
-		PlacePiece(Utilities::GetSquare(x, BACKROWWHITE), PieceType::Pawn, Color::White);
-		PlacePiece(Utilities::GetSquare(x, BACKROWWHITE), PieceType::Pawn, Color::White);
+		PlacePiece(Utilities::GetSquare(x, PAWNROWWHITE), PieceType::Pawn, Color::White);
+		PlacePiece(Utilities::GetSquare(x, PAWNROWBLACK), PieceType::Pawn, Color::Black);
 	}
 
     PlacePiece(Square::A1, PieceType::Rook, Color::White);
@@ -42,8 +42,19 @@ void BitBoard::Initialize() {
     PlacePiece(Square::E8, PieceType::King, Color::Black);
 }
 
+PieceChar BitBoard::GetPiece(Square square) {
+	for (int i = 0; i < PIECECOUNT; i++)
+		if (pieceBB[i] & C64(square)) {
+			if (colorBB[(int) Color::Black] & C64(square))
+				return Utilities::GetPieceChar((PieceType) i, Color::Black);
+			else if (colorBB[(int) Color::White] & C64(square))
+				return Utilities::GetPieceChar((PieceType) i, Color::White);
+		}
+	return PieceChar::None;	
+}
+
 void BitBoard::PlacePiece(Square square, PieceType type, Color color) {
-    U64 bit = (U64)1 << (U64) square;
+    U64 bit = C64(square);
     pieceBB[(int) type] |= bit;
     colorBB[(int) color] |= bit;
     occupiedBB |= bit;

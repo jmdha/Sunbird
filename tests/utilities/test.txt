@@ -1,10 +1,16 @@
 # Tests
 ## GetPieceChar
-add_executable(GetPieceChar tests/utilities/get_piece_char.cpp ${sources})
+### From char
+add_executable(GetPieceCharFromChar tests/utilities/get_piece_char_from_char.cpp ${sources})
 
-add_test(Utilities_GetPieceChar_P GetPieceChar 80 P)
-add_test(Utilities_GetPieceChar_k GetPieceChar 107 k)
+add_test(Utilities_GetPieceChar_Char_P GetPieceCharFromChar 80 P)
+add_test(Utilities_GetPieceChar_Char_k GetPieceCharFromChar 107 k)
 
+### From type
+add_executable(GetPieceCharFromType tests/utilities/get_piece_char_from_type.cpp ${sources})
+
+add_test(Utilities_GetPieceChar_Type_P GetPieceCharFromType 80 0 0)
+add_test(Utilities_GetPieceChar_Type_k GetPieceCharFromType 107 5 1)
 
 ## GetPieceType
 add_executable(GetPieceType tests/utilities/get_piece_type.cpp ${sources})

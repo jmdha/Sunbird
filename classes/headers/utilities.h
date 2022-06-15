@@ -9,6 +9,7 @@
 class Utilities {
 public:
     static PieceChar GetPieceChar(char c);
+    static PieceChar GetPieceChar(PieceType type, Color color);
     static PieceType GetPieceType(PieceChar pieceChar);
     static Color GetPieceColor(PieceChar pieceChar);
     static Square GetSquare(int x, int y);

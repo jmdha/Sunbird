@@ -1,1 +1,2 @@
+include(tests/board_importer/test.txt)
 include(tests/utilities/test.txt)

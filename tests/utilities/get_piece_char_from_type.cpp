@@ -7,9 +7,10 @@
 
 int main(int argc, char* argv[]) {
     PieceChar expectedPieceChar = (PieceChar) std::atoi(argv[1]);
-    char c = argv[2][0];
+    PieceType type = (PieceType) std::atoi(argv[2]);
+    Color color = (Color) std::atoi(argv[3]);
 
-    PieceChar actualPieceChar = (PieceChar) c;
+    PieceChar actualPieceChar = Utilities::GetPieceChar(type, color);
 
     if (expectedPieceChar == actualPieceChar)
         exit(EXIT_SUCCESS);
