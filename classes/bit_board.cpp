@@ -15,47 +15,31 @@ void BitBoard::ClearBoard() {
 
 void BitBoard::Initialize() {
     ClearBoard();
-    PlacePiece(Square::A1, PieceType::Rook, Color::White);
-    PlacePiece(Square::A1, PieceType::Rook, Color::White);
-    PlacePiece(Square::A1, PieceType::Rook, Color::White);
-    PlacePiece(Square::A1, PieceType::Rook, Color::White);
-}
-
-void BitBoard::ImportFEN(std::string FEN) {
-    ClearBoard();
-
-	// import position
-	for(int y = HEIGHT - 1; y >= 0; y--) {
-		int remainingSquares = WIDTH;
-		while(remainingSquares > 0) {
-			char currentChar = FEN[0];
-			if(isdigit(currentChar)) {
-				remainingSquares -= (int) currentChar - 48;
-			} else {
-				PlacePiece(Utilities::GetSquare(WIDTH - remainingSquares, y), (PieceChar) currentChar);
-				remainingSquares--;
-			}
-			FEN.erase(0, 1);
-		}
-		FEN.erase(0, 1);
+	for (int x = 0; x < WIDTH; x++) {
+		PlacePiece(Utilities::GetSquare(x, BACKROWWHITE), PieceType::Pawn, Color::White);
+		PlacePiece(Utilities::GetSquare(x, BACKROWWHITE), PieceType::Pawn, Color::White);
 	}
 
-	if(FEN.length() == 0)
-		return;
-	// import turn
-	//if(FEN[0] == 'w')
-	//	setTurn(Color::White);
-	//else
-	//	setTurn(Color::Black);
-	//FEN.erase(0, 2);
+    PlacePiece(Square::A1, PieceType::Rook, Color::White);
+    PlacePiece(Square::H1, PieceType::Rook, Color::White);
+    PlacePiece(Square::A8, PieceType::Rook, Color::Black);
+    PlacePiece(Square::H8, PieceType::Rook, Color::Black);
 
-	// import king availibity
+	PlacePiece(Square::B1, PieceType::Knight, Color::White);
+    PlacePiece(Square::G1, PieceType::Knight, Color::White);
+    PlacePiece(Square::B8, PieceType::Knight, Color::Black);
+    PlacePiece(Square::G8, PieceType::Knight, Color::Black);
 
-	// import en-passant
+	PlacePiece(Square::C1, PieceType::Bishop, Color::White);
+    PlacePiece(Square::F1, PieceType::Bishop, Color::White);
+    PlacePiece(Square::C8, PieceType::Bishop, Color::Black);
+    PlacePiece(Square::F8, PieceType::Bishop, Color::Black);
+	
+	PlacePiece(Square::D1, PieceType::Queen, Color::White);
+    PlacePiece(Square::D8, PieceType::Queen, Color::Black);
 
-	// import half move
-
-	// import full move
+	PlacePiece(Square::E1, PieceType::King, Color::White);
+    PlacePiece(Square::E8, PieceType::King, Color::Black);
 }
 
 void BitBoard::PlacePiece(Square square, PieceType type, Color color) {

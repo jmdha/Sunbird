@@ -14,8 +14,9 @@ public:
     BitBoard();
     void ClearBoard();
     void Initialize();
-    void ImportFEN(std::string FEN);
     void MovePiece(const int startX, const int startY, const int endX, const int endY);
+    void PlacePiece(Square square, PieceChar pieceChar);
+    
 private:
     U64 pieceBB[PIECECOUNT];
     U64 colorBB[COLORCOUNT];
@@ -23,6 +24,6 @@ private:
     U64 emptyBB;
 
     void PlacePiece(Square square, PieceType type, Color color);
-    void PlacePiece(Square square, PieceChar pieceChar);
+    
 };
 #endif
