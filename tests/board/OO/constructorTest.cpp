@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <string>
 #include <stdlib.h>
-
+/*
 #include "../../../classes/headers/board_OO.h"
 #include "../../../classes/headers/constants.h"
 
@@ -13,5 +13,9 @@ int main(int argc, char* argv[]) {
                 throw std::logic_error("Board not null");
         }
     }
+    exit(EXIT_SUCCESS);
+}*/
+int main(int argc, char* argv[]) {
+
     exit(EXIT_SUCCESS);
 }

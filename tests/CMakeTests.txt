@@ -1,2 +1,1 @@
-include(tests/board/OO/test.txt)
-include(tests/eval/test.txt)
+include(tests/utilities/test.txt)

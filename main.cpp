@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "classes/headers/board_OO.h"
+#include "classes/headers/bit_board.h"
 
 int main(int, char**) {
-    Board_OO board = Board_OO();
+    BitBoard board = BitBoard();
     board.Initialize();
 }
