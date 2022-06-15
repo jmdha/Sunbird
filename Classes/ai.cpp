@@ -305,7 +305,7 @@ Move GetBestMove(Board* board, int maxTime) {
 		accTime += timeSpent;
 		auto estimatedTimeForNextMove = timeSpent * 40;
 		auto threshold = maxTime / 20;
-		if (maxTime >= 0 && accTime + estimatedTimeForNextMove > threshold)
+		if (accTime + estimatedTimeForNextMove > threshold)
 			break;
 	}
 

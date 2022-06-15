@@ -1,3 +1,0 @@
-add_executable(ForceCheckmate Tests/AI/ForceCheckmateTest.cpp ${sources})
-
-add_test(ForceCheckmate ForceCheckmate "k7/8/1K6/8/8/8/8/2Q5 w" "c1c8")
