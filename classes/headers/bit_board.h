@@ -1,9 +1,6 @@
 #ifndef BITBOARD
 #define BITBOARD
 
-#define U64 unsigned long long int
-#define C64(x) (U64)1 << (U64) x
-
 #include <string>
 
 #include "board.h"
@@ -27,5 +24,6 @@ private:
 
     void PlacePiece(Square square, PieceType type, Color color);
     
+    friend class BitEvaluator;
 };
 #endif

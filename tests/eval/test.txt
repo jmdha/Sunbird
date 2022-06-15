@@ -1,4 +1,0 @@
-# Tests
-add_executable(evalTest tests/eval/evalTest.cpp ${sources})
-
-add_test(eval_InitialPosTest evalTest 0 "")

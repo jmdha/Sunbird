@@ -65,3 +65,31 @@ Color Utilities::GetPieceColor(PieceChar pieceChar) {
 Square Utilities::GetSquare(int x, int y) {
     return (Square) (x + 8 * y);
 }
+
+int Utilities::GetPieceValue(PieceType type) {
+    switch(type) {
+        case PieceType::Bishop:
+            return (int) PieceValue::Bishop;
+        case PieceType::King:
+            return (int) PieceValue::King;
+        case PieceType::Knight:
+            return (int) PieceValue::Knight;
+        case PieceType::Pawn:
+            return (int) PieceValue::Pawn;
+        case PieceType::Queen:
+            return (int) PieceValue::Queen;
+        case PieceType::Rook:
+            return (int) PieceValue::Rook;
+        default:
+            return (int) PieceValue::None;
+    }
+}
+
+int Utilities::PopCount(U64 x) {
+    int count = 0;
+    while (x) {
+        count++;
+        x &= x - 1;
+    }
+    return count;
+}

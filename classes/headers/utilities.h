@@ -13,6 +13,10 @@ public:
     static PieceType GetPieceType(PieceChar pieceChar);
     static Color GetPieceColor(PieceChar pieceChar);
     static Square GetSquare(int x, int y);
+    static int GetPieceValue(PieceType type);
+
+    static int PopCount(U64 x);
+
 private:
 };
 

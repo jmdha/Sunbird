@@ -1,8 +1,12 @@
 #ifndef CONSTANTS
 #define CONSTANTS
 
+#define U64 unsigned long long int
+#define C64(x) (U64)1 << (U64) x
+
 #define WIDTH 8
 #define HEIGHT 8
+#define SQUARECOUNT 64
 
 #define PIECECOUNT 6
 #define COLORCOUNT 2
@@ -34,7 +38,8 @@ enum class PieceValue : int {
     Bishop = 30,
     Rook = 50,
     Queen = 90,
-    King = 99999
+    King = 99999,
+    None
 };
 
 enum class PieceChar : char {
