@@ -4,10 +4,10 @@
 class Board;
 class Move;
 
-#include "Constants.h"
-#include "Move.h"
-#include "Board.h"
-#include "Point.h"
+#include "constants.h"
+#include "move.h"
+#include "board.h"
+#include "point.h"
 #include <vector>
 
 

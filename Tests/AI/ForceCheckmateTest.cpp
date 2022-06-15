@@ -2,8 +2,8 @@
 #include <string>
 #include <stdlib.h>
 
-#include "../../Classes/Headers/AI.h"
-#include "../../Classes/Headers/Board.h"
+#include "../../Classes/Headers/ai.h"
+#include "../../Classes/Headers/board.h"
 
 int main(int argc, char* argv[]) {
     Board* board = new Board();

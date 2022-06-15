@@ -1,4 +1,4 @@
-#include "Headers/Bishop.h"
+#include "Headers/bishop.h"
 
 Bishop::Bishop(Color color) : Piece(color) {
 	this->color = color;

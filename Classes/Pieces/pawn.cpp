@@ -1,4 +1,4 @@
-#include "Headers/Pawn.h"
+#include "Headers/pawn.h"
 
 Pawn::Pawn(Color color) : Piece(color) {
 	this->color = color;

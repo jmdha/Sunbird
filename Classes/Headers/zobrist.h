@@ -4,8 +4,8 @@
 class Board;
 
 #include <unordered_map>
-#include "Constants.h"
-#include "Board.h"
+#include "constants.h"
+#include "board.h"
 #include "EvalPoint.h"
 
 class Zobrist {

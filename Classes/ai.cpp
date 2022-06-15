@@ -1,5 +1,5 @@
 // Contains base stuff an ai needs e.g generating possible moves and such
-#include "Headers/AI.h"
+#include "Headers/ai.h"
 #include <iostream>
 #include <algorithm>
 #include <random>

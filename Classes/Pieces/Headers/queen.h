@@ -1,8 +1,8 @@
 #ifndef Queen_H
 #define Queen_H
 
-#include "../../Headers/Piece.h"
-#include "../../Headers/Move.h"
+#include "../../Headers/piece.h"
+#include "../../Headers/move.h"
 
 class Queen : public Piece {
 public:

@@ -1,4 +1,4 @@
-#include "Headers/Move.h"
+#include "Headers/move.h"
 
 Move::Move() {
 	this->startX = -1;

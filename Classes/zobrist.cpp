@@ -1,4 +1,4 @@
-#include "./Headers/Zobrist.h"
+#include "./Headers/zobrist.h"
 #include <stdlib.h>
 #include <math.h>
 #include <random>

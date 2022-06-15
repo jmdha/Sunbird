@@ -1,4 +1,4 @@
-#include "Headers/Utilities.h"
+#include "Headers/utilities.h"
 
 bool IsNumber(char charToCheck) {
 	if(int(charToCheck) > 47 && int(charToCheck) < 58)

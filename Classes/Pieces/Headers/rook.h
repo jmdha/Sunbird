@@ -1,12 +1,12 @@
-#ifndef Bishop_H
-#define Bishop_H
+#ifndef Rook_H
+#define Rook_H
 
-#include "../../Headers/Piece.h"
-#include "../../Headers/Move.h"
+#include "../../Headers/piece.h"
+#include "../../Headers/move.h"
 
-class Bishop : public Piece {
+class Rook : public Piece {
 public:
-	Bishop(Color color);
+	Rook(Color color);
 	PieceChar GetPieceChar();
 	std::vector<Move> GetPossibleMoves(Board board);
 	Move GetMoveIfPossible(Board board, Point endPos);

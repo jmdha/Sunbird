@@ -14,11 +14,11 @@ class Move;
 #include <string>
 #include <vector>
 #include <list>
-#include "Piece.h"
-#include "Constants.h"
-#include "Move.h"
-#include "Zobrist.h"
-#include "Point.h"
+#include "piece.h"
+#include "constants.h"
+#include "move.h"
+#include "zobrist.h"
+#include "point.h"
 
 // used for random taking move
 #include <algorithm>

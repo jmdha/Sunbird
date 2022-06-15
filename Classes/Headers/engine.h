@@ -3,9 +3,9 @@
 
 #include <string>
 #include <chrono>
-#include "AI.h"
-#include "Move.h"
-#include "Utilities.h"
+#include "ai.h"
+#include "move.h"
+#include "utilities.h"
 
 void RunDefaultEngine(int maxTime, std::string importArg = "") {
     Board board = Board();

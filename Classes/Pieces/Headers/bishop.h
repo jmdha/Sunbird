@@ -1,12 +1,12 @@
-#ifndef King_H
-#define King_H
+#ifndef Bishop_H
+#define Bishop_H
 
-#include "../../Headers/Piece.h"
-#include "../../Headers/Move.h"
+#include "../../Headers/piece.h"
+#include "../../Headers/move.h"
 
-class King : public Piece {
+class Bishop : public Piece {
 public:
-	King(Color color);
+	Bishop(Color color);
 	PieceChar GetPieceChar();
 	std::vector<Move> GetPossibleMoves(Board board);
 	Move GetMoveIfPossible(Board board, Point endPos);
@@ -14,9 +14,7 @@ public:
 	int GetIndex();
 	bool CheckIfPosPossible(Board board, Point pos);
 
-
 private:
-	bool getCastlingPossibility(Board board, CastlingDirection direction);
 
 };
 

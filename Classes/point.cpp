@@ -1,4 +1,4 @@
-#include "Headers/Point.h"
+#include "Headers/point.h"
 
 Point::Point(int x, int y) {
 	this->x = x;

@@ -1,4 +1,4 @@
-#include "Headers/Rook.h"
+#include "Headers/rook.h"
 
 Rook::Rook(Color color) : Piece(color) {
 	this->color = color;
