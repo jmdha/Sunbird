@@ -1,7 +1,7 @@
 #ifndef BITSHIFTS
 #define BITSHIFTS
 
-#include "constants.h"
+#include "constants.hh"
 
 class BitShifts {
 public:

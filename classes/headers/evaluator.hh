@@ -1,7 +1,7 @@
 #ifndef EVALUATOR
 #define EVALUATOR
 
-#include "board.h"
+#include "board.hh"
 
 template <class Board>
 class Evaluator {

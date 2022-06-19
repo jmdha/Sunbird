@@ -1,4 +1,4 @@
-#include "headers/board_importer.h"
+#include "headers/board_importer.hh"
 
 void BoardImporter::ImportFEN(Board* board, std::string FEN) {
     board->ClearBoard();
@@ -23,11 +23,12 @@ void BoardImporter::ImportFEN(Board* board, std::string FEN) {
 		return;
 
 	// import turn
-	//if(FEN[0] == 'w')
-	//	setTurn(Color::White);
-	//else
-	//	setTurn(Color::Black);
-	//FEN.erase(0, 2);
+	if(FEN[0] == 'w')
+		board->SetColor(Color::White);
+	else
+		board->SetColor(Color::Black);
+		
+	FEN.erase(0, 2);
 
 	// import king availibity
 

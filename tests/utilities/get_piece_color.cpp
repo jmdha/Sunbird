@@ -2,8 +2,8 @@
 #include <string>
 #include <stdlib.h>
 
-#include "../../classes/headers/constants.h"
-#include "../../classes/headers/utilities.h"
+#include "../../classes/headers/constants.hh"
+#include "../../classes/headers/utilities.hh"
 
 int main(int argc, char* argv[]) {
     Color expectedColor = (Color) std::atoi(argv[1]);

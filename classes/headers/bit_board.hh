@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include "board.h"
-#include "constants.h"
-#include "utilities.h"
+#include "board.hh"
+#include "constants.hh"
+#include "utilities.hh"
 
 class BitBoard : public Board {
 public:
@@ -17,6 +17,7 @@ public:
     void PlacePiece(Square square, PieceChar pieceChar);
 
 private:
+    Color color;
     U64 pieceBB[PIECECOUNT];
     U64 colorBB[COLORCOUNT];
     U64 occupiedBB;

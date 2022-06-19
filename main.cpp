@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "classes/headers/bit_board.h"
-#include "classes/headers/bit_evaluator.h"
-#include "classes/headers/board_importer.h"
+#include "classes/headers/bit_board.hh"
+#include "classes/headers/bit_evaluator.hh"
+#include "classes/headers/board_importer.hh"
 
 int main(int, char**) {
     BitBoard board = BitBoard();

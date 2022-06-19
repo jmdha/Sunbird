@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include "constants.h"
-#include "board.h"
-#include "utilities.h"
+#include "constants.hh"
+#include "board.hh"
+#include "utilities.hh"
 
 class BoardImporter {
 public:

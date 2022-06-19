@@ -2,8 +2,8 @@
 #include <string>
 #include <stdlib.h>
 
-#include "../../classes/headers/constants.h"
-#include "../../classes/headers/utilities.h"
+#include "../../classes/headers/constants.hh"
+#include "../../classes/headers/utilities.hh"
 
 int main(int argc, char* argv[]) {
     Square expectedSquare = (Square) std::atoi((argv[1]));

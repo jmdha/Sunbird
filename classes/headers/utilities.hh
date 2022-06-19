@@ -4,7 +4,7 @@
 #include <string>
 #include <stdexcept>
 
-#include "constants.h"
+#include "constants.hh"
 
 class Utilities {
 public:

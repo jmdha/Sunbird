@@ -4,9 +4,9 @@
 
 #include <string>
 
-#include "../../classes/headers/board_importer.h"
-#include "../../classes/headers/constants.h"
-#include "../../classes/headers/bit_board.h"
+#include "../../classes/headers/board_importer.hh"
+#include "../../classes/headers/constants.hh"
+#include "../../classes/headers/bit_board.hh"
 
 int main(int argc, char* argv[]) {
     std::string FEN = std::string(argv[1]);

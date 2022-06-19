@@ -1,4 +1,4 @@
-#include "headers/utilities.h"
+#include "headers/utilities.hh"
 
 PieceChar Utilities::GetPieceChar(char c) {
     return (PieceChar) c;

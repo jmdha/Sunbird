@@ -1,4 +1,4 @@
-#include "headers/bit_board.h"
+#include "headers/bit_board.hh"
 
 BitBoard::BitBoard() : Board() {
     ClearBoard();
@@ -40,6 +40,8 @@ void BitBoard::Initialize() {
 
     PlacePiece(Square::E1, PieceType::King, Color::White);
     PlacePiece(Square::E8, PieceType::King, Color::Black);
+
+    color = Color::White;
 }
 
 PieceChar BitBoard::GetPiece(Square square) {

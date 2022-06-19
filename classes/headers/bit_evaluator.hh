@@ -1,9 +1,9 @@
 #ifndef BITEVALUATOR
 #define BITEVALUATOR
 
-#include "board.h"
-#include "bit_board.h"
-#include "evaluator.h"
+#include "board.hh"
+#include "bit_board.hh"
+#include "evaluator.hh"
 
 class BitEvaluator : public Evaluator<BitBoard> {
 public:

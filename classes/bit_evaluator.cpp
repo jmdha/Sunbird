@@ -1,4 +1,4 @@
-#include "headers/bit_evaluator.h"
+#include "headers/bit_evaluator.hh"
 
 int BitEvaluator::EvaluatePieceCount(const BitBoard board) {
     int value = 0;
