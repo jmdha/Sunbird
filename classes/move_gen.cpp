@@ -1,7 +1,7 @@
 #include "headers/move_gen.hh"
 
 std::vector<Move> MoveGen::GetPawnMoves(BitBoard board) {
-    U64 to = BitShifts::NOne(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int)Color::White]);
+    U64 to = BitShifts::NOne(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int)Color::White]) & board.emptyBB;
     std::vector<Move> moves = std::vector<Move>();
     printf("Moves %llu\n", board.pieceBB[(int) PieceType::Pawn]);
     while (to) {
