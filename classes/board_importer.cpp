@@ -1,6 +1,6 @@
 #include "headers/board_importer.hh"
 
-void BoardImporter::ImportFEN(Board* board, std::string FEN) {
+void BoardImporter::ImportFEN(BitBoard* board, std::string FEN) {
     board->ClearBoard();
 
 	// import position

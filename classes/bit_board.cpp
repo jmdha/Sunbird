@@ -1,6 +1,6 @@
 #include "headers/bit_board.hh"
 
-BitBoard::BitBoard() : Board() {
+BitBoard::BitBoard() {
     ClearBoard();
 }
 
@@ -64,8 +64,4 @@ void BitBoard::PlacePiece(Square square, PieceType type, Color color) {
 
 void BitBoard::PlacePiece(Square square, PieceChar pieceChar) {
     PlacePiece(square, Utilities::GetPieceType(pieceChar), Utilities::GetPieceColor(pieceChar));
-}
-
-void BitBoard::MovePiece(const int startX, const int startY, const int endX, const int endY) {
-
 }

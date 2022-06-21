@@ -3,13 +3,13 @@
 
 #include <string>
 
+#include "bit_board.hh"
 #include "constants.hh"
-#include "board.hh"
 #include "utilities.hh"
 
 class BoardImporter {
 public:
-    static void ImportFEN(Board* board, std::string FEN);
+    static void ImportFEN(BitBoard* board, std::string FEN);
 
 private:
 };

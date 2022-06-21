@@ -1,12 +1,13 @@
 #include <iostream>
 
 #include "classes/headers/bit_board.hh"
-#include "classes/headers/bit_evaluator.hh"
+#include "classes/headers/evaluator.hh"
 #include "classes/headers/board_importer.hh"
+#include "classes/headers/move_gen.hh"
 
 int main(int, char**) {
     BitBoard board = BitBoard();
-    BoardImporter::ImportFEN(&board, "8/8/8/8/8/8/8/R7 w KQkq - 0 1");
-    BitEvaluator evaluator = BitEvaluator();
-    evaluator.EvaluatePieceCount(board);
+    board.Initialize();
+    MoveGen moveGen = MoveGen();
+    moveGen.GetPawnMoves(board);
 }

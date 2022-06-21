@@ -3,17 +3,16 @@
 
 #include <string>
 
-#include "board.hh"
 #include "constants.hh"
 #include "utilities.hh"
 
-class BitBoard : public Board {
+class BitBoard {
 public:
     BitBoard();
+    void SetColor(Color color) { this->color = color; };
     void ClearBoard();
     void Initialize();
     PieceChar GetPiece(Square square);
-    void MovePiece(const int startX, const int startY, const int endX, const int endY);
     void PlacePiece(Square square, PieceChar pieceChar);
 
 private:
@@ -25,6 +24,7 @@ private:
 
     void PlacePiece(Square square, PieceType type, Color color);
     
-    friend class BitEvaluator;
+    friend class Evaluator;
+    friend class MoveGen;
 };
 #endif

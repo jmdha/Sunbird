@@ -1,6 +1,6 @@
 # Tests
 ## EvaluatePieceCount
-add_executable(EvaluatePieceCount tests/evaluator/bit/evaluate_piece_count.cpp ${sources})
+add_executable(EvaluatePieceCount tests/evaluator/evaluate_piece_count.cpp ${sources})
 
 add_test(Evaluator_Bit_Piece_Count_StartPos EvaluatePieceCount 0 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 add_test(Evaluator_Bit_Piece_Count_Rook EvaluatePieceCount 50 "8/8/8/8/8/8/8/R7 w KQkq - 0 1")

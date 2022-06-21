@@ -1,6 +1,6 @@
-#include "headers/bit_evaluator.hh"
+#include "headers/evaluator.hh"
 
-int BitEvaluator::EvaluatePieceCount(const BitBoard board) {
+int Evaluator::EvaluatePieceCount(const BitBoard board) {
     int value = 0;
     for (int i = 0; i < PIECECOUNT; i++) {
         int pieceValue = Utilities::GetPieceValue((PieceType) i);

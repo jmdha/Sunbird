@@ -2,16 +2,16 @@
 #include <string>
 #include <stdlib.h>
 
-#include "../../../classes/headers/constants.hh"
-#include "../../../classes/headers/bit_board.hh"
-#include "../../../classes/headers/board_importer.hh"
-#include "../../../classes/headers/bit_evaluator.hh"
+#include "../../classes/headers/constants.hh"
+#include "../../classes/headers/bit_board.hh"
+#include "../../classes/headers/board_importer.hh"
+#include "../../classes/headers/evaluator.hh"
 
 int main(int argc, char* argv[]) {
     BitBoard board = BitBoard();
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     int expectedEval = std::atoi(argv[1]);
-    BitEvaluator evaluator = BitEvaluator();
+    Evaluator evaluator = Evaluator();
 
     int eval = evaluator.EvaluatePieceCount(board);
 
