@@ -5,6 +5,7 @@ std::vector<Move> MoveGen::GetPawnMoves(Color color, BitBoard board) {
     Direction up = (color == Color::White) ? Direction::North : Direction::South;
     Direction upRight = (up == Direction::North) ? Direction::NorthEast : Direction::SouthEast;
     Direction upLeft = (up == Direction::North) ? Direction::NorthWest : Direction::SouthWest;
+    Row doubleRank = (up == Direction::North) ? Row::Row4 : Row::Row5;
     Direction captureDirections[2] = { upRight, upLeft };
     std::vector<Move> moves = std::vector<Move>();
 
@@ -14,6 +15,9 @@ std::vector<Move> MoveGen::GetPawnMoves(Color color, BitBoard board) {
         to = BitShifts::Shift(to, up, 1) & ~board.occupiedBB;
 
         U64 toDup = to;
+        if (i == 2)
+            toDup = toDup & (U64)doubleRank;
+
         while (toDup) {
             U64 lsb = Utilities::LSB_Pop(&toDup);
             moves.push_back(Move((Square) (lsb - (int) up * i), (Square) lsb, color, Color::None));

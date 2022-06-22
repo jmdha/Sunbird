@@ -70,15 +70,15 @@ enum class Square : int {
     A8, B8, C8, D8, E8, F8, G8, H8,
 };
 
-enum class Column : int {
-    A = 0,
-    B = 1,
-    C = 2,
-    D = 3,
-    E = 4,
-    F = 5,
-    G = 6,
-    H = 7
+enum class Row : U64 {
+    Row1 = 0xff,
+    Row2 = 0xff00,
+    Row3 = 0xff0000,
+    Row4 = 0xff000000,
+    Row5 = 0xff00000000,
+    Row6 = 0xff0000000000,
+    Row7 = 0xff000000000000,
+    Row8 = 0xff00000000000000
 };
 
 enum class Direction : int {
