@@ -1,5 +1,18 @@
 #include "headers/move_gen.hh"
 
+std::vector<Move> MoveGen::GetAllMoves(Color color, BitBoard board) {
+    std::vector<Move> moves = std::vector<Move>();
+    std::vector<Move> tempMoves = GetPawnMoves(color, board);
+    moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
+    tempMoves = GetRookMoves(color, board);
+    moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
+    tempMoves = GetBishopMoves(color, board);
+    moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
+    tempMoves = GetQueenMoves(color, board);
+    moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
+    return moves;
+}
+
 std::vector<Move> MoveGen::GetPawnMoves(Color color, BitBoard board) {
     Color oppColor = (color == Color::White) ? Color::Black : Color::White;
     Direction up = (color == Color::White) ? Direction::North : Direction::South;
