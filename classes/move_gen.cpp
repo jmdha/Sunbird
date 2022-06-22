@@ -60,6 +60,18 @@ std::vector<Move> MoveGen::GetBishopMoves(Color color, BitBoard board) {
     return moves;
 }
 
+std::vector<Move> MoveGen::GetQueenMoves(Color color, BitBoard board) {
+    Direction directions[8] = { Direction::North, Direction::East, Direction::South, Direction::West, 
+                                Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
+    std::vector<Move> moves = std::vector<Move>();
+    U64 pieces = board.pieceBB[(int) PieceType::Queen] & board.colorBB[(int) color];
+    for (int i = 0; i < 8; i++) {
+        std::vector<Move> tempMoves = GetMoves(color, board, pieces, directions[i]);
+        moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
+    }
+    return moves;
+}
+
 std::vector<Move> MoveGen::GetMoves(Color color, BitBoard board, U64 pieces, Direction direction) {
     Color oppColor = (color == Color::White) ? Color::Black : Color::White;
     std::vector<Move> moves = std::vector<Move>();

@@ -104,10 +104,46 @@ add_test(MoveGen_Bishop_Move_W_BlockerOffset1 GenerateBishopMoves       1  "B7/8
 add_test(MoveGen_Bishop_Move_B_Blocker GenerateBishopMoves              0  "b7/1r6/8/8/8/8/8/8 b KQkq - 0 1")
 add_test(MoveGen_Bishop_Move_B_BlockerOffset1 GenerateBishopMoves       1  "b7/8/2r5/8/8/8/8/8 b KQkq - 0 1")
 
-add_test(MoveGen_Bishop_Move_W_Attack_Blocker           GenerateBishopMoves              1 "B7/1r6/8/8/8/8/8/8 w KQkq - 0 1")
-add_test(MoveGen_Bishop_Move_W_Attack_BlockerOffset1    GenerateBishopMoves       2 "B7/8/2r5/8/8/8/8/8 w KQkq - 0 1")
-add_test(MoveGen_Bishop_Move_B_Attack_Blocker           GenerateBishopMoves              1 "b7/1R6/8/8/8/8/8/8 b KQkq - 0 1")
-add_test(MoveGen_Bishop_Move_B_Attack_BlockerOffset1    GenerateBishopMoves       2 "b7/8/2R5/8/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_W_Attack_Blocker           GenerateBishopMoves     1 "B7/1r6/8/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_W_Attack_BlockerOffset1    GenerateBishopMoves     2 "B7/8/2r5/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_B_Attack_Blocker           GenerateBishopMoves     1 "b7/1R6/8/8/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_B_Attack_BlockerOffset1    GenerateBishopMoves     2 "b7/8/2R5/8/8/8/8/8 b KQkq - 0 1")
 
 add_test(MoveGen_Bishop_Move_W_Attack_Multiple_BlockerOffset1 GenerateBishopMoves       24  "r6r/3rr3/2B2B2/1r4r1/1r4r1/2B2B2/3rr3/r6r w - - 0 1")
 add_test(MoveGen_Bishop_Move_B_Attack_Multiple_BlockerOffset1 GenerateBishopMoves       24  "R6R/3RR2R/2b2b2/1R4R1/1R4R1/2b2b2/3RR3/R6R b - - 0 1")
+
+## QueenMoves
+add_executable(GenerateQueenMoves tests/move_gen/queen_move.cpp ${sources})
+
+add_test(MoveGen_Queen_Move_W_Corner1 GenerateQueenMoves    21  "Q7/8/8/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Queen_Move_W_Corner2 GenerateQueenMoves    21  "7Q/8/8/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Queen_Move_W_Corner3 GenerateQueenMoves    21  "8/8/8/8/8/8/8/Q7 w KQkq - 0 1")
+add_test(MoveGen_Queen_Move_W_Corner4 GenerateQueenMoves    21  "8/8/8/8/8/8/8/7Q w KQkq - 0 1")
+
+add_test(MoveGen_Queen_Move_B_Corner1 GenerateQueenMoves    21  "q7/8/8/8/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Queen_Move_B_Corner2 GenerateQueenMoves    21  "7q/8/8/8/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Queen_Move_B_Corner3 GenerateQueenMoves    21  "8/8/8/8/8/8/8/q7 b KQkq - 0 1")
+add_test(MoveGen_Queen_Move_B_Corner4 GenerateQueenMoves    21  "8/8/8/8/8/8/8/7q b KQkq - 0 1")
+
+add_test(MoveGen_Queen_Move_W_Middle1 GenerateQueenMoves    27  "8/8/8/3Q4/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Queen_Move_W_Middle2 GenerateQueenMoves    27  "8/8/8/4Q3/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Queen_Move_W_Middle3 GenerateQueenMoves    27  "8/8/8/8/3Q4/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Queen_Move_W_Middle4 GenerateQueenMoves    27  "8/8/8/8/3Q4/8/8/8 w KQkq - 0 1")
+
+add_test(MoveGen_Queen_Move_B_Middle1 GenerateQueenMoves    27  "8/8/8/3q4/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Queen_Move_B_Middle2 GenerateQueenMoves    27  "8/8/8/4q3/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Queen_Move_B_Middle3 GenerateQueenMoves    27  "8/8/8/8/3q4/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Queen_Move_B_Middle4 GenerateQueenMoves    27  "8/8/8/8/4q3/8/8/8 b KQkq - 0 1")
+
+add_test(MoveGen_Queen_Move_W_Blocker           GenerateQueenMoves  0  "QR6/RR6/8/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Queen_Move_W_BlockerOffset1    GenerateQueenMoves  3  "Q1R5/8/R1R5/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Queen_Move_B_Blocker           GenerateQueenMoves  0  "qr6/rr6/8/8/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Queen_Move_B_BlockerOffset1    GenerateQueenMoves  3  "q1r5/8/r1r5/8/8/8/8/8 b KQkq - 0 1")
+
+add_test(MoveGen_Queen_Move_W_Attack_Blocker           GenerateQueenMoves     3 "Qr6/rr6/8/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Queen_Move_W_Attack_BlockerOffset1    GenerateQueenMoves     6 "Q1r5/8/r1r5/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Queen_Move_B_Attack_Blocker           GenerateQueenMoves     3 "qR6/RR6/8/8/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Queen_Move_B_Attack_BlockerOffset1    GenerateQueenMoves     6 "q1R5/8/R1R5/8/8/8/8/8 b KQkq - 0 1")
+
+add_test(MoveGen_Queen_Move_W_Attack_Multiple_BlockerOffset1 GenerateQueenMoves       60  "2r2r2/1r4r1/r1Q2Q1r/8/8/r1Q2Q1r/1r4r1/2r2r2 w - - 0 1")
+add_test(MoveGen_Queen_Move_B_Attack_Multiple_BlockerOffset1 GenerateQueenMoves       60  "2R2R2/1R4R1/R1q2q1R/8/8/R1q2q1R/1R4R1/2R2R2 b - - 0 1")
