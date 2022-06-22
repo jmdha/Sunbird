@@ -7,7 +7,8 @@
 
 int main(int, char**) {
     BitBoard board = BitBoard();
-    board.Initialize();
+    BoardImporter::ImportFEN(&board, "8/pppppppp/8/8/8/8/PPPPPPPP/8 b KQkq - 0 1");
     MoveGen moveGen = MoveGen();
-    moveGen.GetPawnMoves(Color::White, board);
+
+    std::vector<Move> moves = moveGen.GetPawnMoves(board.GetColor(), board);
 }

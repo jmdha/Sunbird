@@ -9,6 +9,7 @@
 class BitBoard {
 public:
     BitBoard();
+    Color GetColor() {return color; };
     void SetColor(Color color) { this->color = color; };
     void ClearBoard();
     void Initialize();
@@ -20,7 +21,6 @@ private:
     U64 pieceBB[PIECECOUNT];
     U64 colorBB[COLORCOUNT];
     U64 occupiedBB;
-    U64 emptyBB;
 
     void PlacePiece(Square square, PieceType type, Color color);
     

@@ -1,0 +1,6 @@
+# Tests
+## PawnMoves
+add_executable(GeneratePawnMoves tests/move_gen/pawn_move.cpp ${sources})
+
+add_test(MoveGen_Pawn_Move_Initial GeneratePawnMoves 16 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+add_test(MoveGen_Pawn_Move_OnlyPawns GeneratePawnMoves 16 "8/pppppppp/8/8/8/8/PPPPPPPP/8 b KQkq - 0 1")

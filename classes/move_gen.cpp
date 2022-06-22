@@ -10,7 +10,7 @@ std::vector<Move> MoveGen::GetPawnMoves(Color color, BitBoard board) {
 
     // Generate single and double step moves
     for (int i = 1; i <= 2; i++) {
-        U64 to = BitShifts::Shift(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color], up, i) & board.emptyBB;
+        U64 to = BitShifts::Shift(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color], up, i);
 
         while (to) {
             U64 lsb = Utilities::LSB_Pop(&to);
@@ -28,5 +28,5 @@ std::vector<Move> MoveGen::GetPawnMoves(Color color, BitBoard board) {
         }
     }
 
-    return std::vector<Move>();
+    return moves;
 }
