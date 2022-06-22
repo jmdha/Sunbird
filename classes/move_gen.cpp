@@ -1,13 +1,18 @@
 #include "headers/move_gen.hh"
 
-std::vector<Move> MoveGen::GetPawnMoves(BitBoard board) {
-    U64 to = BitShifts::NOne(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int)Color::White]) & board.emptyBB;
+std::vector<Move> MoveGen::GetPawnMoves(Color color, BitBoard board) {
+    Direction up = (color == Color::White) ? Direction::North : Direction::South;
     std::vector<Move> moves = std::vector<Move>();
-    printf("Moves %llu\n", board.pieceBB[(int) PieceType::Pawn]);
-    while (to) {
-        U64 lsb = ffsll(to) - 1;
-        to ^= (C64(0) << lsb);
-        moves.push_back(Move((Square) (lsb << 8), (Square) lsb, PieceType::Pawn, PieceType::None, Color::White, Color::Black));
+
+    // Generate single and double step moves
+    for (int i = 1; i <= 2; i++) {
+        U64 to = BitShifts::Shift(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color], up, i) & board.emptyBB;
+
+        while (to) {
+            U64 lsb = Utilities::LSB_Pop(&to);
+            moves.push_back(Move((Square) (lsb - (int) up * i), (Square) lsb, PieceType::Pawn, PieceType::None, color, Color::Black));
+        }
     }
+
     return std::vector<Move>();
 }

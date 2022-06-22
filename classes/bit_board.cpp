@@ -10,7 +10,7 @@ void BitBoard::ClearBoard() {
     for (int i = 0; i < COLORCOUNT; i++)
         colorBB[i] = 0;
     occupiedBB = 0;
-    emptyBB = 0;
+    emptyBB = 0xffffffffffffffff;
 }
 
 void BitBoard::Initialize() {

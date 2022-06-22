@@ -9,5 +9,5 @@ int main(int, char**) {
     BitBoard board = BitBoard();
     board.Initialize();
     MoveGen moveGen = MoveGen();
-    moveGen.GetPawnMoves(board);
+    moveGen.GetPawnMoves(Color::White, board);
 }

@@ -69,4 +69,16 @@ enum class Square : int {
     A8, B8, C8, D8, E8, F8, G8, H8,
 };
 
+enum class Direction : int {
+    North = 8,
+    East = 1,
+    South = -North,
+    West = -East,
+
+    NorthEast = North + East,
+    NorthWest = North + West,
+    SouthEast = South + East,
+    SouthWest = South + West
+};
+
 #endif

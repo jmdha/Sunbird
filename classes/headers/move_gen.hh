@@ -11,7 +11,7 @@
 
 class MoveGen {
 public:
-    std::vector<Move> GetPawnMoves(BitBoard board);
+    std::vector<Move> GetPawnMoves(Color color, BitBoard board);
 private:
 };
 #endif

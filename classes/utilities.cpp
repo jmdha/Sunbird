@@ -95,3 +95,9 @@ int Utilities::PopCount(U64 x) {
     }
     return count;
 }
+
+int Utilities::LSB_Pop(U64* x) {
+    U64 lsb = ffsll(*x) - 1;
+    *x ^= (C64(0) << lsb);
+    return lsb;
+}
