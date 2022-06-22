@@ -19,7 +19,8 @@
 
 enum class Color : int {
     White,
-    Black
+    Black,
+    None
 };
 
 enum class PieceType : int {
