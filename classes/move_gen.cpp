@@ -21,12 +21,13 @@ std::vector<Move> MoveGen::GetPawnMoves(Color color, BitBoard board) {
     }
 
     // Generate captures
-    for (int i = 1; i <= 2; i++) {
+    for (int i = 0; i < 2; i++) {
         to = BitShifts::Shift(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color], captureDirections[i], 1) & board.colorBB[(int)oppColor];
-
         while (to) {
             U64 lsb = Utilities::LSB_Pop(&to);
-            moves.push_back(Move((Square) (lsb - (int) captureDirections[i]), (Square) lsb, color, oppColor));
+            U64 from = lsb - (int) captureDirections[i];
+            if (std::abs((int) lsb % 8 - (int) from % 8) <= 1)
+                moves.push_back(Move((Square) (lsb - (int) captureDirections[i]), (Square) lsb, color, oppColor));
         }
     }
 

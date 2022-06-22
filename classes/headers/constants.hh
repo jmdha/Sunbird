@@ -70,6 +70,17 @@ enum class Square : int {
     A8, B8, C8, D8, E8, F8, G8, H8,
 };
 
+enum class Column : int {
+    A = 0,
+    B = 1,
+    C = 2,
+    D = 3,
+    E = 4,
+    F = 5,
+    G = 6,
+    H = 7
+};
+
 enum class Direction : int {
     North = 8,
     East = 1,
