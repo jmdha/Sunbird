@@ -45,15 +45,26 @@ std::vector<Move> MoveGen::GetRookMoves(Color color, BitBoard board) {
     U64 pieces = board.pieceBB[(int) PieceType::Rook] & board.colorBB[(int) color];
     for (int i = 0; i < 4; i++) {
         U64 to = pieces;
-        int counter = 0;
+        int counter = 1;
         while (to) {
-            to = BitShifts::Shift(to & Utilities::NotEdge(directions[i]), directions[i], 1) & ~board.occupiedBB;
-            counter++;
-            U64 toDup = to;
-            while (toDup) {
-                U64 lsb = Utilities::LSB_Pop(&toDup);
+            to = BitShifts::Shift(to & Utilities::NotEdge(directions[i]), directions[i], 1) & ~board.colorBB[(int) color];
+            
+            U64 attackMoves = to & board.occupiedBB;
+            to &= ~board.occupiedBB;
+
+            while (attackMoves) {
+                U64 lsb = Utilities::LSB_Pop(&attackMoves);
                 moves.push_back(Move((Square) (lsb - (int) directions[i] * counter), (Square) lsb, color, Color::None));
             }
+
+            U64 quietMoves = to;
+
+            while (quietMoves) {
+                U64 lsb = Utilities::LSB_Pop(&quietMoves);
+                moves.push_back(Move((Square) (lsb - (int) directions[i] * counter), (Square) lsb, color, Color::None));
+            }
+
+            counter++;
         }
     }
     return moves;
