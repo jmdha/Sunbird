@@ -35,7 +35,26 @@ std::vector<Move> MoveGen::GetPawnMoves(Color color, BitBoard board) {
         }
     }
 
-    
+    return moves;
+}
 
+std::vector<Move> MoveGen::GetRookMoves(Color color, BitBoard board) {
+    Color oppColor = (color == Color::White) ? Color::Black : Color::White;
+    Direction directions[4] = { Direction::North, Direction::East, Direction::South, Direction::West };
+    std::vector<Move> moves = std::vector<Move>();
+    U64 pieces = board.pieceBB[(int) PieceType::Rook] & board.colorBB[(int) color];
+    for (int i = 0; i < 4; i++) {
+        U64 to = pieces;
+        int counter = 0;
+        while (to) {
+            to = BitShifts::Shift(to & Utilities::NotEdge(directions[i]), directions[i], 1) & ~board.occupiedBB;
+            counter++;
+            U64 toDup = to;
+            while (toDup) {
+                U64 lsb = Utilities::LSB_Pop(&toDup);
+                moves.push_back(Move((Square) (lsb - (int) directions[i] * counter), (Square) lsb, color, Color::None));
+            }
+        }
+    }
     return moves;
 }

@@ -95,9 +95,28 @@ int Utilities::PopCount(U64 x) {
     }
     return count;
 }
+int Utilities::LSB(U64 x) {
+    U64 lsb = ffsll(x) - 1;
+    return lsb;
+}
 
 int Utilities::LSB_Pop(U64* x) {
-    U64 lsb = ffsll(*x) - 1;
+    U64 lsb = LSB(*x);
     *x ^= (C64(0) << lsb);
     return lsb;
+}
+
+U64 Utilities::NotEdge(Direction dir) {
+    switch (dir)
+    {
+    case Direction::North:
+        return (U64) NotEdge::North;
+    case Direction::East:
+        return (U64) NotEdge::East;
+    case Direction::South:
+        return (U64) NotEdge::South;
+    case Direction::West:
+        return (U64) NotEdge::West;
+    }
+    return 0;
 }

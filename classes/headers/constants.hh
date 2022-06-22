@@ -93,4 +93,18 @@ enum class Direction : int {
     SouthWest = South + West
 };
 
+enum class Ray : U64 {
+    North = 0x101010101010100,
+    East = 0xfe,
+    South = 0x1010101010101,
+    West = 0x7f
+};
+
+enum class NotEdge : U64 {
+    North = 0xffffffffffffff,
+    East = 0x7f7f7f7f7f7f7f7f,
+    South = 0xffffffffffffff00,
+    West = 0xfefefefefefefefe
+};
+
 #endif
