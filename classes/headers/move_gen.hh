@@ -13,6 +13,8 @@ class MoveGen {
 public:
     std::vector<Move> GetPawnMoves(Color color, BitBoard board);
     std::vector<Move> GetRookMoves(Color color, BitBoard board);
+    std::vector<Move> GetBishopMoves(Color color, BitBoard board);
 private:
+    std::vector<Move> GetMoves(Color color, BitBoard board, U64 pieces, Direction direction);
 };
 #endif

@@ -75,3 +75,39 @@ add_test(MoveGen_Rook_Move_B_Attack_BlockerOffset1 GenerateRookMoves       4  "r
 
 add_test(MoveGen_Rook_Move_W_Attack_Multiple_BlockerOffset1 GenerateRookMoves       24  "8/1R1bb1R1/8/1b4b1/1b4b1/8/1R1bb1R1/8 w KQkq - 0 1")
 add_test(MoveGen_Rook_Move_B_Attack_Multiple_BlockerOffset1 GenerateRookMoves       24  "8/1r1BB1r1/8/1B4B1/1B4B1/8/1r1BB1r1/8 b KQkq - 0 1")
+
+## BishopMoves
+add_executable(GenerateBishopMoves tests/move_gen/bishop_move.cpp ${sources})
+
+add_test(MoveGen_Bishop_Move_W_Corner1 GenerateBishopMoves    7  "B7/8/8/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_W_Corner2 GenerateBishopMoves    7  "7B/8/8/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_W_Corner3 GenerateBishopMoves    7  "8/8/8/8/8/8/8/B7 w KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_W_Corner4 GenerateBishopMoves    7  "8/8/8/8/8/8/8/7B w KQkq - 0 1")
+
+add_test(MoveGen_Bishop_Move_B_Corner1 GenerateBishopMoves    7  "b7/8/8/8/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_B_Corner2 GenerateBishopMoves    7  "7b/8/8/8/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_B_Corner3 GenerateBishopMoves    7  "8/8/8/8/8/8/8/b7 b KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_B_Corner4 GenerateBishopMoves    7  "8/8/8/8/8/8/8/7b b KQkq - 0 1")
+
+add_test(MoveGen_Bishop_Move_W_Middle1 GenerateBishopMoves    13  "8/8/8/3B4/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_W_Middle2 GenerateBishopMoves    13  "8/8/8/4B3/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_W_Middle3 GenerateBishopMoves    13  "8/8/8/8/3B4/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_W_Middle4 GenerateBishopMoves    13  "8/8/8/8/3B4/8/8/8 w KQkq - 0 1")
+
+add_test(MoveGen_Bishop_Move_B_Middle1 GenerateBishopMoves    13  "8/8/8/3b4/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_B_Middle2 GenerateBishopMoves    13  "8/8/8/4b3/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_B_Middle3 GenerateBishopMoves    13  "8/8/8/8/3b4/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_B_Middle4 GenerateBishopMoves    13  "8/8/8/8/4b3/8/8/8 b KQkq - 0 1")
+
+add_test(MoveGen_Bishop_Move_W_Blocker GenerateBishopMoves              0  "B7/1R6/8/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_W_BlockerOffset1 GenerateBishopMoves       1  "B7/8/2R5/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_B_Blocker GenerateBishopMoves              0  "b7/1r6/8/8/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_B_BlockerOffset1 GenerateBishopMoves       1  "b7/8/2r5/8/8/8/8/8 b KQkq - 0 1")
+
+add_test(MoveGen_Bishop_Move_W_Attack_Blocker           GenerateBishopMoves              1 "B7/1r6/8/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_W_Attack_BlockerOffset1    GenerateBishopMoves       2 "B7/8/2r5/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_B_Attack_Blocker           GenerateBishopMoves              1 "b7/1R6/8/8/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Bishop_Move_B_Attack_BlockerOffset1    GenerateBishopMoves       2 "b7/8/2R5/8/8/8/8/8 b KQkq - 0 1")
+
+add_test(MoveGen_Bishop_Move_W_Attack_Multiple_BlockerOffset1 GenerateBishopMoves       24  "r6r/3rr3/2B2B2/1r4r1/1r4r1/2B2B2/3rr3/r6r w - - 0 1")
+add_test(MoveGen_Bishop_Move_B_Attack_Multiple_BlockerOffset1 GenerateBishopMoves       24  "R6R/3RR2R/2b2b2/1R4R1/1R4R1/2b2b2/3RR3/R6R b - - 0 1")

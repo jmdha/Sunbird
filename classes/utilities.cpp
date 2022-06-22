@@ -117,6 +117,14 @@ U64 Utilities::NotEdge(Direction dir) {
         return (U64) NotEdge::South;
     case Direction::West:
         return (U64) NotEdge::West;
+    case Direction::NorthEast:
+        return (U64) NotEdge::North & (U64) NotEdge::East;
+    case Direction::NorthWest:
+        return (U64) NotEdge::North & (U64) NotEdge::West;
+    case Direction::SouthEast:
+        return (U64) NotEdge::South & (U64) NotEdge::East;
+    case Direction::SouthWest:
+        return (U64) NotEdge::South & (U64) NotEdge::West;
     }
     return 0;
 }

@@ -39,33 +39,53 @@ std::vector<Move> MoveGen::GetPawnMoves(Color color, BitBoard board) {
 }
 
 std::vector<Move> MoveGen::GetRookMoves(Color color, BitBoard board) {
-    Color oppColor = (color == Color::White) ? Color::Black : Color::White;
     Direction directions[4] = { Direction::North, Direction::East, Direction::South, Direction::West };
     std::vector<Move> moves = std::vector<Move>();
     U64 pieces = board.pieceBB[(int) PieceType::Rook] & board.colorBB[(int) color];
     for (int i = 0; i < 4; i++) {
-        U64 to = pieces;
-        int counter = 1;
-        while (to) {
-            to = BitShifts::Shift(to & Utilities::NotEdge(directions[i]), directions[i], 1) & ~board.colorBB[(int) color];
-            
-            U64 attackMoves = to & board.occupiedBB;
-            to &= ~board.occupiedBB;
-
-            while (attackMoves) {
-                U64 lsb = Utilities::LSB_Pop(&attackMoves);
-                moves.push_back(Move((Square) (lsb - (int) directions[i] * counter), (Square) lsb, color, Color::None));
-            }
-
-            U64 quietMoves = to;
-
-            while (quietMoves) {
-                U64 lsb = Utilities::LSB_Pop(&quietMoves);
-                moves.push_back(Move((Square) (lsb - (int) directions[i] * counter), (Square) lsb, color, Color::None));
-            }
-
-            counter++;
-        }
+        std::vector<Move> tempMoves = GetMoves(color, board, pieces, directions[i]);
+        moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
     }
+    return moves;
+}
+
+std::vector<Move> MoveGen::GetBishopMoves(Color color, BitBoard board) {
+    Direction directions[4] = { Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
+    std::vector<Move> moves = std::vector<Move>();
+    U64 pieces = board.pieceBB[(int) PieceType::Bishop] & board.colorBB[(int) color];
+    for (int i = 0; i < 4; i++) {
+        std::vector<Move> tempMoves = GetMoves(color, board, pieces, directions[i]);
+        moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
+    }
+    return moves;
+}
+
+std::vector<Move> MoveGen::GetMoves(Color color, BitBoard board, U64 pieces, Direction direction) {
+    Color oppColor = (color == Color::White) ? Color::Black : Color::White;
+    std::vector<Move> moves = std::vector<Move>();
+
+    U64 to = pieces;
+    int counter = 1;
+    while (to) {
+        to = BitShifts::Shift(to & Utilities::NotEdge(direction), direction, 1) & ~board.colorBB[(int) color];
+        
+        U64 attackMoves = to & board.occupiedBB;
+        to &= ~board.occupiedBB;
+
+        while (attackMoves) {
+            U64 lsb = Utilities::LSB_Pop(&attackMoves);
+            moves.push_back(Move((Square) (lsb - (int) direction * counter), (Square) lsb, color, Color::None));
+        }
+
+        U64 quietMoves = to;
+
+        while (quietMoves) {
+            U64 lsb = Utilities::LSB_Pop(&quietMoves);
+            moves.push_back(Move((Square) (lsb - (int) direction * counter), (Square) lsb, color, Color::None));
+        }
+
+        counter++;
+    }
+
     return moves;
 }
