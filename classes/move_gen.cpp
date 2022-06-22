@@ -9,24 +9,28 @@ std::vector<Move> MoveGen::GetPawnMoves(Color color, BitBoard board) {
     std::vector<Move> moves = std::vector<Move>();
 
     // Generate single and double step moves
+    U64 to = board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color];
     for (int i = 1; i <= 2; i++) {
-        U64 to = BitShifts::Shift(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color], up, i) & ~board.occupiedBB;
+        to = BitShifts::Shift(to, up, 1) & ~board.occupiedBB;
 
-        while (to) {
-            U64 lsb = Utilities::LSB_Pop(&to);
+        U64 toDup = to;
+        while (toDup) {
+            U64 lsb = Utilities::LSB_Pop(&toDup);
             moves.push_back(Move((Square) (lsb - (int) up * i), (Square) lsb, color, Color::None));
         }
     }
 
     // Generate captures
     for (int i = 1; i <= 2; i++) {
-        U64 to = BitShifts::Shift(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color], captureDirections[i], 1) & board.colorBB[(int)oppColor];
+        to = BitShifts::Shift(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color], captureDirections[i], 1) & board.colorBB[(int)oppColor];
 
         while (to) {
             U64 lsb = Utilities::LSB_Pop(&to);
             moves.push_back(Move((Square) (lsb - (int) captureDirections[i]), (Square) lsb, color, oppColor));
         }
     }
+
+    
 
     return moves;
 }
