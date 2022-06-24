@@ -22,13 +22,15 @@ std::mt19937 g(rd());
 int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int beta) {
     if (depth == 0)
         return evaluators[(int) board->GetColor()]->EvaluatePieceCount(*board);
-    std::vector<Move> moves = moveGens[(int) board->GetColor()]->GetAllMoves(*board);
-    if (original)
-        std::shuffle(moves.begin(), moves.end(), g);
+    // 218 I believe to be the max number of moves - as such its rounded up to 256
+    Move* moves = (Move*) calloc(256, sizeof(Move));
+    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board);
+    //if (original)
+        //std::shuffle(moves.begin(), moves.end(), g);
 
     int score = -(int) PieceValue::Inf;
 
-    for (int i = 0; i < moves.size(); i++) {
+    for (int i = 0; i < moveCount; i++) {
         board->DoMove(moves[i]);
         int tempScore = -NegaMax(false, bestMove, depth - 1, -beta, -alpha);
         board->UndoMove(moves[i]);
@@ -43,5 +45,6 @@ int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int be
         if (alpha >= beta)
             break;
     }
+    free(moves);
     return score;
 }

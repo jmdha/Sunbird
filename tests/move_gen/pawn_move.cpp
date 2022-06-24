@@ -12,7 +12,9 @@ int main(int argc, char* argv[]) {
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     MoveGen moveGen = MoveGen(board.GetColor());
 
-    int moveCount = moveGen.GetPawnMoves(board).size();
+    Move* moves = (Move*) calloc(256, sizeof(Move));
+    int moveCount = moveGen.GetPawnMoves(moves, 0, board);
+    free(moves);
 
     if (moveCount == std::atoi(argv[1]))
         exit(EXIT_SUCCESS);
