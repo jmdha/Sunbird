@@ -9,6 +9,9 @@ void BitBoard::ClearBoard() {
         pieceBB[i] = 0;
     for (int i = 0; i < COLORCOUNT; i++)
         colorBB[i] = 0;
+    for (int i = 0; i < COLORCOUNT; i++)
+        for (int i2 = 0; i2 < PIECECOUNT; i2++)
+            popCount[i][i2] = 0;
     occupiedBB = 0;
 }
 
@@ -82,6 +85,7 @@ void BitBoard::PlacePiece(Square square, PieceType type, Color color) {
     pieceBB[(int) type] |= bit;
     colorBB[(int) color] |= bit;
     occupiedBB |= bit;
+    popCount[(int) color][(int) type]++;
 }
 
 void BitBoard::RemovePiece(Square square, PieceType type, Color color) {
@@ -89,6 +93,7 @@ void BitBoard::RemovePiece(Square square, PieceType type, Color color) {
     pieceBB[(int) type] ^= bit;
     colorBB[(int) color] ^= bit;
     occupiedBB ^= bit;
+    popCount[(int) color][(int) type]--;
 }
 
 PieceType BitBoard::GetType(Square square, Color color) {
