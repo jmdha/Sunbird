@@ -54,6 +54,29 @@ PieceChar BitBoard::GetPiece(Square square) {
     return PieceChar::None;	
 }
 
+
+
+void BitBoard::DoMove(Move move) {
+    PlacePiece(move.toSquare, move.fromType, move.fromColor);
+    RemovePiece(move.fromSquare, move.fromType, move.fromColor);
+    
+    if (move.toColor != Color::None) {
+        RemovePiece(move.toSquare, move.toType, move.toColor);
+    }
+}
+
+void BitBoard::UndoMove(Move move) {
+    RemovePiece(move.toSquare, move.fromType, move.fromColor);
+    PlacePiece(move.fromSquare, move.fromType, move.fromColor);
+    if (move.toColor != Color::None) {
+        PlacePiece(move.toSquare, move.toType, move.toColor);
+    }
+}
+
+void BitBoard::PlacePiece(Square square, PieceChar pieceChar) {
+    PlacePiece(square, Utilities::GetPieceType(pieceChar), Utilities::GetPieceColor(pieceChar));
+}
+
 void BitBoard::PlacePiece(Square square, PieceType type, Color color) {
     U64 bit = C64(square);
     pieceBB[(int) type] |= bit;
@@ -61,6 +84,18 @@ void BitBoard::PlacePiece(Square square, PieceType type, Color color) {
     occupiedBB |= bit;
 }
 
-void BitBoard::PlacePiece(Square square, PieceChar pieceChar) {
-    PlacePiece(square, Utilities::GetPieceType(pieceChar), Utilities::GetPieceColor(pieceChar));
+void BitBoard::RemovePiece(Square square, PieceType type, Color color) {
+    U64 bit = C64(square);
+    pieceBB[(int) type] ^= bit;
+    colorBB[(int) color] ^= bit;
+    occupiedBB ^= bit;
+}
+
+PieceType BitBoard::GetType(Square square, Color color) {
+    U64 bit = C64(square);
+    for (int i = 0; i < 6; i++) {
+        if (pieceBB[i] & bit)
+            return (PieceType) i;
+    }
+    return PieceType::None;
 }

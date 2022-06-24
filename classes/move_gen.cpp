@@ -37,7 +37,7 @@ std::vector<Move> MoveGen::GetPawnMoves(BitBoard board) {
 
         while (toDup) {
             U64 lsb = Utilities::LSB_Pop(&toDup);
-            moves.push_back(Move((Square) (lsb - (int) up * i), (Square) lsb, color, Color::None));
+            moves.push_back(Move((Square) (lsb - (int) up * i), (Square) lsb, color, Color::None, PieceType::Pawn, PieceType::None));
         }
     }
 
@@ -48,7 +48,7 @@ std::vector<Move> MoveGen::GetPawnMoves(BitBoard board) {
             U64 lsb = Utilities::LSB_Pop(&to);
             U64 from = lsb - (int) captureDirections[i];
             if (std::abs((int) lsb % 8 - (int) from % 8) <= 1)
-                moves.push_back(Move((Square) (lsb - (int) captureDirections[i]), (Square) lsb, color, oppColor));
+                moves.push_back(Move((Square) (lsb - (int) captureDirections[i]), (Square) lsb, color, oppColor, PieceType::Pawn, board.GetType((Square) lsb, oppColor)));
         }
     }
 
@@ -60,7 +60,7 @@ std::vector<Move> MoveGen::GetRookMoves(BitBoard board) {
     std::vector<Move> moves = std::vector<Move>();
     U64 pieces = board.pieceBB[(int) PieceType::Rook] & board.colorBB[(int) color];
     for (int i = 0; i < 4; i++) {
-        std::vector<Move> tempMoves = GetMoves(board, pieces, directions[i]);
+        std::vector<Move> tempMoves = GetMoves(board, pieces, directions[i], PieceType::Rook);
         moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
     }
     return moves;
@@ -71,7 +71,7 @@ std::vector<Move> MoveGen::GetBishopMoves(BitBoard board) {
     std::vector<Move> moves = std::vector<Move>();
     U64 pieces = board.pieceBB[(int) PieceType::Bishop] & board.colorBB[(int) color];
     for (int i = 0; i < 4; i++) {
-        std::vector<Move> tempMoves = GetMoves(board, pieces, directions[i]);
+        std::vector<Move> tempMoves = GetMoves(board, pieces, directions[i], PieceType::Bishop);
         moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
     }
     return moves;
@@ -83,13 +83,13 @@ std::vector<Move> MoveGen::GetQueenMoves(BitBoard board) {
     std::vector<Move> moves = std::vector<Move>();
     U64 pieces = board.pieceBB[(int) PieceType::Queen] & board.colorBB[(int) color];
     for (int i = 0; i < 8; i++) {
-        std::vector<Move> tempMoves = GetMoves(board, pieces, directions[i]);
+        std::vector<Move> tempMoves = GetMoves(board, pieces, directions[i], PieceType::Queen);
         moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
     }
     return moves;
 }
 
-std::vector<Move> MoveGen::GetMoves(BitBoard board, U64 pieces, Direction direction) {
+std::vector<Move> MoveGen::GetMoves(BitBoard board, U64 pieces, Direction direction, PieceType type) {
     std::vector<Move> moves = std::vector<Move>();
 
     U64 to = pieces;
@@ -102,14 +102,14 @@ std::vector<Move> MoveGen::GetMoves(BitBoard board, U64 pieces, Direction direct
 
         while (attackMoves) {
             U64 lsb = Utilities::LSB_Pop(&attackMoves);
-            moves.push_back(Move((Square) (lsb - (int) direction * counter), (Square) lsb, color, Color::None));
+            moves.push_back(Move((Square) (lsb - (int) direction * counter), (Square) lsb, color, oppColor, type, board.GetType((Square) lsb, oppColor)));
         }
 
         U64 quietMoves = to;
 
         while (quietMoves) {
             U64 lsb = Utilities::LSB_Pop(&quietMoves);
-            moves.push_back(Move((Square) (lsb - (int) direction * counter), (Square) lsb, color, Color::None));
+            moves.push_back(Move((Square) (lsb - (int) direction * counter), (Square) lsb, color, Color::None, type, PieceType::None));
         }
 
         counter++;

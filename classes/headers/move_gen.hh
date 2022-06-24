@@ -26,6 +26,6 @@ private:
     Direction upLeft;
     Row doubleRank;
 
-    std::vector<Move> GetMoves(BitBoard board, U64 pieces, Direction direction);
+    std::vector<Move> GetMoves(BitBoard board, U64 pieces, Direction direction, PieceType type);
 };
 #endif
