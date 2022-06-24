@@ -23,7 +23,8 @@ int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int be
     if (depth == 0)
         return evaluators[(int) board->GetColor()]->EvaluatePieceCount(*board);
     std::vector<Move> moves = moveGens[(int) board->GetColor()]->GetAllMoves(*board);
-    std::shuffle(moves.begin(), moves.end(), g);
+    if (original)
+        std::shuffle(moves.begin(), moves.end(), g);
 
     int score = -(int) PieceValue::Inf;
 
@@ -39,10 +40,8 @@ int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int be
         }
 
         alpha = std::max(alpha, score);
-        if (alpha > beta)
+        if (alpha >= beta)
             break;
     }
-    if (original)
-        
     return score;
 }

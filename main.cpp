@@ -13,7 +13,7 @@ int main(int, char**) {
     //std::vector<Move> moves = gen.GetAllMoves(board);
 
     MiniMax miniMax = MiniMax(board);
-    Move move = miniMax.GetBestMove(5);
+    Move move = miniMax.GetBestMove(6);
 
     printf("%d\n", board->totalMoves);
 }
