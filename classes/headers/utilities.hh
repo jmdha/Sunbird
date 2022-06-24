@@ -13,6 +13,7 @@ public:
     static PieceType GetPieceType(PieceChar pieceChar);
     static Color GetPieceColor(PieceChar pieceChar);
     static Square GetSquare(int x, int y);
+    static Square GetSquare(char row, char column);
     static int GetPieceValue(PieceType type);
     static Color GetOppositeColor(Color color);
 

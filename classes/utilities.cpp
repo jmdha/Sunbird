@@ -66,6 +66,10 @@ Square Utilities::GetSquare(int x, int y) {
     return (Square) (x + 8 * y);
 }
 
+Square Utilities::GetSquare(char row, char column) {
+    return GetSquare((int) row - 97, (int) column - 49);
+}
+
 int Utilities::GetPieceValue(PieceType type) {
     switch(type) {
         case PieceType::Bishop:

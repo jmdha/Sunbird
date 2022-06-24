@@ -1,6 +1,10 @@
 #ifndef MINIMAX
 #define MINIMAX
 
+#include <random>
+#include <algorithm>
+#include <iterator>
+
 #include "constants.hh"
 #include "bit_board.hh"
 #include "move_gen.hh"
@@ -17,6 +21,6 @@ private:
     MoveGen* moveGens[2];
     Evaluator* evaluators[2];
 
-    int NegaMax(int depth);
+    int NegaMax(bool original, Move* bestMove, int depth, int alpha, int beta);
 };
 #endif

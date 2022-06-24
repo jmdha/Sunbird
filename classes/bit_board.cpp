@@ -46,26 +46,32 @@ void BitBoard::Initialize() {
     color = Color::White;
 }
 
-PieceChar BitBoard::GetPiece(Square square) {
+PieceType BitBoard::GetPiece(Square square) {
     for (int i = 0; i < PIECECOUNT; i++)
-        if (pieceBB[i] & C64(square)) {
-            if (colorBB[(int) Color::Black] & C64(square))
-                return Utilities::GetPieceChar((PieceType) i, Color::Black);
-            else if (colorBB[(int) Color::White] & C64(square))
-                return Utilities::GetPieceChar((PieceType) i, Color::White);
-        }
-    return PieceChar::None;	
+        if (pieceBB[i] & C64(square))
+            return (PieceType) i;
+    return PieceType::None;	
 }
 
-
+Color BitBoard::GetSquareColor(Square square) {
+    if (colorBB[(int) Color::White] & C64(square))
+        return Color::White;
+    if (colorBB[(int) Color::Black] & C64(square))
+        return Color::Black;
+    else
+        return Color::None;
+}
 
 void BitBoard::DoMove(Move move) {
+    totalMoves++;
     PlacePiece(move.toSquare, move.fromType, move.fromColor);
     RemovePiece(move.fromSquare, move.fromType, move.fromColor);
     
     if (move.toColor != Color::None) {
         RemovePiece(move.toSquare, move.toType, move.toColor);
     }
+
+    color = Utilities::GetOppositeColor(color);
 }
 
 void BitBoard::UndoMove(Move move) {
@@ -74,6 +80,8 @@ void BitBoard::UndoMove(Move move) {
     if (move.toColor != Color::None) {
         PlacePiece(move.toSquare, move.toType, move.toColor);
     }
+
+    color = Utilities::GetOppositeColor(color);
 }
 
 void BitBoard::PlacePiece(Square square, PieceChar pieceChar) {

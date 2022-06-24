@@ -9,37 +9,40 @@ MiniMax::MiniMax(BitBoard* board) {
 }
 
 Move MiniMax::GetBestMove(int depth) {
-    int max = - (int) PieceValue::Inf;
-
-    std::vector<Move> moves = moveGens[(int) board->GetColor()]->GetAllMoves(*board);
-    Move bestMove;
-
-    for (int i = 0; i < moves.size(); i++) {
-        board->DoMove(moves[i]);
-        int score = -NegaMax(depth - 1);
-        if (score > max) {
-            max = score;
-            bestMove = moves[i];
-        }
-        board->UndoMove(moves[i]);
-    }
-    return bestMove;
+    Move move;
+    int alpha = -(int) PieceValue::Inf;
+    int beta = (int) PieceValue::Inf;
+    NegaMax(true, &move, depth, alpha, beta);
+    return move;
 }
 
-int MiniMax::NegaMax(int depth) {
+std::random_device rd;
+std::mt19937 g(rd());
+
+int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int beta) {
     if (depth == 0)
         return evaluators[(int) board->GetColor()]->EvaluatePieceCount(*board);
-    
-    int max = - (int) PieceValue::Inf;
-
     std::vector<Move> moves = moveGens[(int) board->GetColor()]->GetAllMoves(*board);
+    std::shuffle(moves.begin(), moves.end(), g);
+
+    int score = -(int) PieceValue::Inf;
 
     for (int i = 0; i < moves.size(); i++) {
         board->DoMove(moves[i]);
-        int score = -NegaMax(depth - 1);
-        if (score > max)
-            max = score;
+        int tempScore = -NegaMax(false, bestMove, depth - 1, -beta, -alpha);
         board->UndoMove(moves[i]);
+
+        if (tempScore > score) {
+            if (original)
+                *bestMove = moves[i];
+            score = tempScore;
+        }
+
+        alpha = std::max(alpha, score);
+        if (alpha > beta)
+            break;
     }
-    return max;
+    if (original)
+        
+    return score;
 }

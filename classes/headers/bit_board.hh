@@ -9,15 +9,19 @@
 
 class BitBoard {
 public:
+    int totalMoves = 0;
+
     BitBoard();
     Color GetColor() {return color; };
     void SetColor(Color color) { this->color = color; };
     void ClearBoard();
     void Initialize();
-    PieceChar GetPiece(Square square);
+    PieceType GetPiece(Square square);
+    Color GetSquareColor(Square square);
     void PlacePiece(Square square, PieceChar pieceChar);
     void DoMove(Move move);
     void UndoMove(Move move);
+    U64 GetHash() { return occupiedBB; };
 
 private:
     Color color;

@@ -14,4 +14,6 @@ int main(int, char**) {
 
     MiniMax miniMax = MiniMax(board);
     Move move = miniMax.GetBestMove(5);
+
+    printf("%d\n", board->totalMoves);
 }
