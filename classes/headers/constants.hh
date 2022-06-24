@@ -108,4 +108,11 @@ enum class NotEdge : U64 {
     West = 0xfefefefefefefefe
 };
 
+enum class NotEdgeKnight : U64 {
+    North = 0xffffffffffff,
+    East = 0x3f3f3f3f3f3f3f3f,
+    South = 0xffffffffffff0000,
+    West = 0xfcfcfcfcfcfcfcfc
+};
+
 #endif

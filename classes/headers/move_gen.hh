@@ -17,6 +17,7 @@ public:
     std::vector<Move> GetRookMoves(BitBoard board);
     std::vector<Move> GetBishopMoves(BitBoard board);
     std::vector<Move> GetQueenMoves(BitBoard board);
+    std::vector<Move> GetKnightMoves(BitBoard board);
 
 private:
     Color color;
@@ -26,6 +27,9 @@ private:
     Direction upLeft;
     Row doubleRank;
 
+    U64 knightMoves[64] = {};
+
     std::vector<Move> GetMoves(BitBoard board, U64 pieces, Direction direction, PieceType type);
+    void GenerateKnightMoves();
 };
 #endif

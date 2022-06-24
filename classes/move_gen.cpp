@@ -7,6 +7,7 @@ MoveGen::MoveGen(Color color) {
     this->upRight = (up == Direction::North) ? Direction::NorthEast : Direction::SouthEast;
     this->upLeft = (up == Direction::North) ? Direction::NorthWest : Direction::SouthWest;
     this->doubleRank = (up == Direction::North) ? Row::Row4 : Row::Row5;
+    GenerateKnightMoves();
 }
 
 std::vector<Move> MoveGen::GetAllMoves(BitBoard board) {
@@ -18,6 +19,8 @@ std::vector<Move> MoveGen::GetAllMoves(BitBoard board) {
     tempMoves = GetBishopMoves(board);
     moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
     tempMoves = GetQueenMoves(board);
+    moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
+    tempMoves = GetKnightMoves(board);
     moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
     return moves;
 }
@@ -89,6 +92,33 @@ std::vector<Move> MoveGen::GetQueenMoves(BitBoard board) {
     return moves;
 }
 
+std::vector<Move> MoveGen::GetKnightMoves(BitBoard board) {
+    std::vector<Move> moves = std::vector<Move>();
+    U64 pieces = board.pieceBB[(int) PieceType::Knight] & board.colorBB[(int) color];
+    while (pieces) {
+            int lsbPiece = Utilities::LSB_Pop(&pieces);
+            U64 to = knightMoves[lsbPiece];
+            // Attack moves
+            U64 attackMoves = to & board.colorBB[(int) oppColor];
+            to &= ~board.occupiedBB;
+
+            while (attackMoves) {
+                int lsb = Utilities::LSB_Pop(&attackMoves);
+                moves.push_back(Move((Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::Knight, board.GetType((Square) lsb, oppColor)));
+            }
+
+            // Quiet moves
+            U64 quietMoves = to & (~board.occupiedBB);
+            while (quietMoves) {
+                int lsb = Utilities::LSB_Pop(&quietMoves);
+                moves.push_back(Move((Square) lsbPiece, (Square) lsb, color, Color::None, PieceType::Knight, PieceType::None));
+            }
+    }
+
+
+    return moves;
+}
+
 std::vector<Move> MoveGen::GetMoves(BitBoard board, U64 pieces, Direction direction, PieceType type) {
     std::vector<Move> moves = std::vector<Move>();
 
@@ -101,14 +131,14 @@ std::vector<Move> MoveGen::GetMoves(BitBoard board, U64 pieces, Direction direct
         to &= ~board.occupiedBB;
 
         while (attackMoves) {
-            U64 lsb = Utilities::LSB_Pop(&attackMoves);
+            int lsb = Utilities::LSB_Pop(&attackMoves);
             moves.push_back(Move((Square) (lsb - (int) direction * counter), (Square) lsb, color, oppColor, type, board.GetType((Square) lsb, oppColor)));
         }
 
         U64 quietMoves = to;
 
         while (quietMoves) {
-            U64 lsb = Utilities::LSB_Pop(&quietMoves);
+            int lsb = Utilities::LSB_Pop(&quietMoves);
             moves.push_back(Move((Square) (lsb - (int) direction * counter), (Square) lsb, color, Color::None, type, PieceType::None));
         }
 
@@ -116,4 +146,42 @@ std::vector<Move> MoveGen::GetMoves(BitBoard board, U64 pieces, Direction direct
     }
 
     return moves;
+}
+
+void MoveGen::GenerateKnightMoves() {
+    for (int i = 0; i < 64; i++) {
+        U64 bit = C64(i);
+        if (bit & (U64) NotEdgeKnight::North) {
+            if (bit & (U64) NotEdge::East) {
+                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::North, 1), Direction::NorthEast, 1);
+            }
+            if (bit & (U64) NotEdge::West) {
+                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::North, 1), Direction::NorthWest, 1);
+            }
+        }
+        if (bit & (U64) NotEdgeKnight::South) {
+            if (bit & (U64) NotEdge::East) {
+                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::South, 1), Direction::SouthEast, 1);
+            }
+            if (bit & (U64) NotEdge::West) {
+                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::South, 1), Direction::SouthWest, 1);
+            }
+        }
+        if (bit & (U64) NotEdgeKnight::East) {
+            if (bit & (U64) NotEdge::North) {
+                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::North, 1), Direction::East, 2);
+            }
+            if (bit & (U64) NotEdge::South) {
+                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::South, 1), Direction::East, 2);
+            }
+        }
+        if (bit & (U64) NotEdgeKnight::West) {
+            if (bit & (U64) NotEdge::North) {
+                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::North, 1), Direction::West, 2);
+            }
+            if (bit & (U64) NotEdge::South) {
+                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::South, 1), Direction::West, 2);
+            }
+        }
+    }
 }

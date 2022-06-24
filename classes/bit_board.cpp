@@ -6,7 +6,7 @@ BitBoard::BitBoard() {
 
 void BitBoard::ClearBoard() {
     for (int i = 0; i < PIECECOUNT; i++)
-        pieceBB[i] = 0;
+        pieceBB[i] = {};
     for (int i = 0; i < COLORCOUNT; i++)
         colorBB[i] = 0;
     for (int i = 0; i < COLORCOUNT; i++)

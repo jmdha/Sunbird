@@ -147,3 +147,22 @@ add_test(MoveGen_Queen_Move_B_Attack_BlockerOffset1    GenerateQueenMoves     6 
 
 add_test(MoveGen_Queen_Move_W_Attack_Multiple_BlockerOffset1 GenerateQueenMoves       60  "2r2r2/1r4r1/r1Q2Q1r/8/8/r1Q2Q1r/1r4r1/2r2r2 w - - 0 1")
 add_test(MoveGen_Queen_Move_B_Attack_Multiple_BlockerOffset1 GenerateQueenMoves       60  "2R2R2/1R4R1/R1q2q1R/8/8/R1q2q1R/1R4R1/2R2R2 b - - 0 1")
+
+## KnightMoves
+add_executable(GenerateKnightMoves tests/move_gen/knight_move.cpp ${sources})
+
+add_test(MoveGen_Knight_Move_W_Corner1 GenerateKnightMoves    2  "N7/8/8/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Knight_Move_W_Corner2 GenerateKnightMoves    2  "7N/8/8/8/8/8/8/8 w KQkq - 0 1")
+add_test(MoveGen_Knight_Move_W_Corner3 GenerateKnightMoves    2  "8/8/8/8/8/8/8/N7 w KQkq - 0 1")
+add_test(MoveGen_Knight_Move_W_Corner4 GenerateKnightMoves    2  "8/8/8/8/8/8/8/7N w KQkq - 0 1")
+
+add_test(MoveGen_Knight_Move_B_Corner1 GenerateKnightMoves    2  "n7/8/8/8/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Knight_Move_B_Corner2 GenerateKnightMoves    2  "7n/8/8/8/8/8/8/8 b KQkq - 0 1")
+add_test(MoveGen_Knight_Move_B_Corner3 GenerateKnightMoves    2  "8/8/8/8/8/8/8/n7 b KQkq - 0 1")
+add_test(MoveGen_Knight_Move_B_Corner4 GenerateKnightMoves    2  "8/8/8/8/8/8/8/7n b KQkq - 0 1")
+
+add_test(MoveGen_Knight_Move_W_Blocked GenerateKnightMoves    24  "8/2R2R2/1R4R1/3NN3/3NN3/1R4R1/2R2R2/8 w - - 0 1")
+add_test(MoveGen_Knight_Move_B_Blocked GenerateKnightMoves    24  "8/2r2r2/1r4r1/3nn3/3nn3/1r4r1/2r2r2/8 b - - 0 1")
+
+add_test(MoveGen_Knight_Move_W_Attack GenerateKnightMoves    32  "8/2r2r2/1r4r1/3NN3/3NN3/1r4r1/2r2r2/8 w - - 0 1")
+add_test(MoveGen_Knight_Move_B_Attack GenerateKnightMoves    32  "8/2R2R2/1R4R1/3nn3/3nn3/1R4R1/2R2R2/8 b - - 0 1")
