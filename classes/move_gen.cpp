@@ -1,24 +1,28 @@
 #include "headers/move_gen.hh"
 
-std::vector<Move> MoveGen::GetAllMoves(Color color, BitBoard board) {
+MoveGen::MoveGen(Color color) {
+    this->color = color;
+    this->oppColor = Utilities::GetOppositeColor(color);
+    this->up = (color == Color::White) ? Direction::North : Direction::South;
+    this->upRight = (up == Direction::North) ? Direction::NorthEast : Direction::SouthEast;
+    this->upLeft = (up == Direction::North) ? Direction::NorthWest : Direction::SouthWest;
+    this->doubleRank = (up == Direction::North) ? Row::Row4 : Row::Row5;
+}
+
+std::vector<Move> MoveGen::GetAllMoves(BitBoard board) {
     std::vector<Move> moves = std::vector<Move>();
-    std::vector<Move> tempMoves = GetPawnMoves(color, board);
+    std::vector<Move> tempMoves = GetPawnMoves(board);
     moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
-    tempMoves = GetRookMoves(color, board);
+    tempMoves = GetRookMoves(board);
     moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
-    tempMoves = GetBishopMoves(color, board);
+    tempMoves = GetBishopMoves(board);
     moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
-    tempMoves = GetQueenMoves(color, board);
+    tempMoves = GetQueenMoves(board);
     moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
     return moves;
 }
 
-std::vector<Move> MoveGen::GetPawnMoves(Color color, BitBoard board) {
-    Color oppColor = (color == Color::White) ? Color::Black : Color::White;
-    Direction up = (color == Color::White) ? Direction::North : Direction::South;
-    Direction upRight = (up == Direction::North) ? Direction::NorthEast : Direction::SouthEast;
-    Direction upLeft = (up == Direction::North) ? Direction::NorthWest : Direction::SouthWest;
-    Row doubleRank = (up == Direction::North) ? Row::Row4 : Row::Row5;
+std::vector<Move> MoveGen::GetPawnMoves(BitBoard board) {
     Direction captureDirections[2] = { upRight, upLeft };
     std::vector<Move> moves = std::vector<Move>();
 
@@ -51,42 +55,41 @@ std::vector<Move> MoveGen::GetPawnMoves(Color color, BitBoard board) {
     return moves;
 }
 
-std::vector<Move> MoveGen::GetRookMoves(Color color, BitBoard board) {
+std::vector<Move> MoveGen::GetRookMoves(BitBoard board) {
     Direction directions[4] = { Direction::North, Direction::East, Direction::South, Direction::West };
     std::vector<Move> moves = std::vector<Move>();
     U64 pieces = board.pieceBB[(int) PieceType::Rook] & board.colorBB[(int) color];
     for (int i = 0; i < 4; i++) {
-        std::vector<Move> tempMoves = GetMoves(color, board, pieces, directions[i]);
+        std::vector<Move> tempMoves = GetMoves(board, pieces, directions[i]);
         moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
     }
     return moves;
 }
 
-std::vector<Move> MoveGen::GetBishopMoves(Color color, BitBoard board) {
+std::vector<Move> MoveGen::GetBishopMoves(BitBoard board) {
     Direction directions[4] = { Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
     std::vector<Move> moves = std::vector<Move>();
     U64 pieces = board.pieceBB[(int) PieceType::Bishop] & board.colorBB[(int) color];
     for (int i = 0; i < 4; i++) {
-        std::vector<Move> tempMoves = GetMoves(color, board, pieces, directions[i]);
+        std::vector<Move> tempMoves = GetMoves(board, pieces, directions[i]);
         moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
     }
     return moves;
 }
 
-std::vector<Move> MoveGen::GetQueenMoves(Color color, BitBoard board) {
+std::vector<Move> MoveGen::GetQueenMoves(BitBoard board) {
     Direction directions[8] = { Direction::North, Direction::East, Direction::South, Direction::West, 
                                 Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
     std::vector<Move> moves = std::vector<Move>();
     U64 pieces = board.pieceBB[(int) PieceType::Queen] & board.colorBB[(int) color];
     for (int i = 0; i < 8; i++) {
-        std::vector<Move> tempMoves = GetMoves(color, board, pieces, directions[i]);
+        std::vector<Move> tempMoves = GetMoves(board, pieces, directions[i]);
         moves.insert(moves.end(), tempMoves.begin(), tempMoves.end());
     }
     return moves;
 }
 
-std::vector<Move> MoveGen::GetMoves(Color color, BitBoard board, U64 pieces, Direction direction) {
-    Color oppColor = (color == Color::White) ? Color::Black : Color::White;
+std::vector<Move> MoveGen::GetMoves(BitBoard board, U64 pieces, Direction direction) {
     std::vector<Move> moves = std::vector<Move>();
 
     U64 to = pieces;

@@ -14,6 +14,7 @@ public:
     static Color GetPieceColor(PieceChar pieceChar);
     static Square GetSquare(int x, int y);
     static int GetPieceValue(PieceType type);
+    static Color GetOppositeColor(Color color);
 
     // Returns the amount of bits set to 1
     // e.g. 0110 => 2 and 1000 => 1

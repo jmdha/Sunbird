@@ -85,6 +85,13 @@ int Utilities::GetPieceValue(PieceType type) {
     }
 }
 
+Color Utilities::GetOppositeColor(Color color) {
+    if (color == Color::White)
+        return Color::Black;
+    else
+        return Color::White;
+}
+
 // This implementation is from https://www.chessprogramming.org/Population_Count
 // Specifically the one titled "Brian Kerninghan"
 int Utilities::PopCount(U64 x) {

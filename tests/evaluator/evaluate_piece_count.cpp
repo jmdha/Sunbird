@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
     BitBoard board = BitBoard();
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     int expectedEval = std::atoi(argv[1]);
-    Evaluator evaluator = Evaluator();
+    Evaluator evaluator = Evaluator(board.GetColor());
 
     int eval = evaluator.EvaluatePieceCount(board);
 

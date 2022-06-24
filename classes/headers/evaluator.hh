@@ -5,8 +5,11 @@
 
 class Evaluator {
 public:
+    Evaluator(Color color);
     int EvaluatePieceCount(const BitBoard board);
     
 private:
+    Color color;
+    Color oppColor;
 };
 #endif

@@ -11,13 +11,21 @@
 
 class MoveGen {
 public:
-    std::vector<Move> GetAllMoves(Color color, BitBoard board);
-    std::vector<Move> GetPawnMoves(Color color, BitBoard board);
-    std::vector<Move> GetRookMoves(Color color, BitBoard board);
-    std::vector<Move> GetBishopMoves(Color color, BitBoard board);
-    std::vector<Move> GetQueenMoves(Color color, BitBoard board);
+    MoveGen(Color color);
+    std::vector<Move> GetAllMoves(BitBoard board);
+    std::vector<Move> GetPawnMoves(BitBoard board);
+    std::vector<Move> GetRookMoves(BitBoard board);
+    std::vector<Move> GetBishopMoves(BitBoard board);
+    std::vector<Move> GetQueenMoves(BitBoard board);
 
 private:
-    std::vector<Move> GetMoves(Color color, BitBoard board, U64 pieces, Direction direction);
+    Color color;
+    Color oppColor;
+    Direction up;
+    Direction upRight;
+    Direction upLeft;
+    Row doubleRank;
+
+    std::vector<Move> GetMoves(BitBoard board, U64 pieces, Direction direction);
 };
 #endif

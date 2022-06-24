@@ -10,9 +10,9 @@
 int main(int argc, char* argv[]) {
     BitBoard board = BitBoard();
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
-    MoveGen moveGen = MoveGen();
+    MoveGen moveGen = MoveGen(board.GetColor());
 
-    int moveCount = moveGen.GetBishopMoves(board.GetColor(), board).size();
+    int moveCount = moveGen.GetBishopMoves(board).size();
 
     if (moveCount == std::atoi(argv[1]))
         exit(EXIT_SUCCESS);
