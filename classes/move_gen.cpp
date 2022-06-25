@@ -19,6 +19,7 @@ int MoveGen::GetAllMoves(Move* moves, BitBoard board) {
     moveCount += GetBishopMoves(moves, moveCount, board);
     moveCount += GetQueenMoves(moves, moveCount, board);
     moveCount += GetKnightMoves(moves, moveCount, board);
+    moveCount += GetKingMoves(moves, moveCount, board);
     return moveCount;
 }
 
