@@ -12,6 +12,7 @@ class Perft {
 public:
     Perft(BitBoard* board);
     int RunFromMove(Move move, int depth);
+    int RunFromPosition(int depth);
 
 private:
     BitBoard* board;

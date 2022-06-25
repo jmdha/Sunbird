@@ -13,6 +13,11 @@ int Perft::RunFromMove(Move move, int depth) {
     return leafCount;
 }
 
+int Perft::RunFromPosition(int depth) {
+    int leafCount = Run(depth);
+    return leafCount;
+}
+
 int Perft::Run(int depth) {
     if (depth == 0)
         return 1;
