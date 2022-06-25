@@ -17,6 +17,9 @@
 #define BACKROWWHITE 0
 #define BACKROWBLACK 7
 
+#define CASTLINGKING 1
+#define CASTLINGQUEEN 0
+
 enum class Color : int {
     White,
     Black,
@@ -146,5 +149,17 @@ enum class MoveType : short {
 
 #define PromotionBit 3
 #define CaptureBit 0x4
+
+enum class Castling : int {
+    King,
+    Queen
+};
+
+enum class CastlingSquares : U64 {
+    KSideWhite = 0x60,
+    QSideWhite = 0xe,
+    KSideBlack = 0x6000000000000000,
+    QSideBlack = 0xe00000000000000
+};
 
 #endif

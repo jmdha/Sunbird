@@ -30,6 +30,25 @@ void BoardImporter::ImportFEN(BitBoard* board, std::string FEN) {
 		
 	FEN.erase(0, 2);
 
+	while(FEN[0] != ' ') {
+		switch (FEN[0])
+		{
+		case 'K':
+			board->EnableCastling(Color::White, Castling::King);
+			break;
+		case 'k':
+			board->EnableCastling(Color::Black, Castling::King);
+			break;
+		case 'Q':
+			board->EnableCastling(Color::White, Castling::Queen);
+			break;
+		case 'q':
+			board->EnableCastling(Color::Black, Castling::Queen);
+			break;
+		}
+		FEN.erase(0, 1);
+	}
+
 	// import king availibity
 
 	// import en-passant

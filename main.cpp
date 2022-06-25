@@ -7,19 +7,10 @@
 #include "classes/headers/perft.hh"
 
 int main(int, char**) {
-    int expectedLeafCount = 48;
-
-    std::string FEN = std::string("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ");
-    BitBoard board = BitBoard();
-    BoardImporter::ImportFEN(&board, FEN);    
-
-    int depth = 1;
-
-    Perft perft = Perft(&board);
-    int actualLeafCount = perft.RunFromPosition(depth);
-
-    if (expectedLeafCount == actualLeafCount)
-        exit(EXIT_SUCCESS);
-    else
-        throw std::logic_error("Incorrect leaf count | Expected " + std::to_string(expectedLeafCount) + " - Actual " + std::to_string(actualLeafCount));
+     BitBoard board = BitBoard();
+    BoardImporter::ImportFEN(&board, "8/8/8/2RRR3/2RKR3/2RRR3/8/8 w - ");
+    MoveGen moveGen = MoveGen(board.GetColor());
+    Move* moves = (Move*) calloc(256, sizeof(Move));
+    int moveCount = moveGen.GetKingMoves(moves, 0, board);
+    free(moves);
 }

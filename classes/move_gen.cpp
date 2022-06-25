@@ -8,6 +8,13 @@ MoveGen::MoveGen(Color color) {
     this->upLeft = (up == Direction::North) ? Direction::NorthWest : Direction::SouthWest;
     this->doubleRank = (up == Direction::North) ? Row::Row4 : Row::Row5;
     this->enPassantRank = (up == Direction::North) ? Row::Row5 : Row::Row4;
+    if (up == Direction::North) {
+        castling[(int) Castling::King] = CastlingSquares::KSideWhite;
+        castling[(int) Castling::Queen] = CastlingSquares::QSideWhite;
+    } else {
+        castling[(int) Castling::King] = CastlingSquares::KSideBlack;
+        castling[(int) Castling::Queen] = CastlingSquares::QSideBlack;
+    }
     GenerateKnightMoves();
     GenerateKingMoves();
 }
@@ -138,28 +145,35 @@ int MoveGen::GetKingMoves(Move* moves, int startIndex, BitBoard board) {
     U64 pieces = board.pieceBB[(int) PieceType::King] & board.colorBB[(int) color];
     int moveCount = 0;
 
-    while (pieces) {
-            int lsbPiece = Utilities::LSB_Pop(&pieces);
-            U64 to = kingMoves[lsbPiece];
-            // Attack moves
-            U64 attackMoves = to & board.colorBB[(int) oppColor];
-            to &= ~board.occupiedBB;
+    int lsbPiece = Utilities::LSB_Pop(&pieces);
+    U64 to = kingMoves[lsbPiece];
+    // Attack moves
+    U64 attackMoves = to & board.colorBB[(int) oppColor];
+    to &= ~board.occupiedBB;
 
-            while (attackMoves) {
-                int lsb = Utilities::LSB_Pop(&attackMoves);
-                moves[startIndex + moveCount] = Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::King, board.GetType((Square) lsb, oppColor));
-                moveCount++;
-            }
-
-            // Quiet moves
-            U64 quietMoves = to & (~board.occupiedBB);
-            while (quietMoves) {
-                int lsb = Utilities::LSB_Pop(&quietMoves);
-                moves[startIndex + moveCount] = Move(MoveType::Quiet, (Square) lsbPiece, (Square) lsb, color, Color::None, PieceType::King, PieceType::None);
-                moveCount++;
-            }
+    while (attackMoves) {
+        int lsb = Utilities::LSB_Pop(&attackMoves);
+        moves[startIndex + moveCount] = Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::King, board.GetType((Square) lsb, oppColor));
+        moveCount++;
     }
 
+    // Quiet moves
+    U64 quietMoves = to & (~board.occupiedBB);
+    while (quietMoves) {
+        int lsb = Utilities::LSB_Pop(&quietMoves);
+        moves[startIndex + moveCount] = Move(MoveType::Quiet, (Square) lsbPiece, (Square) lsb, color, Color::None, PieceType::King, PieceType::None);
+        moveCount++;
+    }
+
+    // Castling
+    if (board.castlingAllowed[(int)color][(int) Castling::King] && !(board.occupiedBB & (U64) castling[(int) Castling::King])) {
+        moves[startIndex + moveCount] = Move(MoveType::KingCastle, color);
+        moveCount++;
+    } else if (board.castlingAllowed[(int)color][(int) Castling::Queen] && !(board.occupiedBB & (U64) castling[(int) Castling::Queen])) {
+        moves[startIndex + moveCount] = Move(MoveType::QueenCastle, color);
+        moveCount++;
+    }
+        
     return moveCount;
 }
 

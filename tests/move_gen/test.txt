@@ -170,18 +170,18 @@ add_test(MoveGen_Knight_Move_B_Attack GenerateKnightMoves    32  "8/2R2R2/1R4R1/
 ## KingMoves
 add_executable(GenerateKingMoves tests/move_gen/king_move.cpp ${sources})
 
-add_test(MoveGen_King_Move_W_Corner1 GenerateKingMoves    3  "K7/8/8/8/8/8/8/8 w KQkq - 0 1")
-add_test(MoveGen_King_Move_W_Corner2 GenerateKingMoves    3  "7K/8/8/8/8/8/8/8 w KQkq - 0 1")
-add_test(MoveGen_King_Move_W_Corner3 GenerateKingMoves    3  "8/8/8/8/8/8/8/K7 w KQkq - 0 1")
-add_test(MoveGen_King_Move_W_Corner4 GenerateKingMoves    3  "8/8/8/8/8/8/8/7K w KQkq - 0 1")
+add_test(MoveGen_King_Move_W_Corner1 GenerateKingMoves    3  "K7/8/8/8/8/8/8/8 w - ")
+add_test(MoveGen_King_Move_W_Corner2 GenerateKingMoves    3  "7K/8/8/8/8/8/8/8 w - ")
+add_test(MoveGen_King_Move_W_Corner3 GenerateKingMoves    3  "8/8/8/8/8/8/8/K7 w - ")
+add_test(MoveGen_King_Move_W_Corner4 GenerateKingMoves    3  "8/8/8/8/8/8/8/7K w - ")
 
-add_test(MoveGen_King_Move_b_Corner1 GenerateKingMoves    3  "k7/8/8/8/8/8/8/8 b KQkq - 0 1")
-add_test(MoveGen_King_Move_b_Corner2 GenerateKingMoves    3  "7k/8/8/8/8/8/8/8 b KQkq - 0 1")
-add_test(MoveGen_King_Move_b_Corner3 GenerateKingMoves    3  "8/8/8/8/8/8/8/k7 b KQkq - 0 1")
-add_test(MoveGen_King_Move_b_Corner4 GenerateKingMoves    3  "8/8/8/8/8/8/8/7k b KQkq - 0 1")
+add_test(MoveGen_King_Move_b_Corner1 GenerateKingMoves    3  "k7/8/8/8/8/8/8/8 b - ")
+add_test(MoveGen_King_Move_b_Corner2 GenerateKingMoves    3  "7k/8/8/8/8/8/8/8 b - ")
+add_test(MoveGen_King_Move_b_Corner3 GenerateKingMoves    3  "8/8/8/8/8/8/8/k7 b - ")
+add_test(MoveGen_King_Move_b_Corner4 GenerateKingMoves    3  "8/8/8/8/8/8/8/7k b - ")
 
-add_test(MoveGen_King_Move_W_Blocked GenerateKingMoves    0  "8/8/8/2RRR3/2RKR3/2RRR3/8/8 w - - 0 1")
-add_test(MoveGen_King_Move_B_Blocked GenerateKingMoves    0  "8/8/8/2rrr3/2rkr3/2rrr3/8/8 b - - 0 1")
+add_test(MoveGen_King_Move_W_Blocked GenerateKingMoves    0  "8/8/8/2RRR3/2RKR3/2RRR3/8/8 w - ")
+add_test(MoveGen_King_Move_B_Blocked GenerateKingMoves    0  "8/8/8/2rrr3/2rkr3/2rrr3/8/8 b - ")
 
-add_test(MoveGen_King_Move_W_Attack GenerateKingMoves    6  "8/8/8/3R4/2rKr3/3R4/8/8 w - - 0 1")
-add_test(MoveGen_King_Move_B_Attack GenerateKingMoves    6  "8/8/8/3R4/2rkr3/3R4/8/8 b - - 0 1")
+add_test(MoveGen_King_Move_W_Attack GenerateKingMoves    6  "8/8/8/3R4/2rKr3/3R4/8/8 w - ")
+add_test(MoveGen_King_Move_B_Attack GenerateKingMoves    6  "8/8/8/3R4/2rkr3/3R4/8/8 b - ")

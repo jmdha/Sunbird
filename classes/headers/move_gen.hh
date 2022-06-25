@@ -28,6 +28,7 @@ private:
     Direction upLeft;
     Row doubleRank;
     Row enPassantRank;
+    CastlingSquares castling[2];
 
     U64 knightMoves[64] = {};
     U64 kingMoves[64] = {};

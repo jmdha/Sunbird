@@ -23,6 +23,11 @@ public:
     void UndoMove(Move move);
     U64 GetHash() { return occupiedBB; };
 
+    void EnableCastling(Color color, Castling side);
+    void DisableCastling(Color color, Castling side);
+    void IncrementCastling();
+    void DecrementCastling();
+
 private:
     Color color;
     U64 pieceBB[PIECECOUNT];
@@ -30,6 +35,8 @@ private:
     U64 occupiedBB;
     U64 enPassant;
     int popCount[COLORCOUNT][PIECECOUNT] = {};
+    bool castlingAllowed[2][2];
+    int movesSinceCastlingDisallowed[2][2];
 
     void PlacePiece(Square square, PieceType type, Color color);
     void RemovePiece(Square square, PieceType type, Color color);
