@@ -1,0 +1,5 @@
+# Tests
+## Run From Move
+add_executable(RunMove tests/perft/run_from_move.cpp ${sources})
+
+add_test(Perft_RunMove_a2a3 RunMove 181046 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "a2a3" 5)
