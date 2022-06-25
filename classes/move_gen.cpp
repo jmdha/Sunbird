@@ -169,7 +169,8 @@ int MoveGen::GetKingMoves(Move* moves, int startIndex, BitBoard board) {
     if (board.castlingAllowed[(int)color][(int) Castling::King] && !(board.occupiedBB & (U64) castling[(int) Castling::King])) {
         moves[startIndex + moveCount] = Move(MoveType::KingCastle, color);
         moveCount++;
-    } else if (board.castlingAllowed[(int)color][(int) Castling::Queen] && !(board.occupiedBB & (U64) castling[(int) Castling::Queen])) {
+    } 
+    if (board.castlingAllowed[(int)color][(int) Castling::Queen] && !(board.occupiedBB & (U64) castling[(int) Castling::Queen])) {
         moves[startIndex + moveCount] = Move(MoveType::QueenCastle, color);
         moveCount++;
     }

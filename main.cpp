@@ -7,10 +7,9 @@
 #include "classes/headers/perft.hh"
 
 int main(int, char**) {
-     BitBoard board = BitBoard();
-    BoardImporter::ImportFEN(&board, "8/8/8/2RRR3/2RKR3/2RRR3/8/8 w - ");
-    MoveGen moveGen = MoveGen(board.GetColor());
-    Move* moves = (Move*) calloc(256, sizeof(Move));
-    int moveCount = moveGen.GetKingMoves(moves, 0, board);
-    free(moves);
+    BitBoard board = BitBoard();
+    board.Initialize();
+    
+    MiniMax mini = MiniMax(&board);
+    Move move = mini.GetBestMove(6);
 }
