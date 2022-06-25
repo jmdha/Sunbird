@@ -12,6 +12,7 @@ void BitBoard::ClearBoard() {
     for (int i = 0; i < COLORCOUNT; i++)
         for (int i2 = 0; i2 < PIECECOUNT; i2++)
             popCount[i][i2] = 0;
+    enPassant = 0;
     occupiedBB = 0;
 }
 
@@ -67,9 +68,20 @@ void BitBoard::DoMove(Move move) {
     PlacePiece(move.toSquare, move.fromType, move.fromColor);
     RemovePiece(move.fromSquare, move.fromType, move.fromColor);
     
-    if (move.toColor != Color::None) {
-        RemovePiece(move.toSquare, move.toType, move.toColor);
+    if ((short) move.type & CaptureBit) {
+        if (move.type == MoveType::EPCapture) {
+            Square captureSquare = (Square) ((move.fromColor == Color::White) ? (int) move.toSquare - 8 : (int) move.toSquare + 8);
+            RemovePiece(captureSquare, move.toType, move.toColor);
+        }
+        else 
+            RemovePiece(move.toSquare, move.toType, move.toColor);   
     }
+        
+
+    if (move.type == MoveType::DoublePawnPush)
+        enPassant |= (U64) Utilities::GetColumn(move.fromSquare);
+    else
+        enPassant ^= (U64) Utilities::GetColumn(move.fromSquare);
 
     color = Utilities::GetOppositeColor(color);
 }
@@ -77,8 +89,14 @@ void BitBoard::DoMove(Move move) {
 void BitBoard::UndoMove(Move move) {
     RemovePiece(move.toSquare, move.fromType, move.fromColor);
     PlacePiece(move.fromSquare, move.fromType, move.fromColor);
-    if (move.toColor != Color::None) {
-        PlacePiece(move.toSquare, move.toType, move.toColor);
+
+    if ((short) move.type & CaptureBit) {
+        if (move.type == MoveType::EPCapture) {
+            Square captureSquare = (Square) ((move.fromColor == Color::White) ? (int) move.toSquare - 8 : (int) move.toSquare + 8);
+            PlacePiece(captureSquare, move.toType, move.toColor);
+        }
+        else 
+            PlacePiece(move.toSquare, move.toType, move.toColor);
     }
 
     color = Utilities::GetOppositeColor(color);

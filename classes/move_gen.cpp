@@ -7,6 +7,7 @@ MoveGen::MoveGen(Color color) {
     this->upRight = (up == Direction::North) ? Direction::NorthEast : Direction::SouthEast;
     this->upLeft = (up == Direction::North) ? Direction::NorthWest : Direction::SouthWest;
     this->doubleRank = (up == Direction::North) ? Row::Row4 : Row::Row5;
+    this->enPassantRank = (up == Direction::North) ? Row::Row5 : Row::Row4;
     GenerateKnightMoves();
     GenerateKingMoves();
 }
@@ -27,15 +28,18 @@ int MoveGen::GetPawnMoves(Move* moves, int startIndex, BitBoard board) {
     U64 to = board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color];
     int moveCount = 0;
     for (int i = 1; i <= 2; i++) {
+        MoveType type = MoveType::Quiet;
         to = BitShifts::Shift(to, up, 1) & ~board.occupiedBB;
 
         U64 toDup = to;
-        if (i == 2)
+        if (i == 2) {
             toDup = toDup & (U64)doubleRank;
+            type = MoveType::DoublePawnPush;
+        }
 
         while (toDup) {
             U64 lsb = Utilities::LSB_Pop(&toDup);
-            moves[startIndex + moveCount] = Move((Square) (lsb - (int) up * i), (Square) lsb, color, Color::None, PieceType::Pawn, PieceType::None);
+            moves[startIndex + moveCount] = Move(type, (Square) (lsb - (int) up * i), (Square) lsb, color, Color::None, PieceType::Pawn, PieceType::None);
             moveCount++;
         }
     }
@@ -47,7 +51,20 @@ int MoveGen::GetPawnMoves(Move* moves, int startIndex, BitBoard board) {
             U64 lsb = Utilities::LSB_Pop(&to);
             U64 from = lsb - (int) captureDirections[i];
             if (std::abs((int) lsb % 8 - (int) from % 8) <= 1) {
-                moves[startIndex + moveCount] = Move((Square) (lsb - (int) captureDirections[i]), (Square) lsb, color, oppColor, PieceType::Pawn, board.GetType((Square) lsb, oppColor));
+                moves[startIndex + moveCount] = Move(MoveType::Capture, (Square) (lsb - (int) captureDirections[i]), (Square) lsb, color, oppColor, PieceType::Pawn, board.GetType((Square) lsb, oppColor));
+                moveCount++;
+            }
+        }
+    }
+
+    // Generate en passant
+    for (int i = 0; i < 2; i++) {
+        to = BitShifts::Shift(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color] & (U64) enPassantRank, captureDirections[i], 1) & board.enPassant;
+        while (to) {
+            U64 lsb = Utilities::LSB_Pop(&to);
+            U64 from = lsb - (int) captureDirections[i];
+            if (std::abs((int) lsb % 8 - (int) from % 8) <= 1) {
+                moves[startIndex + moveCount] = Move(MoveType::EPCapture, (Square) (lsb - (int) captureDirections[i]), (Square) lsb, color, oppColor, PieceType::Pawn, PieceType::Pawn);
                 moveCount++;
             }
         }
@@ -100,7 +117,7 @@ int MoveGen::GetKnightMoves(Move* moves, int startIndex, BitBoard board) {
 
             while (attackMoves) {
                 int lsb = Utilities::LSB_Pop(&attackMoves);
-                moves[startIndex + moveCount] = Move((Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::Knight, board.GetType((Square) lsb, oppColor));
+                moves[startIndex + moveCount] = Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::Knight, board.GetType((Square) lsb, oppColor));
                 moveCount++;
             }
 
@@ -108,7 +125,7 @@ int MoveGen::GetKnightMoves(Move* moves, int startIndex, BitBoard board) {
             U64 quietMoves = to & (~board.occupiedBB);
             while (quietMoves) {
                 int lsb = Utilities::LSB_Pop(&quietMoves);
-                moves[startIndex + moveCount] = Move((Square) lsbPiece, (Square) lsb, color, Color::None, PieceType::Knight, PieceType::None);
+                moves[startIndex + moveCount] = Move(MoveType::Quiet, (Square) lsbPiece, (Square) lsb, color, Color::None, PieceType::Knight, PieceType::None);
                 moveCount++;
             }
     }
@@ -129,7 +146,7 @@ int MoveGen::GetKingMoves(Move* moves, int startIndex, BitBoard board) {
 
             while (attackMoves) {
                 int lsb = Utilities::LSB_Pop(&attackMoves);
-                moves[startIndex + moveCount] = Move((Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::King, board.GetType((Square) lsb, oppColor));
+                moves[startIndex + moveCount] = Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::King, board.GetType((Square) lsb, oppColor));
                 moveCount++;
             }
 
@@ -137,7 +154,7 @@ int MoveGen::GetKingMoves(Move* moves, int startIndex, BitBoard board) {
             U64 quietMoves = to & (~board.occupiedBB);
             while (quietMoves) {
                 int lsb = Utilities::LSB_Pop(&quietMoves);
-                moves[startIndex + moveCount] = Move((Square) lsbPiece, (Square) lsb, color, Color::None, PieceType::King, PieceType::None);
+                moves[startIndex + moveCount] = Move(MoveType::Quiet, (Square) lsbPiece, (Square) lsb, color, Color::None, PieceType::King, PieceType::None);
                 moveCount++;
             }
     }
@@ -157,7 +174,7 @@ int MoveGen::GetMoves(Move* moves, int startIndex, BitBoard board, U64 pieces, D
 
         while (attackMoves) {
             int lsb = Utilities::LSB_Pop(&attackMoves);
-            moves[startIndex + moveCount] = Move((Square) (lsb - (int) direction * counter), (Square) lsb, color, oppColor, type, board.GetType((Square) lsb, oppColor));
+            moves[startIndex + moveCount] = Move(MoveType::Capture, (Square) (lsb - (int) direction * counter), (Square) lsb, color, oppColor, type, board.GetType((Square) lsb, oppColor));
             moveCount++;
         }
 
@@ -165,7 +182,7 @@ int MoveGen::GetMoves(Move* moves, int startIndex, BitBoard board, U64 pieces, D
 
         while (quietMoves) {
             int lsb = Utilities::LSB_Pop(&quietMoves);
-            moves[startIndex + moveCount] = Move((Square) (lsb - (int) direction * counter), (Square) lsb, color, Color::None, type, PieceType::None);
+            moves[startIndex + moveCount] = Move(MoveType::Quiet, (Square) (lsb - (int) direction * counter), (Square) lsb, color, Color::None, type, PieceType::None);
             moveCount++;
         }
 

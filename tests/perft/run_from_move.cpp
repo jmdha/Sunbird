@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     Square fromSquare = Utilities::GetSquare(sMove[0], sMove[1]);
     Square toSquare = Utilities::GetSquare(sMove[2], sMove[3]);
 
-    Move move = Move(fromSquare, toSquare, board.GetSquareColor(fromSquare), board.GetSquareColor(toSquare), board.GetPiece(fromSquare), board.GetPiece(toSquare));
+    Move move = Move(MoveType::Quiet, fromSquare, toSquare, board.GetSquareColor(fromSquare), board.GetSquareColor(toSquare), board.GetPiece(fromSquare), board.GetPiece(toSquare));
 
     Perft perft = Perft(&board);
     int actualLeafCount = perft.RunFromMove(move, depth);

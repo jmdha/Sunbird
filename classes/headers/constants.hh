@@ -82,6 +82,18 @@ enum class Row : U64 {
     Row8 = 0xff00000000000000
 };
 
+enum class Column : U64 {
+    A = 0x101010101010101,
+    B = 0x202020202020202,
+    C = 0x404040404040404,
+    D = 0x808080808080808,
+    E = 0x1010101010101010,
+    F = 0x2020202020202020,
+    G = 0x4040404040404040,
+    H = 0x8080808080808080,
+    None = 0x0
+};
+
 enum class Direction : int {
     North = 8,
     East = 1,
@@ -114,5 +126,25 @@ enum class NotEdgeKnight : U64 {
     South = 0xffffffffffff0000,
     West = 0xfcfcfcfcfcfcfcfc
 };
+
+enum class MoveType : short {
+    Quiet = 0,
+    DoublePawnPush = 1,
+    KingCastle = 2,
+    QueenCastle = 3,
+    Capture = 4,
+    EPCapture = 5,
+    NPromotion = 8,
+    BPromotion = 9,
+    RPromotion = 10,
+    QPromotion = 11,
+    NPromotionCapture = 12,
+    BPromotionCapture = 13,
+    RPromotionCapture = 14,
+    QPromotionCapture = 15
+};
+
+#define PromotionBit 3
+#define CaptureBit 0x4
 
 #endif

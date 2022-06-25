@@ -139,3 +139,34 @@ U64 Utilities::NotEdge(Direction dir) {
     }
     return 0;
 }
+
+Column Utilities::GetColumn(int columnIndex) {
+    switch (columnIndex)
+    {
+    case 0:
+        return Column::A;
+    case 1:
+        return Column::B;
+    case 2:
+        return Column::C;
+    case 3:
+        return Column::D;
+    case 4:
+        return Column::E;
+    case 5:
+        return Column::F;
+    case 6:
+        return Column::G;
+    case 7:
+        return Column::H;
+    }
+    return Column::None;
+}
+
+Column Utilities::GetColumn(Square square) {
+    return GetColumn(GetColumnIndex(square));
+}
+
+int Utilities::GetColumnIndex(Square square) {
+    return (int) square % 8;
+}

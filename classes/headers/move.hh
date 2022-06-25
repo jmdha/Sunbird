@@ -5,6 +5,7 @@
 
 class Move {
 public:
+    MoveType type;
     Square fromSquare;
     Square toSquare;
     Color fromColor;
@@ -12,7 +13,8 @@ public:
     PieceType fromType;
     PieceType toType;
     Move(){}
-    Move(Square fromSquare, Square toSquare, Color fromColor, Color toColor, PieceType fromType, PieceType toType) {
+    Move(MoveType type, Square fromSquare, Square toSquare, Color fromColor, Color toColor, PieceType fromType, PieceType toType) {
+        this->type = type;
         this->fromSquare = fromSquare;
         this->toSquare = toSquare;
         this->fromColor = fromColor;

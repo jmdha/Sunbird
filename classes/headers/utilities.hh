@@ -29,6 +29,10 @@ public:
 
     static U64 NotEdge(Direction dir);
 
+    static Column GetColumn(int columnIndex);
+    static Column GetColumn(Square square);
+    static int GetColumnIndex(Square square);
+
 private:
 };
 

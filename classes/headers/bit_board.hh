@@ -28,6 +28,7 @@ private:
     U64 pieceBB[PIECECOUNT];
     U64 colorBB[COLORCOUNT];
     U64 occupiedBB;
+    U64 enPassant;
     int popCount[COLORCOUNT][PIECECOUNT] = {};
 
     void PlacePiece(Square square, PieceType type, Color color);
