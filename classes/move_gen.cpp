@@ -9,31 +9,39 @@ MoveGen::MoveGen(Color color) {
     this->doubleRank = (up == Direction::North) ? Row::Row4 : Row::Row5;
     this->enPassantRank = (up == Direction::North) ? Row::Row5 : Row::Row4;
     if (up == Direction::North) {
-        castling[(int) Castling::King] = CastlingSquares::KSideWhite;
-        castling[(int) Castling::Queen] = CastlingSquares::QSideWhite;
+        castlingBlock[(int) Castling::King] = CastlingBlockSquares::KSideWhite;
+        castlingBlock[(int) Castling::Queen] = CastlingBlockSquares::QSideWhite;
+        castlingAttack[(int) Castling::King] = CastlingAttackSquares::KSideWhite;
+        castlingAttack[(int) Castling::Queen] = CastlingAttackSquares::QSideWhite;
     } else {
-        castling[(int) Castling::King] = CastlingSquares::KSideBlack;
-        castling[(int) Castling::Queen] = CastlingSquares::QSideBlack;
+        castlingBlock[(int) Castling::King] = CastlingBlockSquares::KSideBlack;
+        castlingBlock[(int) Castling::Queen] = CastlingBlockSquares::QSideBlack;
+        castlingAttack[(int) Castling::King] = CastlingAttackSquares::KSideBlack;
+        castlingAttack[(int) Castling::Queen] = CastlingAttackSquares::QSideBlack;
     }
     GenerateKnightMoves();
     GenerateKingMoves();
 }
 
-int MoveGen::GetAllMoves(Move* moves, BitBoard board) {
+int MoveGen::GetAllMoves(Move* moves, BitBoard board, U64* attackedSquares) {
+    U64 priorSquares = *attackedSquares;
+    *attackedSquares = 0;
     int moveCount = 0;
-    moveCount += GetPawnMoves(moves, moveCount, board);
-    moveCount += GetRookMoves(moves, moveCount, board);
-    moveCount += GetBishopMoves(moves, moveCount, board);
-    moveCount += GetQueenMoves(moves, moveCount, board);
-    moveCount += GetKnightMoves(moves, moveCount, board);
-    moveCount += GetKingMoves(moves, moveCount, board);
+    moveCount += GetPawnMoves(moves, moveCount, board, attackedSquares);
+    moveCount += GetRookMoves(moves, moveCount, board, attackedSquares);
+    moveCount += GetBishopMoves(moves, moveCount, board, attackedSquares);
+    moveCount += GetQueenMoves(moves, moveCount, board, attackedSquares);
+    moveCount += GetKnightMoves(moves, moveCount, board, attackedSquares);
+    moveCount += GetKingMoves(moves, moveCount, board, attackedSquares, priorSquares);
     return moveCount;
 }
 
-int MoveGen::GetPawnMoves(Move* moves, int startIndex, BitBoard board) {
+int MoveGen::GetPawnMoves(Move* moves, int startIndex, BitBoard board, U64* attackedSquares) {
     Direction captureDirections[2] = { upRight, upLeft };
     // Generate single and double step moves
     U64 to = board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color];
+    if (to == 0)
+        return 0;
     int moveCount = 0;
     for (int i = 1; i <= 2; i++) {
         MoveType type = MoveType::Quiet;
@@ -54,9 +62,11 @@ int MoveGen::GetPawnMoves(Move* moves, int startIndex, BitBoard board) {
 
     // Generate captures
     for (int i = 0; i < 2; i++) {
-        to = BitShifts::Shift(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color], captureDirections[i], 1) & board.colorBB[(int)oppColor];
-        while (to) {
-            U64 lsb = Utilities::LSB_Pop(&to);
+        U64 possibleAttacks = BitShifts::Shift(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color], captureDirections[i], 1);
+        (*attackedSquares) |= possibleAttacks; 
+        U64 validAttacks = possibleAttacks & board.colorBB[(int)oppColor];
+        while (validAttacks) {
+            U64 lsb = Utilities::LSB_Pop(&validAttacks);
             U64 from = lsb - (int) captureDirections[i];
             if (std::abs((int) lsb % 8 - (int) from % 8) <= 1) {
                 moves[startIndex + moveCount] = Move(MoveType::Capture, (Square) (lsb - (int) captureDirections[i]), (Square) lsb, color, oppColor, PieceType::Pawn, board.GetType((Square) lsb, oppColor));
@@ -81,44 +91,53 @@ int MoveGen::GetPawnMoves(Move* moves, int startIndex, BitBoard board) {
     return moveCount;
 }
 
-int MoveGen::GetRookMoves(Move* moves, int startIndex, BitBoard board) {
+int MoveGen::GetRookMoves(Move* moves, int startIndex, BitBoard board, U64* attackedSquares) {
     Direction directions[4] = { Direction::North, Direction::East, Direction::South, Direction::West };
     int moveCount = 0;
 
     U64 pieces = board.pieceBB[(int) PieceType::Rook] & board.colorBB[(int) color];
+    if (pieces == 0)
+        return 0;
     for (int i = 0; i < 4; i++)
-        moveCount += GetMoves(moves, startIndex, board, pieces, directions[i], PieceType::Rook);
+        moveCount += GetMoves(moves, startIndex, board, pieces, directions[i], PieceType::Rook, attackedSquares);
     return moveCount;
 }
 
-int MoveGen::GetBishopMoves(Move* moves, int startIndex, BitBoard board) {
+int MoveGen::GetBishopMoves(Move* moves, int startIndex, BitBoard board, U64* attackedSquares) {
     Direction directions[4] = { Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
     int moveCount = 0;
 
     U64 pieces = board.pieceBB[(int) PieceType::Bishop] & board.colorBB[(int) color];
+    if (pieces == 0)
+        return 0;
     for (int i = 0; i < 4; i++)
-        moveCount += GetMoves(moves, startIndex, board, pieces, directions[i], PieceType::Bishop);
+        moveCount += GetMoves(moves, startIndex, board, pieces, directions[i], PieceType::Bishop, attackedSquares);
     return moveCount;
 }
 
-int MoveGen::GetQueenMoves(Move* moves, int startIndex, BitBoard board) {
+int MoveGen::GetQueenMoves(Move* moves, int startIndex, BitBoard board, U64* attackedSquares) {
     Direction directions[8] = { Direction::North, Direction::East, Direction::South, Direction::West, 
                                 Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
     int moveCount = 0;
 
     U64 pieces = board.pieceBB[(int) PieceType::Queen] & board.colorBB[(int) color];
+    if (pieces == 0)
+        return 0;
     for (int i = 0; i < 8; i++)
-        moveCount += GetMoves(moves, startIndex, board, pieces, directions[i], PieceType::Queen);
+        moveCount += GetMoves(moves, startIndex, board, pieces, directions[i], PieceType::Queen, attackedSquares);
     return moveCount;
 }
 
-int MoveGen::GetKnightMoves(Move* moves, int startIndex, BitBoard board) {
+int MoveGen::GetKnightMoves(Move* moves, int startIndex, BitBoard board, U64* attackedSquares) {
     U64 pieces = board.pieceBB[(int) PieceType::Knight] & board.colorBB[(int) color];
+    if (pieces == 0)
+        return 0;
     int moveCount = 0;
 
     while (pieces) {
             int lsbPiece = Utilities::LSB_Pop(&pieces);
             U64 to = knightMoves[lsbPiece];
+            (*attackedSquares) |= to;
             // Attack moves
             U64 attackMoves = to & board.colorBB[(int) oppColor];
             to &= ~board.occupiedBB;
@@ -141,15 +160,20 @@ int MoveGen::GetKnightMoves(Move* moves, int startIndex, BitBoard board) {
     return moveCount;
 }
 
-int MoveGen::GetKingMoves(Move* moves, int startIndex, BitBoard board) {
+int MoveGen::GetKingMoves(Move* moves, int startIndex, BitBoard board, U64* attackedSquares, U64 priorAttacks) {
     U64 pieces = board.pieceBB[(int) PieceType::King] & board.colorBB[(int) color];
+    if (pieces == 0)
+        return 0;
     int moveCount = 0;
 
     int lsbPiece = Utilities::LSB_Pop(&pieces);
     U64 to = kingMoves[lsbPiece];
+    (*attackedSquares) |= to;
     // Attack moves
     U64 attackMoves = to & board.colorBB[(int) oppColor];
     to &= ~board.occupiedBB;
+    to &= ~priorAttacks;
+    attackMoves &= ~priorAttacks;
 
     while (attackMoves) {
         int lsb = Utilities::LSB_Pop(&attackMoves);
@@ -166,11 +190,11 @@ int MoveGen::GetKingMoves(Move* moves, int startIndex, BitBoard board) {
     }
 
     // Castling
-    if (board.castlingAllowed[(int)color][(int) Castling::King] && !(board.occupiedBB & (U64) castling[(int) Castling::King])) {
+    if (board.castlingAllowed[(int)color][(int) Castling::King] && !(board.occupiedBB & (U64) castlingBlock[(int) Castling::King]) && !(priorAttacks & (U64) castlingAttack[(int) Castling::King])) {
         moves[startIndex + moveCount] = Move(MoveType::KingCastle, color);
         moveCount++;
     } 
-    if (board.castlingAllowed[(int)color][(int) Castling::Queen] && !(board.occupiedBB & (U64) castling[(int) Castling::Queen])) {
+    if (board.castlingAllowed[(int)color][(int) Castling::Queen] && !(board.occupiedBB & (U64) castlingBlock[(int) Castling::Queen]) && !(priorAttacks & (U64) castlingAttack[(int) Castling::Queen])) {
         moves[startIndex + moveCount] = Move(MoveType::QueenCastle, color);
         moveCount++;
     }
@@ -178,13 +202,13 @@ int MoveGen::GetKingMoves(Move* moves, int startIndex, BitBoard board) {
     return moveCount;
 }
 
-int MoveGen::GetMoves(Move* moves, int startIndex, BitBoard board, U64 pieces, Direction direction, PieceType type) {
+int MoveGen::GetMoves(Move* moves, int startIndex, BitBoard board, U64 pieces, Direction direction, PieceType type, U64* attackedSquares) {
     U64 to = pieces;
     int moveCount = 0;
     int counter = 1;
     while (to) {
         to = BitShifts::Shift(to & Utilities::NotEdge(direction), direction, 1) & ~board.colorBB[(int) color];
-        
+        (*attackedSquares) |= to;
         U64 attackMoves = to & board.occupiedBB;
         to &= ~board.occupiedBB;
 

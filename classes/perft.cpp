@@ -6,28 +6,22 @@ Perft::Perft(BitBoard* board) {
     moveGens[(int) Color::Black] = new MoveGen(Color::Black);
 }
 
-int Perft::RunFromMove(Move move, int depth) {
-    board->DoMove(move);
-    int leafCount = Run(depth - 1);
-    board->UndoMove(move);
-    return leafCount;
-}
-
 int Perft::RunFromPosition(int depth) {
-    int leafCount = Run(depth);
+    int leafCount = Run(depth, 0);
     return leafCount;
 }
 
-int Perft::Run(int depth) {
+int Perft::Run(int depth, U64 attackedSquares) {
     if (depth == 0)
         return 1;
     Move* moves = (Move*) calloc(256, sizeof(Move));
-    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board);
+    U64 attackSquares = attackedSquares;
+    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attackSquares);
     int leafCount = 0;
 
     for (int i = 0; i < moveCount; i++) {
         board->DoMove(moves[i]);
-        leafCount += Run(depth - 1);
+        leafCount += Run(depth - 1, attackSquares);
         board->UndoMove(moves[i]);
     }
 

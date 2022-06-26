@@ -13,7 +13,8 @@ int main(int argc, char* argv[]) {
     MoveGen moveGen = MoveGen(board.GetColor());
 
     Move* moves = (Move*) calloc(256, sizeof(Move));
-    int moveCount = moveGen.GetPawnMoves(moves, 0, board);
+    U64 attackMoves = 0;
+    int moveCount = moveGen.GetPawnMoves(moves, 0, board, &attackMoves);
     free(moves);
 
     if (moveCount == std::atoi(argv[1]))

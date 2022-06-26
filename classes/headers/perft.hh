@@ -18,7 +18,7 @@ private:
     BitBoard* board;
     MoveGen* moveGens[2];
 
-    int Run(int depth);
+    int Run(int depth, U64 attackedSquares);
 
 };
 #endif

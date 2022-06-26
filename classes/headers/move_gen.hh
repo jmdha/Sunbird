@@ -12,13 +12,13 @@
 class MoveGen {
 public:
     MoveGen(Color color);
-    int GetAllMoves(Move* moves, BitBoard board);
-    int GetPawnMoves(Move* moves, int startIndex, BitBoard board);
-    int GetRookMoves(Move* moves, int startIndex, BitBoard board);
-    int GetBishopMoves(Move* moves, int startIndex, BitBoard board);
-    int GetQueenMoves(Move* moves, int startIndex, BitBoard board);
-    int GetKnightMoves(Move* moves, int startIndex, BitBoard board);
-    int GetKingMoves(Move* moves, int startIndex, BitBoard board);
+    int GetAllMoves(Move* moves, BitBoard board, U64* attackedSquares);
+    int GetPawnMoves(Move* moves, int startIndex, BitBoard board, U64* attackedSquares);
+    int GetRookMoves(Move* moves, int startIndex, BitBoard board, U64* attackedSquares);
+    int GetBishopMoves(Move* moves, int startIndex, BitBoard board, U64* attackedSquares);
+    int GetQueenMoves(Move* moves, int startIndex, BitBoard board, U64* attackedSquares);
+    int GetKnightMoves(Move* moves, int startIndex, BitBoard board, U64* attackedSquares);
+    int GetKingMoves(Move* moves, int startIndex, BitBoard board, U64* attackedSquares, U64 priorAttacks);
 
 private:
     Color color;
@@ -28,12 +28,13 @@ private:
     Direction upLeft;
     Row doubleRank;
     Row enPassantRank;
-    CastlingSquares castling[2];
+    CastlingBlockSquares castlingBlock[2];
+    CastlingAttackSquares castlingAttack[2];
 
     U64 knightMoves[64] = {};
     U64 kingMoves[64] = {};
 
-    int GetMoves(Move* moves, int startIndex, BitBoard board, U64 pieces, Direction direction, PieceType type);
+    int GetMoves(Move* moves, int startIndex, BitBoard board, U64 pieces, Direction direction, PieceType type, U64* attackedSquares);
     void GenerateKnightMoves();
     void GenerateKingMoves();
 };

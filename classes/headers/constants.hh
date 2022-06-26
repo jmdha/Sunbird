@@ -155,11 +155,18 @@ enum class Castling : int {
     Queen
 };
 
-enum class CastlingSquares : U64 {
+enum class CastlingBlockSquares : U64 {
     KSideWhite = 0x60,
     QSideWhite = 0xe,
     KSideBlack = 0x6000000000000000,
     QSideBlack = 0xe00000000000000
+};
+
+enum class CastlingAttackSquares : U64 {
+    KSideWhite = 0x60,
+    QSideWhite = 0xc,
+    KSideBlack = 0x6000000000000000,
+    QSideBlack = 0xc00000000000000
 };
 
 #endif

@@ -183,8 +183,8 @@ add_test(MoveGen_King_Move_b_Corner4 GenerateKingMoves    3  "8/8/8/8/8/8/8/7k b
 add_test(MoveGen_King_Move_W_Blocked GenerateKingMoves    0  "8/8/8/2RRR3/2RKR3/2RRR3/8/8 w - ")
 add_test(MoveGen_King_Move_B_Blocked GenerateKingMoves    0  "8/8/8/2rrr3/2rkr3/2rrr3/8/8 b - ")
 
-add_test(MoveGen_King_Move_W_Attack GenerateKingMoves    6  "8/8/8/3R4/2rKr3/3R4/8/8 w - ")
-add_test(MoveGen_King_Move_B_Attack GenerateKingMoves    6  "8/8/8/3R4/2rkr3/3R4/8/8 b - ")
+add_test(MoveGen_King_Move_W_Attack GenerateKingMoves    4  "8/8/8/3R4/3Kr3/3R4/8/8 w - ")
+add_test(MoveGen_King_Move_B_Attack GenerateKingMoves    4  "8/8/8/8/2rkr3/3R4/8/8 b - ")
 
 add_test(MoveGen_King_W_Castle GenerateKingMoves        7  "8/8/8/8/8/8/8/R3K2R w KQ - 0 1")
 add_test(MoveGen_King_W_Castle_King GenerateKingMoves   6  "8/8/8/8/8/8/8/R3K2R w K - 0 1")
@@ -205,3 +205,18 @@ add_test(MoveGen_King_B_CastleBlocked GenerateKingMoves         3  "r2qkq1r/8/8/
 add_test(MoveGen_King_B_CastleBlocked_King GenerateKingMoves    5  "rq2k1qr/8/8/8/8/8/8/8 b k - 0 1")
 add_test(MoveGen_King_B_CastleBlocked_Queen GenerateKingMoves   5  "rq2k1qr/8/8/8/8/8/8/8 b q - 0 1")
 add_test(MoveGen_King_B_CastleBlocked_None GenerateKingMoves    5  "rq2k1qr/8/8/8/8/8/8/8 b - 0 1")
+
+add_test(MoveGen_King_W_AttackedSquares GenerateKingMoves    1  "3r1r2/8/8/8/8/8/8/4K3 w - - 0 1")
+add_test(MoveGen_King_B_AttackedSquares GenerateKingMoves    1  "3R1R2/8/8/8/8/8/8/4k3 b - - 0 1")
+
+add_test(MoveGen_King_W_AttackedSquares_Castle1 GenerateKingMoves    6  "6r1/8/8/8/8/8/8/R3K2R w KQ - 0 1")
+add_test(MoveGen_King_W_AttackedSquares_Castle2 GenerateKingMoves    4  "5r2/8/8/8/8/8/8/R3K2R w KQ - 0 1")
+add_test(MoveGen_King_W_AttackedSquares_Castle3 GenerateKingMoves    4  "3r4/8/8/8/8/8/8/R3K2R w KQ - 0 1")
+add_test(MoveGen_King_W_AttackedSquares_Castle4 GenerateKingMoves    6  "2r5/8/8/8/8/8/8/R3K2R w KQ - 0 1")
+add_test(MoveGen_King_W_AttackedSquares_Castle5 GenerateKingMoves    7  "1r6/8/8/8/8/8/8/R3K2R w KQ - 0 1")
+
+add_test(MoveGen_King_B_AttackedSquares_Castle1 GenerateKingMoves    6  "r3k2r/8/8/8/8/8/8/6R1 b kq - 0 1")
+add_test(MoveGen_King_B_AttackedSquares_Castle2 GenerateKingMoves    4  "r3k2r/8/8/8/8/8/8/5R2 b kq - 0 1")
+add_test(MoveGen_King_B_AttackedSquares_Castle3 GenerateKingMoves    4  "r3k2r/8/8/8/8/8/8/3R4 b kq - 0 1")
+add_test(MoveGen_King_B_AttackedSquares_Castle4 GenerateKingMoves    6  "r3k2r/8/8/8/8/8/8/2R5 b kq - 0 1")
+add_test(MoveGen_King_B_AttackedSquares_Castle5 GenerateKingMoves    7  "r3k2r/8/8/8/8/8/8/1R6 b kq - 0 1")

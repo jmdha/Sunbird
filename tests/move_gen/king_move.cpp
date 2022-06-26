@@ -11,9 +11,18 @@ int main(int argc, char* argv[]) {
     BitBoard board = BitBoard();
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     MoveGen moveGen = MoveGen(board.GetColor());
+    MoveGen oppMoveGen = MoveGen(Utilities::GetOppositeColor(board.GetColor()));
+    board.SetColor(Utilities::GetOppositeColor(board.GetColor()));
     Move* moves = (Move*) calloc(256, sizeof(Move));
-    int moveCount = moveGen.GetKingMoves(moves, 0, board);
+    Move* fakeMoves = (Move*) calloc(256, sizeof(Move));
+    U64 priorAttacks = 0;
+    // Generate attackboard
+    oppMoveGen.GetAllMoves(fakeMoves, board, &priorAttacks);
+    board.SetColor(Utilities::GetOppositeColor(board.GetColor()));
+    U64 attackSquares = 0;
+    int moveCount = moveGen.GetKingMoves(moves, 0, board, &attackSquares, priorAttacks);
     free(moves);
+    free(fakeMoves);
 
     if (moveCount == std::atoi(argv[1]))
         exit(EXIT_SUCCESS);

@@ -12,19 +12,20 @@ Move MiniMax::GetBestMove(int depth) {
     Move move;
     int alpha = -(int) PieceValue::Inf;
     int beta = (int) PieceValue::Inf;
-    NegaMax(true, &move, depth, alpha, beta);
+    NegaMax(true, &move, depth, alpha, beta, 0);
     return move;
 }
 
 std::random_device rd;
 std::mt19937 g(rd());
 
-int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int beta) {
+int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int beta, U64 attackedSquares) {
     if (depth == 0)
         return evaluators[(int) board->GetColor()]->EvaluatePieceCount(*board);
     // 218 I believe to be the max number of moves - as such its rounded up to 256
     Move* moves = (Move*) calloc(256, sizeof(Move));
-    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board);
+    U64 attackSquares = attackedSquares;
+    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attackSquares);
     //if (original)
         //std::shuffle(moves.begin(), moves.end(), g);
 
@@ -32,7 +33,7 @@ int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int be
 
     for (int i = 0; i < moveCount; i++) {
         board->DoMove(moves[i]);
-        int tempScore = -NegaMax(false, bestMove, depth - 1, -beta, -alpha);
+        int tempScore = -NegaMax(false, bestMove, depth - 1, -beta, -alpha, attackSquares);
         board->UndoMove(moves[i]);
 
         if (tempScore > score) {

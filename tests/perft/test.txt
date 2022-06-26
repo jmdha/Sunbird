@@ -1,28 +1,4 @@
 # Tests
-## Run From Move
-add_executable(RunMove tests/perft/run_from_move.cpp ${sources})
-
-add_test(Perft_RunMove_a2a3 RunMove 181046 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "a2a3" 5)
-add_test(Perft_RunMove_b2b3 RunMove 215255 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "b2b3" 5)
-add_test(Perft_RunMove_c2c3 RunMove 222861 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "c2c3" 5)
-add_test(Perft_RunMove_d2d3 RunMove 328511 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "d2d3" 5)
-add_test(Perft_RunMove_e2e3 RunMove 402988 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "e2e3" 5)
-add_test(Perft_RunMove_f2f3 RunMove 178889 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "f2f3" 5)
-add_test(Perft_RunMove_g2g3 RunMove 217210 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "g2g3" 5)
-add_test(Perft_RunMove_h2h3 RunMove 181044 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "h2h3" 5)
-add_test(Perft_RunMove_a2a4 RunMove 217832 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "a2a4" 5)
-add_test(Perft_RunMove_b2b4 RunMove 216145 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "b2b4" 5)
-add_test(Perft_RunMove_c2c4 RunMove 240082 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "c2c4" 5)
-add_test(Perft_RunMove_d2d4 RunMove 361790 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "d2d4" 5)
-add_test(Perft_RunMove_e2e4 RunMove 405385 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "e2e4" 5)
-add_test(Perft_RunMove_f2f4 RunMove 198473 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "f2f4" 5)
-add_test(Perft_RunMove_g2g4 RunMove 214048 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "g2g4" 5)
-add_test(Perft_RunMove_h2h4 RunMove 218829 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "h2h4" 5)
-add_test(Perft_RunMove_b1a3 RunMove 198572 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "b1a3" 5)
-add_test(Perft_RunMove_b1c3 RunMove 234656 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "b1c3" 5)
-add_test(Perft_RunMove_g1f3 RunMove 233491 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "g1f3" 5)
-add_test(Perft_RunMove_g1h3 RunMove 198502 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "g1h3" 5)
-
 ## Run From Position
 add_executable(RunPosition tests/perft/run_from_position.cpp ${sources})
 
