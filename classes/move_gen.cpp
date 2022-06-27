@@ -6,8 +6,10 @@ MoveGen::MoveGen(Color color) {
     this->up = (color == Color::White) ? Direction::North : Direction::South;
     this->upRight = (up == Direction::North) ? Direction::NorthEast : Direction::SouthEast;
     this->upLeft = (up == Direction::North) ? Direction::NorthWest : Direction::SouthWest;
-    this->doubleRank = (up == Direction::North) ? Row::Row4 : Row::Row5;
-    this->enPassantRank = (up == Direction::North) ? Row::Row5 : Row::Row4;
+    this->doubleRank = (up == Direction::North) ? Row::Row2 : Row::Row7;
+    this->enPassantRank = (up == Direction::North) ? Row::Row6 : Row::Row3;
+    this->notPromotionRank = (up == Direction::North) ? NotEdge::North : NotEdge::South;
+
     if (up == Direction::North) {
         castlingBlock[(int) Castling::King] = CastlingBlockSquares::KSideWhite;
         castlingBlock[(int) Castling::Queen] = CastlingBlockSquares::QSideWhite;
@@ -19,6 +21,7 @@ MoveGen::MoveGen(Color color) {
         castlingAttack[(int) Castling::King] = CastlingAttackSquares::KSideBlack;
         castlingAttack[(int) Castling::Queen] = CastlingAttackSquares::QSideBlack;
     }
+    GeneratePawnMoves();
     GenerateKnightMoves();
     GenerateKingMoves();
 }
@@ -37,54 +40,46 @@ int MoveGen::GetAllMoves(Move* moves, BitBoard board, U64* attackedSquares) {
 }
 
 int MoveGen::GetPawnMoves(Move* moves, int startIndex, BitBoard board, U64* attackedSquares) {
-    Direction captureDirections[2] = { upRight, upLeft };
     // Generate single and double step moves
-    U64 to = board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color];
-    if (to == 0)
+    U64 pieces = board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color];
+    if (pieces == 0)
         return 0;
+        
     int moveCount = 0;
-    for (int i = 1; i <= 2; i++) {
-        MoveType type = MoveType::Quiet;
-        to = BitShifts::Shift(to, up, 1) & ~board.occupiedBB;
 
-        U64 toDup = to;
-        if (i == 2) {
-            toDup = toDup & (U64)doubleRank;
-            type = MoveType::DoublePawnPush;
-        }
+    while (pieces) {
+        int lsb = Utilities::LSB_Pop(&pieces);
 
-        while (toDup) {
-            U64 lsb = Utilities::LSB_Pop(&toDup);
-            moves[startIndex + moveCount] = Move(type, (Square) (lsb - (int) up * i), (Square) lsb, color, Color::None, PieceType::Pawn, PieceType::None);
+        // Quiet move
+        //// Single push
+        if (!(board.occupiedBB & pawnSingleMove[(int) lsb])) {
+            moves[startIndex + moveCount] = 
+            Move(MoveType::Quiet, (Square) lsb, (Square) (lsb + (int) up), color, Color::None, PieceType::Pawn, PieceType::None);
             moveCount++;
         }
-    }
-
-    // Generate captures
-    for (int i = 0; i < 2; i++) {
-        U64 possibleAttacks = BitShifts::Shift(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color], captureDirections[i], 1);
-        (*attackedSquares) |= possibleAttacks; 
-        U64 validAttacks = possibleAttacks & board.colorBB[(int)oppColor];
-        while (validAttacks) {
-            U64 lsb = Utilities::LSB_Pop(&validAttacks);
-            U64 from = lsb - (int) captureDirections[i];
-            if (std::abs((int) lsb % 8 - (int) from % 8) <= 1) {
-                moves[startIndex + moveCount] = Move(MoveType::Capture, (Square) (lsb - (int) captureDirections[i]), (Square) lsb, color, oppColor, PieceType::Pawn, board.GetType((Square) lsb, oppColor));
-                moveCount++;
-            }
+        //// Double push
+        if (C64(lsb) & (U64) doubleRank && !(board.occupiedBB & pawnDoubleMove[(int) lsb])) {
+            moves[startIndex + moveCount] = 
+            Move(MoveType::Quiet, (Square) lsb, (Square) (lsb + (int) up * 2), color, Color::None, PieceType::Pawn, PieceType::None);
+            moveCount++;
         }
-    }
-
-    // Generate en passant
-    for (int i = 0; i < 2; i++) {
-        to = BitShifts::Shift(board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color] & (U64) enPassantRank, captureDirections[i], 1) & board.enPassant;
-        while (to) {
-            U64 lsb = Utilities::LSB_Pop(&to);
-            U64 from = lsb - (int) captureDirections[i];
-            if (std::abs((int) lsb % 8 - (int) from % 8) <= 1) {
-                moves[startIndex + moveCount] = Move(MoveType::EPCapture, (Square) (lsb - (int) captureDirections[i]), (Square) lsb, color, oppColor, PieceType::Pawn, PieceType::Pawn);
-                moveCount++;
-            }
+        
+        // Attack moves
+        //// Diagonal
+        U64 captures = board.colorBB[(int) oppColor] & pawnCaptureMoves[(int) lsb];
+        while (captures) {
+            int capturePiece = Utilities::LSB_Pop(&captures);
+            moves[startIndex + moveCount] = 
+            Move(MoveType::Capture, (Square) lsb, (Square) capturePiece, color, oppColor, PieceType::Pawn, board.GetType((Square) capturePiece, oppColor));
+            moveCount++;
+        }
+        //// En Passant
+        captures = board.enPassant & pawnCaptureMoves[(int) lsb] & (U64) enPassantRank;
+        while (captures) {
+            int capturePiece = Utilities::LSB_Pop(&captures);
+            moves[startIndex + moveCount] = 
+            Move(MoveType::EPCapture, (Square) lsb, (Square) capturePiece, color, oppColor, PieceType::Pawn, board.GetType((Square) BitShifts::Shift(capturePiece, up, -1), oppColor));
+            moveCount++;
         }
     }
 
@@ -230,6 +225,25 @@ int MoveGen::GetMoves(Move* moves, int startIndex, BitBoard board, U64 pieces, D
     }
 
     return moveCount;
+}
+
+void MoveGen::GeneratePawnMoves() {
+    for (int i = 0; i < 64; i++) {
+        U64 bit = C64(i);
+        pawnCaptureMoves[i] = 0;
+        if (bit & (U64) notPromotionRank) {
+            if (bit & (U64) NotEdge::West)
+                pawnCaptureMoves[i] |= BitShifts::Shift(bit, upLeft, 1);
+            if (bit & (U64) NotEdge::East)    
+                pawnCaptureMoves[i] |= BitShifts::Shift(bit, upRight, 1);
+            U64 upOne = BitShifts::Shift(bit, up, 1);
+            pawnSingleMove[i] |= BitShifts::Shift(bit, up, 1);
+            if (bit & (U64) doubleRank) {
+                pawnDoubleMove[i] |= upOne;
+                pawnDoubleMove[i] |= BitShifts::Shift(bit, up, 2);
+            }
+        }   
+    }
 }
 
 void MoveGen::GenerateKnightMoves() {

@@ -28,13 +28,18 @@ private:
     Direction upLeft;
     Row doubleRank;
     Row enPassantRank;
+    NotEdge notPromotionRank;
     CastlingBlockSquares castlingBlock[2];
     CastlingAttackSquares castlingAttack[2];
 
+    U64 pawnSingleMove[64] = {};
+    U64 pawnDoubleMove[64] = {};
+    U64 pawnCaptureMoves[64] = {};
     U64 knightMoves[64] = {};
     U64 kingMoves[64] = {};
 
     int GetMoves(Move* moves, int startIndex, BitBoard board, U64 pieces, Direction direction, PieceType type, U64* attackedSquares);
+    void GeneratePawnMoves();
     void GenerateKnightMoves();
     void GenerateKingMoves();
 };
