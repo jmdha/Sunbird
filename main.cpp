@@ -12,4 +12,5 @@ int main(int, char**) {
     
     MiniMax mini = MiniMax(&board);
     Move move = mini.GetBestMove(6);
+    printf("Done\n");
 }

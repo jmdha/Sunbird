@@ -82,7 +82,8 @@ enum class Row : U64 {
     Row5 = 0xff00000000,
     Row6 = 0xff0000000000,
     Row7 = 0xff000000000000,
-    Row8 = 0xff00000000000000
+    Row8 = 0xff00000000000000,
+    None = 0x0
 };
 
 enum class Column : U64 {

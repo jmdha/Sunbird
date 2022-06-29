@@ -1,15 +1,14 @@
 #include "headers/move_gen.hh"
 
-MoveGen::MoveGen(Color color) {
-    this->color = color;
-    this->oppColor = Utilities::GetOppositeColor(color);
-    this->up = (color == Color::White) ? Direction::North : Direction::South;
-    this->upRight = (up == Direction::North) ? Direction::NorthEast : Direction::SouthEast;
-    this->upLeft = (up == Direction::North) ? Direction::NorthWest : Direction::SouthWest;
-    this->doubleRank = (up == Direction::North) ? Row::Row2 : Row::Row7;
-    this->enPassantRank = (up == Direction::North) ? Row::Row6 : Row::Row3;
-    this->notPromotionRank = (up == Direction::North) ? NotEdge::North : NotEdge::South;
-
+MoveGen::MoveGen(Color color):
+color(color),
+oppColor(Utilities::GetOppositeColor(color)),
+up((color == Color::White) ? Direction::North : Direction::South),
+upRight((up == Direction::North) ? Direction::NorthEast : Direction::SouthEast),
+upLeft((up == Direction::North) ? Direction::NorthWest : Direction::SouthWest),
+doubleRank((up == Direction::North) ? Row::Row2 : Row::Row7),
+enPassantRank((up == Direction::North) ? Row::Row6 : Row::Row3),
+notPromotionRank((up == Direction::North) ? NotEdge::North : NotEdge::South) {
     if (up == Direction::North) {
         castlingBlock[(int) Castling::King] = CastlingBlockSquares::KSideWhite;
         castlingBlock[(int) Castling::Queen] = CastlingBlockSquares::QSideWhite;
@@ -24,6 +23,7 @@ MoveGen::MoveGen(Color color) {
     GeneratePawnMoves();
     GenerateKnightMoves();
     GenerateKingMoves();
+    GenerateKingThreats();
 }
 
 int MoveGen::GetAllMoves(Move* moves, BitBoard board, U64* attackedSquares) {
@@ -308,4 +308,47 @@ void MoveGen::GenerateKingMoves() {
             kingMoves[i] |= BitShifts::Shift(bit, Direction::West, 1);
         }
     }
+}
+
+void MoveGen::GenerateKingThreats() {
+    for (int i = 0; i < 64; i++) {
+        kingThreatsRook[i] = 0;
+        kingThreatsBishop[i] = 0;
+
+        // Rook Threats
+        kingThreatsRook[i] |= (U64) Utilities::GetRow((Square) i);
+        kingThreatsRook[i] |= (U64) Utilities::GetColumn((Square) i);
+
+        // Bishop Threats
+        U64 tempBit = C64(i);
+        while (tempBit & (U64) NotEdge::North && tempBit & (U64) NotEdge::West) {
+            tempBit = BitShifts::Shift(tempBit, Direction::NorthWest, 1);
+            kingThreatsBishop[i] |= tempBit;
+        }
+        tempBit = C64(i);
+        while (tempBit & (U64) NotEdge::North && tempBit & (U64) NotEdge::East) {
+            tempBit = BitShifts::Shift(tempBit, Direction::NorthEast, 1);
+            kingThreatsBishop[i] |= tempBit;
+        }
+        tempBit = C64(i);
+        while (tempBit & (U64) NotEdge::South && tempBit & (U64) NotEdge::West) {
+            tempBit = BitShifts::Shift(tempBit, Direction::SouthWest, 1);
+            kingThreatsBishop[i] |= tempBit;
+        }
+        tempBit = C64(i);
+        while (tempBit & (U64) NotEdge::South && tempBit & (U64) NotEdge::East) {
+            tempBit = BitShifts::Shift(tempBit, Direction::SouthEast, 1);
+            kingThreatsBishop[i] |= tempBit;
+        }
+    }
+}
+
+bool MoveGen::IsKingSafe() {
+    
+    return true;
+}
+
+bool MoveGen::IsSafeMove(Square square) {
+
+    return true;
 }

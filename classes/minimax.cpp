@@ -9,11 +9,11 @@ MiniMax::MiniMax(BitBoard* board) {
 }
 
 Move MiniMax::GetBestMove(int depth) {
-    Move move;
+    Move* move;
     int alpha = -(int) PieceValue::Inf;
     int beta = (int) PieceValue::Inf;
-    NegaMax(true, &move, depth, alpha, beta, 0);
-    return move;
+    NegaMax(true, move, depth, alpha, beta, 0);
+    return *move;
 }
 
 std::random_device rd;
@@ -38,7 +38,7 @@ int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int be
 
         if (tempScore > score) {
             if (original)
-                *bestMove = moves[i];
+                bestMove = &moves[i];
             score = tempScore;
         }
 

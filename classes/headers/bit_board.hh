@@ -9,7 +9,7 @@
 
 class BitBoard {
 public:
-    int totalMoves = 0;
+    U64 totalMoves = 0;
 
     BitBoard();
     Color GetColor() {return color; };

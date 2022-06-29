@@ -3,6 +3,7 @@
 
 #include <strings.h>
 #include <stdexcept>
+#include <math.h>
 
 #include "constants.hh"
 
@@ -32,6 +33,10 @@ public:
     static Column GetColumn(int columnIndex);
     static Column GetColumn(Square square);
     static int GetColumnIndex(Square square);
+
+    static Row GetRow(int rowIndex);
+    static Row GetRow(Square square);
+    static int GetRowIndex(Square square);
 
 private:
 };

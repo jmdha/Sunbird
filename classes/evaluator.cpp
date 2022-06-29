@@ -1,9 +1,8 @@
 #include "headers/evaluator.hh"
 
-Evaluator::Evaluator(Color color) {
-    this->color = color;
-    this->oppColor = Utilities::GetOppositeColor(color);
-}
+Evaluator::Evaluator(Color color) :
+    color(color),
+    oppColor(Utilities::GetOppositeColor(color)) {}
 
 int Evaluator::EvaluatePieceCount(const BitBoard board) {
     int value = 0;

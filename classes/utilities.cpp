@@ -170,3 +170,34 @@ Column Utilities::GetColumn(Square square) {
 int Utilities::GetColumnIndex(Square square) {
     return (int) square % 8;
 }
+
+Row Utilities::GetRow(int columnIndex) {
+    switch (columnIndex)
+    {
+    case 0:
+        return Row::Row1;
+    case 1:
+        return Row::Row2;
+    case 2:
+        return Row::Row3;
+    case 3:
+        return Row::Row4;
+    case 4:
+        return Row::Row5;
+    case 5:
+        return Row::Row6;
+    case 6:
+        return Row::Row7;
+    case 7:
+        return Row::Row8;
+    }
+    return Row::None;
+}
+
+Row Utilities::GetRow(Square square) {
+    return GetRow(GetRowIndex(square));
+}
+
+int Utilities::GetRowIndex(Square square) {
+    return std::floor((int) square / 8);
+}

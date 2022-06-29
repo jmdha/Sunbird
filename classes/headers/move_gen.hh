@@ -37,10 +37,15 @@ private:
     U64 pawnCaptureMoves[64] = {};
     U64 knightMoves[64] = {};
     U64 kingMoves[64] = {};
+    U64 kingThreatsRook[64] = {};
+    U64 kingThreatsBishop[64] = {};
 
     int GetMoves(Move* moves, int startIndex, BitBoard board, U64 pieces, Direction direction, PieceType type, U64* attackedSquares);
     void GeneratePawnMoves();
     void GenerateKnightMoves();
     void GenerateKingMoves();
+    void GenerateKingThreats();
+    bool IsKingSafe();
+    bool IsSafeMove(Square square);
 };
 #endif
