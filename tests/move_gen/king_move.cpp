@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     oppMoveGen.GetAllMoves(fakeMoves, board, &priorAttacks);
     board.SetColor(Utilities::GetOppositeColor(board.GetColor()));
     U64 attackSquares = 0;
-    int moveCount = moveGen.GetKingMoves(moves, 0, board, &attackSquares, priorAttacks);
+    int moveCount = moveGen.GetKingMoves(moves, 0, board, true, &attackSquares, priorAttacks);
     free(moves);
     free(fakeMoves);
 

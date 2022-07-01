@@ -1,4 +1,26 @@
 # Tests
+## King Safe
+add_executable(IsKingSafe tests/move_gen/king_safe.cpp ${sources})
+
+add_test(MoveGen_IsKingSafe_StartPos IsKingSafe "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" 1)
+add_test(MoveGen_IsKingSafe_PureRook IsKingSafe "bbbbbbbb/bbbbbbbb/bbbbbbbb/1bbbbbbb/b1bbbbb1/bb1bbb1b/bbb1b1bb/bbbbKbbb w - - 0 1" 1)
+add_test(MoveGen_IsKingSafe_Mixed IsKingSafe "4R3/2B5/1R6/3k4/5R2/4B3/2R5/8 b - - 0 1" 1)
+add_test(MoveGen_IsKingSafe_Rook IsKingSafe "3r4/8/8/8/8/8/8/3K4 w - - 0 1" 0)
+add_test(MoveGen_IsKingSafe_Bishop IsKingSafe "8/8/8/3k4/8/8/8/7B b - - 0 1" 0)
+add_test(MoveGen_IsKingSafe_Knights IsKingSafe "8/8/8/8/8/1n1n1n2/2nnn3/1nnKnn2 w - - 0 1" 1)
+add_test(MoveGen_IsKingSafe_Knight IsKingSafe "8/8/8/8/8/4n3/8/3K4 w - - 0 1" 0)
+add_test(MoveGen_IsKingSafe_White_Pawns IsKingSafe "8/8/1ppppp2/1p1p1p2/1ppKpp2/1ppppp2/8/8 w - - 0 1" 1)
+add_test(MoveGen_IsKingSafe_White_Pawn_1 IsKingSafe "8/8/8/2p5/3K4/8/8/8 w - - 0 1" 0)
+add_test(MoveGen_IsKingSafe_White_Pawn_2 IsKingSafe "8/8/8/4p3/3K4/8/8/8 w - - 0 1" 0)
+add_test(MoveGen_IsKingSafe_Black_Pawns IsKingSafe "8/8/1PPPPP2/1PPPPP2/1PPkPP2/1P1P1P2/1PPPPP2/8 b - - 0 1" 1)
+add_test(MoveGen_IsKingSafe_Black_Pawn_1 IsKingSafe "8/8/8/8/3k4/2P5/8/8 b - - 0 1" 0)
+add_test(MoveGen_IsKingSafe_Black_Pawn_2 IsKingSafe "8/8/8/8/3k4/4P3/8/8 b - - 0 1" 0)
+
+add_test(MoveGen_IsKingSafe_Blocked_Rook_Friendly IsKingSafe "4r3/8/8/8/8/8/4R3/4K3 w - - 0 1" 1)
+add_test(MoveGen_IsKingSafe_Blocked_Rook_Enemy IsKingSafe "4r3/8/8/8/8/8/4b3/4K3 w - - 0 1" 1)
+add_test(MoveGen_IsKingSafe_Blocked_Bishops_Friendly IsKingSafe "8/8/8/8/1b6/8/3B4/4K3 w - - 0 1" 1)
+add_test(MoveGen_IsKingSafe_Blocked_Bishops_Enemy IsKingSafe "8/8/8/8/1b6/8/3r4/4K3 w - - 0 1" 1)
+
 ## PawnMoves
 add_executable(GeneratePawnMoves tests/move_gen/pawn_move.cpp ${sources})
 

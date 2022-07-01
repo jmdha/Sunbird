@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
     MoveGen moveGen = MoveGen(board.GetColor());
     Move* moves = (Move*) calloc(256, sizeof(Move));
     U64 attackMoves = 0;
-    int moveCount = moveGen.GetBishopMoves(moves, 0, board, &attackMoves);
+    int moveCount = moveGen.GetBishopMoves(moves, 0, board, true, &attackMoves);
     free(moves);
     if (moveCount == std::atoi(argv[1]))
         exit(EXIT_SUCCESS);

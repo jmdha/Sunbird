@@ -201,3 +201,27 @@ Row Utilities::GetRow(Square square) {
 int Utilities::GetRowIndex(Square square) {
     return std::floor((int) square / 8);
 }
+
+Direction Utilities::GetDirection(int i) {
+    switch (i)
+    {
+    case 1:
+        return Direction::SouthWest;
+    case 2:
+        return Direction::South;
+    case 3:
+        return Direction::SouthEast;
+    case 4:
+        return Direction::West;
+    case 6:
+        return Direction::East;
+    case 7:
+        return Direction::NorthWest;
+    case 8:
+        return Direction::North;
+    case 9:
+        return Direction::NorthEast;
+    default:
+        return Direction::None;
+    }
+}

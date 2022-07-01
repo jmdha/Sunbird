@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 
     Move* moves = (Move*) calloc(256, sizeof(Move));
     U64 attackMoves = 0;
-    int moveCount = moveGen.GetRookMoves(moves, 0, board, &attackMoves);
+    int moveCount = moveGen.GetRookMoves(moves, 0, board, true, &attackMoves);
     free(moves);
 
     if (moveCount == std::atoi(argv[1]))

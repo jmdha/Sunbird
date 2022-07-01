@@ -38,6 +38,9 @@ public:
     static Row GetRow(Square square);
     static int GetRowIndex(Square square);
 
+    // Converts 1-8 to bitshift equivilant
+    static Direction GetDirection(int i);
+
 private:
 };
 
