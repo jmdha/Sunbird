@@ -87,7 +87,7 @@ int MoveGen::GetRookMoves(Move* moves, int startIndex, BitBoard board, bool isKi
     if (pieces == 0)
         return 0;
     for (int i = 0; i < 4; i++)
-        moveCount += GetMoves(moves, startIndex, board, pieces, directions[i], PieceType::Rook, isKingSafe, attackedSquares);
+        moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, directions[i], PieceType::Rook, isKingSafe, attackedSquares);
     return moveCount;
 }
 
@@ -99,7 +99,7 @@ int MoveGen::GetBishopMoves(Move* moves, int startIndex, BitBoard board, bool is
     if (pieces == 0)
         return 0;
     for (int i = 0; i < 4; i++)
-        moveCount += GetMoves(moves, startIndex, board, pieces, directions[i], PieceType::Bishop, isKingSafe, attackedSquares);
+        moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, directions[i], PieceType::Bishop, isKingSafe, attackedSquares);
     return moveCount;
 }
 
@@ -112,7 +112,7 @@ int MoveGen::GetQueenMoves(Move* moves, int startIndex, BitBoard board, bool isK
     if (pieces == 0)
         return 0;
     for (int i = 0; i < 8; i++)
-        moveCount += GetMoves(moves, startIndex, board, pieces, directions[i], PieceType::Queen, isKingSafe, attackedSquares);
+        moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, directions[i], PieceType::Queen, isKingSafe, attackedSquares);
     return moveCount;
 }
 
