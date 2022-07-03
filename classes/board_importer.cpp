@@ -83,7 +83,7 @@ void BoardImporter::ImportMoveSequence(BitBoard* board, std::string moves) {
 			
 			else if (fromType == PieceType::Pawn) {
 				// If double pawn push
-				if (std::abs((int) Utilities::GetRow(fromSquare) - (int) Utilities::GetRow(toSquare)))
+				if (std::abs((int) Utilities::GetRowIndex(fromSquare) - (int) Utilities::GetRowIndex(toSquare)) == 2)
 					type = MoveType::DoublePawnPush;
 				// If promotion
 				else if (Utilities::GetRow(toSquare) == ((fromColor == Color::White) ? Row::Row8 : Row::Row1)) {
@@ -110,7 +110,10 @@ void BoardImporter::ImportMoveSequence(BitBoard* board, std::string moves) {
 						} else
 							type = MoveType::QPromotionCapture;
 					}
-				}
+				} else if (toType != PieceType::None)
+					type = MoveType::Capture; 
+				else
+					type = MoveType::Quiet;
 			} else if (toType != PieceType::None)
 				type = MoveType::Capture; 
 			else

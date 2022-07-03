@@ -111,7 +111,6 @@ void BitBoard::DoMove(Move move) {
             RemovePiece(Square::A8, PieceType::Rook, Color::Black);
         }
     } else {
-        PlacePiece(move.toSquare, move.fromType, move.fromColor);
         RemovePiece(move.fromSquare, move.fromType, move.fromColor);
         
         if ((short) move.type & CaptureBit) {
@@ -122,13 +121,14 @@ void BitBoard::DoMove(Move move) {
             else 
                 RemovePiece(move.toSquare, move.toType, move.toColor);   
         }
-
-        // En passant    
-        if (move.type == MoveType::DoublePawnPush)
-            enPassant |= (U64) Utilities::GetColumn(move.fromSquare);
-        else
-            enPassant ^= (U64) Utilities::GetColumn(move.fromSquare);
+        PlacePiece(move.toSquare, move.fromType, move.fromColor);
     }
+
+    // En passant    
+    if (move.type == MoveType::DoublePawnPush)
+        enPassant |= (U64) Utilities::GetColumn(move.fromSquare);
+    else
+        enPassant = 0;
     
     // Castling rights
     IncrementCastling();

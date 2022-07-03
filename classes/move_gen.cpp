@@ -47,6 +47,12 @@ int MoveGen::GetPawnMoves(Move* moves, int startIndex, BitBoard board, bool isKi
         
     int moveCount = 0;
 
+    // Generate attackedSquares
+    U64 tempPieces = pieces;
+    while (tempPieces) {
+        (*attackedSquares) |= pawnCaptureMoves[Utilities::LSB_Pop(&tempPieces)];
+    }
+
     while (pieces) {
         int lsb = Utilities::LSB_Pop(&pieces);
 
