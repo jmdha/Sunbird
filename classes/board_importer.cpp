@@ -57,3 +57,67 @@ void BoardImporter::ImportFEN(BitBoard* board, std::string FEN) {
 
 	// import full move
 }
+
+void BoardImporter::ImportMoveSequence(BitBoard* board, std::string moves) {
+	board->Initialize();
+	std::string move = "";
+	for (int i = 0; i < moves.length(); i++) {
+		if (moves[i] != ' ')
+			move.push_back(moves[i]);
+
+		if (moves[i] == ' ' || i == (int) moves.length() - 1) {
+			Square fromSquare = Utilities::GetSquare(move[0], move[1]);
+			Square toSquare = Utilities::GetSquare(move[2], move[3]);
+			PieceType fromType = board->GetPiece(fromSquare);
+			PieceType toType = board->GetPiece(toSquare);
+			Color fromColor = board->GetColor(fromSquare);
+			Color toColor = board->GetColor(toSquare);
+			MoveType type;
+			// Is castling?
+			//// Is kingside castle
+			if (fromType == PieceType::King && (move == "e1g1" || move == "e8g8"))
+				type = MoveType::KingCastle;
+			//// Is queenside castle
+			else if (fromType == PieceType::King && (move == "e1c1" || move == "e8c8"))
+				type = MoveType::QueenCastle;
+			
+			else if (fromType == PieceType::Pawn) {
+				// If double pawn push
+				if (std::abs((int) Utilities::GetRow(fromSquare) - (int) Utilities::GetRow(toSquare)))
+					type = MoveType::DoublePawnPush;
+				// If promotion
+				else if (Utilities::GetRow(toSquare) == ((fromColor == Color::White) ? Row::Row8 : Row::Row1)) {
+					// If none capture promotion
+					if (toType == PieceType::None) {
+						if (moves.length() == 5) {
+							if (move[4] == 'r')
+								type = MoveType::RPromotion;
+							else if (move[4] == 'n')
+								type = MoveType::NPromotion;
+							else if (move[4] == 'b')
+								type = MoveType::BPromotion;
+						} else
+							type = MoveType::QPromotion;
+					} else {
+						// Capture promotion
+						if (moves.length() == 5) {
+							if (move[4] == 'r')
+								type = MoveType::RPromotionCapture;
+							else if (move[4] == 'n')
+								type = MoveType::NPromotionCapture;
+							else if (move[4] == 'b')
+								type = MoveType::BPromotionCapture;
+						} else
+							type = MoveType::QPromotionCapture;
+					}
+				}
+			} else if (toType != PieceType::None)
+				type = MoveType::Capture; 
+			else
+				type = MoveType::Quiet;
+			
+			board->DoMove(Move(type, fromSquare, toSquare, fromColor, toColor, fromType, toType));
+			move = "";
+		}
+	}
+}

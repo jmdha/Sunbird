@@ -1,7 +1,10 @@
 #ifndef MOVE
 #define MOVE
 
+#include <string>
+
 #include "constants.hh"
+#include "utilities.hh"
 
 class Move {
 public:
@@ -24,6 +27,8 @@ public:
     toColor(toColor),
     fromType(fromType),
     toType(toType)     {}
+
+    std::string ToString();
 private:
 };
 #endif

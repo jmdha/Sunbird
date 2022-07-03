@@ -10,6 +10,7 @@
 class BoardImporter {
 public:
     static void ImportFEN(BitBoard* board, std::string FEN);
+    static void ImportMoveSequence(BitBoard* board, std::string moves);
 
 private:
 };

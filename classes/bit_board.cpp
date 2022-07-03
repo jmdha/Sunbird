@@ -4,6 +4,15 @@ BitBoard::BitBoard() {
     ClearBoard();
 }
 
+Color BitBoard::GetColor(Square sq) {
+    if (colorBB[(int) Color::White] & C64(sq))
+        return Color::White;
+    else if (colorBB[(int) Color::Black] & C64(sq))
+        return Color::Black;
+    else
+        return Color::None;
+}
+
 void BitBoard::ClearBoard() {
     for (int i = 0; i < PIECECOUNT; i++)
         pieceBB[i] = {};

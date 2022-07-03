@@ -70,6 +70,15 @@ Square Utilities::GetSquare(char row, char column) {
     return GetSquare((int) row - 97, (int) column - 49);
 }
 
+std::string Utilities::GetSquareString(Square sq) {
+    std::string square = "";
+    int col = GetColumnIndex(sq);
+    int row = GetRowIndex(sq);
+    square += 'a' + col;
+    square += '1' + row;
+    return square;
+}
+
 int Utilities::GetPieceValue(PieceType type) {
     switch(type) {
         case PieceType::Bishop:

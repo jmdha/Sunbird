@@ -16,6 +16,7 @@ public:
     static Color GetPieceColor(PieceChar pieceChar);
     static Square GetSquare(int x, int y);
     static Square GetSquare(char row, char column);
+    static std::string GetSquareString(Square sq);
     static int GetPieceValue(PieceType type);
     static Color GetOppositeColor(Color color);
 

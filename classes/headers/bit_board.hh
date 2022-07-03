@@ -13,6 +13,7 @@ public:
 
     BitBoard();
     Color GetColor() {return color; };
+    Color GetColor(Square sq);
     void SetColor(Color color) { this->color = color; };
     void ClearBoard();
     void Initialize();
