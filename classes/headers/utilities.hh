@@ -4,6 +4,7 @@
 #include <strings.h>
 #include <stdexcept>
 #include <math.h>
+#include <bitset>
 
 #include "constants.hh"
 
@@ -27,6 +28,8 @@ public:
     // Returns the least significant set bit, and pops it
     // e.g. 0110 => 1 and 1000 => 3 and 1001 => 0
     static int LSB_Pop(U64* x);
+
+    static int MSB(U64 x);
 
     static U64 NotEdge(Direction dir);
 

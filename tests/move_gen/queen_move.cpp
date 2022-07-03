@@ -8,13 +8,14 @@
 #include "../../classes/headers/move_gen.hh"
 
 int main(int argc, char* argv[]) {
+    BitShifts::Init();
     BitBoard board = BitBoard();
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     MoveGen moveGen = MoveGen(board.GetColor());
 
     Move* moves = (Move*) calloc(256, sizeof(Move));
     U64 attackMoves = 0;
-    int moveCount = moveGen.GetQueenMoves(moves, 0, board, true, &attackMoves);
+    int moveCount = moveGen.GetQueenMoves(moves, 0, board, (bool)std::atoi(argv[3]), &attackMoves);
     free(moves);
 
     if (moveCount == std::atoi(argv[1]))

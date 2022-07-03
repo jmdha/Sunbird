@@ -117,6 +117,15 @@ int Utilities::LSB_Pop(U64* x) {
     return lsb;
 }
 
+int Utilities::MSB(U64 x) {
+    int index = 0;
+    while (1 < x) {
+        x = x >> 1;
+        index++;
+    }
+    return index;
+}
+
 U64 Utilities::NotEdge(Direction dir) {
     switch (dir)
     {

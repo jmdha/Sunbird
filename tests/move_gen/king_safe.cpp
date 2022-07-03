@@ -8,10 +8,10 @@
 #include "../../classes/headers/move_gen.hh"
 
 int main(int argc, char* argv[]) {
+    BitShifts::Init();
     BitBoard board = BitBoard();
     BoardImporter::ImportFEN(&board, (std::string) argv[1]);
     int expectedBool = std::atoi(argv[2]);
-    BitShifts::Init();
 
     MoveGen gen = MoveGen(board.GetColor());
     int kingSafe = (int) gen.IsKingSafe(board);

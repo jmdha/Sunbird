@@ -52,37 +52,30 @@ int MoveGen::GetPawnMoves(Move* moves, int startIndex, BitBoard board, bool isKi
 
         // Quiet move
         //// Single push
-        if (!(board.occupiedBB & pawnSingleMove[(int) lsb])) {
-            moves[startIndex + moveCount] = 
-            Move(MoveType::Quiet, (Square) lsb, (Square) (lsb + (int) up), color, Color::None, PieceType::Pawn, PieceType::None);
-            moveCount++;
-        }
+        if (!(board.occupiedBB & pawnSingleMove[(int) lsb]))
+            if (isKingSafe || IsKingSafe(board, (board.occupiedBB ^ C64(lsb)) | C64(lsb + (int) up)))
+                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) lsb, (Square) (lsb + (int) up), color, Color::None, PieceType::Pawn, PieceType::None));
         //// Double push
-        if (C64(lsb) & (U64) doubleRank && !(board.occupiedBB & pawnDoubleMove[(int) lsb])) {
-            moves[startIndex + moveCount] = 
-            Move(MoveType::Quiet, (Square) lsb, (Square) (lsb + (int) up * 2), color, Color::None, PieceType::Pawn, PieceType::None);
-            moveCount++;
-        }
+        if (C64(lsb) & (U64) doubleRank && !(board.occupiedBB & pawnDoubleMove[(int) lsb]))
+            if (isKingSafe || IsKingSafe(board, (board.occupiedBB ^ C64(lsb)) | C64(lsb + (int) up * 2)))
+                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) lsb, (Square) (lsb + (int) up * 2), color, Color::None, PieceType::Pawn, PieceType::None));
         
         // Attack moves
         //// Diagonal
         U64 captures = board.colorBB[(int) oppColor] & pawnCaptureMoves[(int) lsb];
         while (captures) {
             int capturePiece = Utilities::LSB_Pop(&captures);
-            moves[startIndex + moveCount] = 
-            Move(MoveType::Capture, (Square) lsb, (Square) capturePiece, color, oppColor, PieceType::Pawn, board.GetType((Square) capturePiece, oppColor));
-            moveCount++;
+            if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsb), board.colorBB[(int) oppColor] ^ C64(capturePiece)))
+                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsb, (Square) capturePiece, color, oppColor, PieceType::Pawn, board.GetType((Square) capturePiece, oppColor)));
         }
         //// En Passant
         captures = board.enPassant & pawnCaptureMoves[(int) lsb] & (U64) enPassantRank;
         while (captures) {
             int capturePiece = Utilities::LSB_Pop(&captures);
-            moves[startIndex + moveCount] = 
-            Move(MoveType::EPCapture, (Square) lsb, (Square) capturePiece, color, oppColor, PieceType::Pawn, board.GetType((Square) BitShifts::Shift(capturePiece, up, -1), oppColor));
-            moveCount++;
+            if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsb),  board.colorBB[(int) oppColor] ^ C64(capturePiece)))
+                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::EPCapture, (Square) lsb, (Square) capturePiece, color, oppColor, PieceType::Pawn, board.GetType((Square) BitShifts::Shift(capturePiece, up, -1), oppColor)));
         }
     }
-
     return moveCount;
 }
 
@@ -139,16 +132,16 @@ int MoveGen::GetKnightMoves(Move* moves, int startIndex, BitBoard board, bool is
 
             while (attackMoves) {
                 int lsb = Utilities::LSB_Pop(&attackMoves);
-                moves[startIndex + moveCount] = Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::Knight, board.GetType((Square) lsb, oppColor));
-                moveCount++;
+                if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsbPiece), board.colorBB[(int) oppColor] ^ C64(lsb)))
+                    AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::Knight, board.GetType((Square) lsb, oppColor)));
             }
 
             // Quiet moves
             U64 quietMoves = to & (~board.occupiedBB);
             while (quietMoves) {
                 int lsb = Utilities::LSB_Pop(&quietMoves);
-                moves[startIndex + moveCount] = Move(MoveType::Quiet, (Square) lsbPiece, (Square) lsb, color, Color::None, PieceType::Knight, PieceType::None);
-                moveCount++;
+                if (isKingSafe || IsKingSafe(board, (board.occupiedBB ^ C64(lsbPiece) | C64(lsb))))
+                    AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) lsbPiece, (Square) lsb, color, Color::None, PieceType::Knight, PieceType::None));
             }
     }
 
@@ -172,27 +165,25 @@ int MoveGen::GetKingMoves(Move* moves, int startIndex, BitBoard board, bool isKi
 
     while (attackMoves) {
         int lsb = Utilities::LSB_Pop(&attackMoves);
-        moves[startIndex + moveCount] = Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::King, board.GetType((Square) lsb, oppColor));
-        moveCount++;
+        if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsbPiece), board.colorBB[(int) oppColor] ^ C64(lsb), C64(lsb)))
+            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::King, board.GetType((Square) lsb, oppColor)));
     }
 
     // Quiet moves
     U64 quietMoves = to & (~board.occupiedBB);
     while (quietMoves) {
         int lsb = Utilities::LSB_Pop(&quietMoves);
-        moves[startIndex + moveCount] = Move(MoveType::Quiet, (Square) lsbPiece, (Square) lsb, color, Color::None, PieceType::King, PieceType::None);
-        moveCount++;
+        if (isKingSafe || IsKingSafe(board, (board.occupiedBB ^ C64(lsbPiece) | C64(lsb)), board.colorBB[(int) oppColor], C64(lsb)))
+            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) lsbPiece, (Square) lsb, color, Color::None, PieceType::King, PieceType::None));
     }
 
     // Castling
-    if (board.castlingAllowed[(int)color][(int) Castling::King] && !(board.occupiedBB & (U64) castlingBlock[(int) Castling::King]) && !(priorAttacks & (U64) castlingAttack[(int) Castling::King])) {
-        moves[startIndex + moveCount] = Move(MoveType::KingCastle, color);
-        moveCount++;
-    } 
-    if (board.castlingAllowed[(int)color][(int) Castling::Queen] && !(board.occupiedBB & (U64) castlingBlock[(int) Castling::Queen]) && !(priorAttacks & (U64) castlingAttack[(int) Castling::Queen])) {
-        moves[startIndex + moveCount] = Move(MoveType::QueenCastle, color);
-        moveCount++;
-    }
+    if (board.castlingAllowed[(int)color][(int) Castling::King] && !(board.occupiedBB & (U64) castlingBlock[(int) Castling::King]) && !(priorAttacks & (U64) castlingAttack[(int) Castling::King]))
+        if (isKingSafe)
+            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::KingCastle, color));
+    if (board.castlingAllowed[(int)color][(int) Castling::Queen] && !(board.occupiedBB & (U64) castlingBlock[(int) Castling::Queen]) && !(priorAttacks & (U64) castlingAttack[(int) Castling::Queen]))
+        if (isKingSafe)
+            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::QueenCastle, color));
         
     return moveCount;
 }
@@ -209,16 +200,16 @@ int MoveGen::GetMoves(Move* moves, int startIndex, BitBoard board, U64 pieces, D
 
         while (attackMoves) {
             int lsb = Utilities::LSB_Pop(&attackMoves);
-            moves[startIndex + moveCount] = Move(MoveType::Capture, (Square) (lsb - (int) direction * counter), (Square) lsb, color, oppColor, type, board.GetType((Square) lsb, oppColor));
-            moveCount++;
+            if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsb - (int) direction * counter), board.colorBB[(int) oppColor] ^ C64(lsb)))
+                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) (lsb - (int) direction * counter), (Square) lsb, color, oppColor, type, board.GetType((Square) lsb, oppColor)));
         }
 
         U64 quietMoves = to;
 
         while (quietMoves) {
             int lsb = Utilities::LSB_Pop(&quietMoves);
-            moves[startIndex + moveCount] = Move(MoveType::Quiet, (Square) (lsb - (int) direction * counter), (Square) lsb, color, Color::None, type, PieceType::None);
-            moveCount++;
+            if (isKingSafe || IsKingSafe(board, (board.occupiedBB ^ C64(lsb - (int) direction * counter) | C64(lsb))))
+                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) (lsb - (int) direction * counter), (Square) lsb, color, Color::None, type, PieceType::None));
         }
 
         counter++;
@@ -310,27 +301,40 @@ void MoveGen::GenerateKingMoves() {
     }
 }
 
-bool MoveGen::IsKingSafe(BitBoard board) {
-    U64 kingPos = board.pieceBB[(int) PieceType::King] & board.colorBB[(int) color];
+bool MoveGen::IsKingSafe(BitBoard board, U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard) {
+    U64 kingPos = tempKingBoard;
     int kingPosIndex = Utilities::LSB_Pop(&kingPos);
-    BitShifts bt;
 
-    DirectionIndex rookDirections[4] = { DirectionIndex::North, DirectionIndex::East, DirectionIndex::South, DirectionIndex::West };
-    DirectionIndex bishopDirections[4] = { DirectionIndex::NorthEast, DirectionIndex::NorthWest, DirectionIndex::SouthEast, DirectionIndex::SouthWest };
+    U64 enemyRooks = (board.pieceBB[(int) PieceType::Rook] | board.pieceBB[(int) PieceType::Queen]) & tempEnemyBoard;
+    U64 enemyBishops = (board.pieceBB[(int) PieceType::Bishop] | board.pieceBB[(int) PieceType::Queen]) & tempEnemyBoard;
+    U64 enemyKnights = board.pieceBB[(int) PieceType::Knight] & tempEnemyBoard;
+    U64 enemyPawns = board.pieceBB[(int) PieceType::Pawn] & tempEnemyBoard;
 
-    U64 enemyRooks = (board.pieceBB[(int) PieceType::Rook] | board.pieceBB[(int) PieceType::Queen]) & board.colorBB[(int) oppColor];
-    U64 enemyBishops = (board.pieceBB[(int) PieceType::Bishop] | board.pieceBB[(int) PieceType::Queen]) & board.colorBB[(int) oppColor];
-    U64 enemyKnights = board.pieceBB[(int) PieceType::Knight] & board.colorBB[(int) oppColor];
-    U64 enemyPawns = board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) oppColor];
+    if (BitShifts::rays[kingPosIndex][(int) DirectionIndex::North] & enemyRooks)
+        if (Utilities::LSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::North] & enemyRooks) == Utilities::LSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::North] & tempOccuracyBoard))
+            return false;
+    if (BitShifts::rays[kingPosIndex][(int) DirectionIndex::East] & enemyRooks)
+        if (Utilities::LSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::East] & enemyRooks) == Utilities::LSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::East] & tempOccuracyBoard))
+            return false;
+    if (BitShifts::rays[kingPosIndex][(int) DirectionIndex::South] & enemyRooks)
+        if (Utilities::MSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::South] & enemyRooks) == Utilities::MSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::South] & tempOccuracyBoard))
+            return false;
+    if (BitShifts::rays[kingPosIndex][(int) DirectionIndex::West] & enemyRooks)
+        if (Utilities::MSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::West] & enemyRooks) == Utilities::MSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::West] & tempOccuracyBoard))
+            return false;
 
-    for (int i = 0; i < 4; i++)
-        if (BitShifts::rays[kingPosIndex][(int) rookDirections[i]] & enemyRooks)
-            if (Utilities::LSB(BitShifts::rays[kingPosIndex][(int) rookDirections[i]] & enemyRooks) == Utilities::LSB(BitShifts::rays[kingPosIndex][(int) rookDirections[i]] & board.occupiedBB))
-                return false;
-    for (int i = 0; i < 4; i++)
-        if (BitShifts::rays[kingPosIndex][(int) bishopDirections[i]] & enemyBishops)
-            if (Utilities::LSB(BitShifts::rays[kingPosIndex][(int) bishopDirections[i]] & enemyBishops) == Utilities::LSB(BitShifts::rays[kingPosIndex][(int) bishopDirections[i]] & board.occupiedBB))
-                return false;
+    if (BitShifts::rays[kingPosIndex][(int) DirectionIndex::NorthEast] & enemyBishops)
+        if (Utilities::LSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::NorthEast] & enemyBishops) == Utilities::LSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::NorthEast] & tempOccuracyBoard))
+            return false;
+    if (BitShifts::rays[kingPosIndex][(int) DirectionIndex::NorthWest] & enemyBishops)
+        if (Utilities::LSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::NorthWest] & enemyBishops) == Utilities::LSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::NorthWest] & tempOccuracyBoard))
+            return false;
+    if (BitShifts::rays[kingPosIndex][(int) DirectionIndex::SouthEast] & enemyBishops)
+        if (Utilities::MSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::SouthEast] & enemyBishops) == Utilities::MSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::SouthEast] & tempOccuracyBoard))
+            return false;
+    if (BitShifts::rays[kingPosIndex][(int) DirectionIndex::SouthWest] & enemyBishops)
+        if (Utilities::MSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::SouthWest] & enemyBishops) == Utilities::MSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::SouthWest] & tempOccuracyBoard))
+            return false;
 
     if (knightMoves[kingPosIndex] & enemyKnights)
         return false;
@@ -341,7 +345,24 @@ bool MoveGen::IsKingSafe(BitBoard board) {
     return true;
 }
 
+bool MoveGen::IsKingSafe(BitBoard board, U64 tempOccuracyBoard, U64 tempEnemyBoard) {
+    return IsKingSafe(board, tempOccuracyBoard, tempEnemyBoard, board.pieceBB[(int) PieceType::King] & board.colorBB[(int) color]);
+}
+
+bool MoveGen::IsKingSafe(BitBoard board, U64 tempOccuracyBoard) {
+    return IsKingSafe(board, tempOccuracyBoard, board.colorBB[(int) oppColor]);
+}
+
+bool MoveGen::IsKingSafe(BitBoard board) {
+    return IsKingSafe(board, board.occupiedBB);
+}
+
 bool MoveGen::IsSafeMove(BitBoard board, Square square) {
 
     return true;
+}
+
+void MoveGen::AppendMove(Move* moves, int index, int* moveCount, Move move) {
+    moves[index] = move;
+    (*moveCount)++;
 }

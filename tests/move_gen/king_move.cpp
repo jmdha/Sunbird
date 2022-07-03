@@ -8,6 +8,7 @@
 #include "../../classes/headers/move_gen.hh"
 
 int main(int argc, char* argv[]) {
+    BitShifts::Init();
     BitBoard board = BitBoard();
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     MoveGen moveGen = MoveGen(board.GetColor());
@@ -20,7 +21,7 @@ int main(int argc, char* argv[]) {
     oppMoveGen.GetAllMoves(fakeMoves, board, &priorAttacks);
     board.SetColor(Utilities::GetOppositeColor(board.GetColor()));
     U64 attackSquares = 0;
-    int moveCount = moveGen.GetKingMoves(moves, 0, board, true, &attackSquares, priorAttacks);
+    int moveCount = moveGen.GetKingMoves(moves, 0, board, (bool)std::atoi(argv[3]), &attackSquares, priorAttacks);
     free(moves);
     free(fakeMoves);
 

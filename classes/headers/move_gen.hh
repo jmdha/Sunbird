@@ -19,6 +19,9 @@ public:
     int GetQueenMoves(Move* moves, int startIndex, BitBoard board, bool isKingSafe, U64* attackedSquares);
     int GetKnightMoves(Move* moves, int startIndex, BitBoard board, bool isKingSafe, U64* attackedSquares);
     int GetKingMoves(Move* moves, int startIndex, BitBoard board, bool isKingSafe, U64* attackedSquares, U64 priorAttacks);
+    bool IsKingSafe(BitBoard board, U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard);
+    bool IsKingSafe(BitBoard board, U64 tempOccuracyBoard, U64 tempEnemyBoard);
+    bool IsKingSafe(BitBoard board, U64 tempOccuracyBoard);
     bool IsKingSafe(BitBoard board);
 
 private:
@@ -44,6 +47,9 @@ private:
     void GenerateKnightMoves();
     void GenerateKingMoves();
     
+    
     bool IsSafeMove(BitBoard board, Square square);
+
+    void AppendMove(Move* moves, int index, int* moveCount, Move move);
 };
 #endif
