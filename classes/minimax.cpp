@@ -36,7 +36,7 @@ int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int be
         int tempScore = -NegaMax(false, bestMove, depth - 1, -beta, -alpha, attackSquares);
         board->UndoMove(moves[i]);
 
-        if (tempScore > score) {
+        if (tempScore >= score) {
             if (original)
                 (*bestMove) = moves[i];
             score = tempScore;
