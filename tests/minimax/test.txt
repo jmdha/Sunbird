@@ -1,0 +1,5 @@
+# Tests
+## Import FEN
+add_executable(GetBestMove tests/minimax/get_best_move.cpp ${sources})
+
+add_test(GetBestMove_InitialPos GetBestMove "" 1 "g1h3")

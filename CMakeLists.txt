@@ -9,6 +9,7 @@ enable_testing()
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS classes/*.cpp classes/*.h)
 
 add_executable(main builds/main.cpp ${sources})
+add_executable(test_run builds/test_run.cpp ${sources})
 add_executable(chess_engine builds/engine.cpp ${sources})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

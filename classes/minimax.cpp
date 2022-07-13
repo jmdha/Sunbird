@@ -12,7 +12,11 @@ Move MiniMax::GetBestMove(int depth) {
     Move* move = new Move(MoveType::BPromotionCapture, Color::None);
     int alpha = -(int) PieceValue::Inf;
     int beta = (int) PieceValue::Inf;
-    NegaMax(true, move, depth, alpha, beta, 0);
+    U64 attacks = 0;
+    Move* moves = (Move*) calloc(256, sizeof(Move));
+    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attacks);
+    free(moves);
+    NegaMax(true, move, depth, alpha, beta, attacks);
     return *move;
 }
 
@@ -34,13 +38,18 @@ int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int be
     for (int i = 0; i < moveCount; i++) {
         board->DoMove(moves[i]);
         int tempScore = -NegaMax(false, bestMove, depth - 1, -beta, -alpha, attackSquares);
-        board->UndoMove(moves[i]);
 
-        if (tempScore >= score) {
-            if (original)
+        if (tempScore >= score ) {
+            // As move gen generates psuedo legal moves, check whether it is legal
+            // Only do so on possible return moves, as otherwise it impacts performance greatly 
+            if (original && moveGens[(int) board->GetColor()]->IsKingSafe(*board)){
                 (*bestMove) = moves[i];
-            score = tempScore;
+                score = tempScore;
+            } else
+                score = tempScore;
         }
+
+        board->UndoMove(moves[i]);
 
         alpha = std::max(alpha, score);
         if (alpha >= beta)
