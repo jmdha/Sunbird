@@ -42,7 +42,7 @@ int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int be
         if (tempScore >= score ) {
             // As move gen generates psuedo legal moves, check whether it is legal
             // Only do so on possible return moves, as otherwise it impacts performance greatly 
-            if (original && moveGens[(int) board->GetColor()]->IsKingSafe(*board)){
+            if (original && moveGens[(int) Utilities::GetOppositeColor(board->GetColor())]->IsKingSafe(*board)){
                 (*bestMove) = moves[i];
                 score = tempScore;
             } else
