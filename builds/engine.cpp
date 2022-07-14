@@ -12,6 +12,6 @@ int main(int argc, char* argv[]) {
     BitBoard board = BitBoard();
     BoardImporter::ImportMoveSequence(&board, argv[2]);
     MiniMax max = MiniMax(&board);
-    Move move = max.GetBestMove(4);
+    Move move = max.GetBestMove(5);
     printf("%s\n", move.ToString().c_str());
 }

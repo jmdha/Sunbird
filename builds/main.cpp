@@ -7,10 +7,10 @@
 #include "../classes/headers/perft.hh"
 
 int main(int argc, char* argv[]) {
-    BitShifts::Init();
     BitBoard board = BitBoard();
-    BoardImporter::ImportFEN(&board, "r2q2nr/ppp2kp1/2n5/2bpp2p/5Pb1/2N5/PPPPP1PP/R1BQKB1R w KQ - 0 8");
+    BoardImporter::ImportFEN(&board, "rnbqkbnr/pp2pppp/8/2pp2N1/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 3");
     MiniMax max = MiniMax(&board);
-    Move move = max.GetBestMove(4);
-    printf("%s\n", move.ToString().c_str());
+    Move move = max.GetBestMove(5);
+    printf("Move found %s\n", move.ToString().c_str());
+    printf("Moves made %llu\n", board.totalMoves);
 }

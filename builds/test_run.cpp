@@ -9,8 +9,9 @@
 int main(int argc, char* argv[]) {
     BitShifts::Init();
     BitBoard board = BitBoard();
-    BoardImporter::ImportMoveSequence(&board, "g1h3 d7d5 h3g5 e7e5 g5f7 e8f7 b1c3 f8c5 c3b5 b8c6 b5c3 c8g4 f2f4 h7h5");
+    BoardImporter::ImportMoveSequence(&board, "");
     MiniMax max = MiniMax(&board);
-    Move move = max.GetBestMove(4);
-    printf("%s\n", move.ToString().c_str());
+    Move move = max.GetBestMove(7);
+    printf("Move found %s\n", move.ToString().c_str());
+    printf("Moves made %llu\n", board.totalMoves);
 }
