@@ -16,7 +16,7 @@ public:
     MoveTreeGenerator(BitBoard* board, std::string outputPath);
     ~MoveTreeGenerator();
 
-    void GenerateTreeToFile(int depth);
+    void GenerateTreeToFile(int depth, int outputDepth);
 
 private:
     BitBoard* board;
@@ -26,8 +26,8 @@ private:
     Evaluator* evaluators[2];
 
     void PrintNode(std::string move, MoveTreeNode node, int indent, bool lastNode);
-    MoveTreeNode GenerateMoveTree(int depth);
-    MoveTreeNode NegaMax(int depth, U64 attacks);
+    MoveTreeNode GenerateMoveTree(int depth, int outputDepth);
+    MoveTreeNode NegaMax(int depth, int outputDepth, U64 attacks);
 
     void PrintIndent(int indent, std::string string);
     void PrintIndentNL(int indent, std::string string);

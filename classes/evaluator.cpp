@@ -5,7 +5,7 @@ Evaluator::Evaluator(Color color) :
     oppColor(Utilities::GetOppositeColor(color)) {}
 
 int Evaluator::Evalute(const BitBoard board) {
-    return EvaluatePieceCount(board);
+    return EvaluatePieceCount(board) + EvaluatePositionValue(board);
 }
 
 int Evaluator::EvaluatePieceCount(const BitBoard board) {

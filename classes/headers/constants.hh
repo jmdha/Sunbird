@@ -22,7 +22,7 @@
 
 #define HEDEPTH 8
 
-#define DEBUGGING true
+//#define DEBUGGING true
 
 enum class Color : int {
     White,

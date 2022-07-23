@@ -12,8 +12,8 @@ MoveTreeGenerator::~MoveTreeGenerator() {
     fclose(fp);
 }
 
-void MoveTreeGenerator::GenerateTreeToFile(int depth) {
-    MoveTreeNode moveTree = GenerateMoveTree(depth);
+void MoveTreeGenerator::GenerateTreeToFile(int depth, int outputDepth) {
+    MoveTreeNode moveTree = GenerateMoveTree(depth, outputDepth);
     PrintNode("", moveTree, 0, true);
 }
 
@@ -22,6 +22,9 @@ void MoveTreeGenerator::PrintNode(std::string move, MoveTreeNode node, int inden
     PrintIndentNL(indent, "{");
     PrintIndentNL(newIndent, "\"move\": \"" + move + "\",");
     PrintIndentNL(newIndent, "\"score\": \"" + std::to_string(node.score) + "\",");
+    PrintIndentNL(newIndent, "\"materialScore\": \"" + std::to_string(node.materialScore) + "\",");
+    PrintIndentNL(newIndent, "\"positionScore\": \"" + std::to_string(node.positionScore) + "\",");
+
     if (node.children.size() == 0)
         PrintIndentNL(newIndent, "\"moves\": []");
     else {
@@ -38,33 +41,40 @@ void MoveTreeGenerator::PrintNode(std::string move, MoveTreeNode node, int inden
         PrintIndentNL(indent, "},");
 }
 
-MoveTreeNode MoveTreeGenerator::GenerateMoveTree(int depth) {
+MoveTreeNode MoveTreeGenerator::GenerateMoveTree(int depth, int outputDepth) {
     U64 attacks = 0;
     Move* moves = (Move*) calloc(256, sizeof(Move));
     int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attacks);
     free(moves);
-    MoveTreeNode node = NegaMax(depth, attacks);
+    MoveTreeNode node = NegaMax(depth, depth - outputDepth, attacks);
     return node;
 }
 
-MoveTreeNode MoveTreeGenerator::NegaMax(int depth, U64 attacks) {
+MoveTreeNode MoveTreeGenerator::NegaMax(int depth, int outputDepth, U64 attacks) {
     if (depth == 0)
-        return MoveTreeNode(evaluators[(int) board->GetColor()]->Evalute(*board));
+        return MoveTreeNode(evaluators[(int) board->GetColor()]->EvaluatePieceCount(*board), evaluators[(int) board->GetColor()]->EvaluatePositionValue(*board));
     // 218 I believe to be the max number of moves - as such its rounded up to 256
     Move* moves = (Move*) calloc(256, sizeof(Move));
     U64 attackSquares = attacks;
     int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attackSquares);
     
-    MoveTreeNode node = MoveTreeNode(-(int)PieceValue::Inf);
+    MoveTreeNode node = MoveTreeNode(-(int)PieceValue::Inf, depth);
 
     for (int i = 0; i < moveCount; i++) {
         board->DoMove(moves[i]);
-        MoveTreeNode childNode = NegaMax(depth - 1, attackSquares);
+        MoveTreeNode childNode = NegaMax(depth - 1, outputDepth, attackSquares);
         childNode.score *= -1;
+        childNode.materialScore *= -1;
+        childNode.positionScore *= -1;
         board->UndoMove(moves[i]);
-        node.AppendMoveTreeNode(moves[i].ToString(), childNode);
+        if (depth >= outputDepth)
+            node.AppendMoveTreeNode(moves[i].ToString(), childNode);
 
-        node.score = std::max(node.score, childNode.score);
+        if (childNode.score > node.score) {
+            node.score = childNode.score;
+            node.materialScore = childNode.materialScore;
+            node.positionScore = childNode.positionScore;
+        }
     }
     free(moves);
     return node;
