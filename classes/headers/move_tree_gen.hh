@@ -13,7 +13,7 @@
 
 class MoveTreeGenerator {
 public:
-    MoveTreeGenerator(BitBoard* board, std::string outputPath);
+    MoveTreeGenerator(BitBoard* board, std::string outputPath, int HEDepth);
     ~MoveTreeGenerator();
 
     void GenerateTreeToFile(int depth, int outputDepth);
@@ -24,10 +24,11 @@ private:
     std::string outputPath;
     MoveGen* moveGens[2];
     Evaluator* evaluators[2];
+    int HEDepth;
 
     void PrintNode(std::string move, MoveTreeNode node, int indent, bool lastNode);
     MoveTreeNode GenerateMoveTree(int depth, int outputDepth);
-    MoveTreeNode NegaMax(int depth, int outputDepth, U64 attacks);
+    MoveTreeNode NegaMax(int depth, bool doingHE, int outputDepth, U64 attacks);
 
     void PrintIndent(int indent, std::string string);
     void PrintIndentNL(int indent, std::string string);

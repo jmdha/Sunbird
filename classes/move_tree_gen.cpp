@@ -1,6 +1,6 @@
 #include "headers/move_tree_gen.hh"
 
-MoveTreeGenerator::MoveTreeGenerator(BitBoard* board, std::string outputPath) : board(board), outputPath(outputPath) {
+MoveTreeGenerator::MoveTreeGenerator(BitBoard* board, std::string outputPath, int HEDepth) : board(board), outputPath(outputPath), HEDepth(HEDepth) {
     evaluators[(int) Color::White] = new Evaluator(Color::White);
     evaluators[(int) Color::Black] = new Evaluator(Color::Black);
     moveGens[(int) Color::White] = new MoveGen(Color::White);
@@ -46,11 +46,11 @@ MoveTreeNode MoveTreeGenerator::GenerateMoveTree(int depth, int outputDepth) {
     Move* moves = (Move*) calloc(256, sizeof(Move));
     int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attacks);
     free(moves);
-    MoveTreeNode node = NegaMax(depth, depth - outputDepth, attacks);
+    MoveTreeNode node = NegaMax(depth, false, depth - outputDepth, attacks);
     return node;
 }
 
-MoveTreeNode MoveTreeGenerator::NegaMax(int depth, int outputDepth, U64 attacks) {
+MoveTreeNode MoveTreeGenerator::NegaMax(int depth, bool doingHE, int outputDepth, U64 attacks) {
     if (depth == 0)
         return MoveTreeNode(evaluators[(int) board->GetColor()]->EvaluatePieceCount(*board), evaluators[(int) board->GetColor()]->EvaluatePositionValue(*board));
     // 218 I believe to be the max number of moves - as such its rounded up to 256
@@ -62,7 +62,15 @@ MoveTreeNode MoveTreeGenerator::NegaMax(int depth, int outputDepth, U64 attacks)
 
     for (int i = 0; i < moveCount; i++) {
         board->DoMove(moves[i]);
-        MoveTreeNode childNode = NegaMax(depth - 1, outputDepth, attackSquares);
+        MoveTreeNode childNode = MoveTreeNode(-1, -1);
+        if (depth == 1 && !doingHE && ((int) moves[i].type & (int) MoveType::Capture))
+            childNode = NegaMax(HEDepth, true, outputDepth, attackSquares);
+        else {
+            if (!doingHE || ((int) moves[i].type & (int) MoveType::Capture))
+                childNode = NegaMax(depth - 1, doingHE, outputDepth, attackSquares);
+            else
+                childNode = NegaMax(0, doingHE, outputDepth, attackSquares);
+        }
         childNode.score *= -1;
         childNode.materialScore *= -1;
         childNode.positionScore *= -1;

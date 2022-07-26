@@ -7,6 +7,6 @@
 int main(int argc, char* argv[]) {
     BitBoard board = BitBoard();
     BoardImporter::ImportFEN(&board, argv[1]);
-    MoveTreeGenerator moveGen = MoveTreeGenerator(&board, argv[2]);
+    MoveTreeGenerator moveGen = MoveTreeGenerator(&board, argv[2], std::atoi(argv[5]));
     moveGen.GenerateTreeToFile(std::atoi(argv[3]), std::atoi(argv[4]));
 }
