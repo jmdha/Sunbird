@@ -21,6 +21,6 @@ private:
     MoveGen* moveGens[2];
     Evaluator* evaluators[2];
 
-    int NegaMax(bool original, bool doingHE, Move* bestMove, int depth, int alpha, int beta, U64 attackedSquares);
+    int NegaMax(bool original, Move* bestMove, int depth, int alpha, int beta, U64 attackedSquares);
 };
 #endif

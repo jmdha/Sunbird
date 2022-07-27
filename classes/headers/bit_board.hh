@@ -9,8 +9,9 @@
 
 class BitBoard {
 public:
+    Color originalColor;
     U64 totalMoves = 0;
-
+    
     BitBoard();
     Color GetColor() {return color; };
     Color GetColor(Square sq);
@@ -30,6 +31,7 @@ public:
     void DecrementCastling();
 
 private:
+    
     Color color;
     U64 pieceBB[PIECECOUNT];
     U64 colorBB[COLORCOUNT];

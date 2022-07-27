@@ -20,8 +20,6 @@
 #define CASTLINGKING 1
 #define CASTLINGQUEEN 0
 
-#define HEDEPTH 8
-
 //#define DEBUGGING true
 
 enum class Color : int {

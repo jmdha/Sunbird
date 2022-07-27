@@ -1,6 +1,6 @@
 #include "headers/move_tree_gen.hh"
 
-MoveTreeGenerator::MoveTreeGenerator(BitBoard* board, std::string outputPath, int HEDepth) : board(board), outputPath(outputPath), HEDepth(HEDepth) {
+MoveTreeGenerator::MoveTreeGenerator(BitBoard* board, std::string outputPath, bool useAB) : board(board), outputPath(outputPath), useAB(useAB) {
     evaluators[(int) Color::White] = new Evaluator(Color::White);
     evaluators[(int) Color::Black] = new Evaluator(Color::Black);
     moveGens[(int) Color::White] = new MoveGen(Color::White);
@@ -43,16 +43,19 @@ void MoveTreeGenerator::PrintNode(std::string move, MoveTreeNode node, int inden
 
 MoveTreeNode MoveTreeGenerator::GenerateMoveTree(int depth, int outputDepth) {
     U64 attacks = 0;
+    int alpha = -(int) PieceValue::Inf;
+    int beta = (int) PieceValue::Inf;
     Move* moves = (Move*) calloc(256, sizeof(Move));
     int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attacks);
     free(moves);
-    MoveTreeNode node = NegaMax(depth, false, depth - outputDepth, attacks);
+    board->originalColor = board->GetColor();
+    MoveTreeNode node = NegaMax(depth, useAB, depth - outputDepth, alpha, beta, attacks);
     return node;
 }
 
-MoveTreeNode MoveTreeGenerator::NegaMax(int depth, bool doingHE, int outputDepth, U64 attacks) {
+MoveTreeNode MoveTreeGenerator::NegaMax(int depth, bool useAB, int outputDepth, int alpha, int beta, U64 attacks) {
     if (depth == 0)
-        return MoveTreeNode(evaluators[(int) board->GetColor()]->EvaluatePieceCount(*board), evaluators[(int) board->GetColor()]->EvaluatePositionValue(*board));
+        return MoveTreeNode(evaluators[(int) board->originalColor]->EvaluatePieceCount(*board), evaluators[(int) board->originalColor]->EvaluatePositionValue(*board));
     // 218 I believe to be the max number of moves - as such its rounded up to 256
     Move* moves = (Move*) calloc(256, sizeof(Move));
     U64 attackSquares = attacks;
@@ -62,15 +65,8 @@ MoveTreeNode MoveTreeGenerator::NegaMax(int depth, bool doingHE, int outputDepth
 
     for (int i = 0; i < moveCount; i++) {
         board->DoMove(moves[i]);
-        MoveTreeNode childNode = MoveTreeNode(-1, -1);
-        if (depth == 1 && !doingHE && ((int) moves[i].type & (int) MoveType::Capture))
-            childNode = NegaMax(HEDepth, true, outputDepth, attackSquares);
-        else {
-            if (!doingHE || ((int) moves[i].type & (int) MoveType::Capture))
-                childNode = NegaMax(depth - 1, doingHE, outputDepth, attackSquares);
-            else
-                childNode = NegaMax(0, doingHE, outputDepth, attackSquares);
-        }
+
+        MoveTreeNode childNode = NegaMax(depth - 1, useAB, outputDepth, -beta, -alpha, attackSquares);
         childNode.score *= -1;
         childNode.materialScore *= -1;
         childNode.positionScore *= -1;
@@ -82,6 +78,13 @@ MoveTreeNode MoveTreeGenerator::NegaMax(int depth, bool doingHE, int outputDepth
             node.score = childNode.score;
             node.materialScore = childNode.materialScore;
             node.positionScore = childNode.positionScore;
+        }
+
+        if (useAB) {
+            if (alpha >= beta)
+                return node;
+            if (childNode.score > alpha)
+                alpha = childNode.score;
         }
     }
     free(moves);
