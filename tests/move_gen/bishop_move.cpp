@@ -12,8 +12,9 @@ int main(int argc, char* argv[]) {
     BitBoard board = BitBoard();
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     MoveGen moveGen = MoveGen(board.GetColor());
+    
     Move* moves = (Move*) calloc(256, sizeof(Move));
-    U64 attackMoves = 0;
+    U64 attackMoves[2] = { 0, 0 };
     int moveCount = moveGen.GetBishopMoves(moves, 0, board, (bool)std::atoi(argv[3]), &attackMoves);
     free(moves);
     if (moveCount == std::atoi(argv[1]))
