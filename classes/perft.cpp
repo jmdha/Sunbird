@@ -7,7 +7,10 @@ Perft::Perft(BitBoard* board) {
 }
 
 int Perft::RunFromPosition(int depth) {
-    int leafCount = Run(depth, 0);
+    U64 attacks = 0;
+    Move* moves = (Move*) calloc(256, sizeof(Move));
+    int moveCount = moveGens[(int) Utilities::GetOppositeColor(board->GetColor())]->GetAllMoves(moves, *board, &attacks);
+    int leafCount = Run(depth, attacks);
     return leafCount;
 }
 
@@ -21,7 +24,9 @@ int Perft::Run(int depth, U64 attackedSquares) {
 
     for (int i = 0; i < moveCount; i++) {
         board->DoMove(moves[i]);
-        leafCount += Run(depth - 1, attackSquares);
+        if (moveGens[(int) Utilities::GetOppositeColor(board->GetColor())]->IsKingSafe(*board)) {
+            leafCount += Run(depth - 1, attackSquares);
+        }
         board->UndoMove(moves[i]);
     }
 

@@ -7,6 +7,7 @@
 #include "../classes/headers/perft.hh"
 
 int main(int argc, char* argv[]) {
+    BitShifts::Init();
     BitBoard board = BitBoard();
     BoardImporter::ImportFEN(&board, "rnbqkbnr/pp2pppp/8/2pp2N1/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 3");
     MiniMax max = MiniMax(&board);

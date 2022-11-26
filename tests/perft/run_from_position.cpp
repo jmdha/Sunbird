@@ -11,6 +11,7 @@
 #include "../../classes/headers/perft.hh"
 
 int main(int argc, char* argv[]) {
+    BitShifts::Init();
     int expectedLeafCount = std::atoi(argv[1]);
 
     std::string FEN = std::string(argv[2]);

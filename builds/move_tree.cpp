@@ -5,6 +5,7 @@
 #include "../classes/headers/move_tree_gen.hh"
 
 int main(int argc, char* argv[]) {
+    BitShifts::Init();
     BitBoard board = BitBoard();
     BoardImporter::ImportFEN(&board, argv[1]);
     MoveTreeGenerator moveGen = MoveTreeGenerator(&board, argv[2], std::atoi(argv[5]));
