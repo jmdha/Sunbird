@@ -31,17 +31,11 @@ int Evaluator::EvaluatePositionValue(const BitBoard board, Color color) {
     U64 queens  = board.pieceBB[(int) PieceType::Queen]     & board.colorBB[(int) color];
     U64 kings   = board.pieceBB[(int) PieceType::King]      & board.colorBB[(int) color];
 
-    int pawnIndex;
     while (pawns)   value += GetPiecePositionValue(PieceType::Pawn,     (Square) Utilities::LSB_Pop(&pawns),    color);
-    int knightIndex;
     while (knights) value += GetPiecePositionValue(PieceType::Knight,   (Square) Utilities::LSB_Pop(&knights),  color);
-    int bishopIndex;
     while (bishops) value += GetPiecePositionValue(PieceType::Bishop,   (Square) Utilities::LSB_Pop(&bishops),  color);
-    int rookIndex;
     while (rooks)   value += GetPiecePositionValue(PieceType::Rook,     (Square) Utilities::LSB_Pop(&rooks),    color);
-    int queenIndex;
     while (queens)  value += GetPiecePositionValue(PieceType::Queen,    (Square) Utilities::LSB_Pop(&queens),   color);
-    int kingIndex;
     while (kings)   value += GetPiecePositionValue(PieceType::King,     (Square) Utilities::LSB_Pop(&kings),    color);
 
     return value;
