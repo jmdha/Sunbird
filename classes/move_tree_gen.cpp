@@ -42,7 +42,7 @@ void MoveTreeGenerator::PrintNode(std::string move, MoveTreeNode node, int inden
 }
 
 MoveTreeNode MoveTreeGenerator::GenerateMoveTree(int depth, int outputDepth) {
-    U64 attacks = 0;
+    U64 attacks[2] = { 0, 0 };
     int alpha = -(int) PieceValue::Inf;
     int beta = (int) PieceValue::Inf;
     Move* moves = (Move*) calloc(256, sizeof(Move));
@@ -53,12 +53,12 @@ MoveTreeNode MoveTreeGenerator::GenerateMoveTree(int depth, int outputDepth) {
     return node;
 }
 
-MoveTreeNode MoveTreeGenerator::NegaMax(int depth, bool useAB, int outputDepth, int alpha, int beta, U64 attacks) {
+MoveTreeNode MoveTreeGenerator::NegaMax(int depth, bool useAB, int outputDepth, int alpha, int beta, U64 attacks[2]) {
     if (depth == 0)
         return MoveTreeNode(evaluators[(int) board->originalColor]->EvaluatePieceCount(*board), evaluators[(int) board->originalColor]->EvaluatePositionValue(*board));
     // 218 I believe to be the max number of moves - as such its rounded up to 256
     Move* moves = (Move*) calloc(256, sizeof(Move));
-    U64 attackSquares = attacks;
+    U64 attackSquares[2] = { attacks[0], attacks[1] };
     int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attackSquares);
     
     MoveTreeNode node = MoveTreeNode(-(int)PieceValue::Inf, depth);

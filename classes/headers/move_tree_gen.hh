@@ -28,7 +28,7 @@ private:
 
     void PrintNode(std::string move, MoveTreeNode node, int indent, bool lastNode);
     MoveTreeNode GenerateMoveTree(int depth, int outputDepth);
-    MoveTreeNode NegaMax(int depth, bool useAB, int outputDepth, int alpha, int beta, U64 attacks);
+    MoveTreeNode NegaMax(int depth, bool useAB, int outputDepth, int alpha, int beta, U64 attacks[2]);
 
     void PrintIndent(int indent, std::string string);
     void PrintIndentNL(int indent, std::string string);

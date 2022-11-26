@@ -1,6 +1,9 @@
 #ifndef PERFT
 #define PERFT
 
+#define DEBUG_MOVE_TYPE_COUNT true
+#define DEBUG_PRINT_MOVES true
+
 #include <string>
 
 #include "constants.hh"
@@ -18,7 +21,9 @@ private:
     BitBoard* board;
     MoveGen* moveGens[2];
 
-    int Run(int depth, U64 attackedSquares);
+    unsigned int moveTypeCount[16] = { 0 };
+
+    int Run(int depth, U64 attackedSquares[2]);
 
 };
 #endif
