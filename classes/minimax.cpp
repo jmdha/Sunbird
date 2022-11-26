@@ -9,6 +9,7 @@ MiniMax::MiniMax(BitBoard* board) {
 }
 
 Move MiniMax::GetBestMove(int depth) {
+    board->originalColor = board->GetColor();
     Move move = Move(MoveType::BPromotionCapture, Color::None);
     int alpha = -(int) PieceValue::Inf;
     int beta = (int) PieceValue::Inf;
