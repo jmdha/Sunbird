@@ -45,6 +45,10 @@ public:
     // Converts 1-8 to bitshift equivilant
     static Direction GetDirection(int i);
 
+    static void AddSquares(U64 (*attackSquares)[2], U64 addedSquares);
+    static void RemoveSquares(U64 (*attackSquares)[2], U64 removedSquares);
+
+
 private:
 };
 

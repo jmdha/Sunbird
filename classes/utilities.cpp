@@ -243,3 +243,23 @@ Direction Utilities::GetDirection(int i) {
         return Direction::None;
     }
 }
+
+void Utilities::AddSquares(U64 (*attackSquares)[2], U64 addedSquares) {
+    while (addedSquares) {
+        int lsb = LSB_Pop(&addedSquares);
+        if (lsb & (*attackSquares)[0])
+            (*attackSquares)[1] |= lsb;
+        else
+            (*attackSquares)[0] |= lsb;
+    }
+}
+
+void Utilities::RemoveSquares(U64 (*attackSquares)[2], U64 removedSquares) {
+    while (removedSquares) {
+        int lsb = LSB_Pop(&removedSquares);
+        if (lsb & (*attackSquares)[1])
+            (*attackSquares)[1] ^= lsb;
+        else
+            (*attackSquares)[0] ^= lsb;
+    }
+}
