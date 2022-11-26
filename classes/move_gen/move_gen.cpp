@@ -42,12 +42,6 @@ int MoveGen::GetAllMoves(Move* moves, BitBoard board, U64 (*attackedSquares)[2])
     moveCount += GetKnightMoves(moves, moveCount, board, isKingSafe, attackedSquares);
     moveCount += GetKingMoves(moves, moveCount, board, isKingSafe, attackedSquares, priorSquares);
 
-#ifdef DEBUGGING_COUNT_MOVE_TYPE
-    for (int i = 0; i < moveCount; i++) {
-        
-    }
-#endif
-
     return moveCount;
 }
 
@@ -393,6 +387,12 @@ bool MoveGen::IsSafeMove(BitBoard board, Square square) {
 
     return true;
 }
+
+U64 MoveGen::GetAttackSquares(BitBoard board, Square fromSquare) {
+    auto pos = C64((int) fromSquare);
+    printf("a\n");
+}
+
 
 void MoveGen::AppendMove(Move* moves, int index, int* moveCount, Move move) {
     moves[index] = move;

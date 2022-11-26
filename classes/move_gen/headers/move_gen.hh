@@ -4,10 +4,10 @@
 #include <vector>
 #include <strings.h>
 
-#include "bit_board.hh"
-#include "bit_shifts.hh"
-#include "constants.hh"
-#include "move.hh"
+#include "../../headers/bit_board.hh"
+#include "../../headers/bit_shifts.hh"
+#include "../../headers/constants.hh"
+#include "../../headers/move.hh"
 
 class MoveGen {
 public:
@@ -19,6 +19,8 @@ public:
     int GetQueenMoves   (Move* moves, int startIndex, BitBoard board, bool isKingSafe, U64 (*attackedSquares)[2]);
     int GetKnightMoves  (Move* moves, int startIndex, BitBoard board, bool isKingSafe, U64 (*attackedSquares)[2]);
     int GetKingMoves    (Move* moves, int startIndex, BitBoard board, bool isKingSafe, U64 (*attackedSquares)[2], U64 priorAttacks[2]);
+    U64 GetAttackSquares(BitBoard board, Square fromSquare);
+
     bool IsKingSafe(BitBoard board, U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard);
     bool IsKingSafe(BitBoard board, U64 tempOccuracyBoard, U64 tempEnemyBoard);
     bool IsKingSafe(BitBoard board, U64 tempOccuracyBoard);
