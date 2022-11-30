@@ -31,12 +31,21 @@ int Evaluator::EvaluatePositionValue(const Board board, Color color) {
     U64 queens  = board.pieceBB[(int) PieceType::Queen]     & board.colorBB[(int) color];
     U64 kings   = board.pieceBB[(int) PieceType::King]      & board.colorBB[(int) color];
 
-    while (pawns)   value += PosValuePawn      [(color == Color::White) ? Utilities::LSB_Pop(&pawns)   : 63 - Utilities::LSB_Pop(&pawns)];
-    while (knights) value += PosValueKnight    [(color == Color::White) ? Utilities::LSB_Pop(&knights) : 63 - Utilities::LSB_Pop(&knights)];
-    while (bishops) value += PosValueBishop    [(color == Color::White) ? Utilities::LSB_Pop(&bishops) : 63 - Utilities::LSB_Pop(&bishops)];
-    while (rooks)   value += PosValueRook      [(color == Color::White) ? Utilities::LSB_Pop(&rooks)   : 63 - Utilities::LSB_Pop(&rooks)];
-    while (queens)  value += PosValueQueen     [(color == Color::White) ? Utilities::LSB_Pop(&queens)  : 63 - Utilities::LSB_Pop(&queens)];
-    while (kings)   value += PosValueKing_Early[(color == Color::White) ? Utilities::LSB_Pop(&kings)   : 63 - Utilities::LSB_Pop(&kings)];
+    if (color == Color::White) {
+        while (pawns)   value += PosValuePawn      [Utilities::LSB_Pop(&pawns)];
+        while (knights) value += PosValueKnight    [Utilities::LSB_Pop(&knights)];
+        while (bishops) value += PosValueBishop    [Utilities::LSB_Pop(&bishops)];
+        while (rooks)   value += PosValueRook      [Utilities::LSB_Pop(&rooks)];
+        while (queens)  value += PosValueQueen     [Utilities::LSB_Pop(&queens)];
+        while (kings)   value += PosValueKing_Early[Utilities::LSB_Pop(&kings)];
+    } else {
+        while (pawns)   value += PosValuePawn      [63 - Utilities::LSB_Pop(&pawns)];
+        while (knights) value += PosValueKnight    [63 - Utilities::LSB_Pop(&knights)];
+        while (bishops) value += PosValueBishop    [63 - Utilities::LSB_Pop(&bishops)];
+        while (rooks)   value += PosValueRook      [63 - Utilities::LSB_Pop(&rooks)];
+        while (queens)  value += PosValueQueen     [63 - Utilities::LSB_Pop(&queens)];
+        while (kings)   value += PosValueKing_Early[63 - Utilities::LSB_Pop(&kings)];
+    }
 
     return value;
 }
