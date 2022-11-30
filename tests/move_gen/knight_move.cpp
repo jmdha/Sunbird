@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     MoveGen moveGen = MoveGen(board.GetColor());
 
-    Move* moves = (Move*) calloc(256, sizeof(Move));
+    Move* moves = (Move*) calloc(MAXMOVECOUNT, sizeof(Move));
     U64 attackMoves[2] = { 0, 0 };
     int moveCount = moveGen.GetKnightMoves(moves, 0, board, (bool)std::atoi(argv[3]), &attackMoves);
     free(moves);
