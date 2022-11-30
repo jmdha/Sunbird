@@ -80,14 +80,14 @@ int MoveGen::GetPawnMoves(Move* moves, int startIndex, Board board, bool isKingS
         while (captures) {
             int capturePiece = Utilities::LSB_Pop(&captures);
             if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsb), board.colorBB[(int) oppColor] ^ C64(capturePiece)))
-                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsb, (Square) capturePiece, color, oppColor, PieceType::Pawn, board.GetType((Square) capturePiece, oppColor)));
+                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsb, (Square) capturePiece, color, oppColor, PieceType::Pawn, board.GetType((Square) capturePiece)));
         }
         //// En Passant
         captures = board.enPassant & PawnAttacks[(int) color][(int) lsb] & (U64) enPassantRank;
         while (captures) {
             int capturePiece = Utilities::LSB_Pop(&captures);
             if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsb),  board.colorBB[(int) oppColor] ^ C64(capturePiece)))
-                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::EPCapture, (Square) lsb, (Square) capturePiece, color, oppColor, PieceType::Pawn, board.GetType((Square) BitShifts::Shift(capturePiece, up, -1), oppColor)));
+                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::EPCapture, (Square) lsb, (Square) capturePiece, color, oppColor, PieceType::Pawn, board.GetType((Square) BitShifts::Shift(capturePiece, up, -1))));
         }
     }
     return moveCount;
@@ -151,7 +151,7 @@ int MoveGen::GetKnightMoves(Move* moves, int startIndex, Board board, bool isKin
             while (attackMoves) {
                 int lsb = Utilities::LSB_Pop(&attackMoves);
                 if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsbPiece), board.colorBB[(int) oppColor] ^ C64(lsb)))
-                    AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::Knight, board.GetType((Square) lsb, oppColor)));
+                    AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::Knight, board.GetType((Square) lsb)));
             }
 
             // Quiet moves
@@ -187,7 +187,7 @@ int MoveGen::GetKingMoves(Move* moves, int startIndex, Board board, bool isKingS
     while (attackMoves) {
         int lsb = Utilities::LSB_Pop(&attackMoves);
         if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsbPiece), board.colorBB[(int) oppColor] ^ C64(lsb), C64(lsb)))
-            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::King, board.GetType((Square) lsb, oppColor)));
+            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, color, oppColor, PieceType::King, board.GetType((Square) lsb)));
     }
 
     // Quiet moves
@@ -225,7 +225,7 @@ int MoveGen::GetMoves(Move* moves, int startIndex, Board board, U64 pieces, Dire
         while (attackMoves) {
             int lsb = Utilities::LSB_Pop(&attackMoves);
             if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsb - (int) direction * counter), board.colorBB[(int) oppColor] ^ C64(lsb)))
-                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) (lsb - (int) direction * counter), (Square) lsb, color, oppColor, type, board.GetType((Square) lsb, oppColor)));
+                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) (lsb - (int) direction * counter), (Square) lsb, color, oppColor, type, board.GetType((Square) lsb)));
         }
 
         U64 quietMoves = to;

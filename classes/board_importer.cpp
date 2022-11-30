@@ -1,7 +1,7 @@
 #include "headers/board_importer.hh"
 
 void BoardImporter::ImportFEN(Board* board, std::string FEN) {
-    board->ClearBoard();
+    (*board) = Board();
 
 	// import position
 	for(int y = HEIGHT - 1; y >= 0; y--) {
@@ -23,10 +23,13 @@ void BoardImporter::ImportFEN(Board* board, std::string FEN) {
 		return;
 
 	// import turn
-	if(FEN[0] == 'w')
-		board->SetColor(Color::White);
-	else
-		board->SetColor(Color::Black);
+	if(FEN[0] == 'w') {
+		board->color = Color::White;
+		board->originalColor = Color::White;
+	} else {
+		board->color = Color::Black;
+		board->originalColor = Color::Black;
+	}
 		
 	FEN.erase(0, 2);
 
@@ -68,8 +71,8 @@ void BoardImporter::ImportMoveSequence(Board* board, std::string moves) {
 		if (moves[i] == ' ' || i == (int) moves.length() - 1) {
 			Square fromSquare = Utilities::GetSquare(move[0], move[1]);
 			Square toSquare = Utilities::GetSquare(move[2], move[3]);
-			PieceType fromType = board->GetPiece(fromSquare);
-			PieceType toType = board->GetPiece(toSquare);
+			PieceType fromType = board->GetType(fromSquare);
+			PieceType toType = board->GetType(toSquare);
 			Color fromColor = board->GetColor(fromSquare);
 			Color toColor = board->GetColor(toSquare);
 			MoveType type;

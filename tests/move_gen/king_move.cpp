@@ -13,13 +13,11 @@ int main(int argc, char* argv[]) {
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     MoveGen moveGen = MoveGen(board.GetColor());
     MoveGen oppMoveGen = MoveGen(Utilities::GetOppositeColor(board.GetColor()));
-    board.SetColor(Utilities::GetOppositeColor(board.GetColor()));
     Move* moves = (Move*) calloc(256, sizeof(Move));
     Move* fakeMoves = (Move*) calloc(256, sizeof(Move));
     U64 priorAttacks[2] = { 0, 0 };
     // Generate attackboard
     oppMoveGen.GetAllMoves(fakeMoves, board, &priorAttacks);
-    board.SetColor(Utilities::GetOppositeColor(board.GetColor()));
     U64 attackSquares[2] = { 0, 0 };
     int moveCount = moveGen.GetKingMoves(moves, 0, board, (bool)std::atoi(argv[3]), &attackSquares, priorAttacks);
     free(moves);

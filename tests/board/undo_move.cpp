@@ -21,10 +21,10 @@ int main(int argc, char* argv[]) {
     Square fromSquare = Utilities::GetSquare(sMove[0], sMove[1]);
     Square toSquare = Utilities::GetSquare(sMove[2], sMove[3]);
 
-    PieceType toPiece = board.GetPiece(toSquare);
+    PieceType toPiece = board.GetType(toSquare);
     MoveType moveType = (toPiece == PieceType::None) ? MoveType::Quiet : MoveType::Capture;
 
-    Move move = Move(moveType, fromSquare, toSquare, board.GetSquareColor(fromSquare), board.GetSquareColor(toSquare), board.GetPiece(fromSquare), toPiece);
+    Move move = Move(moveType, fromSquare, toSquare, board.GetColor(fromSquare), board.GetColor(toSquare), board.GetType(fromSquare), toPiece);
 
     board.DoMove(move);
     board.UndoMove(move);

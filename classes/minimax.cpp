@@ -9,7 +9,6 @@ MiniMax::MiniMax(Board* board) {
 }
 
 Move MiniMax::GetBestMove(int depth) {
-    board->originalColor = board->GetColor();
     Move move = Move(MoveType::BPromotionCapture, Color::None);
     int alpha = -(int) PieceValue::Inf;
     int beta = (int) PieceValue::Inf;
@@ -26,7 +25,7 @@ std::mt19937 g(rd());
 
 int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int beta, U64 attackedSquares[2]) {
     if (depth == 0)
-        return evaluators[(int) board->originalColor]->Evalute(*board);
+        return evaluators[(int) board->GetOriginalColor()]->Evalute(*board);
     // 218 I believe to be the max number of moves - as such its rounded up to 256
     Move* moves = (Move*) calloc(256, sizeof(Move));
     U64 attackSquares[2] = { attackedSquares[0], attackedSquares[1] };

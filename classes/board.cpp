@@ -1,37 +1,6 @@
 #include "headers/board.hh"
 
-Board::Board() {
-    ClearBoard();
-}
-
-Color Board::GetColor(Square sq) {
-    if (colorBB[(int) Color::White] & C64(sq))
-        return Color::White;
-    else if (colorBB[(int) Color::Black] & C64(sq))
-        return Color::Black;
-    else
-        return Color::None;
-}
-
-void Board::ClearBoard() {
-    for (int i = 0; i < PIECECOUNT; i++)
-        pieceBB[i] = {};
-    for (int i = 0; i < COLORCOUNT; i++)
-        colorBB[i] = 0;
-    for (int i = 0; i < COLORCOUNT; i++)
-        for (int i2 = 0; i2 < PIECECOUNT; i2++)
-            popCount[i][i2] = 0;
-    enPassant = 0;
-    occupiedBB = 0;
-    for (int i = 0; i < COLORCOUNT; i++)
-        for (int i2 = 0; i2 < 2; i2++) {
-            castlingAllowed[i][i2] = false;
-            movesSinceCastlingDisallowed[i][i2] = -1;
-        }
-}
-
 void Board::Initialize() {
-    ClearBoard();
     for (int x = 0; x < WIDTH; x++) {
         PlacePiece(Utilities::GetSquare(x, PAWNROWWHITE), PieceType::Pawn, Color::White);
         PlacePiece(Utilities::GetSquare(x, PAWNROWBLACK), PieceType::Pawn, Color::Black);
@@ -66,26 +35,11 @@ void Board::Initialize() {
             
 
     color = Color::White;
-}
-
-PieceType Board::GetPiece(Square square) {
-    for (int i = 0; i < PIECECOUNT; i++)
-        if (pieceBB[i] & C64(square))
-            return (PieceType) i;
-    return PieceType::None;	
-}
-
-Color Board::GetSquareColor(Square square) {
-    if (colorBB[(int) Color::White] & C64(square))
-        return Color::White;
-    if (colorBB[(int) Color::Black] & C64(square))
-        return Color::Black;
-    else
-        return Color::None;
+    originalColor = Color::White;
 }
 
 void Board::DoMove(Move move) {
-    totalMoves++;
+    stats.totalMoves++;
     if (move.type == MoveType::KingCastle) {
         if (move.fromColor == Color::White) {
             PlacePiece(Square::G1, PieceType::King, Color::White);
@@ -250,13 +204,4 @@ void Board::RemovePiece(Square square, PieceType type, Color color) {
     colorBB[(int) color] ^= bit;
     occupiedBB ^= bit;
     popCount[(int) color][(int) type]--;
-}
-
-PieceType Board::GetType(Square square, Color color) {
-    U64 bit = C64(square);
-    for (int i = 0; i < 6; i++) {
-        if (pieceBB[i] & bit)
-            return (PieceType) i;
-    }
-    return PieceType::None;
 }
