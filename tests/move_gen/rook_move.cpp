@@ -3,13 +3,13 @@
 #include <stdlib.h>
 
 #include "../../classes/headers/constants.hh"
-#include "../../classes/headers/bit_board.hh"
+#include "../../classes/headers/board.hh"
 #include "../../classes/headers/board_importer.hh"
 #include "../../classes/headers/move_gen.hh"
 
 int main(int argc, char* argv[]) {
     BitShifts::Init();
-    BitBoard board = BitBoard();
+    Board board = Board();
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     MoveGen moveGen = MoveGen(board.GetColor());
 

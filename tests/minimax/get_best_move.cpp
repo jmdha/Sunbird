@@ -5,14 +5,14 @@
 #include <string>
 
 #include "../../classes/headers/constants.hh"
-#include "../../classes/headers/bit_board.hh"
+#include "../../classes/headers/board.hh"
 #include "../../classes/headers/board_importer.hh"
 #include "../../classes/headers/move.hh"
 #include "../../classes/headers/minimax.hh"
 
 int main(int argc, char* argv[]) {
     std::string moveSequence = std::string(argv[1]);
-    BitBoard board = BitBoard();
+    Board board = Board();
     BoardImporter::ImportMoveSequence(&board, moveSequence);
     std::string expectedMove = argv[3];    
 

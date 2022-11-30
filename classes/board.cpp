@@ -1,10 +1,10 @@
-#include "headers/bit_board.hh"
+#include "headers/board.hh"
 
-BitBoard::BitBoard() {
+Board::Board() {
     ClearBoard();
 }
 
-Color BitBoard::GetColor(Square sq) {
+Color Board::GetColor(Square sq) {
     if (colorBB[(int) Color::White] & C64(sq))
         return Color::White;
     else if (colorBB[(int) Color::Black] & C64(sq))
@@ -13,7 +13,7 @@ Color BitBoard::GetColor(Square sq) {
         return Color::None;
 }
 
-void BitBoard::ClearBoard() {
+void Board::ClearBoard() {
     for (int i = 0; i < PIECECOUNT; i++)
         pieceBB[i] = {};
     for (int i = 0; i < COLORCOUNT; i++)
@@ -30,7 +30,7 @@ void BitBoard::ClearBoard() {
         }
 }
 
-void BitBoard::Initialize() {
+void Board::Initialize() {
     ClearBoard();
     for (int x = 0; x < WIDTH; x++) {
         PlacePiece(Utilities::GetSquare(x, PAWNROWWHITE), PieceType::Pawn, Color::White);
@@ -68,14 +68,14 @@ void BitBoard::Initialize() {
     color = Color::White;
 }
 
-PieceType BitBoard::GetPiece(Square square) {
+PieceType Board::GetPiece(Square square) {
     for (int i = 0; i < PIECECOUNT; i++)
         if (pieceBB[i] & C64(square))
             return (PieceType) i;
     return PieceType::None;	
 }
 
-Color BitBoard::GetSquareColor(Square square) {
+Color Board::GetSquareColor(Square square) {
     if (colorBB[(int) Color::White] & C64(square))
         return Color::White;
     if (colorBB[(int) Color::Black] & C64(square))
@@ -84,7 +84,7 @@ Color BitBoard::GetSquareColor(Square square) {
         return Color::None;
 }
 
-void BitBoard::DoMove(Move move) {
+void Board::DoMove(Move move) {
     totalMoves++;
     if (move.type == MoveType::KingCastle) {
         if (move.fromColor == Color::White) {
@@ -154,7 +154,7 @@ void BitBoard::DoMove(Move move) {
     color = Utilities::GetOppositeColor(color);
 }
 
-void BitBoard::UndoMove(Move move) {
+void Board::UndoMove(Move move) {
     if (move.type == MoveType::KingCastle) {
         if (move.fromColor == Color::White) {
             RemovePiece(Square::G1, PieceType::King, Color::White);
@@ -201,17 +201,17 @@ void BitBoard::UndoMove(Move move) {
     color = Utilities::GetOppositeColor(color);
 }
 
-void BitBoard::EnableCastling(Color color, Castling side) {
+void Board::EnableCastling(Color color, Castling side) {
     castlingAllowed[(int) color][(int) side] = true;
     movesSinceCastlingDisallowed[(int) color][(int) side] = -1;
 }
 
-void BitBoard::DisableCastling(Color color, Castling side) {
+void Board::DisableCastling(Color color, Castling side) {
     castlingAllowed[(int) color][(int) side] = false;
     movesSinceCastlingDisallowed[(int) color][(int) side] = 0;
 }
 
-void BitBoard::IncrementCastling() {
+void Board::IncrementCastling() {
     for (int i = 0; i < 2; i++) {
         for (int i2 = 0; i2 < 2; i2++) {
             if (movesSinceCastlingDisallowed[i][i2] != -1)
@@ -220,7 +220,7 @@ void BitBoard::IncrementCastling() {
     }
 }
 
-void BitBoard::DecrementCastling() {
+void Board::DecrementCastling() {
     for (int i = 0; i < 2; i++) {
         for (int i2 = 0; i2 < 2; i2++) {
             if (movesSinceCastlingDisallowed[i][i2] == 0) {
@@ -232,11 +232,11 @@ void BitBoard::DecrementCastling() {
     }
 }
 
-void BitBoard::PlacePiece(Square square, PieceChar pieceChar) {
+void Board::PlacePiece(Square square, PieceChar pieceChar) {
     PlacePiece(square, Utilities::GetPieceType(pieceChar), Utilities::GetPieceColor(pieceChar));
 }
 
-void BitBoard::PlacePiece(Square square, PieceType type, Color color) {
+void Board::PlacePiece(Square square, PieceType type, Color color) {
     U64 bit = C64(square);
     pieceBB[(int) type] |= bit;
     colorBB[(int) color] |= bit;
@@ -244,7 +244,7 @@ void BitBoard::PlacePiece(Square square, PieceType type, Color color) {
     popCount[(int) color][(int) type]++;
 }
 
-void BitBoard::RemovePiece(Square square, PieceType type, Color color) {
+void Board::RemovePiece(Square square, PieceType type, Color color) {
     U64 bit = C64(square);
     pieceBB[(int) type] ^= bit;
     colorBB[(int) color] ^= bit;
@@ -252,7 +252,7 @@ void BitBoard::RemovePiece(Square square, PieceType type, Color color) {
     popCount[(int) color][(int) type]--;
 }
 
-PieceType BitBoard::GetType(Square square, Color color) {
+PieceType Board::GetType(Square square, Color color) {
     U64 bit = C64(square);
     for (int i = 0; i < 6; i++) {
         if (pieceBB[i] & bit)

@@ -7,12 +7,12 @@
 #include "utilities.hh"
 #include "move.hh"
 
-class BitBoard {
+class Board {
 public:
     Color originalColor;
     U64 totalMoves = 0;
     
-    BitBoard();
+    Board();
     Color GetColor() {return color; };
     Color GetColor(Square sq);
     void SetColor(Color color) { this->color = color; };

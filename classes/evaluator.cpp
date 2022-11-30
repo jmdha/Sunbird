@@ -4,11 +4,11 @@ Evaluator::Evaluator(Color color) :
     color(color),
     oppColor(Utilities::GetOppositeColor(color)) {}
 
-int Evaluator::Evalute(const BitBoard board) {
+int Evaluator::Evalute(const Board board) {
     return EvaluatePieceCount(board) + EvaluatePositionValue(board);
 }
 
-int Evaluator::EvaluatePieceCount(const BitBoard board) {
+int Evaluator::EvaluatePieceCount(const Board board) {
     int value = 0;
     for (int i = 0; i < PIECECOUNT; i++) {
         int pieceValue = Utilities::GetPieceValue((PieceType) i);
@@ -18,11 +18,11 @@ int Evaluator::EvaluatePieceCount(const BitBoard board) {
     return value;
 }
 
-int Evaluator::EvaluatePositionValue(const BitBoard board) {
+int Evaluator::EvaluatePositionValue(const Board board) {
     return EvaluatePositionValue(board, board.color) - EvaluatePositionValue(board, Utilities::GetOppositeColor(board.color));
 }
 
-int Evaluator::EvaluatePositionValue(const BitBoard board, Color color) {
+int Evaluator::EvaluatePositionValue(const Board board, Color color) {
     int value   = 0;
     U64 pawns   = board.pieceBB[(int) PieceType::Pawn]      & board.colorBB[(int) color];
     U64 knights = board.pieceBB[(int) PieceType::Knight]    & board.colorBB[(int) color];

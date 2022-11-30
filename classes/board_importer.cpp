@@ -1,6 +1,6 @@
 #include "headers/board_importer.hh"
 
-void BoardImporter::ImportFEN(BitBoard* board, std::string FEN) {
+void BoardImporter::ImportFEN(Board* board, std::string FEN) {
     board->ClearBoard();
 
 	// import position
@@ -58,7 +58,7 @@ void BoardImporter::ImportFEN(BitBoard* board, std::string FEN) {
 	// import full move
 }
 
-void BoardImporter::ImportMoveSequence(BitBoard* board, std::string moves) {
+void BoardImporter::ImportMoveSequence(Board* board, std::string moves) {
 	board->Initialize();
 	std::string move = "";
 	for (int i = 0; i < moves.length(); i++) {

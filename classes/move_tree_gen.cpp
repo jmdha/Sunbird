@@ -1,6 +1,6 @@
 #include "headers/move_tree_gen.hh"
 
-MoveTreeGenerator::MoveTreeGenerator(BitBoard* board, std::string outputPath, bool useAB) : board(board), outputPath(outputPath), useAB(useAB) {
+MoveTreeGenerator::MoveTreeGenerator(Board* board, std::string outputPath, bool useAB) : board(board), outputPath(outputPath), useAB(useAB) {
     evaluators[(int) Color::White] = new Evaluator(Color::White);
     evaluators[(int) Color::Black] = new Evaluator(Color::Black);
     moveGens[(int) Color::White] = new MoveGen(Color::White);

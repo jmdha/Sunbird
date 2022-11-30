@@ -5,13 +5,13 @@
 #include <string>
 
 #include "../../classes/headers/constants.hh"
-#include "../../classes/headers/bit_board.hh"
+#include "../../classes/headers/board.hh"
 #include "../../classes/headers/board_importer.hh"
 #include "../../classes/headers/move.hh"
 
 int main(int argc, char* argv[]) {
     std::string FEN = std::string(argv[1]);
-    BitBoard board = BitBoard();
+    Board board = Board();
     BoardImporter::ImportFEN(&board, FEN);    
 
     U64 priorHash = board.GetHash();

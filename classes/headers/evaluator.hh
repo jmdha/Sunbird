@@ -1,15 +1,15 @@
 #ifndef EVALUATOR
 #define EVALUATOR
 
-#include "bit_board.hh"
+#include "board.hh"
 
 class Evaluator {
 public:
     Evaluator(Color color);
-    int Evalute(const BitBoard board);
-    int EvaluatePieceCount(const BitBoard board);
-    int EvaluatePositionValue(const BitBoard board);
-    int EvaluatePositionValue(const BitBoard board, Color color);
+    int Evalute(const Board board);
+    int EvaluatePieceCount(const Board board);
+    int EvaluatePositionValue(const Board board);
+    int EvaluatePositionValue(const Board board, Color color);
     int GetPiecePositionValue(PieceType type, Square position, Color color);
     
 private:

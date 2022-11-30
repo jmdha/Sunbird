@@ -5,7 +5,7 @@
 #include <string>
 
 #include "constants.hh"
-#include "bit_board.hh"
+#include "board.hh"
 #include "evaluator.hh"
 #include "move_gen.hh"
 #include "move.hh"
@@ -13,13 +13,13 @@
 
 class MoveTreeGenerator {
 public:
-    MoveTreeGenerator(BitBoard* board, std::string outputPath, bool useAB);
+    MoveTreeGenerator(Board* board, std::string outputPath, bool useAB);
     ~MoveTreeGenerator();
 
     void GenerateTreeToFile(int depth, int outputDepth);
 
 private:
-    BitBoard* board;
+    Board* board;
     FILE *fp;
     std::string outputPath;
     MoveGen* moveGens[2];

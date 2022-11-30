@@ -6,14 +6,14 @@
 
 #include "../../classes/headers/board_importer.hh"
 #include "../../classes/headers/constants.hh"
-#include "../../classes/headers/bit_board.hh"
+#include "../../classes/headers/board.hh"
 
 int main(int argc, char* argv[]) {
     std::string FEN = std::string(argv[1]);
-    BitBoard expectedBoard = BitBoard();
+    Board expectedBoard = Board();
     expectedBoard.Initialize();
 
-    BitBoard* boardFEN = new BitBoard();
+    Board* boardFEN = new Board();
 
     BoardImporter::ImportFEN(boardFEN, FEN);
 

@@ -1,6 +1,6 @@
 #include "headers/perft.hh"
 
-Perft::Perft(BitBoard* board) {
+Perft::Perft(Board* board) {
     this->board = board;
     moveGens[(int) Color::White] = new MoveGen(Color::White);
     moveGens[(int) Color::Black] = new MoveGen(Color::Black);

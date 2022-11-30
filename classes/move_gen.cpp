@@ -25,7 +25,7 @@ notPromotionRank((up == Direction::North) ? NotEdge::North : NotEdge::South) {
     GeneratePawnMoves();
 }
 
-int MoveGen::GetAllMoves(Move* moves, BitBoard board, U64 (*attackedSquares)[2]) {
+int MoveGen::GetAllMoves(Move* moves, Board board, U64 (*attackedSquares)[2]) {
     U64 priorSquares[2];
     priorSquares[0] = (*attackedSquares)[0];
     priorSquares[1] = (*attackedSquares)[1];
@@ -43,7 +43,7 @@ int MoveGen::GetAllMoves(Move* moves, BitBoard board, U64 (*attackedSquares)[2])
     return moveCount;
 }
 
-int MoveGen::GetPawnMoves(Move* moves, int startIndex, BitBoard board, bool isKingSafe, U64 (*attackedSquares)[2]) {
+int MoveGen::GetPawnMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
     // Generate single and double step moves
     U64 pieces = board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color];
     if (pieces == 0)
@@ -93,7 +93,7 @@ int MoveGen::GetPawnMoves(Move* moves, int startIndex, BitBoard board, bool isKi
     return moveCount;
 }
 
-int MoveGen::GetRookMoves(Move* moves, int startIndex, BitBoard board, bool isKingSafe, U64 (*attackedSquares)[2]) {
+int MoveGen::GetRookMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
     Direction directions[4] = { Direction::North, Direction::East, Direction::South, Direction::West };
     int moveCount = 0;
 
@@ -105,7 +105,7 @@ int MoveGen::GetRookMoves(Move* moves, int startIndex, BitBoard board, bool isKi
     return moveCount;
 }
 
-int MoveGen::GetBishopMoves(Move* moves, int startIndex, BitBoard board, bool isKingSafe, U64 (*attackedSquares)[2]) {
+int MoveGen::GetBishopMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
     Direction directions[4] = { Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
     int moveCount = 0;
 
@@ -117,7 +117,7 @@ int MoveGen::GetBishopMoves(Move* moves, int startIndex, BitBoard board, bool is
     return moveCount;
 }
 
-int MoveGen::GetQueenMoves(Move* moves, int startIndex, BitBoard board, bool isKingSafe, U64 (*attackedSquares)[2]) {
+int MoveGen::GetQueenMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
     Direction directions[8] = { Direction::North, Direction::East, Direction::South, Direction::West, 
                                 Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
     int moveCount = 0;
@@ -130,7 +130,7 @@ int MoveGen::GetQueenMoves(Move* moves, int startIndex, BitBoard board, bool isK
     return moveCount;
 }
 
-int MoveGen::GetKnightMoves(Move* moves, int startIndex, BitBoard board, bool isKingSafe, U64 (*attackedSquares)[2]) {
+int MoveGen::GetKnightMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
     U64 pieces = board.pieceBB[(int) PieceType::Knight] & board.colorBB[(int) color];
     if (pieces == 0)
         return 0;
@@ -166,7 +166,7 @@ int MoveGen::GetKnightMoves(Move* moves, int startIndex, BitBoard board, bool is
     return moveCount;
 }
 
-int MoveGen::GetKingMoves(Move* moves, int startIndex, BitBoard board, bool isKingSafe, U64 (*attackedSquares)[2], U64 priorAttacks[2]) {
+int MoveGen::GetKingMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2], U64 priorAttacks[2]) {
     U64 pieces = board.pieceBB[(int) PieceType::King] & board.colorBB[(int) color];
     if (pieces == 0)
         return 0;
@@ -209,7 +209,7 @@ int MoveGen::GetKingMoves(Move* moves, int startIndex, BitBoard board, bool isKi
     return moveCount;
 }
 
-int MoveGen::GetMoves(Move* moves, int startIndex, BitBoard board, U64 pieces, Direction direction, PieceType type, bool isKingSafe, U64 (*attackedSquares)[2]) {
+int MoveGen::GetMoves(Move* moves, int startIndex, Board board, U64 pieces, Direction direction, PieceType type, bool isKingSafe, U64 (*attackedSquares)[2]) {
     U64 to = pieces;
     int moveCount = 0;
     int counter = 1;
@@ -256,7 +256,7 @@ void MoveGen::GeneratePawnMoves() {
     }
 }
 
-bool MoveGen::IsKingSafe(BitBoard board, U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard) {
+bool MoveGen::IsKingSafe(Board board, U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard) {
     U64 kingPos = tempKingBoard;
     int kingPosIndex = Utilities::LSB_Pop(&kingPos);
 
@@ -300,19 +300,19 @@ bool MoveGen::IsKingSafe(BitBoard board, U64 tempOccuracyBoard, U64 tempEnemyBoa
     return true;
 }
 
-bool MoveGen::IsKingSafe(BitBoard board, U64 tempOccuracyBoard, U64 tempEnemyBoard) {
+bool MoveGen::IsKingSafe(Board board, U64 tempOccuracyBoard, U64 tempEnemyBoard) {
     return IsKingSafe(board, tempOccuracyBoard, tempEnemyBoard, board.pieceBB[(int) PieceType::King] & board.colorBB[(int) color]);
 }
 
-bool MoveGen::IsKingSafe(BitBoard board, U64 tempOccuracyBoard) {
+bool MoveGen::IsKingSafe(Board board, U64 tempOccuracyBoard) {
     return IsKingSafe(board, tempOccuracyBoard, board.colorBB[(int) oppColor]);
 }
 
-bool MoveGen::IsKingSafe(BitBoard board) {
+bool MoveGen::IsKingSafe(Board board) {
     return IsKingSafe(board, board.occupiedBB);
 }
 
-bool MoveGen::IsSafeMove(BitBoard board, Square square) {
+bool MoveGen::IsSafeMove(Board board, Square square) {
 
     return true;
 }

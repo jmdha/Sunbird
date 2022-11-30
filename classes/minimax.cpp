@@ -1,6 +1,6 @@
 #include "headers/minimax.hh"
 
-MiniMax::MiniMax(BitBoard* board) {
+MiniMax::MiniMax(Board* board) {
     this->board = board;
     evaluators[(int) Color::White] = new Evaluator(Color::White);
     evaluators[(int) Color::Black] = new Evaluator(Color::Black);
