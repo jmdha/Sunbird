@@ -31,50 +31,12 @@ int Evaluator::EvaluatePositionValue(const Board board, Color color) {
     U64 queens  = board.pieceBB[(int) PieceType::Queen]     & board.colorBB[(int) color];
     U64 kings   = board.pieceBB[(int) PieceType::King]      & board.colorBB[(int) color];
 
-    while (pawns)   value += GetPiecePositionValue(PieceType::Pawn,     (Square) Utilities::LSB_Pop(&pawns),    color);
-    while (knights) value += GetPiecePositionValue(PieceType::Knight,   (Square) Utilities::LSB_Pop(&knights),  color);
-    while (bishops) value += GetPiecePositionValue(PieceType::Bishop,   (Square) Utilities::LSB_Pop(&bishops),  color);
-    while (rooks)   value += GetPiecePositionValue(PieceType::Rook,     (Square) Utilities::LSB_Pop(&rooks),    color);
-    while (queens)  value += GetPiecePositionValue(PieceType::Queen,    (Square) Utilities::LSB_Pop(&queens),   color);
-    while (kings)   value += GetPiecePositionValue(PieceType::King,     (Square) Utilities::LSB_Pop(&kings),    color);
+    while (pawns)   value += PosValuePawn      [(color == Color::White) ? Utilities::LSB_Pop(&pawns)   : 63 - Utilities::LSB_Pop(&pawns)];
+    while (knights) value += PosValueKnight    [(color == Color::White) ? Utilities::LSB_Pop(&knights) : 63 - Utilities::LSB_Pop(&knights)];
+    while (bishops) value += PosValueBishop    [(color == Color::White) ? Utilities::LSB_Pop(&bishops) : 63 - Utilities::LSB_Pop(&bishops)];
+    while (rooks)   value += PosValueRook      [(color == Color::White) ? Utilities::LSB_Pop(&rooks)   : 63 - Utilities::LSB_Pop(&rooks)];
+    while (queens)  value += PosValueQueen     [(color == Color::White) ? Utilities::LSB_Pop(&queens)  : 63 - Utilities::LSB_Pop(&queens)];
+    while (kings)   value += PosValueKing_Early[(color == Color::White) ? Utilities::LSB_Pop(&kings)   : 63 - Utilities::LSB_Pop(&kings)];
 
     return value;
-}
-
-int Evaluator::GetPiecePositionValue(PieceType type, Square position, Color color) {
-    switch (type)
-    {
-    case PieceType::Pawn:
-        if (color == Color::White)
-            return PosValuePawn[(int) position];
-        else
-            return PosValuePawn[63 - (int) position];
-    case PieceType::Knight:
-        if (color == Color::White)
-            return PosValueKnight[(int) position];
-        else
-            return PosValueKnight[63 - (int) position];
-    case PieceType::Bishop:
-        if (color == Color::White)
-            return PosValueBishop[(int) position];
-        else
-            return PosValueBishop[63 - (int) position];
-    case PieceType::Rook:
-        if (color == Color::White)
-            return PosValueRook[(int) position];
-        else
-            return PosValueRook[63 - (int) position];
-    case PieceType::Queen:
-        if (color == Color::White)
-            return PosValueQueen[(int) position];
-        else
-            return PosValueQueen[63 - (int) position];
-    case PieceType::King:
-        if (color == Color::White)
-            return PosValueKing_Early[(int) position];
-        else
-            return PosValueKing_Early[63 - (int) position];
-    }
-
-    throw std::logic_error("Unexpected piece type " + std::to_string((int) type));
 }

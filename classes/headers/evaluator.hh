@@ -10,7 +10,6 @@ public:
     int EvaluatePieceCount(const Board board);
     int EvaluatePositionValue(const Board board);
     int EvaluatePositionValue(const Board board, Color color);
-    int GetPiecePositionValue(PieceType type, Square position, Color color);
     
 private:
     Color color;

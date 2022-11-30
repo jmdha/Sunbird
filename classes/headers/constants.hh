@@ -198,7 +198,7 @@ constexpr U64 PawnAttacks[2][64] = {
     { 0LLU, 0LLU, 0LLU, 0LLU, 0LLU, 0LLU, 0LLU, 0LLU, 2LLU, 5LLU, 10LLU, 20LLU, 40LLU, 80LLU, 160LLU, 64LLU, 512LLU, 1280LLU, 2560LLU, 5120LLU, 10240LLU, 20480LLU, 40960LLU, 16384LLU, 131072LLU, 327680LLU, 655360LLU, 1310720LLU, 2621440LLU, 5242880LLU, 10485760LLU, 4194304LLU, 33554432LLU, 83886080LLU, 167772160LLU, 335544320LLU, 671088640LLU, 1342177280LLU, 2684354560LLU, 1073741824LLU, 8589934592LLU, 21474836480LLU, 42949672960LLU, 85899345920LLU, 171798691840LLU, 343597383680LLU, 687194767360LLU, 274877906944LLU, 2199023255552LLU, 5497558138880LLU, 10995116277760LLU, 21990232555520LLU, 43980465111040LLU, 87960930222080LLU, 175921860444160LLU, 70368744177664LLU, 562949953421312LLU, 1407374883553280LLU, 2814749767106560LLU, 5629499534213120LLU, 11258999068426240LLU, 22517998136852480LLU, 45035996273704960LLU, 18014398509481984LLU }
 };
 
-const int PosValuePawn[64] = {
+constexpr int PosValuePawn[64] = {
 	  0,  0,  0,  0,  0,  0,  0,  0,
       5, 10, 10,-20,-20, 10, 10,  5,
       5, -5, 10,  0,  0,-10, -5,  5,
@@ -209,7 +209,7 @@ const int PosValuePawn[64] = {
       0,  0,  0,  0,  0,  0,  0,  0
 };
 
-const int PosValueKnight[64] = {
+constexpr int PosValueKnight[64] = {
 	-50,-40,-30,-30,-30,-30,-40,-50,
     -40,-20,  0,  0,  0,  0,-20,-40,
     -30,  0, 10, 15, 15, 10,  0,-30,
@@ -220,7 +220,7 @@ const int PosValueKnight[64] = {
     -50,-40,-30,-30,-30,-30,-40,-50
 };
 
-const int PosValueBishop[64] = {
+constexpr int PosValueBishop[64] = {
 	-20,-10,-10,-10,-10,-10,-10,-20,
     -10,  5,  0,  0,  0,  0,  5,-10,
     -10, 10, 10, 10, 10, 10, 10,-10,
@@ -231,7 +231,7 @@ const int PosValueBishop[64] = {
     -20,-10,-10,-10,-10,-10,-10,-20
 };
 
-const int PosValueRook[64] = {
+constexpr int PosValueRook[64] = {
 	 0,  0,  0,  5,  5,  0,  0,  0
     -5,  0,  0,  0,  0,  0,  0, -5,
     -5,  0,  0,  0,  0,  0,  0, -5,
@@ -242,7 +242,7 @@ const int PosValueRook[64] = {
      0,  0,  0,  0,  0,  0,  0,  0
 };
 
-const int PosValueQueen[64] = {
+constexpr int PosValueQueen[64] = {
 	-20,-10,-10, -5, -5,-10,-10,-20
     -10,  0,  5,  0,  0,  0,  0,-10,
     -10,  5,  5,  5,  5,  5,  0,-10,
@@ -253,7 +253,7 @@ const int PosValueQueen[64] = {
     -20,-10,-10, -5, -5,-10,-10,-20
 };
 
-const int PosValueKing_Early[64] = {
+constexpr int PosValueKing_Early[64] = {
 	20, 30, 10,  0,  0, 10, 30, 20,
     20, 20,  0,  0,  0,  0, 20, 20,
     -10,-20,-20,-20,-20,-20,-20,-10,
@@ -264,7 +264,7 @@ const int PosValueKing_Early[64] = {
     -30,-40,-40,-50,-50,-40,-40,-30
 };
 
-const int PosValueKing_Late[64] = {
+constexpr int PosValueKing_Late[64] = {
 	-50,-30,-30,-30,-30,-30,-30,-50,
     -30,-30,  0,  0,  0,  0,-30,-30,
     -30,-10, 20, 30, 30, 20,-10,-30,
