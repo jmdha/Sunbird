@@ -40,9 +40,6 @@ private:
 
     U64 pawnSingleMove[64] = { 0 };
     U64 pawnDoubleMove[64] = { 0 };
-    U64 pawnCaptureMoves[64] = { 0 };
-    U64 knightMoves[64] = { 0 };
-    U64 kingMoves[64] = { 0 };
 
     int GetMoves(Move* moves, int startIndex, BitBoard board, U64 pieces, Direction direction, PieceType type, bool isKingSafe, U64 (*attackedSquares)[2]);
     void GeneratePawnMoves();

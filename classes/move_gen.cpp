@@ -23,8 +23,6 @@ notPromotionRank((up == Direction::North) ? NotEdge::North : NotEdge::South) {
         castlingAttack[(int) Castling::Queen] = CastlingAttackSquares::QSideBlack;
     }
     GeneratePawnMoves();
-    GenerateKnightMoves();
-    GenerateKingMoves();
 }
 
 int MoveGen::GetAllMoves(Move* moves, BitBoard board, U64 (*attackedSquares)[2]) {
@@ -56,7 +54,7 @@ int MoveGen::GetPawnMoves(Move* moves, int startIndex, BitBoard board, bool isKi
     // Generate attackedSquares
     U64 tempPieces = pieces;
     while (tempPieces) {
-        U64 capture = pawnCaptureMoves[Utilities::LSB_Pop(&tempPieces)];
+        U64 capture = PawnAttacks[(int) color][Utilities::LSB_Pop(&tempPieces)];
         if ((*attackedSquares)[0] & capture)
             (*attackedSquares)[1] |= capture;
         else
@@ -78,14 +76,14 @@ int MoveGen::GetPawnMoves(Move* moves, int startIndex, BitBoard board, bool isKi
         
         // Attack moves
         //// Diagonal
-        U64 captures = board.colorBB[(int) oppColor] & pawnCaptureMoves[(int) lsb];
+        U64 captures = board.colorBB[(int) oppColor] & PawnAttacks[(int) color][(int) lsb];
         while (captures) {
             int capturePiece = Utilities::LSB_Pop(&captures);
             if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsb), board.colorBB[(int) oppColor] ^ C64(capturePiece)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsb, (Square) capturePiece, color, oppColor, PieceType::Pawn, board.GetType((Square) capturePiece, oppColor)));
         }
         //// En Passant
-        captures = board.enPassant & pawnCaptureMoves[(int) lsb] & (U64) enPassantRank;
+        captures = board.enPassant & PawnAttacks[(int) color][(int) lsb] & (U64) enPassantRank;
         while (captures) {
             int capturePiece = Utilities::LSB_Pop(&captures);
             if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsb),  board.colorBB[(int) oppColor] ^ C64(capturePiece)))
@@ -140,7 +138,7 @@ int MoveGen::GetKnightMoves(Move* moves, int startIndex, BitBoard board, bool is
 
     while (pieces) {
             int lsbPiece = Utilities::LSB_Pop(&pieces);
-            U64 to = knightMoves[lsbPiece];
+            U64 to = KnightMoves[lsbPiece];
             if ((*attackedSquares)[0] & to)
                 (*attackedSquares)[1] |= to;
             else
@@ -175,7 +173,7 @@ int MoveGen::GetKingMoves(Move* moves, int startIndex, BitBoard board, bool isKi
     int moveCount = 0;
 
     int lsbPiece = Utilities::LSB_Pop(&pieces);
-    U64 to = kingMoves[lsbPiece];
+    U64 to = KingMoves[lsbPiece];
     if ((*attackedSquares)[0] & to)
         (*attackedSquares)[1] |= to;
     else
@@ -247,12 +245,7 @@ int MoveGen::GetMoves(Move* moves, int startIndex, BitBoard board, U64 pieces, D
 void MoveGen::GeneratePawnMoves() {
     for (int i = 0; i < 64; i++) {
         U64 bit = C64(i);
-        pawnCaptureMoves[i] = 0;
         if (bit & (U64) notPromotionRank) {
-            if (bit & (U64) NotEdge::West)
-                pawnCaptureMoves[i] |= BitShifts::Shift(bit, upLeft, 1);
-            if (bit & (U64) NotEdge::East)    
-                pawnCaptureMoves[i] |= BitShifts::Shift(bit, upRight, 1);
             U64 upOne = BitShifts::Shift(bit, up, 1);
             pawnSingleMove[i] |= BitShifts::Shift(bit, up, 1);
             if (bit & (U64) doubleRank) {
@@ -260,70 +253,6 @@ void MoveGen::GeneratePawnMoves() {
                 pawnDoubleMove[i] |= BitShifts::Shift(bit, up, 2);
             }
         }   
-    }
-}
-
-void MoveGen::GenerateKnightMoves() {
-    for (int i = 0; i < 64; i++) {
-        U64 bit = C64(i);
-        if (bit & (U64) NotEdgeKnight::North) {
-            if (bit & (U64) NotEdge::East) {
-                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::North, 1), Direction::NorthEast, 1);
-            }
-            if (bit & (U64) NotEdge::West) {
-                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::North, 1), Direction::NorthWest, 1);
-            }
-        }
-        if (bit & (U64) NotEdgeKnight::South) {
-            if (bit & (U64) NotEdge::East) {
-                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::South, 1), Direction::SouthEast, 1);
-            }
-            if (bit & (U64) NotEdge::West) {
-                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::South, 1), Direction::SouthWest, 1);
-            }
-        }
-        if (bit & (U64) NotEdgeKnight::East) {
-            if (bit & (U64) NotEdge::North) {
-                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::North, 1), Direction::East, 2);
-            }
-            if (bit & (U64) NotEdge::South) {
-                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::South, 1), Direction::East, 2);
-            }
-        }
-        if (bit & (U64) NotEdgeKnight::West) {
-            if (bit & (U64) NotEdge::North) {
-                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::North, 1), Direction::West, 2);
-            }
-            if (bit & (U64) NotEdge::South) {
-                knightMoves[i] |= BitShifts::Shift(BitShifts::Shift(bit, Direction::South, 1), Direction::West, 2);
-            }
-        }
-    }
-}
-
-void MoveGen::GenerateKingMoves() {
-    for (int i = 0; i < 64; i++) {
-        U64 bit = C64(i);
-        if (bit & (U64) NotEdge::North) {
-            kingMoves[i] |= BitShifts::Shift(bit, Direction::North, 1);
-            if (bit & (U64) NotEdge::East)
-                kingMoves[i] |= BitShifts::Shift(bit, Direction::NorthEast, 1);
-            if (bit & (U64) NotEdge::West)
-                kingMoves[i] |= BitShifts::Shift(bit, Direction::NorthWest, 1);
-        }
-        if (bit & (U64) NotEdge::South) {
-            kingMoves[i] |= BitShifts::Shift(bit, Direction::South, 1);
-            if (bit & (U64) NotEdge::East)
-                kingMoves[i] |= BitShifts::Shift(bit, Direction::SouthEast, 1);
-            if (bit & (U64) NotEdge::West)
-                kingMoves[i] |= BitShifts::Shift(bit, Direction::SouthWest, 1);
-        }
-        if (bit & (U64) NotEdge::East) {
-            kingMoves[i] |= BitShifts::Shift(bit, Direction::East, 1);
-        }
-        if (bit & (U64) NotEdge::West) {
-            kingMoves[i] |= BitShifts::Shift(bit, Direction::West, 1);
-        }
     }
 }
 
@@ -362,10 +291,10 @@ bool MoveGen::IsKingSafe(BitBoard board, U64 tempOccuracyBoard, U64 tempEnemyBoa
         if (Utilities::MSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::SouthWest] & enemyBishops) == Utilities::MSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::SouthWest] & tempOccuracyBoard))
             return false;
 
-    if (knightMoves[kingPosIndex] & enemyKnights)
+    if (KnightMoves[kingPosIndex] & enemyKnights)
         return false;
 
-    if (pawnCaptureMoves[kingPosIndex] & enemyPawns)
+    if (PawnAttacks[(int) color][kingPosIndex] & enemyPawns)
         return false;
 
     return true;
