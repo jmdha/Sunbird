@@ -53,10 +53,3 @@ void BitShifts::Init () {
         }
     }
 }
-
-U64 BitShifts::Shift (U64 b, Direction dir, int times) { 
-    if ((int) dir > 0)
-        return b << (int) dir * times;
-    else
-        return b >> std::abs((int) dir) * times;
-}; 
