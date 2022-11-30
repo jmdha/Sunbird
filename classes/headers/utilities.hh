@@ -224,31 +224,6 @@ namespace Utilities {
         return GetRow(GetRowIndex(square));
     }
 
-    // Converts 1-8 to bitshift equivilant
-    static inline Direction GetDirection(int i) {
-        switch (i)
-        {
-        case 1:
-            return Direction::SouthWest;
-        case 2:
-            return Direction::South;
-        case 3:
-            return Direction::SouthEast;
-        case 4:
-            return Direction::West;
-        case 6:
-            return Direction::East;
-        case 7:
-            return Direction::NorthWest;
-        case 8:
-            return Direction::North;
-        case 9:
-            return Direction::NorthEast;
-        default:
-            return Direction::None;
-        }
-    }
-
     static inline void AddSquares(U64 (*attackSquares)[2], U64 addedSquares) {
         while (addedSquares) {
             int lsb = LSB_Pop(&addedSquares);

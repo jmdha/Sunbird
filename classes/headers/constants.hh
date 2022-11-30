@@ -114,6 +114,17 @@ enum class Direction : int {
     None = 0
 };
 
+constexpr Direction Directions[8] {
+    Direction::SouthWest,
+    Direction::South,
+    Direction::SouthEast,
+    Direction::West,
+    Direction::East,
+    Direction::NorthWest,
+    Direction::North,
+    Direction::NorthEast
+};
+
 enum class DirectionIndex : int {
     North,
     East,
