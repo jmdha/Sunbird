@@ -317,12 +317,6 @@ bool MoveGen::IsSafeMove(BitBoard board, Square square) {
     return true;
 }
 
-U64 MoveGen::GetAttackSquares(BitBoard board, Square fromSquare) {
-    auto pos = C64((int) fromSquare);
-    printf("a\n");
-}
-
-
 void MoveGen::AppendMove(Move* moves, int index, int* moveCount, Move move) {
     moves[index] = move;
     (*moveCount)++;
