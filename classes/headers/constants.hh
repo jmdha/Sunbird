@@ -26,13 +26,13 @@
 
 //#define DEBUGGING true
 
-enum class Color : int {
+enum class Color : short {
     White,
     Black,
     None
 };
 
-enum class PieceType : int {
+enum class PieceType : short {
     Pawn,
     Knight,
     Bishop,
@@ -69,7 +69,7 @@ enum class PieceChar : char {
     None = 'O'
 };
 
-enum class Square : int {
+enum class Square : short {
     A1, B1, C1, D1, E1, F1, G1, H1,
     A2, B2, C2, D2, E2, F2, G2, H2,
     A3, B3, C3, D3, E3, F3, G3, H3,
@@ -104,7 +104,7 @@ enum class Column : U64 {
     None = 0x0
 };
 
-enum class Direction : int {
+enum class Direction : short {
     North = 8,
     East = 1,
     South = -North,
@@ -118,18 +118,7 @@ enum class Direction : int {
     None = 0
 };
 
-constexpr Direction Directions[8] {
-    Direction::SouthWest,
-    Direction::South,
-    Direction::SouthEast,
-    Direction::West,
-    Direction::East,
-    Direction::NorthWest,
-    Direction::North,
-    Direction::NorthEast
-};
-
-enum class DirectionIndex : int {
+enum class DirectionIndex : short {
     North,
     East,
     South,
@@ -175,7 +164,7 @@ enum class MoveType : short {
 #define PromotionBit 3
 #define CaptureBit 0x4
 
-enum class Castling : int {
+enum class Castling : short {
     King,
     Queen
 };
