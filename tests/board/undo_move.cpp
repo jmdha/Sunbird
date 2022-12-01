@@ -24,10 +24,10 @@ int main(int argc, char* argv[]) {
     PieceType toPiece = board.GetType(toSquare);
     MoveType moveType = (toPiece == PieceType::None) ? MoveType::Quiet : MoveType::Capture;
 
-    Move move = Move(moveType, fromSquare, toSquare, board.GetColor(fromSquare), board.GetColor(toSquare), board.GetType(fromSquare), toPiece);
+    Move move = Move(moveType, fromSquare, toSquare);
 
-    board.DoMove(move);
-    board.UndoMove(move);
+    PieceType capturedPiece = board.DoMove(move);
+    board.UndoMove(move, capturedPiece);
 
     U64 newHash = board.GetHash();
 
