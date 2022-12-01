@@ -40,9 +40,9 @@ private:
     Stats stats = Stats();
 
     // Pieces
-    void PlacePiece(Square square, PieceChar pieceChar);
-    void PlacePiece(Square square, PieceType type, Color color);
-    void RemovePiece(Square square, PieceType type, Color color);
+    inline void PlacePiece(Square square, PieceChar pieceChar);
+    inline void PlacePiece(Square square, PieceType type, Color color);
+    inline void RemovePiece(Square square, PieceType type, Color color);
     // Castling
     void EnableCastling(Color color, Castling side);
     void DisableCastling(Color color, Castling side);
@@ -84,5 +84,25 @@ inline U64 Board::GetHash() const {
 inline Board::Stats Board::GetStats() const {
     return stats;
 };
+
+inline void Board::PlacePiece(Square square, PieceChar pieceChar) {
+    PlacePiece(square, Utilities::GetPieceType(pieceChar), Utilities::GetPieceColor(pieceChar));
+}
+
+inline void Board::PlacePiece(Square square, PieceType type, Color color) {
+    U64 bit = C64(square);
+    pieceBB[(int) type] |= bit;
+    colorBB[(int) color] |= bit;
+    occupiedBB |= bit;
+    popCount[(int) color][(int) type]++;
+}
+
+inline void Board::RemovePiece(Square square, PieceType type, Color color) {
+    U64 bit = C64(square);
+    pieceBB[(int) type] ^= bit;
+    colorBB[(int) color] ^= bit;
+    occupiedBB ^= bit;
+    popCount[(int) color][(int) type]--;
+}
 
 #endif

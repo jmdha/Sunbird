@@ -187,23 +187,3 @@ void Board::DecrementCastling() {
         }
     }
 }
-
-void Board::PlacePiece(Square square, PieceChar pieceChar) {
-    PlacePiece(square, Utilities::GetPieceType(pieceChar), Utilities::GetPieceColor(pieceChar));
-}
-
-void Board::PlacePiece(Square square, PieceType type, Color color) {
-    U64 bit = C64(square);
-    pieceBB[(int) type] |= bit;
-    colorBB[(int) color] |= bit;
-    occupiedBB |= bit;
-    popCount[(int) color][(int) type]++;
-}
-
-void Board::RemovePiece(Square square, PieceType type, Color color) {
-    U64 bit = C64(square);
-    pieceBB[(int) type] ^= bit;
-    colorBB[(int) color] ^= bit;
-    occupiedBB ^= bit;
-    popCount[(int) color][(int) type]--;
-}
