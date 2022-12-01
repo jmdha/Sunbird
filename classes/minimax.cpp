@@ -9,7 +9,7 @@ MiniMax::MiniMax(Board* board) {
 }
 
 Move MiniMax::GetBestMove(int depth) {
-    Move move = Move(MoveType::BPromotionCapture, Color::None);
+    Move move = Move(MoveType::Quiet);
     int alpha = -(int) PieceValue::Inf;
     int beta = (int) PieceValue::Inf;
     U64 attacks[2] = { 0, 0 };
@@ -36,7 +36,7 @@ int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int be
     int score = -(int) PieceValue::Inf;
 
     for (int i = 0; i < moveCount; i++) {
-        board->DoMove(moves[i]);
+        PieceType capturedPiece = board->DoMove(moves[i]);
  
         int tempScore = -NegaMax(false, bestMove, depth - 1, -beta, -alpha, attackSquares);
 
@@ -50,7 +50,7 @@ int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int be
                 score = tempScore;
         }
 
-        board->UndoMove(moves[i]);
+        board->UndoMove(moves[i], capturedPiece);
 
         if (alpha >= beta)
             return beta;

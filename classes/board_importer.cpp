@@ -122,7 +122,7 @@ void BoardImporter::ImportMoveSequence(Board* board, std::string moves) {
 			else
 				type = MoveType::Quiet;
 			
-			board->DoMove(Move(type, fromSquare, toSquare, fromColor, toColor, fromType, toType));
+			board->DoMove(Move(type, fromSquare, toSquare));
 			move = "";
 		}
 	}

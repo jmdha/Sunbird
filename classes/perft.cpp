@@ -23,19 +23,20 @@ int Perft::Run(int depth, U64 attackedSquares[2]) {
     int leafCount = 0;
 
     for (int i = 0; i < moveCount; i++) {
-        board->DoMove(moves[i]);
+        #ifdef DEBUG_PRINT_MOVES
+            for (int i = 0; i < depth - 1; i++)
+                printf("\t");
+            printf("%s\n", moves[i].ToString().c_str());
+        #endif
+        PieceType capturedPiece = board->DoMove(moves[i]);
         if (moveGens[(int) Utilities::GetOppositeColor(board->GetColor())]->IsKingSafe(*board)) {
             #ifdef DEBUG_MOVE_TYPE_COUNT
-                moveTypeCount[(int) moves[i].type]++;
+                moveTypeCount[(int) moves[i].GetType()]++;
             #endif 
-            #ifdef DEBUG_PRINT_MOVES
-                for (int i = 0; i < depth - 1; i++)
-                    printf("\t");
-                printf("%s\n", moves[i].ToString().c_str());
-            #endif
+            
             leafCount += Run(depth - 1, attackSquares);
         }
-        board->UndoMove(moves[i]);
+        board->UndoMove(moves[i], capturedPiece);
     }
 
     free(moves);

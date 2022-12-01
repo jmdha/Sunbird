@@ -18,8 +18,8 @@ public:
     // Pieces
     inline PieceType GetType(Square square) const;
     // Moves
-    void DoMove(Move move);
-    void UndoMove(Move move);
+    PieceType DoMove(Move move);
+    void UndoMove(Move move, PieceType capturedType);
     // Misc
     inline Color GetColor() const;
     inline Color GetColor(Square sq) const;
@@ -36,7 +36,6 @@ private:
     U64 enPassant = 0;
     int popCount[COLORCOUNT][PIECECOUNT] = { 0 };
     bool castlingAllowed[2][2] = { 0 };
-    int movesSinceCastlingDisallowed[2][2] = { 0 };
     Stats stats = Stats();
 
     // Pieces

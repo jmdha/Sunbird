@@ -27,13 +27,13 @@
 //#define DEBUGGING true
 #define STATS true
 
-enum class Color : short {
+enum class Color : unsigned short {
     White,
     Black,
     None
 };
 
-enum class PieceType : short {
+enum class PieceType : unsigned short {
     Pawn,
     Knight,
     Bishop,
@@ -70,7 +70,7 @@ enum class PieceChar : char {
     None = 'O'
 };
 
-enum class Square : short {
+enum class Square : unsigned short {
     A1, B1, C1, D1, E1, F1, G1, H1,
     A2, B2, C2, D2, E2, F2, G2, H2,
     A3, B3, C3, D3, E3, F3, G3, H3,
@@ -119,7 +119,7 @@ enum class Direction : short {
     None = 0
 };
 
-enum class DirectionIndex : short {
+enum class DirectionIndex : unsigned short {
     North,
     East,
     South,
@@ -145,7 +145,7 @@ enum class NotEdgeKnight : U64 {
     West = 0xfcfcfcfcfcfcfcfc
 };
 
-enum class MoveType : short {
+enum class MoveType : unsigned short {
     Quiet = 0,
     DoublePawnPush = 1,
     KingCastle = 2,
@@ -162,7 +162,7 @@ enum class MoveType : short {
     QPromotionCapture = 15
 };
 
-#define PromotionBit 3
+#define PromotionBit 0x8
 #define CaptureBit 0x4
 
 enum class Castling : short {
