@@ -16,16 +16,16 @@ public:
     // Initialization
     void Initialize();
     // Pieces
-    PieceType GetType(Square square) const;        // inline
+    inline PieceType GetType(Square square) const;
     // Moves
     void DoMove(Move move);
     void UndoMove(Move move);
     // Misc
-    Color GetColor() const;                        // inline
-    Color GetColor(Square sq) const;               // inline
-    Color GetOriginalColor() const;                // inline
-    U64 GetHash() const;                           // inline
-    Stats GetStats() const;                        // inline
+    inline Color GetColor() const;
+    inline Color GetColor(Square sq) const;
+    inline Color GetOriginalColor() const;
+    inline U64 GetHash() const; 
+    inline Stats GetStats() const;
 
 private:
     Color color = Color::None;
