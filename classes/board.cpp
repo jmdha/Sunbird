@@ -87,7 +87,6 @@ void Board::DoMove(Move move) {
         enPassant = 0;
     
     // Castling rights
-    IncrementCastling();
     if (move.fromType == PieceType::King) {
         if (castlingAllowed[(int) move.fromColor][(int) Castling::King])
             DisableCastling(move.fromColor, Castling::King);
@@ -105,6 +104,8 @@ void Board::DoMove(Move move) {
             else if (castlingAllowed[(int) move.fromColor][(int) Castling::Queen] && move.fromSquare == Square::A8)
                 DisableCastling(move.fromColor, Castling::Queen);
         }
+    } else {
+        IncrementCastling();
     }
 
     color = Utilities::GetOppositeColor(color);
@@ -117,23 +118,27 @@ void Board::UndoMove(Move move) {
             RemovePiece(Square::F1, PieceType::Rook, Color::White);
             PlacePiece(Square::E1, PieceType::King, Color::White);
             PlacePiece(Square::H1, PieceType::Rook, Color::White);
+            EnableCastling(Color::White, Castling::King);
         } else {
             RemovePiece(Square::G8, PieceType::King, Color::Black);
             RemovePiece(Square::F8, PieceType::Rook, Color::Black);
             PlacePiece(Square::E8, PieceType::King, Color::Black);
             PlacePiece(Square::H8, PieceType::Rook, Color::Black);
+            EnableCastling(Color::Black, Castling::King);
         }
-    } if (move.type == MoveType::QueenCastle) {
+    } else if (move.type == MoveType::QueenCastle) {
         if (move.fromColor == Color::White) {
             RemovePiece(Square::C1, PieceType::King, Color::White);
             RemovePiece(Square::D1, PieceType::Rook, Color::White);
             PlacePiece(Square::E1, PieceType::King, Color::White);
             PlacePiece(Square::A1, PieceType::Rook, Color::White);
+            EnableCastling(Color::White, Castling::Queen);
         } else {
             RemovePiece(Square::C8, PieceType::King, Color::Black);
             RemovePiece(Square::D8, PieceType::Rook, Color::Black);
             PlacePiece(Square::E8, PieceType::King, Color::Black);
             PlacePiece(Square::A8, PieceType::Rook, Color::Black);
+            EnableCastling(Color::Black, Castling::Queen);
         }
     } else {
         RemovePiece(move.toSquare, move.fromType, move.fromColor);
@@ -148,18 +153,22 @@ void Board::UndoMove(Move move) {
             else 
                 PlacePiece(move.toSquare, move.toType, move.toColor);
         }
+        DecrementCastling();
     }
-    
-
-    // Castling rights
-    DecrementCastling();
 
     color = Utilities::GetOppositeColor(color);
 }
 
 void Board::EnableCastling(Color color, Castling side) {
-    castlingAllowed[(int) color][(int) side] = true;
-    movesSinceCastlingDisallowed[(int) color][(int) side] = -1;
+    if (movesSinceCastlingDisallowed[(int) color][(int) Castling::King] == movesSinceCastlingDisallowed[(int) color][(int) Castling::Queen]) {
+        castlingAllowed[(int) color][(int) Castling::King] = true;
+        castlingAllowed[(int) color][(int) Castling::Queen] = true;
+        movesSinceCastlingDisallowed[(int) color][(int) Castling::King] = 0;
+        movesSinceCastlingDisallowed[(int) color][(int) Castling::Queen] = 0;
+    } else {
+        castlingAllowed[(int) color][(int) side] = true;
+        movesSinceCastlingDisallowed[(int) color][(int) side] = 0;
+    }
 }
 
 void Board::DisableCastling(Color color, Castling side) {
@@ -168,22 +177,18 @@ void Board::DisableCastling(Color color, Castling side) {
 }
 
 void Board::IncrementCastling() {
-    for (int i = 0; i < 2; i++) {
-        for (int i2 = 0; i2 < 2; i2++) {
-            if (movesSinceCastlingDisallowed[i][i2] != -1)
+    for (int i = 0; i < 2; i++)
+        for (int i2 = 0; i2 < 2; i2++)
+            if (!castlingAllowed[i][i2])
                 movesSinceCastlingDisallowed[i][i2]++;
-        }
-    }
 }
 
 void Board::DecrementCastling() {
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++)
         for (int i2 = 0; i2 < 2; i2++) {
-            if (movesSinceCastlingDisallowed[i][i2] == 0) {
-                castlingAllowed[i][i2] = true;
-                movesSinceCastlingDisallowed[i][i2] = -1;
-            } else if (movesSinceCastlingDisallowed[i][i2] != -1)
+            if (castlingAllowed[i][i2])
                 movesSinceCastlingDisallowed[i][i2]--;
-        }
-    }
+            else 
+                EnableCastling((Color) i, (Castling) i2);
+        } 
 }
