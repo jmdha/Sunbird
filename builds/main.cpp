@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
     BoardImporter::ImportFEN(&board, "rnbqkbnr/pp2pppp/8/2pp2N1/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 3");
     MiniMax max = MiniMax(&board);
     auto t0 = std::chrono::steady_clock::now();
-    Move move = max.GetBestMove(6);
+    Move move = max.GetBestMove(7);
     auto t1 = std::chrono::steady_clock::now();
     auto elapsed = (unsigned long long) std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
     printf("Move found %s\n", move.ToString().c_str());

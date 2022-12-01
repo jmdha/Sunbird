@@ -49,6 +49,12 @@ private:
     
     bool IsSafeMove(Board board, Square square);
 
-    void AppendMove(Move* moves, int index, int* moveCount, Move move);
+    inline void AppendMove(Move* moves, int index, int* moveCount, Move move);
 };
+
+inline void MoveGen::AppendMove(Move* moves, int index, int* moveCount, Move move) {
+    moves[index] = move;
+    (*moveCount)++;
+}
+
 #endif

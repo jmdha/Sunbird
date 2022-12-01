@@ -94,7 +94,7 @@ int MoveGen::GetPawnMoves(Move* moves, int startIndex, Board board, bool isKingS
 }
 
 int MoveGen::GetRookMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
-    Direction directions[4] = { Direction::North, Direction::East, Direction::South, Direction::West };
+    constexpr Direction directions[4] = { Direction::North, Direction::East, Direction::South, Direction::West };
     int moveCount = 0;
 
     U64 pieces = board.pieceBB[(int) PieceType::Rook] & board.colorBB[(int) color];
@@ -106,7 +106,7 @@ int MoveGen::GetRookMoves(Move* moves, int startIndex, Board board, bool isKingS
 }
 
 int MoveGen::GetBishopMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
-    Direction directions[4] = { Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
+    constexpr Direction directions[4] = { Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
     int moveCount = 0;
 
     U64 pieces = board.pieceBB[(int) PieceType::Bishop] & board.colorBB[(int) color];
@@ -118,8 +118,8 @@ int MoveGen::GetBishopMoves(Move* moves, int startIndex, Board board, bool isKin
 }
 
 int MoveGen::GetQueenMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
-    Direction directions[8] = { Direction::North, Direction::East, Direction::South, Direction::West, 
-                                Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
+    constexpr Direction directions[8] = { Direction::North, Direction::East, Direction::South, Direction::West, 
+                                          Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
     int moveCount = 0;
 
     U64 pieces = board.pieceBB[(int) PieceType::Queen] & board.colorBB[(int) color];
@@ -310,14 +310,4 @@ bool MoveGen::IsKingSafe(Board board, U64 tempOccuracyBoard) {
 
 bool MoveGen::IsKingSafe(Board board) {
     return IsKingSafe(board, board.occupiedBB);
-}
-
-bool MoveGen::IsSafeMove(Board board, Square square) {
-
-    return true;
-}
-
-void MoveGen::AppendMove(Move* moves, int index, int* moveCount, Move move) {
-    moves[index] = move;
-    (*moveCount)++;
 }
