@@ -5,11 +5,15 @@ Evaluator::Evaluator(Color color) :
     oppColor(Utilities::GetOppositeColor(color)) {}
 
 Evaluator::~Evaluator() {
+#ifdef STATS
     printf("Evaluator: %d - %llu evaluations\n", (int) color, stats.evalCount);
+#endif
 }
 
 int Evaluator::Evalute(const Board board) {
+#ifdef STATS
     stats.evalCount++;
+#endif
     return EvaluatePieceCount(board) + EvaluatePositionValue(board);
 }
 

@@ -25,6 +25,7 @@
 #define CASTLINGQUEEN 0
 
 //#define DEBUGGING true
+#define STATS true
 
 enum class Color : short {
     White,

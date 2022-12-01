@@ -39,7 +39,9 @@ void Board::Initialize() {
 }
 
 void Board::DoMove(Move move) {
+#ifdef STATS
     stats.totalMoves++;
+#endif
     if (move.type == MoveType::KingCastle) {
         if (move.fromColor == Color::White) {
             PlacePiece(Square::G1, PieceType::King, Color::White);
