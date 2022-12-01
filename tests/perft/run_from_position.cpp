@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     int expectedLeafCount = std::atoi(argv[1]);
 
     std::string FEN = std::string(argv[2]);
-    BitBoard board = BitBoard();
+    Board board = Board();
     BoardImporter::ImportFEN(&board, FEN);    
 
     int depth = std::atoi(argv[3]);
