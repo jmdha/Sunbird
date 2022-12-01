@@ -5,7 +5,7 @@
 #include <string>
 
 #include "../../classes/headers/constants.hh"
-#include "../../classes/headers/bit_board.hh"
+#include "../../classes/headers/board.hh"
 #include "../../classes/headers/board_importer.hh"
 #include "../../classes/headers/move.hh"
 #include "../../classes/headers/perft.hh"
