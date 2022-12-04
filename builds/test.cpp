@@ -14,24 +14,29 @@ int main(int argc, char* argv[]) {
     Board priorBoard = board;
 
     char* sMove = "O-O";
-
     Move move = Move(MoveType::Quiet);
-    if (sMove == "O-O-O" || sMove == "o-o-o") 
-        move = Move(MoveType::QueenCastle);
-    else if (sMove == "O-O" || sMove == "o-o") 
-        move = Move(MoveType::KingCastle);
-    else {
+    if (sMove == "O-O-O" || sMove == "o-o-o") {
+        if (board.color == Color::White)
+            move = Move(MoveType::QueenCastle, Square::E1, Square::C1);
+        else
+            move = Move(MoveType::QueenCastle, Square::E8, Square::C8);
+    } else if (sMove == "O-O" || sMove == "o-o") {
+        if (board.color == Color::White)
+            move = Move(MoveType::KingCastle, Square::E1, Square::G1);
+        else
+            move = Move(MoveType::KingCastle, Square::E8, Square::G8);
+    } else {
         Square fromSquare = Utilities::GetSquare(sMove[0], sMove[1]);
         Square toSquare = Utilities::GetSquare(sMove[2], sMove[3]);
 
         PieceType toPiece = board.GetType(toSquare);
         MoveType moveType = (toPiece == PieceType::None) ? MoveType::Quiet : MoveType::Capture;
 
-        move = Move(moveType, fromSquare, toSquare);
+        move = Move(moveType, fromSquare, toSquare, toPiece);
     }
 
-    PieceType capturedPiece = board.DoMove(move);
-    board.UndoMove(move, capturedPiece);
+    board.DoMove(&move);
+    board.UndoMove(move);
 
     if (priorBoard == board)
         exit(EXIT_SUCCESS);

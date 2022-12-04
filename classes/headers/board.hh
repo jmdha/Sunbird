@@ -18,7 +18,7 @@ public:
     // Pieces
     inline PieceType GetType(Square square) const;
     // Moves
-    void DoMove(Move move);
+    void DoMove(Move *move);
     void UndoMove(Move move);
     // Misc
     inline Color GetColor() const;
@@ -28,26 +28,26 @@ public:
     inline Stats GetStats() const;
 
     bool friend operator==(const Board & lhs, const Board & rhs) {
-        if (!(lhs.color == rhs.color && lhs.occupiedBB == rhs.occupiedBB))
-            return false;
+/*         if (lhs.color != rhs.color || lhs.occupiedBB != rhs.occupiedBB)
+            return false; */
         for (int i = 0; i < PIECECOUNT; i++)
             if (lhs.pieceBB[i] != rhs.pieceBB[i])
                 return false;
         for (int i = 0; i < COLORCOUNT; i++)
             if (lhs.colorBB[i] != rhs.colorBB[i])
                 return false;
-        for (int i = 0; i < COLORCOUNT; i++)
+        /* for (int i = 0; i < COLORCOUNT; i++)
             for (int t = 0; t < PIECECOUNT; t++)
                 if (lhs.popCount[i][t] != rhs.popCount[i][t])
                     return false;
         for (int i = 0; i < 2; i++)
             for (int t = 0; t < 2; t++)
                 if (lhs.castlingAllowed[i][t] != rhs.castlingAllowed[i][t])
-                    return false;
+                    return false; */
         return true;
     }
 
-private:
+//private:
     Color color = Color::None;
     Color originalColor = Color::None;
     U64 pieceBB[PIECECOUNT] = { 0 };
@@ -63,8 +63,8 @@ private:
     inline void PlacePiece(Square square, PieceType type, Color color);
     inline void RemovePiece(Square square, PieceType type, Color color);
     // Castling
-    void EnableCastling(Color color, Castling side);
-    void DisableCastling(Color color, Castling side);
+    void EnableCastling(Move move);
+    void DisableCastling(Move *move, Color color, Castling side);
     void IncrementCastling();
     void DecrementCastling();
     friend class Evaluator;

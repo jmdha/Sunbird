@@ -170,6 +170,13 @@ enum class Castling : U64 {
     Queen
 };
 
+enum class CastlingSided : U64 {
+    WK = 0,
+    WQ = 1,
+    BK = 2,
+    BQ = 3
+};
+
 enum class CastlingBlockSquares : U64 {
     KSideWhite = 0x60,
     QSideWhite = 0xe,

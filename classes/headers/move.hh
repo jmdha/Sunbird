@@ -8,11 +8,11 @@
 
 class Move {
 public:
-    Move(MoveType type) : move(0), type(type) {
+    Move(MoveType type) : move(0), type(type), capturedPiece(PieceType::None) {
         SetType(type);
     };
 
-    Move(MoveType type, Square from, Square to) : move(0), type(type), from(from), to(to) {
+    Move(MoveType type, Square from, Square to) : move(0), type(type), from(from), to(to), capturedPiece(PieceType::None) {
         SetType(type);
         SetFrom(from);
         SetTo(to);
@@ -34,14 +34,12 @@ public:
     inline bool IsCapture() const;
     inline bool IsPromotion() const;
     inline bool IsEP() const;
+    inline bool IsDC() const;
+    inline bool IsDC(Color color, Castling side) const;
+    inline void SetDisableCastle(Color color, Castling side);
     
 
 private:
-    // 1  - 4  bit is the movetype, see constants.h for movetypes
-    // 5  - 13 bit is from square
-    // 14 - 22 bit is to square
-    // 23 - 27  bit is the captured piece
-    // 23 - 27 bit whether the move disabled castling
     U64 move;
     // These are for debug information
     // As they are unused, they are optimised away in release mode
@@ -95,6 +93,14 @@ inline bool Move::IsEP() const {
     return GetType() == MoveType::EPCapture;
 }
 
+inline bool Move::IsDC() const {
+    return ((move >> 24) & (U64) 0xf) != 0;
+}
+
+inline bool Move::IsDC(Color color, Castling side) const {
+    return ((move >> 24) & (U64) std::pow(2, (U64) (2 * (U64) color + (U64) side))) != 0;
+}
+
 inline void Move::SetType(MoveType type) {
     move |= ((U64)type & 0xf);
 }
@@ -109,6 +115,10 @@ inline void Move::SetTo(Square square) {
 
 inline void Move::SetCapture(PieceType capturedType) {
     move |= (((U64)capturedType & 0xf)) << 20;
+}
+
+inline void Move::SetDisableCastle(Color color, Castling side) {
+    move |= (U64) std::pow(2, (U64) (2 * (U64) color + (U64) side)) << 24;
 }
 
 #endif // MOVE

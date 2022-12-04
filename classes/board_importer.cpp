@@ -37,16 +37,16 @@ void BoardImporter::ImportFEN(Board* board, std::string FEN) {
 		switch (FEN[0])
 		{
 		case 'K':
-			board->EnableCastling(Color::White, Castling::King);
+			board->castlingAllowed[(int) Color::White][(int) Castling::King] = true;
 			break;
 		case 'k':
-			board->EnableCastling(Color::Black, Castling::King);
+			board->castlingAllowed[(int) Color::Black][(int) Castling::King] = true;
 			break;
 		case 'Q':
-			board->EnableCastling(Color::White, Castling::Queen);
+			board->castlingAllowed[(int) Color::White][(int) Castling::Queen] = true;
 			break;
 		case 'q':
-			board->EnableCastling(Color::Black, Castling::Queen);
+			board->castlingAllowed[(int) Color::Black][(int) Castling::Queen] = true;
 			break;
 		}
 		FEN.erase(0, 1);
@@ -121,8 +121,8 @@ void BoardImporter::ImportMoveSequence(Board* board, std::string moves) {
 				type = MoveType::Capture; 
 			else
 				type = MoveType::Quiet;
-			
-			board->DoMove(Move(type, fromSquare, toSquare));
+			Move tempMove = Move(type, fromSquare, toSquare);
+			board->DoMove(&tempMove);
 			move = "";
 		}
 	}

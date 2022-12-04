@@ -37,7 +37,7 @@ int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int be
 
     for (int i = 0; i < moveCount; i++) {
         const Move currentMove = moves[i];
-        board->DoMove(moves[i]);
+        board->DoMove(&moves[i]);
  
         int tempScore = -NegaMax(false, bestMove, depth - 1, -beta, -alpha, attackSquares);
 

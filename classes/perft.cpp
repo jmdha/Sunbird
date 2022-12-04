@@ -28,7 +28,7 @@ int Perft::Run(int depth, U64 attackedSquares[2]) {
                 printf("\t");
             printf("%s\n", moves[i].ToString().c_str());
         #endif
-        board->DoMove(moves[i]);
+        board->DoMove(&moves[i]);
         if (moveGens[(int) Utilities::GetOppositeColor(board->GetColor())]->IsKingSafe(*board)) {
             #ifdef DEBUG_MOVE_TYPE_COUNT
                 moveTypeCount[(int) moves[i].GetType()]++;
