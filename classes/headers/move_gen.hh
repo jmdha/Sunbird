@@ -12,13 +12,13 @@
 class MoveGen {
 public:
     MoveGen(Color color);
-    int GetAllMoves     (Move* moves, Board board, U64 (*attackedSquares)[2]);
-    int GetPawnMoves    (Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]);
-    int GetRookMoves    (Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]);
-    int GetBishopMoves  (Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]);
-    int GetQueenMoves   (Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]);
-    int GetKnightMoves  (Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]);
-    int GetKingMoves    (Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2], U64 priorAttacks[2]);
+    U8 GetAllMoves     (Move* moves, Board board, U64 (*attackedSquares)[2]);
+    U8 GetPawnMoves    (Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]);
+    U8 GetRookMoves    (Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]);
+    U8 GetBishopMoves  (Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]);
+    U8 GetQueenMoves   (Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]);
+    U8 GetKnightMoves  (Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]);
+    U8 GetKingMoves    (Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2], U64 priorAttacks[2]);
     U64 GetAttackSquares(Board board, Square fromSquare);
 
     bool IsKingSafe(Board board, U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard);
@@ -41,7 +41,7 @@ private:
     U64 pawnSingleMove[64] = { 0 };
     U64 pawnDoubleMove[64] = { 0 };
 
-    int GetMoves(Move* moves, int startIndex, Board board, U64 pieces, Direction direction, PieceType type, bool isKingSafe, U64 (*attackedSquares)[2]);
+    U8 GetMoves(Move* moves, int startIndex, Board board, U64 pieces, Direction direction, PieceType type, bool isKingSafe, U64 (*attackedSquares)[2]);
     void GeneratePawnMoves();
     void GenerateKnightMoves();
     void GenerateKingMoves();
@@ -49,10 +49,10 @@ private:
     
     bool IsSafeMove(Board board, Square square);
 
-    inline void AppendMove(Move* moves, int index, int* moveCount, Move move);
+    inline void AppendMove(Move* moves, int index, U8* moveCount, Move move);
 };
 
-inline void MoveGen::AppendMove(Move* moves, int index, int* moveCount, Move move) {
+inline void MoveGen::AppendMove(Move* moves, int index, U8* moveCount, Move move) {
     moves[index] = move;
     (*moveCount)++;
 }

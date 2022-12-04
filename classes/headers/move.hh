@@ -77,11 +77,11 @@ inline PieceType Move::GetCapturedPiece() const {
 }
 
 inline bool Move::IsCapture() const {
-    return ((U64) GetType() & CaptureBit) != 0;
+    return ((U8) GetType() & CaptureBit) != 0;
 }
 
 inline bool Move::IsPromotion() const {
-    return ((U64) GetType() & PromotionBit) != 0;
+    return ((U8) GetType() & PromotionBit) != 0;
 }
 
 inline bool Move::IsEP() const {
@@ -93,27 +93,27 @@ inline bool Move::IsDC() const {
 }
 
 inline bool Move::IsDC(Color color, Castling side) const {
-    return ((move >> 24) & (U64) std::pow(2, (U64) (2 * (unsigned short) color + (unsigned short) side))) != 0;
+    return ((move >> 24) & (U8) std::pow(2, (U8) (2 * (U8) color + (U8) side))) != 0;
 }
 
 inline void Move::SetType(MoveType type) {
-    move |= ((U64)type & 0xf);
+    move |= ((U8)type & 0xf);
 }
 
 inline void Move::SetFrom(Square square) {
-    move |= (((U64)square & 0x3f)) << 4;
+    move |= (((U8)square & 0x3f)) << 4;
 }
 
 inline void Move::SetTo(Square square) {
-    move |= (((U64)square & 0x3f)) << 12;
+    move |= (((U8)square & 0x3f)) << 12;
 }
 
 inline void Move::SetCapture(PieceType capturedType) {
-    move |= (((U64)capturedType & 0xf)) << 20;
+    move |= (((U8)capturedType & 0xf)) << 20;
 }
 
 inline void Move::SetDisableCastle(Color color, Castling side) {
-    move |= (U64) std::pow(2, (U64) (2 * (U64) color + (U64) side)) << 24;
+    move |= (U8) std::pow(2, (U8) (2 * (U8) color + (U8) side)) << 24;
 }
 
 #endif // MOVE

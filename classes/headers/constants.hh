@@ -1,8 +1,11 @@
 #ifndef CONSTANTS
 #define CONSTANTS
 
-#define U64 unsigned long long int
-#define C64(x) (U64)1 << (U64) x
+#define U8  uint_fast8_t
+#define U16 uint_fast16_t
+#define U32 uint_fast32_t
+#define U64 uint_fast64_t
+#define C64(x) (U64)1 << ((U64) x)
 
 #define WIDTH 8
 #define HEIGHT 8
@@ -25,15 +28,15 @@
 #define CASTLINGQUEEN 0
 
 //#define DEBUGGING true
-//#define STATS true
+#define STATS true
 
-enum class Color : unsigned short {
+enum class Color : U8 {
     White,
     Black,
     None
 };
 
-enum class PieceType : unsigned short {
+enum class PieceType : U8 {
     Pawn,
     Knight,
     Bishop,
@@ -43,7 +46,7 @@ enum class PieceType : unsigned short {
     None
 };
 
-enum class PieceValue : int {
+enum class PieceValue : U64 {
     Pawn = 10,
     Knight = 30,
     Bishop = 30,
@@ -70,7 +73,7 @@ enum class PieceChar : char {
     None = 'O'
 };
 
-enum class Square : unsigned short {
+enum class Square : U8 {
     A1, B1, C1, D1, E1, F1, G1, H1,
     A2, B2, C2, D2, E2, F2, G2, H2,
     A3, B3, C3, D3, E3, F3, G3, H3,
@@ -105,7 +108,7 @@ enum class Column : U64 {
     None = 0x0
 };
 
-enum class Direction : U64 {
+enum class Direction : int {
     North = 8,
     East = 1,
     South = -North,
@@ -119,7 +122,7 @@ enum class Direction : U64 {
     None = 0
 };
 
-enum class DirectionIndex : unsigned short {
+enum class DirectionIndex : U8 {
     North,
     East,
     South,
@@ -145,7 +148,7 @@ enum class NotEdgeKnight : U64 {
     West = 0xfcfcfcfcfcfcfcfc
 };
 
-enum class MoveType : unsigned short {
+enum class MoveType : U8 {
     Quiet = 0,
     DoublePawnPush = 1,
     KingCastle = 2,
@@ -165,12 +168,12 @@ enum class MoveType : unsigned short {
 #define PromotionBit 0x8
 #define CaptureBit 0x4
 
-enum class Castling : unsigned short {
+enum class Castling : U8 {
     King,
     Queen
 };
 
-enum class CastlingSided : unsigned short {
+enum class CastlingSided : U8 {
     WK = 0,
     WQ = 1,
     BK = 2,

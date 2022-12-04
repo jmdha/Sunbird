@@ -78,22 +78,22 @@ namespace Utilities {
         return GetSquare((int) row - 97, (int) column - 49);
     }
 
-    static inline int GetPieceValue(PieceType type) {
+    static inline U64 GetPieceValue(PieceType type) {
         switch(type) {
         case PieceType::Bishop:
-            return (int) PieceValue::Bishop;
+            return (U64) PieceValue::Bishop;
         case PieceType::King:
-            return (int) PieceValue::King;
+            return (U64) PieceValue::King;
         case PieceType::Knight:
-            return (int) PieceValue::Knight;
+            return (U64) PieceValue::Knight;
         case PieceType::Pawn:
-            return (int) PieceValue::Pawn;
+            return (U64) PieceValue::Pawn;
         case PieceType::Queen:
-            return (int) PieceValue::Queen;
+            return (U64) PieceValue::Queen;
         case PieceType::Rook:
-            return (int) PieceValue::Rook;
+            return (U64) PieceValue::Rook;
         default:
-            return (int) PieceValue::None;
+            return (U64) PieceValue::None;
         }
     }
 
@@ -108,8 +108,8 @@ namespace Utilities {
     // e.g. 0110 => 2 and 1000 => 1
     // This implementation is from https://www.chessprogramming.org/Population_Count
     // Specifically the one titled "Brian Kerninghan"
-    static inline int PopCount(U64 x) {
-        int count = 0;
+    static inline U8 PopCount(U64 x) {
+        U8 count = 0;
         while (x) {
             count++;
             x &= x - 1;
@@ -117,21 +117,20 @@ namespace Utilities {
         return count;
     }
 
-    static inline int LSB(U64 x) {
-        U64 lsb = ffsll(x) - 1;
-        return lsb;
+    static inline U64 LSB(U64 x) {
+        return ffsll(x) - 1;
     }
 
     // Returns the least significant set bit, and pops it
     // e.g. 0110 => 1 and 1000 => 3 and 1001 => 0
-    static inline int LSB_Pop(U64* x) {
+    static inline U64 LSB_Pop(U64* x) {
         U64 lsb = LSB(*x);
         *x ^= (C64(0) << lsb);
         return lsb;
     }
 
-    static inline int MSB(U64 x) {
-        int index = 0;
+    static inline U64 MSB(U64 x) {
+        U64 index = 0;
         while (1 < x) {
             x = x >> 1;
             index++;
@@ -187,15 +186,15 @@ namespace Utilities {
         return Column::None;
     }
 
-    static inline int GetColumnIndex(Square square) {
-        return (int) square % 8;
+    static inline U8 GetColumnIndex(Square square) {
+        return (U8) square % 8;
     }
 
     static inline Column GetColumn(Square square) {
         return GetColumn(GetColumnIndex(square));
     }
 
-    static inline Row GetRow(int rowIndex) {
+    static inline Row GetRow(U8 rowIndex) {
         switch (rowIndex)
         {
         case 0:
@@ -218,8 +217,8 @@ namespace Utilities {
         return Row::None;
     }
 
-    static inline int GetRowIndex(Square square) {
-        return std::floor((int) square / 8);
+    static inline U8 GetRowIndex(Square square) {
+        return std::floor((U8) square / 8);
     }
 
     static inline Row GetRow(Square square) {
@@ -228,7 +227,7 @@ namespace Utilities {
 
     static inline void AddSquares(U64 (*attackSquares)[2], U64 addedSquares) {
         while (addedSquares) {
-            int lsb = LSB_Pop(&addedSquares);
+            U64 lsb = LSB_Pop(&addedSquares);
             if (lsb & (*attackSquares)[0])
                 (*attackSquares)[1] |= lsb;
             else
@@ -237,7 +236,7 @@ namespace Utilities {
     }
     static inline void RemoveSquares(U64 (*attackSquares)[2], U64 removedSquares) {
         while (removedSquares) {
-            int lsb = LSB_Pop(&removedSquares);
+            U64 lsb = LSB_Pop(&removedSquares);
             if (lsb & (*attackSquares)[1])
                 (*attackSquares)[1] ^= lsb;
             else
@@ -247,8 +246,8 @@ namespace Utilities {
 
     static inline std::string GetSquareString(Square sq) {
         std::string square = "";
-        int col = GetColumnIndex(sq);
-        int row = GetRowIndex(sq);
+        U8 col = GetColumnIndex(sq);
+        U8 row = GetRowIndex(sq);
         square += 'a' + col;
         square += '1' + row;
         return square;

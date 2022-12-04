@@ -1,7 +1,7 @@
 #include "headers/board.hh"
 
 void Board::Initialize() {
-    for (int x = 0; x < WIDTH; x++) {
+    for (U8 x = 0; x < WIDTH; x++) {
         PlacePiece(Utilities::GetSquare(x, PAWNROWWHITE), PieceType::Pawn, Color::White);
         PlacePiece(Utilities::GetSquare(x, PAWNROWBLACK), PieceType::Pawn, Color::Black);
     }
@@ -27,8 +27,8 @@ void Board::Initialize() {
     PlacePiece(Square::E1, PieceType::King, Color::White);
     PlacePiece(Square::E8, PieceType::King, Color::Black);
     
-    for (int i = 0; i < COLORCOUNT; i++)
-        for (int i2 = 0; i2 < 2; i2++) {
+    for (U8 i = 0; i < COLORCOUNT; i++)
+        for (U8 i2 = 0; i2 < 2; i2++) {
             castlingAllowed[i][i2] = true;
         }
             
@@ -91,20 +91,20 @@ void Board::DoMove(Move *move) {
     
     // Castling rights
     if (fromType == PieceType::King) {
-        if (castlingAllowed[(int) color][(int) Castling::King])
+        if (castlingAllowed[(U8) color][(U8) Castling::King])
             DisableCastling(move, color, Castling::King);
-        if (castlingAllowed[(int) color][(int) Castling::Queen])
+        if (castlingAllowed[(U8) color][(U8) Castling::Queen])
             DisableCastling(move, color, Castling::Queen);
     } else if (fromType == PieceType::Rook) {
         if (color == Color::White) {
-            if (castlingAllowed[(int) color][(int) Castling::King] && move->GetFrom() == Square::H1)
+            if (castlingAllowed[(U8) color][(U8) Castling::King] && move->GetFrom() == Square::H1)
                 DisableCastling(move, color, Castling::King);
-            else if (castlingAllowed[(int) color][(int) Castling::Queen] && move->GetFrom() == Square::A1)
+            else if (castlingAllowed[(U8) color][(U8) Castling::Queen] && move->GetFrom() == Square::A1)
                 DisableCastling(move, color, Castling::Queen);
         } else if (color == Color::Black) {
-            if (castlingAllowed[(int) color][(int) Castling::King] && move->GetFrom() == Square::H8)
+            if (castlingAllowed[(U8) color][(U8) Castling::King] && move->GetFrom() == Square::H8)
                 DisableCastling(move, color, Castling::King);
-            else if (castlingAllowed[(int) color][(int) Castling::Queen] && move->GetFrom() == Square::A8)
+            else if (castlingAllowed[(U8) color][(U8) Castling::Queen] && move->GetFrom() == Square::A8)
                 DisableCastling(move, color, Castling::Queen);
         }
     }
@@ -178,6 +178,6 @@ void Board::EnableCastling(Move move) {
 }
 
 void Board::DisableCastling(Move *move, Color color, Castling side) {
-    castlingAllowed[(int) color][(int) side] = false;
+    castlingAllowed[(U8) color][(U8) side] = false;
     move->SetDisableCastle(color, side);
 }

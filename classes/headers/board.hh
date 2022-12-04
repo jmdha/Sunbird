@@ -30,10 +30,10 @@ public:
     bool friend operator==(const Board & lhs, const Board & rhs) {
 /*         if (lhs.color != rhs.color || lhs.occupiedBB != rhs.occupiedBB)
             return false; */
-        for (int i = 0; i < PIECECOUNT; i++)
+        for (U8 i = 0; i < PIECECOUNT; i++)
             if (lhs.pieceBB[i] != rhs.pieceBB[i])
                 return false;
-        for (int i = 0; i < COLORCOUNT; i++)
+        for (U8 i = 0; i < COLORCOUNT; i++)
             if (lhs.colorBB[i] != rhs.colorBB[i])
                 return false;
         /* for (int i = 0; i < COLORCOUNT; i++)
@@ -54,7 +54,7 @@ public:
     U64 colorBB[COLORCOUNT] = { 0 };
     U64 occupiedBB = 0;
     U64 enPassant = 0;
-    int popCount[COLORCOUNT][PIECECOUNT] = { 0 };
+    U8 popCount[COLORCOUNT][PIECECOUNT] = { 0 };
     bool castlingAllowed[2][2] = { 0 };
     Stats stats = Stats();
 
@@ -73,7 +73,7 @@ public:
 };
 
 inline PieceType Board::GetType(Square square) const {
-    for (int i = 0; i < PIECECOUNT; i++)
+    for (U8 i = 0; i < PIECECOUNT; i++)
         if (pieceBB[i] & C64(square))
             return (PieceType) i;
     return PieceType::None;	
@@ -84,9 +84,9 @@ inline Color Board::GetColor() const {
 };
 
 inline Color Board::GetColor(Square sq) const {
-    if (colorBB[(int) Color::White] & C64(sq))
+    if (colorBB[(U8) Color::White] & C64(sq))
         return Color::White;
-    else if (colorBB[(int) Color::Black] & C64(sq))
+    else if (colorBB[(U8) Color::Black] & C64(sq))
         return Color::Black;
     else
         return Color::None;
@@ -110,18 +110,18 @@ inline void Board::PlacePiece(Square square, PieceChar pieceChar) {
 
 inline void Board::PlacePiece(Square square, PieceType type, Color color) {
     U64 bit = C64(square);
-    pieceBB[(int) type] |= bit;
-    colorBB[(int) color] |= bit;
+    pieceBB[(U8) type] |= bit;
+    colorBB[(U8) color] |= bit;
     occupiedBB |= bit;
-    popCount[(int) color][(int) type]++;
+    popCount[(U8) color][(U8) type]++;
 }
 
 inline void Board::RemovePiece(Square square, PieceType type, Color color) {
     U64 bit = C64(square);
-    pieceBB[(int) type] ^= bit;
-    colorBB[(int) color] ^= bit;
+    pieceBB[(U8) type] ^= bit;
+    colorBB[(U8) color] ^= bit;
     occupiedBB ^= bit;
-    popCount[(int) color][(int) type]--;
+    popCount[(U8) color][(U8) type]--;
 }
 
 #endif // BOARD

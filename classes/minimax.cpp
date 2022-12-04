@@ -1,8 +1,8 @@
 #include "headers/minimax.hh"
 
 MiniMax::MiniMax(Board* board) : board(board), evaluator(Evaluator(board->color)) {
-    moveGens[(int) Color::White] = new MoveGen(Color::White);
-    moveGens[(int) Color::Black] = new MoveGen(Color::Black);
+    moveGens[(U8) Color::White] = new MoveGen(Color::White);
+    moveGens[(U8) Color::Black] = new MoveGen(Color::Black);
 }
 
 Move MiniMax::GetBestMove(int depth) {
@@ -12,7 +12,7 @@ Move MiniMax::GetBestMove(int depth) {
 Move MiniMax::NegaMax(int depth) {
     Move* moves = (Move*) calloc(MAXMOVECOUNT, sizeof(Move));
     U64 attacks[2] = { 0, 0 };
-    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attacks);
+    U8 moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attacks);
 
     Move bestMove = Move(MoveType::Quiet);
     int bestScore = -(int) PieceValue::Inf;
