@@ -168,11 +168,11 @@ void Board::EnableCastling(Move move) {
     if (move.IsDC()) {
         if (move.IsDC(Color::White, Castling::King))
             castlingAllowed[(int) Color::White][(int) Castling::King] = true;
-        else if (move.IsDC(Color::White, Castling::Queen))
+        if (move.IsDC(Color::White, Castling::Queen))
             castlingAllowed[(int) Color::White][(int) Castling::Queen] = true;
-        else if (move.IsDC(Color::Black, Castling::King))
+        if (move.IsDC(Color::Black, Castling::King))
             castlingAllowed[(int) Color::Black][(int) Castling::King] = true;
-        else if (move.IsDC(Color::Black, Castling::Queen))
+        if (move.IsDC(Color::Black, Castling::Queen))
             castlingAllowed[(int) Color::Black][(int) Castling::Queen] = true;
     }
 }
