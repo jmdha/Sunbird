@@ -2,6 +2,7 @@
 #define EVALUATOR
 
 #include "board.hh"
+#include "constants.hh"
 
 class Evaluator {
 public:
@@ -9,7 +10,7 @@ public:
         U64 evalCount = 0;
     };
     // Init
-    Evaluator(Color color);
+    Evaluator(Color color) : stats(Stats()), color(color) {};
     ~Evaluator();
     // Evaluation
     int Evalute(const Board board);
@@ -19,9 +20,8 @@ public:
     // Misc
     inline Stats GetStats();
 private:
-    Color color;
-    Color oppColor;
     Stats stats;
+    Color color;
 };
 
 inline Evaluator::Stats Evaluator::GetStats() {

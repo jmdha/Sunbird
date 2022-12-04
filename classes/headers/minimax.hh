@@ -17,16 +17,15 @@ public:
     ~MiniMax() {
         delete(moveGens[0]);
         delete(moveGens[1]);
-        delete(evaluators[0]);
-        delete(evaluators[1]);
     }
     Move GetBestMove(int depth);
     
 private:
     Board *board;
     MoveGen *moveGens[2];
-    Evaluator *evaluators[2];
+    Evaluator evaluator;
 
-    int NegaMax(bool original, Move* bestMove, int depth, int alpha, int beta, U64 attackedSquares[2]);
+    Move NegaMax(int depth);
+    int NegaMax(int depth, int alpha, int beta, U64 attackedSquares[2]);
 };
 #endif // MINIMAX

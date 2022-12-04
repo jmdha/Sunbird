@@ -1,63 +1,61 @@
 #include "headers/minimax.hh"
 
-MiniMax::MiniMax(Board* board) {
+MiniMax::MiniMax(Board* board) : evaluator(Evaluator(board->color)) {
     this->board = board;
-    evaluators[(int) Color::White] = new Evaluator(Color::White);
-    evaluators[(int) Color::Black] = new Evaluator(Color::Black);
     moveGens[(int) Color::White] = new MoveGen(Color::White);
     moveGens[(int) Color::Black] = new MoveGen(Color::Black);
 }
 
 Move MiniMax::GetBestMove(int depth) {
-    Move move = Move(MoveType::Quiet);
-    int alpha = -(int) PieceValue::Inf;
-    int beta = (int) PieceValue::Inf;
-    U64 attacks[2] = { 0, 0 };
-    Move* moves = (Move*) calloc(MAXMOVECOUNT, sizeof(Move));
-    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attacks);
-    free(moves);
-    NegaMax(true, &move, depth, alpha, beta, attacks);
-    return move;
+    return NegaMax(depth);
 }
 
-std::random_device rd;
-std::mt19937 g(rd());
+Move MiniMax::NegaMax(int depth) {
+    Move* moves = (Move*) calloc(MAXMOVECOUNT, sizeof(Move));
+    U64 attacks[2] = { 0, 0 };
+    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attacks);
 
-int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int beta, U64 attackedSquares[2]) {
+    Move *bestMove;
+    int bestScore = -(int) PieceValue::Inf;
+
+    for (int i = 0; i < moveCount; i++) {
+        auto currentMove = &moves[i];
+
+        board->DoMove(currentMove);
+        int score = NegaMax(depth - 1, -(int) PieceValue::Inf, (int) PieceValue::Inf, attacks);
+        board->UndoMove(*currentMove);
+
+        if (score > bestScore) {
+            bestScore = score;
+            bestMove = currentMove;
+        }
+    }
+
+    free(moves);
+    return *bestMove;
+}
+
+int MiniMax::NegaMax(int depth, int alpha, int beta, U64 attackedSquares[2]) {
     if (depth == 0)
-        return evaluators[(int) board->GetOriginalColor()]->Evalute(*board);
+        return evaluator.Evalute(*board);
     
     Move* moves = (Move*) calloc(MAXMOVECOUNT, sizeof(Move));
     U64 attackSquares[2] = { attackedSquares[0], attackedSquares[1] };
     int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attackSquares);
-    //if (original)
-        //std::shuffle(moves.begin(), moves.end(), g);
-
-    int score = -(int) PieceValue::Inf;
 
     for (int i = 0; i < moveCount; i++) {
         const Move currentMove = moves[i];
+
         board->DoMove(&moves[i]);
- 
-        int tempScore = -NegaMax(false, bestMove, depth - 1, -beta, -alpha, attackSquares);
-
-        if (tempScore >= score ) {
-            // As move gen generates psuedo legal moves, check whether it is legal
-            // Only do so on possible return moves, as otherwise it impacts performance greatly 
-            if (original && moveGens[(int) Utilities::GetOppositeColor(board->GetColor())]->IsKingSafe(*board)){
-                (*bestMove) = moves[i];
-                score = tempScore;
-            } else
-                score = tempScore;
-        }
-
+        int score = -NegaMax(depth - 1, -beta, -alpha, attackSquares);
         board->UndoMove(moves[i]);
 
-        if (alpha >= beta)
+        if (score >= beta)
             return beta;
         if (score > alpha)
             alpha = score;
     }
+    
     free(moves);
-    return score;
+    return alpha;
 }

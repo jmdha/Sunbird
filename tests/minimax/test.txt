@@ -3,4 +3,7 @@
 add_executable(GetBestMove tests/minimax/get_best_move.cpp ${sources})
 
 ## Avoid stupid
-add_test(GetBestMove_NoStupid_5 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 2 2" 6 "h6g4")
+add_test(GetBestMove_FreeQueen_1 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 2 2" 1 "h6g4")
+add_test(GetBestMove_FreeQueen_2 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 2 2" 2 "h6g4")
+add_test(GetBestMove_FreeQueen_3 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 2 2" 3 "h6g4")
+add_test(GetBestMove_FreeQueen_4 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 2 2" 4 "h6g4")

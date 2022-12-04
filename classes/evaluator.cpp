@@ -1,9 +1,5 @@
 #include "headers/evaluator.hh"
 
-Evaluator::Evaluator(Color color) :
-    color(color),
-    oppColor(Utilities::GetOppositeColor(color)) {}
-
 Evaluator::~Evaluator() {
 #ifdef STATS
     printf("Evaluator: %d - %llu evaluations\n", (int) color, stats.evalCount);
@@ -14,15 +10,15 @@ int Evaluator::Evalute(const Board board) {
 #ifdef STATS
     stats.evalCount++;
 #endif
-    return EvaluatePieceCount(board) + EvaluatePositionValue(board);
+    return EvaluatePieceCount(board) * EvaluatePositionValue(board) * ((color == Color::White) ? 1 : -1);
 }
 
 int Evaluator::EvaluatePieceCount(const Board board) {
     int value = 0;
     for (int i = 0; i < PIECECOUNT; i++) {
         int pieceValue = Utilities::GetPieceValue((PieceType) i);
-        value += board.popCount[(int) color][i] * pieceValue;
-        value -= board.popCount[(int) oppColor][i] * pieceValue;
+        value += board.popCount[(int) Color::White][i] * pieceValue;
+        value -= board.popCount[(int) Color::Black][i] * pieceValue;
     }
     return value;
 }

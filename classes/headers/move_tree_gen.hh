@@ -23,7 +23,7 @@ private:
     FILE *fp;
     std::string outputPath;
     MoveGen* moveGens[2];
-    Evaluator* evaluators[2];
+    Evaluator evaluator;
     bool useAB;
 
     void PrintNode(std::string move, MoveTreeNode node, int indent, bool lastNode);

@@ -1,8 +1,6 @@
 #include "headers/move_tree_gen.hh"
 
-MoveTreeGenerator::MoveTreeGenerator(Board* board, std::string outputPath, bool useAB) : board(board), outputPath(outputPath), useAB(useAB) {
-    evaluators[(int) Color::White] = new Evaluator(Color::White);
-    evaluators[(int) Color::Black] = new Evaluator(Color::Black);
+MoveTreeGenerator::MoveTreeGenerator(Board* board, std::string outputPath, bool useAB) : board(board), outputPath(outputPath), useAB(useAB), evaluator(Evaluator(board->color)) {
     moveGens[(int) Color::White] = new MoveGen(Color::White);
     moveGens[(int) Color::Black] = new MoveGen(Color::Black);
     fp = fopen64(outputPath.c_str(), "w");   
@@ -54,7 +52,7 @@ MoveTreeNode MoveTreeGenerator::GenerateMoveTree(int depth, int outputDepth) {
 
 MoveTreeNode MoveTreeGenerator::NegaMax(int depth, bool useAB, int outputDepth, int alpha, int beta, U64 attacks[2]) {
     if (depth == 0)
-        return MoveTreeNode(evaluators[(int) board->GetOriginalColor()]->EvaluatePieceCount(*board), evaluators[(int) board->GetOriginalColor()]->EvaluatePositionValue(*board));
+        return MoveTreeNode(evaluator.EvaluatePieceCount(*board), evaluator.EvaluatePositionValue(*board));
     Move* moves = (Move*) calloc(MAXMOVECOUNT, sizeof(Move));
     U64 attackSquares[2] = { attacks[0], attacks[1] };
     int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attackSquares);
