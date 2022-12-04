@@ -27,5 +27,6 @@ private:
 
     Move NegaMax(int depth);
     int NegaMax(int depth, int alpha, int beta, U64 attackedSquares[2]);
+    int Quiesce(int alpha, int beta, U64 attackedSquares[2]);
 };
 #endif // MINIMAX

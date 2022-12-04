@@ -7,10 +7,11 @@ add_executable(GetAnythingBut tests/minimax/anything_but.cpp ${sources})
 add_test(GetBestMove_FreeQueen_1 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 2 2" 1 "h6g4")
 add_test(GetBestMove_FreeQueen_2 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 2 2" 2 "h6g4")
 add_test(GetBestMove_FreeQueen_3 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 2 2" 3 "h6g4")
-add_test(GetBestMove_FreeQueen_4 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 2 2" 4 "h6g4")
 add_test(GetBestMove_FreeQueen_1w GetBestMove "rnb1kbnr/pppp1ppp/8/4p3/4P1Qq/8/PPPP1PPP/RNB1KBNR w KQkq - 2 3" 1 "g4h4")
 add_test(GetBestMove_FreeQueen_2w GetBestMove "rnb1kbnr/pppp1ppp/8/4p3/4P1Qq/8/PPPP1PPP/RNB1KBNR w KQkq - 2 3" 2 "g4h4")
 add_test(GetBestMove_FreeQueen_3w GetBestMove "rnb1kbnr/pppp1ppp/8/4p3/4P1Qq/8/PPPP1PPP/RNB1KBNR w KQkq - 2 3" 3 "g4h4")
 
 ## Avoid obvious blunder
-add_test(AnythingBut_MoveBlunder_1 GetAnythingBut "r2q1rk1/ppp2ppp/2n1bn2/3pB3/2PP4/4PN2/P2N1PPP/R2QKB1R b KQ - 0 9" 5 "d8d6")
+add_test(AnythingBut_MoveBlunder_1 GetAnythingBut "r2q1rk1/ppp2ppp/2n1bn2/3pB3/2PP4/4PN2/P2N1PPP/R2QKB1R b KQ - 0 9" 1 "d8d6")
+add_test(AnythingBut_MoveBlunder_2 GetAnythingBut "r2q1rk1/ppp2ppp/2n1bn2/3pB3/2PP4/4PN2/P2N1PPP/R2QKB1R b KQ - 0 9" 2 "d8d6")
+add_test(AnythingBut_MoveBlunder_3 GetAnythingBut "r2q1rk1/ppp2ppp/2n1bn2/3pB3/2PP4/4PN2/P2N1PPP/R2QKB1R b KQ - 0 9" 3 "d8d6")
