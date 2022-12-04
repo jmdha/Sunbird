@@ -1,3 +1,6 @@
 # Tests
 ## Import FEN
 add_executable(GetBestMove tests/minimax/get_best_move.cpp ${sources})
+
+## Avoid stupid
+add_test(GetBestMove_NoStupid_5 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 2 2" 6 "h6g4")

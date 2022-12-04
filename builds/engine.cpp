@@ -9,7 +9,7 @@
 int main(int argc, char* argv[]) {
     BitShifts::Init();
     Board board = Board();
-    BoardImporter::ImportMoveSequence(&board, argv[1]);
+    BoardImporter::ImportMoveSequence(&board, argv[2]);
     MiniMax max = MiniMax(&board);
     Move move = max.GetBestMove(5);
     printf("%s\n", move.ToString().c_str());
