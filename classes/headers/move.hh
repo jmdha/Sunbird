@@ -54,10 +54,6 @@ private:
 };
 
 inline std::string Move::ToString() const {
-    if (GetType() == MoveType::KingCastle)
-            return "O-O";
-    else if (GetType() == MoveType::QueenCastle)
-            return "O-O-O";
     std::string move = "";        
     move += Utilities::GetSquareString(GetFrom());
     move += Utilities::GetSquareString(GetTo());

@@ -201,10 +201,10 @@ int MoveGen::GetKingMoves(Move* moves, int startIndex, Board board, bool isKingS
     // Castling
     if (board.castlingAllowed[(int)color][(int) Castling::King] && !(board.occupiedBB & (U64) castlingBlock[(int) Castling::King]) && !(priorAttacks[0] & (U64) castlingAttack[(int) Castling::King]))
         if (isKingSafe)
-            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::KingCastle));
+            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::KingCastle, ((color == Color::White) ? Square::E1 : Square::E8), (color == Color::White) ? Square::G1 : Square::G8));
     if (board.castlingAllowed[(int)color][(int) Castling::Queen] && !(board.occupiedBB & (U64) castlingBlock[(int) Castling::Queen]) && !(priorAttacks[0] & (U64) castlingAttack[(int) Castling::Queen]))
         if (isKingSafe)
-            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::QueenCastle));
+            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::QueenCastle, ((color == Color::White) ? Square::E1 : Square::E8), (color == Color::White) ? Square::C1 : Square::C8));
         
     return moveCount;
 }
