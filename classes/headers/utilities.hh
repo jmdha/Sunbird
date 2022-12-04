@@ -158,6 +158,8 @@ namespace Utilities {
             return (U64) NotEdge::South & (U64) NotEdge::East;
         case Direction::SouthWest:
             return (U64) NotEdge::South & (U64) NotEdge::West;
+        case Direction::None:
+            throw std::invalid_argument("No direction given");
         }
         return 0;
     }
