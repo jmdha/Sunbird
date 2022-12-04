@@ -40,7 +40,7 @@ public:
     
 
 private:
-    U64 move;
+    uint32_t move;
     // These are for debug information
 /*     MoveType type;
     Square from;
@@ -65,27 +65,27 @@ inline std::string Move::ToString() const {
 }
 
 inline MoveType Move::GetType() const {
-    return (MoveType) (move & (U64) 0xf);
+    return (MoveType) (move & 0xf);
 }
 
 inline Square Move::GetFrom() const {
-    return (Square) ((move >> 4) & (U64) 0x3f);
+    return (Square) ((move >> 4) & 0x3f);
 }
 
 inline Square Move::GetTo() const {
-    return (Square) ((move >> 12) & (U64) 0x3f);
+    return (Square) ((move >> 12) & 0x3f);
 }
 
 inline PieceType Move::GetCapturedPiece() const {
-    return (PieceType) ((move >> 20) & (U64) 0xf);
+    return (PieceType) ((move >> 20) & 0xf);
 }
 
 inline bool Move::IsCapture() const {
-    return ((U64) GetType() & (U64) CaptureBit) != 0;
+    return ((U64) GetType() & CaptureBit) != 0;
 }
 
 inline bool Move::IsPromotion() const {
-    return ((U64) GetType() & (U64) PromotionBit) != 0;
+    return ((U64) GetType() & PromotionBit) != 0;
 }
 
 inline bool Move::IsEP() const {
@@ -93,11 +93,11 @@ inline bool Move::IsEP() const {
 }
 
 inline bool Move::IsDC() const {
-    return ((move >> 24) & (U64) 0xf) != 0;
+    return ((move >> 24) & 0xf) != 0;
 }
 
 inline bool Move::IsDC(Color color, Castling side) const {
-    return ((move >> 24) & (U64) std::pow(2, (U64) (2 * (U64) color + (U64) side))) != 0;
+    return ((move >> 24) & (U64) std::pow(2, (U64) (2 * (unsigned short) color + (unsigned short) side))) != 0;
 }
 
 inline void Move::SetType(MoveType type) {
