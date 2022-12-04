@@ -27,6 +27,26 @@ public:
     inline U64 GetHash() const; 
     inline Stats GetStats() const;
 
+    bool friend operator==(const Board & lhs, const Board & rhs) {
+        if (!(lhs.color == rhs.color && lhs.occupiedBB == rhs.occupiedBB))
+            return false;
+        for (int i = 0; i < PIECECOUNT; i++)
+            if (lhs.pieceBB[i] != rhs.pieceBB[i])
+                return false;
+        for (int i = 0; i < COLORCOUNT; i++)
+            if (lhs.colorBB[i] != rhs.colorBB[i])
+                return false;
+        for (int i = 0; i < COLORCOUNT; i++)
+            for (int t = 0; t < PIECECOUNT; t++)
+                if (lhs.popCount[i][t] != rhs.popCount[i][t])
+                    return false;
+        for (int i = 0; i < 2; i++)
+            for (int t = 0; t < 2; t++)
+                if (lhs.castlingAllowed[i][t] != rhs.castlingAllowed[i][t])
+                    return false;
+        return true;
+    }
+
 private:
     Color color = Color::None;
     Color originalColor = Color::None;
@@ -104,4 +124,4 @@ inline void Board::RemovePiece(Square square, PieceType type, Color color) {
     popCount[(int) color][(int) type]--;
 }
 
-#endif
+#endif // BOARD

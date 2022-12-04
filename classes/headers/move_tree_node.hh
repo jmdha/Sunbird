@@ -1,5 +1,5 @@
-#ifndef MOVETREENODE
-#define MOVETREENODE
+#ifndef MOVE_TREE_NODE
+#define MOVE_TREE_NODE
 
 #include <string>
 #include <map>
@@ -19,4 +19,4 @@ public:
 private:
     
 };
-#endif
+#endif // MOVE_TREE_NODE

@@ -1,5 +1,5 @@
-#ifndef MOVETREEGEN
-#define MOVETREEGEN
+#ifndef MOVE_TREE_GEN
+#define MOVE_TREE_GEN
 
 #include <stdio.h>
 #include <string>
@@ -33,4 +33,4 @@ private:
     void PrintIndent(int indent, std::string string);
     void PrintIndentNL(int indent, std::string string);
 };
-#endif
+#endif // MOVE_TREE_GEN

@@ -36,6 +36,7 @@ int MiniMax::NegaMax(bool original, Move* bestMove, int depth, int alpha, int be
     int score = -(int) PieceValue::Inf;
 
     for (int i = 0; i < moveCount; i++) {
+        const Move currentMove = moves[i];
         PieceType capturedPiece = board->DoMove(moves[i]);
  
         int tempScore = -NegaMax(false, bestMove, depth - 1, -beta, -alpha, attackSquares);

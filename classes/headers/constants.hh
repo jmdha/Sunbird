@@ -27,13 +27,13 @@
 //#define DEBUGGING true
 #define STATS true
 
-enum class Color : unsigned short {
+enum class Color : U64 {
     White,
     Black,
     None
 };
 
-enum class PieceType : unsigned short {
+enum class PieceType : U64 {
     Pawn,
     Knight,
     Bishop,
@@ -70,7 +70,7 @@ enum class PieceChar : char {
     None = 'O'
 };
 
-enum class Square : unsigned short {
+enum class Square : U64 {
     A1, B1, C1, D1, E1, F1, G1, H1,
     A2, B2, C2, D2, E2, F2, G2, H2,
     A3, B3, C3, D3, E3, F3, G3, H3,
@@ -105,7 +105,7 @@ enum class Column : U64 {
     None = 0x0
 };
 
-enum class Direction : short {
+enum class Direction : U64 {
     North = 8,
     East = 1,
     South = -North,
@@ -119,7 +119,7 @@ enum class Direction : short {
     None = 0
 };
 
-enum class DirectionIndex : unsigned short {
+enum class DirectionIndex : U64 {
     North,
     East,
     South,
@@ -145,7 +145,7 @@ enum class NotEdgeKnight : U64 {
     West = 0xfcfcfcfcfcfcfcfc
 };
 
-enum class MoveType : unsigned short {
+enum class MoveType : U64 {
     Quiet = 0,
     DoublePawnPush = 1,
     KingCastle = 2,
@@ -165,7 +165,7 @@ enum class MoveType : unsigned short {
 #define PromotionBit 0x8
 #define CaptureBit 0x4
 
-enum class Castling : short {
+enum class Castling : U64 {
     King,
     Queen
 };
@@ -269,4 +269,4 @@ constexpr int PosValueKing_Late[64] = {
     -50,-40,-30,-20,-20,-30,-40,-50
 };
 
-#endif
+#endif // CONSTANTS

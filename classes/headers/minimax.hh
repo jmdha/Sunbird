@@ -29,4 +29,4 @@ private:
 
     int NegaMax(bool original, Move* bestMove, int depth, int alpha, int beta, U64 attackedSquares[2]);
 };
-#endif
+#endif // MINIMAX

@@ -1,5 +1,5 @@
-#ifndef BOARDIMPORTER
-#define BOARDIMPORTER
+#ifndef BOARD_IMPORTER
+#define BOARD_IMPORTER
 
 #include <string>
 
@@ -14,4 +14,4 @@ public:
 
 private:
 };
-#endif
+#endif // BOARD_IMPORTER

@@ -1,5 +1,5 @@
-#ifndef MOVEGEN
-#define MOVEGEN
+#ifndef MOVE_GEN
+#define MOVE_GEN
 
 #include <vector>
 #include <strings.h>
@@ -57,4 +57,4 @@ inline void MoveGen::AppendMove(Move* moves, int index, int* moveCount, Move mov
     (*moveCount)++;
 }
 
-#endif
+#endif // MOVE_GEN

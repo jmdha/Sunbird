@@ -1,5 +1,5 @@
-#ifndef BITSHIFTS
-#define BITSHIFTS
+#ifndef BIT_SHIFTS
+#define BIT_SHIFTS
 
 #include <array>
 
@@ -21,4 +21,4 @@ inline U64 BitShifts::Shift(U64 b, Direction dir, int times) {
         return b >> std::abs((int) dir) * times;
 }; 
 
-#endif
+#endif // BIT_SHIFTS

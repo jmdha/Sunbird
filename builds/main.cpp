@@ -8,12 +8,17 @@
 #include "../classes/headers/perft.hh"
 
 int main(int argc, char* argv[]) {
+    std::vector<int> test;
+    test.push_back(0);
+    test.push_back(2);
+    test.push_back(1);
+    test.push_back(4);
     BitShifts::Init();
     Board board = Board();
-    BoardImporter::ImportFEN(&board, "rnbqkbnr/pp2pppp/8/2pp2N1/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 3");
+    BoardImporter::ImportFEN(&board, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     MiniMax max = MiniMax(&board);
     auto t0 = std::chrono::steady_clock::now();
-    Move move = max.GetBestMove(7);
+    Move move = max.GetBestMove(4);
     auto t1 = std::chrono::steady_clock::now();
     auto elapsed = (unsigned long long) std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
     printf("Move found %s\n", move.ToString().c_str());

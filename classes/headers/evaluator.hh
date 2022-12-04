@@ -28,4 +28,4 @@ inline Evaluator::Stats Evaluator::GetStats() {
     return stats;
 }
 
-#endif
+#endif // EVALUATOR

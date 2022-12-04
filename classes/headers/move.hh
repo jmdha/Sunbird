@@ -8,8 +8,16 @@
 
 class Move {
 public:
-    Move(MoveType type) : type(type) {};
-    Move(MoveType type, Square from, Square to) : type(type), from(from), to(to) {};
+    Move(MoveType type) : move(0) {
+        SetType(type);
+    };
+
+    Move(MoveType type, Square from, Square to) : move(0) {
+        SetType(type);
+        SetFrom(from);
+        SetTo(to);
+    };
+
     inline std::string ToString() const;
     // Properties
     inline MoveType GetType() const;
@@ -20,44 +28,66 @@ public:
     inline bool IsEP() const;
 
 private:
-    MoveType type;
-    Square from;
-    Square to;
+    // 0  - 3  bit is the movetype, see constants.h for movetypes
+    // 4 - 12 bit is from square
+    // 13 - 21 bit is to square
+    // ?  - ?  bit is captured piece type
+    // ?  - ? bit is disabled castling
+    U64 move;
+
+    inline void SetType(MoveType type);
+    inline void SetFrom(Square square);
+    inline void SetTo(Square square);
 };
 
 inline std::string Move::ToString() const {
-    if (type == MoveType::KingCastle)
+    if (GetType() == MoveType::KingCastle)
             return "O-O";
-    else if (type == MoveType::QueenCastle)
+    else if (GetType() == MoveType::QueenCastle)
             return "O-O-O";
     std::string move = "";        
-    move += Utilities::GetSquareString(from);
-    move += Utilities::GetSquareString(to);
+    move += Utilities::GetSquareString(GetFrom());
+    move += Utilities::GetSquareString(GetTo());
     return move;
 }
 
 inline MoveType Move::GetType() const {
-    return type;
+    return (MoveType) (move & (U64) 0xf);
 }
 
 inline Square Move::GetFrom() const {
-    return from;
+    return (Square) ((move >> 4) & (U64) 0x3f);
 }
 
 inline Square Move::GetTo() const {
-    return to;
+    return (Square) ((move >> 12) & (U64) 0x3f);
 }
 
 inline bool Move::IsCapture() const {
-    return ((unsigned short) type & (unsigned short) CaptureBit) != 0;
+    return ((U64) GetType() & (U64) CaptureBit) != 0;
 }
 
 inline bool Move::IsPromotion() const {
-    return ((unsigned short) type & (unsigned short) PromotionBit) != 0;
+    return ((U64) GetType() & (U64) PromotionBit) != 0;
 }
 
 inline bool Move::IsEP() const {
-    return type == MoveType::EPCapture;
+    return GetType() == MoveType::EPCapture;
 }
 
-#endif
+inline void Move::SetType(MoveType type) {
+    move &= (U64) ~0xf;
+    move |= (U64) type;
+}
+
+inline void Move::SetFrom(Square square) {
+    move &= ((U64) ~0x3f) << 4;
+    move |= ((U64) square) << 4;
+}
+
+inline void Move::SetTo(Square square) {
+    move &= ((U64) ~0x3f) << 12;
+    move |= ((U64) square) << 12;
+}
+
+#endif // MOVE

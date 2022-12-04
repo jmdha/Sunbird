@@ -2,7 +2,7 @@
 #define PERFT
 
 #define DEBUG_MOVE_TYPE_COUNT true
-//#define DEBUG_PRINT_MOVES true
+#define DEBUG_PRINT_MOVES true
 
 #include <string>
 
@@ -26,4 +26,4 @@ private:
     int Run(int depth, U64 attackedSquares[2]);
 
 };
-#endif
+#endif // PERFT
