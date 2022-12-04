@@ -8,11 +8,11 @@
 
 class Move {
 public:
-    Move(MoveType type) : move(0) {
+    Move(MoveType type) : move(0), type(type) {
         SetType(type);
     };
 
-    Move(MoveType type, Square from, Square to) : move(0) {
+    Move(MoveType type, Square from, Square to) : move(0), type(type), from(from), to(to) {
         SetType(type);
         SetFrom(from);
         SetTo(to);
@@ -34,6 +34,11 @@ private:
     // ?  - ?  bit is captured piece type
     // ?  - ? bit is disabled castling
     U64 move;
+    // These are for debug information
+    // As they are unused, they are optimised away in release mode
+    MoveType type;
+    Square from;
+    Square to;
 
     inline void SetType(MoveType type);
     inline void SetFrom(Square square);
@@ -76,18 +81,15 @@ inline bool Move::IsEP() const {
 }
 
 inline void Move::SetType(MoveType type) {
-    move &= (U64) ~0xf;
-    move |= (U64) type;
+    move |= ((U64)type & 0xf);
 }
 
 inline void Move::SetFrom(Square square) {
-    move &= ((U64) ~0x3f) << 4;
-    move |= ((U64) square) << 4;
+    move |= (((U64)square & 0x3f)) << 4;
 }
 
 inline void Move::SetTo(Square square) {
-    move &= ((U64) ~0x3f) << 12;
-    move |= ((U64) square) << 12;
+    move |= (((U64)square & 0x3f)) << 12;
 }
 
 #endif // MOVE

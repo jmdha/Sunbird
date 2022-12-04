@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 
+#include "../classes/headers/bit_shifts.hh"
 #include "../classes/headers/board.hh"
 #include "../classes/headers/board_importer.hh"
 #include "../classes/headers/minimax.hh"
@@ -8,11 +9,6 @@
 #include "../classes/headers/perft.hh"
 
 int main(int argc, char* argv[]) {
-    std::vector<int> test;
-    test.push_back(0);
-    test.push_back(2);
-    test.push_back(1);
-    test.push_back(4);
     BitShifts::Init();
     Board board = Board();
     BoardImporter::ImportFEN(&board, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
