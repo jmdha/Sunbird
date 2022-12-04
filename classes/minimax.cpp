@@ -15,7 +15,7 @@ Move MiniMax::NegaMax(int depth) {
     U64 attacks[2] = { 0, 0 };
     int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attacks);
 
-    Move *bestMove;
+    Move bestMove = Move(MoveType::Quiet);
     int bestScore = -(int) PieceValue::Inf;
 
     for (int i = 0; i < moveCount; i++) {
@@ -27,12 +27,12 @@ Move MiniMax::NegaMax(int depth) {
 
         if (score > bestScore) {
             bestScore = score;
-            bestMove = currentMove;
+            bestMove = moves[i];
         }
     }
 
     free(moves);
-    return *bestMove;
+    return bestMove;
 }
 
 int MiniMax::NegaMax(int depth, int alpha, int beta, U64 attackedSquares[2]) {
@@ -55,7 +55,7 @@ int MiniMax::NegaMax(int depth, int alpha, int beta, U64 attackedSquares[2]) {
         if (score > alpha)
             alpha = score;
     }
-    
+
     free(moves);
     return alpha;
 }
