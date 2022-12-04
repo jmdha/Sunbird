@@ -37,7 +37,7 @@ void Board::Initialize() {
     originalColor = Color::White;
 }
 
-PieceType Board::DoMove(Move move) {
+void Board::DoMove(Move move) {
     const PieceType fromType = GetType(move.GetFrom());
     PieceType capture = PieceType::None;
     if (move.IsCapture()) {
@@ -114,10 +114,9 @@ PieceType Board::DoMove(Move move) {
     }
 
     color = Utilities::GetOppositeColor(color);
-    return capture;
 }
 
-void Board::UndoMove(Move move, PieceType capturedType) {
+void Board::UndoMove(Move move) {
     const PieceType toType = GetType(move.GetTo());
     if (move.GetType() == MoveType::KingCastle) {
         if (color == Color::Black) {
@@ -160,10 +159,10 @@ void Board::UndoMove(Move move, PieceType capturedType) {
         if ((short) move.GetType() & CaptureBit) {
             if (move.GetType() == MoveType::EPCapture) {
                 Square captureSquare = (Square) ((color == Color::Black) ? (int) move.GetTo() - 8 : (int) move.GetTo() + 8);
-                PlacePiece(captureSquare, capturedType, color);
+                PlacePiece(captureSquare, move.GetCapturedPiece(), color);
             }
             else 
-                PlacePiece(move.GetTo(), capturedType, color);
+                PlacePiece(move.GetTo(), move.GetCapturedPiece(), color);
         }
     }
 

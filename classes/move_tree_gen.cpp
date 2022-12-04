@@ -62,13 +62,13 @@ MoveTreeNode MoveTreeGenerator::NegaMax(int depth, bool useAB, int outputDepth, 
     MoveTreeNode node = MoveTreeNode(-(int)PieceValue::Inf, depth);
 
     for (int i = 0; i < moveCount; i++) {
-        PieceType capturedPiece = board->DoMove(moves[i]);
+        board->DoMove(moves[i]);
 
         MoveTreeNode childNode = NegaMax(depth - 1, useAB, outputDepth, -beta, -alpha, attackSquares);
         childNode.score *= -1;
         childNode.materialScore *= -1;
         childNode.positionScore *= -1;
-        board->UndoMove(moves[i], capturedPiece);
+        board->UndoMove(moves[i]);
         if (depth >= outputDepth)
             node.AppendMoveTreeNode(moves[i].ToString(), childNode);
 

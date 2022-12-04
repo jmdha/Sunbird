@@ -18,8 +18,8 @@ public:
     // Pieces
     inline PieceType GetType(Square square) const;
     // Moves
-    PieceType DoMove(Move move);
-    void UndoMove(Move move, PieceType capturedType);
+    void DoMove(Move move);
+    void UndoMove(Move move);
     // Misc
     inline Color GetColor() const;
     inline Color GetColor(Square sq) const;

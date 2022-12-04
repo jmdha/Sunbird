@@ -18,31 +18,42 @@ public:
         SetTo(to);
     };
 
+    Move(MoveType type, Square from, Square to, PieceType capturedPiece) : move(0), type(type), from(from), to(to), capturedPiece(capturedPiece) {
+        SetType(type);
+        SetFrom(from);
+        SetTo(to);
+        SetCapture(capturedPiece);
+    };
+
     inline std::string ToString() const;
     // Properties
     inline MoveType GetType() const;
     inline Square GetFrom() const;
     inline Square GetTo() const;
+    inline PieceType GetCapturedPiece() const;
     inline bool IsCapture() const;
     inline bool IsPromotion() const;
     inline bool IsEP() const;
+    
 
 private:
-    // 0  - 3  bit is the movetype, see constants.h for movetypes
-    // 4 - 12 bit is from square
-    // 13 - 21 bit is to square
-    // ?  - ?  bit is captured piece type
-    // ?  - ? bit is disabled castling
+    // 1  - 4  bit is the movetype, see constants.h for movetypes
+    // 5  - 13 bit is from square
+    // 14 - 22 bit is to square
+    // 23 - 27  bit is the captured piece
+    // 23 - 27 bit whether the move disabled castling
     U64 move;
     // These are for debug information
     // As they are unused, they are optimised away in release mode
     MoveType type;
     Square from;
     Square to;
+    PieceType capturedPiece;
 
     inline void SetType(MoveType type);
     inline void SetFrom(Square square);
     inline void SetTo(Square square);
+    inline void SetCapture(PieceType capturedType);
 };
 
 inline std::string Move::ToString() const {
@@ -68,6 +79,10 @@ inline Square Move::GetTo() const {
     return (Square) ((move >> 12) & (U64) 0x3f);
 }
 
+inline PieceType Move::GetCapturedPiece() const {
+    return (PieceType) ((move >> 20) & (U64) 0xf);
+}
+
 inline bool Move::IsCapture() const {
     return ((U64) GetType() & (U64) CaptureBit) != 0;
 }
@@ -90,6 +105,10 @@ inline void Move::SetFrom(Square square) {
 
 inline void Move::SetTo(Square square) {
     move |= (((U64)square & 0x3f)) << 12;
+}
+
+inline void Move::SetCapture(PieceType capturedType) {
+    move |= (((U64)capturedType & 0xf)) << 20;
 }
 
 #endif // MOVE
