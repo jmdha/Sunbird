@@ -8,17 +8,17 @@
 
 class Move {
 public:
-    Move(MoveType type) : move(0), type(type), capturedPiece(PieceType::None) {
+    Move(MoveType type) : move(0)/* , type(type), capturedPiece(PieceType::None) */ {
         SetType(type);
     };
 
-    Move(MoveType type, Square from, Square to) : move(0), type(type), from(from), to(to), capturedPiece(PieceType::None) {
+    Move(MoveType type, Square from, Square to) : move(0)/* , type(type), from(from), to(to), capturedPiece(PieceType::None) */ {
         SetType(type);
         SetFrom(from);
         SetTo(to);
     };
 
-    Move(MoveType type, Square from, Square to, PieceType capturedPiece) : move(0), type(type), from(from), to(to), capturedPiece(capturedPiece) {
+    Move(MoveType type, Square from, Square to, PieceType capturedPiece) : move(0)/* , type(type), from(from), to(to), capturedPiece(capturedPiece) */ {
         SetType(type);
         SetFrom(from);
         SetTo(to);
@@ -42,11 +42,10 @@ public:
 private:
     U64 move;
     // These are for debug information
-    // As they are unused, they are optimised away in release mode
-    MoveType type;
+/*     MoveType type;
     Square from;
     Square to;
-    PieceType capturedPiece;
+    PieceType capturedPiece; */
 
     inline void SetType(MoveType type);
     inline void SetFrom(Square square);
