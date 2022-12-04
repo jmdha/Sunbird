@@ -1,7 +1,6 @@
 #include "headers/minimax.hh"
 
-MiniMax::MiniMax(Board* board) : evaluator(Evaluator(board->color)) {
-    this->board = board;
+MiniMax::MiniMax(Board* board) : board(board), evaluator(Evaluator(board->color)) {
     moveGens[(int) Color::White] = new MoveGen(Color::White);
     moveGens[(int) Color::Black] = new MoveGen(Color::Black);
 }
@@ -19,11 +18,10 @@ Move MiniMax::NegaMax(int depth) {
     int bestScore = -(int) PieceValue::Inf;
 
     for (int i = 0; i < moveCount; i++) {
-        auto currentMove = &moves[i];
 
-        board->DoMove(currentMove);
-        int score = NegaMax(depth - 1, -(int) PieceValue::Inf, (int) PieceValue::Inf, attacks);
-        board->UndoMove(*currentMove);
+        board->DoMove(&moves[i]);
+        int score = -NegaMax(depth - 1, -(int) PieceValue::Inf, (int) PieceValue::Inf, attacks);
+        board->UndoMove(moves[i]);
 
         if (score > bestScore) {
             bestScore = score;
@@ -43,19 +41,17 @@ int MiniMax::NegaMax(int depth, int alpha, int beta, U64 attackedSquares[2]) {
     U64 attackSquares[2] = { attackedSquares[0], attackedSquares[1] };
     int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attackSquares);
 
+    int score = -(int) PieceValue::Inf;
     for (int i = 0; i < moveCount; i++) {
-        const Move currentMove = moves[i];
-
         board->DoMove(&moves[i]);
-        int score = -NegaMax(depth - 1, -beta, -alpha, attackSquares);
+        score = std::max(score, -NegaMax(depth - 1, -beta, -alpha, attackSquares));
         board->UndoMove(moves[i]);
 
-        if (score >= beta)
-            return beta;
-        if (score > alpha)
-            alpha = score;
+        alpha = std::max(alpha, score);
+        if (alpha >= beta)
+            break;
     }
 
     free(moves);
-    return alpha;
+    return score;
 }

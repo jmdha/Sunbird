@@ -2,7 +2,7 @@
 
 Evaluator::~Evaluator() {
 #ifdef STATS
-    printf("Evaluator: %d - %llu evaluations\n", (int) color, stats.evalCount);
+    printf("Evaluator: %d - %llu evaluations\n", (int) oColor, stats.evalCount);
 #endif
 }
 
@@ -10,21 +10,23 @@ int Evaluator::Evalute(const Board board) {
 #ifdef STATS
     stats.evalCount++;
 #endif
-    return EvaluatePieceCount(board) * EvaluatePositionValue(board) * ((color == Color::White) ? 1 : -1);
+    int value = EvaluatePieceCount(board) + EvaluatePositionValue(board);
+    if (oColor == Color::Black)
+        value *= -1;
+    if (board.color != oColor)
+        value *= -1;
+    return value;
 }
 
 int Evaluator::EvaluatePieceCount(const Board board) {
     int value = 0;
-    for (int i = 0; i < PIECECOUNT; i++) {
-        int pieceValue = Utilities::GetPieceValue((PieceType) i);
-        value += board.popCount[(int) Color::White][i] * pieceValue;
-        value -= board.popCount[(int) Color::Black][i] * pieceValue;
-    }
+    for (int i = 0; i < PIECECOUNT; i++)
+        value += (board.popCount[(int) Color::White][i] - board.popCount[(int) Color::Black][i]) * Utilities::GetPieceValue((PieceType) i);
     return value;
 }
 
 int Evaluator::EvaluatePositionValue(const Board board) {
-    return EvaluatePositionValue(board, board.color) - EvaluatePositionValue(board, Utilities::GetOppositeColor(board.color));
+    return EvaluatePositionValue(board, Color::White) - EvaluatePositionValue(board, Color::Black);
 }
 
 int Evaluator::EvaluatePositionValue(const Board board, Color color) {
@@ -51,6 +53,5 @@ int Evaluator::EvaluatePositionValue(const Board board, Color color) {
         while (queens)  value += PosValueQueen     [63 - Utilities::LSB_Pop(&queens)];
         while (kings)   value += PosValueKing_Early[63 - Utilities::LSB_Pop(&kings)];
     }
-
     return value;
 }

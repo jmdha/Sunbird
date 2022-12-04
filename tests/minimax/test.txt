@@ -7,3 +7,6 @@ add_test(GetBestMove_FreeQueen_1 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPP
 add_test(GetBestMove_FreeQueen_2 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 2 2" 2 "h6g4")
 add_test(GetBestMove_FreeQueen_3 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 2 2" 3 "h6g4")
 add_test(GetBestMove_FreeQueen_4 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 2 2" 4 "h6g4")
+add_test(GetBestMove_FreeQueen_1w GetBestMove "rnb1kbnr/pppp1ppp/8/4p3/4P1Qq/8/PPPP1PPP/RNB1KBNR w KQkq - 2 3" 1 "g4h4")
+add_test(GetBestMove_FreeQueen_2w GetBestMove "rnb1kbnr/pppp1ppp/8/4p3/4P1Qq/8/PPPP1PPP/RNB1KBNR w KQkq - 2 3" 2 "g4h4")
+add_test(GetBestMove_FreeQueen_3w GetBestMove "rnb1kbnr/pppp1ppp/8/4p3/4P1Qq/8/PPPP1PPP/RNB1KBNR w KQkq - 2 3" 3 "g4h4")

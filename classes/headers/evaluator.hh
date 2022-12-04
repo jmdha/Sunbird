@@ -10,7 +10,7 @@ public:
         U64 evalCount = 0;
     };
     // Init
-    Evaluator(Color color) : stats(Stats()), color(color) {};
+    Evaluator(Color color) : stats(Stats()), oColor(color) {};
     ~Evaluator();
     // Evaluation
     int Evalute(const Board board);
@@ -21,7 +21,7 @@ public:
     inline Stats GetStats();
 private:
     Stats stats;
-    Color color;
+    Color oColor;
 };
 
 inline Evaluator::Stats Evaluator::GetStats() {

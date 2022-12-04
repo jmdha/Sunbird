@@ -19,7 +19,6 @@ int main(int argc, char* argv[]) {
     MiniMax minimax = MiniMax(&board);
     Move move = minimax.GetBestMove(std::atoi(argv[2]));
 
-
     if (expectedMove == move.ToString())
         exit(EXIT_SUCCESS);
     else
