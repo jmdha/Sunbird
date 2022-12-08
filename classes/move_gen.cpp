@@ -94,39 +94,29 @@ U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
 }
 
 U8 MoveGen::GetRookMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
-    constexpr Direction directions[4] = { Direction::North, Direction::East, Direction::South, Direction::West };
     int moveCount = 0;
 
     U64 pieces = board.pieceBB[(int) PieceType::Rook] & board.colorBB[(int) color];
-    if (pieces == 0)
-        return 0;
     for (int i = 0; i < 4; i++)
-        moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, directions[i], PieceType::Rook, isKingSafe, attackedSquares);
+        moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, rookDirections[i], PieceType::Rook, isKingSafe, attackedSquares);
     return moveCount;
 }
 
 U8 MoveGen::GetBishopMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
-    constexpr Direction directions[4] = { Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
     int moveCount = 0;
 
     U64 pieces = board.pieceBB[(int) PieceType::Bishop] & board.colorBB[(int) color];
-    if (pieces == 0)
-        return 0;
     for (int i = 0; i < 4; i++)
-        moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, directions[i], PieceType::Bishop, isKingSafe, attackedSquares);
+        moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, bishopDirections[i], PieceType::Bishop, isKingSafe, attackedSquares);
     return moveCount;
 }
 
 U8 MoveGen::GetQueenMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
-    constexpr Direction directions[8] = { Direction::North, Direction::East, Direction::South, Direction::West, 
-                                          Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
     int moveCount = 0;
 
     U64 pieces = board.pieceBB[(int) PieceType::Queen] & board.colorBB[(int) color];
-    if (pieces == 0)
-        return 0;
     for (int i = 0; i < 8; i++)
-        moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, directions[i], PieceType::Queen, isKingSafe, attackedSquares);
+        moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, queenDirections[i], PieceType::Queen, isKingSafe, attackedSquares);
     return moveCount;
 }
 
