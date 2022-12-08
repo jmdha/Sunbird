@@ -13,10 +13,10 @@ int main(int argc, char* argv[]) {
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     MoveGen moveGen = MoveGen(board.GetColor());
     
-    Move* moves = (Move*) calloc(MAXMOVECOUNT, sizeof(Move));
+    std::array<Move, MAXMOVECOUNT> moves;
     U64 attackMoves[2] = { 0, 0 };
-    int moveCount = moveGen.GetBishopMoves(moves, 0, board, (bool)std::atoi(argv[3]), &attackMoves);
-    free(moves);
+    int moveCount = moveGen.GetBishopMoves(&moves, 0, board, (bool)std::atoi(argv[3]), &attackMoves);
+
     if (moveCount == std::atoi(argv[1]))
         exit(EXIT_SUCCESS);
     else

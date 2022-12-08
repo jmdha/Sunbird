@@ -43,9 +43,8 @@ MoveTreeNode MoveTreeGenerator::GenerateMoveTree(int depth, int outputDepth) {
     U64 attacks[2] = { 0, 0 };
     int alpha = -(int) PieceValue::Inf;
     int beta = (int) PieceValue::Inf;
-    Move* moves = (Move*) calloc(MAXMOVECOUNT, sizeof(Move));
-    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attacks);
-    free(moves);
+    std::array<Move, MAXMOVECOUNT> moves;
+    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(&moves, *board, &attacks);
     MoveTreeNode node = NegaMax(depth, useAB, depth - outputDepth, alpha, beta, attacks);
     return node;
 }
@@ -53,9 +52,9 @@ MoveTreeNode MoveTreeGenerator::GenerateMoveTree(int depth, int outputDepth) {
 MoveTreeNode MoveTreeGenerator::NegaMax(int depth, bool useAB, int outputDepth, int alpha, int beta, U64 attacks[2]) {
     if (depth == 0)
         return MoveTreeNode(evaluator.EvaluatePieceCount(*board), evaluator.EvaluatePositionValue(*board));
-    Move* moves = (Move*) calloc(MAXMOVECOUNT, sizeof(Move));
+    std::array<Move, MAXMOVECOUNT> moves;
     U64 attackSquares[2] = { attacks[0], attacks[1] };
-    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attackSquares);
+    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(&moves, *board, &attackSquares);
     
     MoveTreeNode node = MoveTreeNode(-(int)PieceValue::Inf, depth);
 
@@ -83,7 +82,6 @@ MoveTreeNode MoveTreeGenerator::NegaMax(int depth, bool useAB, int outputDepth, 
                 alpha = childNode.score;
         }
     }
-    free(moves);
     return node;
 }
 

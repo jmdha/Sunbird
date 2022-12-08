@@ -10,9 +10,9 @@ Move MiniMax::GetBestMove(int depth) {
 }
 
 Move MiniMax::NegaMax(int depth) {
-    Move* moves = (Move*) calloc(MAXMOVECOUNT, sizeof(Move));
+    std::array<Move, MAXMOVECOUNT> moves;
     U64 attacks[2] = { 0, 0 };
-    U8 moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attacks);
+    U8 moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(&moves, *board, &attacks);
 
     Move bestMove = Move(MoveType::Quiet);
     int bestScore = -(int) PieceValue::Inf;
@@ -28,7 +28,6 @@ Move MiniMax::NegaMax(int depth) {
         }
     }
 
-    free(moves);
     return bestMove;
 }
 
@@ -36,9 +35,9 @@ int MiniMax::NegaMax(int depth, int alpha, int beta, U64 attackedSquares[2]) {
     if (depth == 0)
         return Quiesce(alpha, beta, attackedSquares);
     
-    Move* moves = (Move*) calloc(MAXMOVECOUNT, sizeof(Move));
+    std::array<Move, MAXMOVECOUNT> moves;
     U64 attackSquares[2] = { attackedSquares[0], attackedSquares[1] };
-    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attackSquares);
+    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(&moves, *board, &attackSquares);
 
     int score = -(int) PieceValue::Inf;
     for (int i = 0; i < moveCount; i++) {
@@ -51,7 +50,6 @@ int MiniMax::NegaMax(int depth, int alpha, int beta, U64 attackedSquares[2]) {
             break;
     }
 
-    free(moves);
     return score;
 }
 
@@ -62,9 +60,9 @@ int MiniMax::Quiesce(int alpha, int beta, U64 attackedSquares[2]) {
     if (alpha < standPat)
         alpha = standPat;
 
-    Move* moves = (Move*) calloc(MAXMOVECOUNT, sizeof(Move));
+    std::array<Move, MAXMOVECOUNT> moves;
     U64 attackSquares[2] = { attackedSquares[0], attackedSquares[1] };
-    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(moves, *board, &attackSquares);    
+    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(&moves, *board, &attackSquares);    
 
     for (int i = 0; i < moveCount; i++) {
         if (!moves[i].IsCapture())
@@ -79,6 +77,5 @@ int MiniMax::Quiesce(int alpha, int beta, U64 attackedSquares[2]) {
         if (score > alpha)
             alpha = score;
     }
-    free(moves);
     return alpha;
 }

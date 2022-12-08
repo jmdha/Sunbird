@@ -8,6 +8,7 @@
 
 class Move {
 public:
+    Move() {};
     Move(MoveType type) : move(0)/* , type(type), capturedPiece(PieceType::None) */ {
         SetType(type);
     };

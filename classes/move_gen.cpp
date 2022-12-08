@@ -25,7 +25,7 @@ notPromotionRank((up == Direction::North) ? NotEdge::North : NotEdge::South) {
     GeneratePawnMoves();
 }
 
-U8 MoveGen::GetAllMoves(Move* moves, Board board, U64 (*attackedSquares)[2]) {
+U8 MoveGen::GetAllMoves(std::array<Move, MAXMOVECOUNT> *moves, Board board, U64 (*attackedSquares)[2]) {
     U64 priorSquares[2];
     priorSquares[0] = (*attackedSquares)[0];
     priorSquares[1] = (*attackedSquares)[1];
@@ -43,7 +43,7 @@ U8 MoveGen::GetAllMoves(Move* moves, Board board, U64 (*attackedSquares)[2]) {
     return moveCount;
 }
 
-U8 MoveGen::GetPawnMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
+U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
     // Generate single and double step moves
     U64 pieces = board.pieceBB[(int) PieceType::Pawn] & board.colorBB[(int) color];
     if (pieces == 0)
@@ -93,7 +93,7 @@ U8 MoveGen::GetPawnMoves(Move* moves, int startIndex, Board board, bool isKingSa
     return moveCount;
 }
 
-U8 MoveGen::GetRookMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
+U8 MoveGen::GetRookMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
     constexpr Direction directions[4] = { Direction::North, Direction::East, Direction::South, Direction::West };
     int moveCount = 0;
 
@@ -105,7 +105,7 @@ U8 MoveGen::GetRookMoves(Move* moves, int startIndex, Board board, bool isKingSa
     return moveCount;
 }
 
-U8 MoveGen::GetBishopMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
+U8 MoveGen::GetBishopMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
     constexpr Direction directions[4] = { Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
     int moveCount = 0;
 
@@ -117,7 +117,7 @@ U8 MoveGen::GetBishopMoves(Move* moves, int startIndex, Board board, bool isKing
     return moveCount;
 }
 
-U8 MoveGen::GetQueenMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
+U8 MoveGen::GetQueenMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
     constexpr Direction directions[8] = { Direction::North, Direction::East, Direction::South, Direction::West, 
                                           Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
     int moveCount = 0;
@@ -130,7 +130,7 @@ U8 MoveGen::GetQueenMoves(Move* moves, int startIndex, Board board, bool isKingS
     return moveCount;
 }
 
-U8 MoveGen::GetKnightMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
+U8 MoveGen::GetKnightMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2]) {
     U64 pieces = board.pieceBB[(int) PieceType::Knight] & board.colorBB[(int) color];
     if (pieces == 0)
         return 0;
@@ -166,7 +166,7 @@ U8 MoveGen::GetKnightMoves(Move* moves, int startIndex, Board board, bool isKing
     return moveCount;
 }
 
-U8 MoveGen::GetKingMoves(Move* moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2], U64 priorAttacks[2]) {
+U8 MoveGen::GetKingMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board board, bool isKingSafe, U64 (*attackedSquares)[2], U64 priorAttacks[2]) {
     U64 pieces = board.pieceBB[(int) PieceType::King] & board.colorBB[(int) color];
     if (pieces == 0)
         return 0;
@@ -209,7 +209,7 @@ U8 MoveGen::GetKingMoves(Move* moves, int startIndex, Board board, bool isKingSa
     return moveCount;
 }
 
-U8 MoveGen::GetMoves(Move* moves, int startIndex, Board board, U64 pieces, Direction direction, PieceType type, bool isKingSafe, U64 (*attackedSquares)[2]) {
+U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board board, U64 pieces, Direction direction, PieceType type, bool isKingSafe, U64 (*attackedSquares)[2]) {
     U64 to = pieces;
     U8 moveCount = 0;
     int counter = 1;
