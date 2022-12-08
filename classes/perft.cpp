@@ -1,15 +1,9 @@
 #include "headers/perft.hh"
 
-Perft::Perft(Board* board) {
-    this->board = board;
-    moveGens[(int) Color::White] = new MoveGen(Color::White);
-    moveGens[(int) Color::Black] = new MoveGen(Color::Black);
-}
-
 int Perft::RunFromPosition(int depth) {
     U64 attacks[2] = { 0, 0 };
     std::array<Move, MAXMOVECOUNT> moves;
-    int moveCount = moveGens[(int) Utilities::GetOppositeColor(board->GetColor())]->GetAllMoves(&moves, *board, &attacks);
+    int moveCount = moveGens[(int) Utilities::GetOppositeColor(board->GetColor())].GetAllMoves(&moves, *board, &attacks);
     int leafCount = Run(depth, attacks);
     return leafCount;
 }
@@ -19,7 +13,7 @@ int Perft::Run(int depth, U64 attackedSquares[2]) {
         return 1;
     std::array<Move, MAXMOVECOUNT> moves;
     U64 attackSquares[2] = { attackedSquares[0], attackedSquares[1] };
-    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(&moves, *board, &attackSquares);
+    int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, *board, &attackSquares);
     int leafCount = 0;
 
     for (int i = 0; i < moveCount; i++) {
@@ -29,7 +23,7 @@ int Perft::Run(int depth, U64 attackedSquares[2]) {
             printf("%s\n", moves[i].ToString().c_str());
         #endif
         board->DoMove(&moves[i]);
-        if (moveGens[(int) Utilities::GetOppositeColor(board->GetColor())]->IsKingSafe(*board)) {
+        if (moveGens[(int) Utilities::GetOppositeColor(board->GetColor())].IsKingSafe(*board)) {
             #ifdef DEBUG_MOVE_TYPE_COUNT
                 moveTypeCount[(int) moves[i].GetType()]++;
             #endif 
@@ -38,6 +32,6 @@ int Perft::Run(int depth, U64 attackedSquares[2]) {
         }
         board->UndoMove(moves[i]);
     }
-    
+
     return leafCount;
 }

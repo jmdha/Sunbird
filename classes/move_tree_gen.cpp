@@ -1,8 +1,11 @@
 #include "headers/move_tree_gen.hh"
 
-MoveTreeGenerator::MoveTreeGenerator(Board* board, std::string outputPath, bool useAB) : board(board), outputPath(outputPath), useAB(useAB), evaluator(Evaluator(board->GetColor())) {
-    moveGens[(int) Color::White] = new MoveGen(Color::White);
-    moveGens[(int) Color::Black] = new MoveGen(Color::Black);
+MoveTreeGenerator::MoveTreeGenerator(Board* board, std::string outputPath, bool useAB) : 
+board(board), 
+outputPath(outputPath), 
+useAB(useAB), 
+evaluator(Evaluator(board->GetColor())),
+moveGens{MoveGen(Color::White), MoveGen(Color::Black)} {
     fp = fopen64(outputPath.c_str(), "w");   
 }
 
@@ -44,7 +47,7 @@ MoveTreeNode MoveTreeGenerator::GenerateMoveTree(int depth, int outputDepth) {
     int alpha = -(int) PieceValue::Inf;
     int beta = (int) PieceValue::Inf;
     std::array<Move, MAXMOVECOUNT> moves;
-    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(&moves, *board, &attacks);
+    int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, *board, &attacks);
     MoveTreeNode node = NegaMax(depth, useAB, depth - outputDepth, alpha, beta, attacks);
     return node;
 }
@@ -54,7 +57,7 @@ MoveTreeNode MoveTreeGenerator::NegaMax(int depth, bool useAB, int outputDepth, 
         return MoveTreeNode(evaluator.EvaluatePieceCount(*board), evaluator.EvaluatePositionValue(*board));
     std::array<Move, MAXMOVECOUNT> moves;
     U64 attackSquares[2] = { attacks[0], attacks[1] };
-    int moveCount = moveGens[(int) board->GetColor()]->GetAllMoves(&moves, *board, &attackSquares);
+    int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, *board, &attackSquares);
     
     MoveTreeNode node = MoveTreeNode(-(int)PieceValue::Inf, depth);
 

@@ -13,13 +13,13 @@
 
 class Perft {
 public:
-    Perft(Board* board);
+    Perft(Board* board) : board(board), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {};
     int RunFromMove(Move move, int depth);
     int RunFromPosition(int depth);
 
 private:
     Board* board;
-    MoveGen* moveGens[2];
+    MoveGen moveGens[2];
 
     unsigned int moveTypeCount[16] = { 0 };
 

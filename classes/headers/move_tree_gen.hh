@@ -22,7 +22,7 @@ private:
     Board* board;
     FILE *fp;
     std::string outputPath;
-    MoveGen* moveGens[2];
+    MoveGen moveGens[2];
     Evaluator evaluator;
     bool useAB;
 

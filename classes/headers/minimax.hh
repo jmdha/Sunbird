@@ -13,16 +13,16 @@
 
 class MiniMax {
 public:
-    MiniMax(Board* board);
-    ~MiniMax() {
-        delete(moveGens[0]);
-        delete(moveGens[1]);
-    }
+    struct Stats {
+        U64 negamaxExpansionCount = 0;
+        U64 quiesceExpansionCount = 0;
+    };
+    MiniMax(Board* board) : board(board), evaluator(Evaluator(board->GetColor())), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {}
     Move GetBestMove(int depth);
     
 private:
     Board *board;
-    MoveGen *moveGens[2];
+    MoveGen moveGens[2];
     Evaluator evaluator;
 
     Move NegaMax(int depth);
