@@ -17,6 +17,8 @@ int main(int argc, char* argv[]) {
     Move move = max.GetBestMove(6);
     auto t1 = std::chrono::steady_clock::now();
     auto elapsed = (unsigned long long) std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+    if (elapsed == 0)
+        elapsed = 1;
     printf("Move found %s\n", move.ToString().c_str());
     printf("Moves made %lu (%llu/s)\n", board.GetStats().totalMoves, (board.GetStats().totalMoves / elapsed) * 1000);
 }
