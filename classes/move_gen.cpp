@@ -200,17 +200,16 @@ U8 MoveGen::GetKingMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
 }
 
 U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board board, U64 pieces, Direction direction, PieceType type, bool isKingSafe, U64 (*attackedSquares)[2]) {
-    U64 to = pieces;
     U8 moveCount = 0;
     int counter = 1;
-    while (to) {
-        to = BitShifts::Shift(to & Utilities::NotEdge(direction), direction, 1) & ~board.colorBB[(int) color];
-        if ((*attackedSquares)[0] & to)
-            (*attackedSquares)[1] |= to;
+    while (pieces) {
+        pieces = BitShifts::Shift(pieces & Utilities::NotEdge(direction), direction, 1) & ~board.colorBB[(int) color];
+        if ((*attackedSquares)[0] & pieces)
+            (*attackedSquares)[1] |= pieces;
         else
-            (*attackedSquares)[0] |= to;
-        U64 attackMoves = to & board.occupiedBB;
-        to &= ~board.occupiedBB;
+            (*attackedSquares)[0] |= pieces;
+        U64 attackMoves = pieces & board.occupiedBB;
+        pieces &= ~board.occupiedBB;
 
         while (attackMoves) {
             int lsb = Utilities::LSB_Pop(&attackMoves);
@@ -218,7 +217,7 @@ U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Boar
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) (lsb - (int) direction * counter), (Square) lsb, board.GetType((Square) lsb)));
         }
 
-        U64 quietMoves = to;
+        U64 quietMoves = pieces;
 
         while (quietMoves) {
             int lsb = Utilities::LSB_Pop(&quietMoves);
