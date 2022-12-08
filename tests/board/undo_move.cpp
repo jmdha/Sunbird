@@ -19,12 +19,12 @@ int main(int argc, char* argv[]) {
     std::string sMove = std::string(argv[2]);
     Move move = Move(MoveType::Quiet);
     if (sMove == "O-O-O" || sMove == "o-o-o") {
-        if (board.color == Color::White)
+        if (board.GetColor() == Color::White)
             move = Move(MoveType::QueenCastle, Square::E1, Square::C1);
         else
             move = Move(MoveType::QueenCastle, Square::E8, Square::C8);
     } else if (sMove == "O-O" || sMove == "o-o") {
-        if (board.color == Color::White)
+        if (board.GetColor() == Color::White)
             move = Move(MoveType::KingCastle, Square::E1, Square::G1);
         else
             move = Move(MoveType::KingCastle, Square::E8, Square::G8);

@@ -1,6 +1,6 @@
 #include "headers/minimax.hh"
 
-MiniMax::MiniMax(Board* board) : board(board), evaluator(Evaluator(board->color)) {
+MiniMax::MiniMax(Board* board) : board(board), evaluator(Evaluator(board->GetColor())) {
     moveGens[(U8) Color::White] = new MoveGen(Color::White);
     moveGens[(U8) Color::Black] = new MoveGen(Color::Black);
 }
