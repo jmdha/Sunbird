@@ -2,7 +2,7 @@
 
 Evaluator::~Evaluator() {
 #ifdef STATS
-    printf("Evaluator: %d - %llu evaluations\n", (int) oColor, stats.evalCount);
+    printf("Evaluator: %d - %lu evaluations\n", (int) oColor, stats.evalCount);
 #endif
 }
 

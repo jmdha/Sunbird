@@ -13,5 +13,5 @@ int main(int argc, char* argv[]) {
     MiniMax max = MiniMax(&board);
     Move move = max.GetBestMove(7);
     printf("Move found %s\n", move.ToString().c_str());
-    printf("Moves made %llu\n", board.GetStats().totalMoves);
+    printf("Moves made %lu\n", board.GetStats().totalMoves);
 }
