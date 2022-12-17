@@ -2,6 +2,7 @@
 #define BIT_SHIFTS
 
 #include <array>
+#include <algorithm>
 
 #include "constants.hh"
 

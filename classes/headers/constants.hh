@@ -1,10 +1,8 @@
 #ifndef CONSTANTS
 #define CONSTANTS
 
-#define U8  uint_fast8_t
-#define U16 uint_fast16_t
-#define U32 uint_fast32_t
-#define U64 uint_fast64_t
+#define U8  unsigned short
+#define U64 unsigned long long int
 #define C64(x) (U64)1 << ((U64) x)
 
 #define WIDTH 8
