@@ -21,4 +21,5 @@ int main(int argc, char* argv[]) {
         elapsed = 1;
     printf("Move found %s\n", move.ToString().c_str());
     printf("Moves made %llu (%llu/s)\n", board.GetStats().totalMoves, (board.GetStats().totalMoves / elapsed) * 1000);
+    printf("Elapsed %llu ms\n", elapsed);
 }
