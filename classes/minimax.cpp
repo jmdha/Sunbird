@@ -17,6 +17,7 @@ Move MiniMax::NegaMax(int depth) {
         int score = -NegaMax(depth - 1, -(int) PieceValue::Inf, (int) PieceValue::Inf, attacks);
         board->UndoMove(moves[i]);
 
+        printf("%s %d\n", moves[i].ToString().c_str(), score);
         if (score > bestScore) {
             bestScore = score;
             bestMove = moves[i];
@@ -34,9 +35,9 @@ int MiniMax::NegaMax(int depth, int alpha, int beta, U64 attackedSquares[2]) {
     U64 attackSquares[2] = { attackedSquares[0], attackedSquares[1] };
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, *board, &attackSquares);
 
-    int bestScore = -(int) PieceValue::Inf;
     for (int moveType = 0; moveType < 2; moveType++) 
         for (int i = 0; i < moveCount; i++) {
+            // Do capture before quiet
             if (moves.at(i).IsCapture()) {
                 if (moveType == 1)
                     continue;
@@ -48,16 +49,13 @@ int MiniMax::NegaMax(int depth, int alpha, int beta, U64 attackedSquares[2]) {
             int score = -NegaMax(depth - 1, -beta, -alpha, attackSquares);
             board->UndoMove(moves[i]);
 
-            if (score >= beta)
-                return score;
-            if (score > bestScore) {
-                bestScore = score;
-                if (score > alpha)
-                    alpha = score;
-            }
+            if( score >= beta )
+                return beta;   //  fail hard beta-cutoff
+            if( score > alpha )
+                alpha = score; // alpha acts like max in MiniMax
         }
-
-    return bestScore;
+        
+    return alpha;
 }
 
 int MiniMax::Quiesce(int alpha, int beta, U64 attackedSquares[2]) {
