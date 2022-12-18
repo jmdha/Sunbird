@@ -6,7 +6,7 @@ Evaluator::~Evaluator() {
 #endif
 }
 
-int Evaluator::Evalute(const Board board) {
+int Evaluator::Evalute(const Board &board) {
 #ifdef STATS
     stats.evalCount++;
 #endif
@@ -18,18 +18,18 @@ int Evaluator::Evalute(const Board board) {
     return value;
 }
 
-int Evaluator::EvaluatePieceCount(const Board board) {
+int Evaluator::EvaluatePieceCount(const Board &board) {
     int value = 0;
     for (int i = 0; i < PIECECOUNT; i++)
         value += (board.popCount[(int) Color::White][i] - board.popCount[(int) Color::Black][i]) * Utilities::GetPieceValue((PieceType) i);
     return value;
 }
 
-int Evaluator::EvaluatePositionValue(const Board board) {
+int Evaluator::EvaluatePositionValue(const Board &board) {
     return EvaluatePositionValue(board, Color::White) - EvaluatePositionValue(board, Color::Black);
 }
 
-int Evaluator::EvaluatePositionValue(const Board board, Color color) {
+int Evaluator::EvaluatePositionValue(const Board &board, Color color) {
     int value   = 0;
     U64 pawns   = board.pieceBB[(int) PieceType::Pawn]      & board.colorBB[(int) color];
     U64 knights = board.pieceBB[(int) PieceType::Knight]    & board.colorBB[(int) color];

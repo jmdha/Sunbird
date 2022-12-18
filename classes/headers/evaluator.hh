@@ -13,10 +13,10 @@ public:
     Evaluator(Color color) : stats(Stats()), oColor(color) {};
     ~Evaluator();
     // Evaluation
-    int Evalute(const Board board);
-    int EvaluatePieceCount(const Board board);
-    int EvaluatePositionValue(const Board board);
-    int EvaluatePositionValue(const Board board, Color color);
+    int Evalute(const Board &board);
+    int EvaluatePieceCount(const Board &board);
+    int EvaluatePositionValue(const Board &board);
+    int EvaluatePositionValue(const Board &board, Color color);
     // Misc
     inline Stats GetStats();
 private:
