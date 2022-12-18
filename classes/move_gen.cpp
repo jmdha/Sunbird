@@ -64,6 +64,23 @@ U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
     while (pieces) {
         int lsb = Utilities::LSB_Pop(&pieces);
 
+        // Attack moves
+        //// Diagonal
+        U64 captures = board.colorBB[(int) oppColor] & PawnAttacks[(int) color][(int) lsb];
+        while (captures) {
+            int capturePiece = Utilities::LSB_Pop(&captures);
+            if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsb), board.colorBB[(int) oppColor] ^ C64(capturePiece)))
+                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsb, (Square) capturePiece, board.GetType((Square) capturePiece)));
+        }
+
+        //// En Passant
+        captures = board.enPassant & PawnAttacks[(int) color][(int) lsb] & (U64) enPassantRank;
+        while (captures) {
+            int capturePiece = Utilities::LSB_Pop(&captures);
+            if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsb),  board.colorBB[(int) oppColor] ^ C64(capturePiece)))
+                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::EPCapture, (Square) lsb, (Square) capturePiece, PieceType::Pawn));
+        }
+
         // Quiet move
         //// Single push
         if (!(board.occupiedBB & pawnSingleMove[(int) lsb]))
@@ -73,22 +90,6 @@ U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
         if (C64(lsb) & (U64) doubleRank && !(board.occupiedBB & pawnDoubleMove[(int) lsb]))
             if (isKingSafe || IsKingSafe(board, (board.occupiedBB ^ C64(lsb)) | C64(lsb + (int) up * 2)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::DoublePawnPush, (Square) lsb, (Square) (lsb + (int) up * 2)));
-        
-        // Attack moves
-        //// Diagonal
-        U64 captures = board.colorBB[(int) oppColor] & PawnAttacks[(int) color][(int) lsb];
-        while (captures) {
-            int capturePiece = Utilities::LSB_Pop(&captures);
-            if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsb), board.colorBB[(int) oppColor] ^ C64(capturePiece)))
-                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsb, (Square) capturePiece, board.GetType((Square) capturePiece)));
-        }
-        //// En Passant
-        captures = board.enPassant & PawnAttacks[(int) color][(int) lsb] & (U64) enPassantRank;
-        while (captures) {
-            int capturePiece = Utilities::LSB_Pop(&captures);
-            if (isKingSafe || IsKingSafe(board, board.occupiedBB ^ C64(lsb),  board.colorBB[(int) oppColor] ^ C64(capturePiece)))
-                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::EPCapture, (Square) lsb, (Square) capturePiece, PieceType::Pawn));
-        }
     }
     return moveCount;
 }
