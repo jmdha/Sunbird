@@ -165,9 +165,12 @@ U8 MoveGen::GetKingMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
     AppendAttack(attackedSquares, to);
     // Attack moves
     U64 attackMoves = to & board.colorBB[(int) oppColor];
+    // King cannot move onto friendly piece
     to &= ~board.occupiedBB;
+    // King cannot move to an attacked square, unless the move is an attack
     to &= ~priorAttacks[0];
-    attackMoves &= ~priorAttacks[0];
+    // King cannot attack a square which is attacked twice
+    attackMoves &= ~priorAttacks[1];
 
     while (attackMoves) {
         int lsb = Utilities::LSB_Pop(&attackMoves);
