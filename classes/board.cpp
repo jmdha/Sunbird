@@ -35,12 +35,12 @@ void Board::Initialize() {
     originalColor = Color::White;
 }
 
-void Board::DoMove(Move *move) {
+void Board::DoMove(Move &move) {
     PieceType fromType;
 #ifdef STATS
     stats.totalMoves++;
 #endif
-    if (move->GetType() == MoveType::KingCastle) {
+    if (move.GetType() == MoveType::KingCastle) {
         if (color == Color::White) {
             PlacePiece(Square::G1, PieceType::King, Color::White);
             PlacePiece(Square::F1, PieceType::Rook, Color::White);
@@ -53,7 +53,7 @@ void Board::DoMove(Move *move) {
             RemovePiece(Square::H8, PieceType::Rook, Color::Black);
         }
         fromType = PieceType::King;
-    } else if (move->GetType() == MoveType::QueenCastle) {
+    } else if (move.GetType() == MoveType::QueenCastle) {
         if (color == Color::White) {
             PlacePiece(Square::C1, PieceType::King, Color::White);
             PlacePiece(Square::D1, PieceType::Rook, Color::White);
@@ -67,23 +67,23 @@ void Board::DoMove(Move *move) {
         }
         fromType = PieceType::King;
     } else {
-        fromType = GetType(move->GetFrom());
-        RemovePiece(move->GetFrom(), fromType, color);
+        fromType = GetType(move.GetFrom());
+        RemovePiece(move.GetFrom(), fromType, color);
         
-        if (move->IsCapture()) {
-            if (move->GetType() == MoveType::EPCapture) {
-                Square captureSquare = (Square) ((color == Color::White) ? (int) move->GetTo() - 8 : (int) move->GetTo() + 8);
-                RemovePiece(captureSquare, move->GetCapturedPiece(), Utilities::GetOppositeColor(color));
+        if (move.IsCapture()) {
+            if (move.GetType() == MoveType::EPCapture) {
+                Square captureSquare = (Square) ((color == Color::White) ? (int) move.GetTo() - 8 : (int) move.GetTo() + 8);
+                RemovePiece(captureSquare, move.GetCapturedPiece(), Utilities::GetOppositeColor(color));
             }
             else 
-                RemovePiece(move->GetTo(), move->GetCapturedPiece(), Utilities::GetOppositeColor(color));   
+                RemovePiece(move.GetTo(), move.GetCapturedPiece(), Utilities::GetOppositeColor(color));   
         }
-        PlacePiece(move->GetTo(), fromType, color);
+        PlacePiece(move.GetTo(), fromType, color);
     }
 
     // En passant    
-    if (move->GetType() == MoveType::DoublePawnPush)
-        enPassant |= (U64) Utilities::GetColumn(move->GetFrom());
+    if (move.GetType() == MoveType::DoublePawnPush)
+        enPassant |= (U64) Utilities::GetColumn(move.GetFrom());
     else
         enPassant = 0;
     
@@ -95,14 +95,14 @@ void Board::DoMove(Move *move) {
             DisableCastling(move, color, Castling::Queen);
     } else if (fromType == PieceType::Rook) {
         if (color == Color::White) {
-            if (castlingAllowed[(U8) color][(U8) Castling::King] && move->GetFrom() == Square::H1)
+            if (castlingAllowed[(U8) color][(U8) Castling::King] && move.GetFrom() == Square::H1)
                 DisableCastling(move, color, Castling::King);
-            else if (castlingAllowed[(U8) color][(U8) Castling::Queen] && move->GetFrom() == Square::A1)
+            else if (castlingAllowed[(U8) color][(U8) Castling::Queen] && move.GetFrom() == Square::A1)
                 DisableCastling(move, color, Castling::Queen);
         } else if (color == Color::Black) {
-            if (castlingAllowed[(U8) color][(U8) Castling::King] && move->GetFrom() == Square::H8)
+            if (castlingAllowed[(U8) color][(U8) Castling::King] && move.GetFrom() == Square::H8)
                 DisableCastling(move, color, Castling::King);
-            else if (castlingAllowed[(U8) color][(U8) Castling::Queen] && move->GetFrom() == Square::A8)
+            else if (castlingAllowed[(U8) color][(U8) Castling::Queen] && move.GetFrom() == Square::A8)
                 DisableCastling(move, color, Castling::Queen);
         }
     }
@@ -162,7 +162,7 @@ void Board::UndoMove(Move move) {
     color = Utilities::GetOppositeColor(color);
 }
 
-void Board::EnableCastling(Move move) {
+void Board::EnableCastling(Move &move) {
     if (move.IsDC()) {
         if (move.IsDC(Color::White, Castling::King))
             castlingAllowed[(int) Color::White][(int) Castling::King] = true;
@@ -175,7 +175,7 @@ void Board::EnableCastling(Move move) {
     }
 }
 
-void Board::DisableCastling(Move *move, Color color, Castling side) {
+void Board::DisableCastling(Move &move, Color color, Castling side) {
     castlingAllowed[(U8) color][(U8) side] = false;
-    move->SetDisableCastle(color, side);
+    move.SetDisableCastle(color, side);
 }

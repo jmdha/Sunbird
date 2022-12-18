@@ -17,7 +17,7 @@ int Perft::Run(int depth, U64 attackedSquares[2]) {
     int leafCount = 0;
 
     for (int i = 0; i < moveCount; i++) {
-        board->DoMove(&moves[i]);
+        board->DoMove(moves[i]);
         if (moveGens[(int) Utilities::GetOppositeColor(board->GetColor())].IsKingSafe(*board)) {
             moveTypeCount[(int) moves[i].GetType()]++;
             leafCount += Run(depth - 1, attackSquares);

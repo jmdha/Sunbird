@@ -11,9 +11,7 @@ int Evaluator::Evalute(const Board &board) {
     stats.evalCount++;
 #endif
     int value = EvaluatePieceCount(board) + EvaluatePositionValue(board);
-    if (oColor == Color::Black)
-        value *= -1;
-    if (board.color != oColor)
+    if (board.color == Color::Black)
         value *= -1;
     return value;
 }

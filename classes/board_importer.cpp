@@ -121,8 +121,12 @@ void BoardImporter::ImportMoveSequence(Board* board, std::string moves) {
 				type = MoveType::Capture; 
 			else
 				type = MoveType::Quiet;
-			Move tempMove = Move(type, fromSquare, toSquare);
-			board->DoMove(&tempMove);
+			Move tempMove;
+			if (type == MoveType::Capture || type == MoveType::RPromotionCapture || type == MoveType::NPromotionCapture || type == MoveType::BPromotionCapture || type == MoveType::QPromotionCapture)
+				tempMove = Move(type, fromSquare, toSquare, board->GetType(toSquare));
+			else
+				tempMove = Move(type, fromSquare, toSquare);
+			board->DoMove(tempMove);
 			move = "";
 		}
 	}

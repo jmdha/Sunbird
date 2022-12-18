@@ -18,7 +18,7 @@ public:
     // Pieces
     inline PieceType GetType(Square square) const;
     // Moves
-    void DoMove(Move *move);
+    void DoMove(Move &move);
     void UndoMove(Move move);
     // Misc
     inline Color GetColor() const;
@@ -63,8 +63,8 @@ private:
     inline void PlacePiece(Square square, PieceType type, Color color);
     inline void RemovePiece(Square square, PieceType type, Color color);
     // Castling
-    void EnableCastling(Move move);
-    void DisableCastling(Move *move, Color color, Castling side);
+    void EnableCastling(Move &move);
+    void DisableCastling(Move &move, Color color, Castling side);
     void IncrementCastling();
     void DecrementCastling();
     friend class Evaluator;
