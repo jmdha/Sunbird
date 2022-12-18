@@ -1,9 +1,6 @@
 #ifndef PERFT
 #define PERFT
 
-#define DEBUG_MOVE_TYPE_COUNT true
-//#define DEBUG_PRINT_MOVES true
-
 #include <string>
 
 #include "constants.hh"

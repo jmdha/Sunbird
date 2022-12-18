@@ -1,7 +1,5 @@
 #include "headers/minimax.hh"
 
-
-
 Move MiniMax::GetBestMove(int depth) {
     return NegaMax(depth);
 }

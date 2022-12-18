@@ -28,11 +28,9 @@ void Board::Initialize() {
     PlacePiece(Square::E8, PieceType::King, Color::Black);
     
     for (U8 i = 0; i < COLORCOUNT; i++)
-        for (U8 i2 = 0; i2 < 2; i2++) {
+        for (U8 i2 = 0; i2 < 2; i2++)
             castlingAllowed[i][i2] = true;
-        }
             
-
     color = Color::White;
     originalColor = Color::White;
 }

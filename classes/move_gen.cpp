@@ -129,10 +129,7 @@ U8 MoveGen::GetKnightMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex
     while (pieces) {
             int lsbPiece = Utilities::LSB_Pop(&pieces);
             U64 to = KnightMoves[lsbPiece];
-            if ((*attackedSquares)[0] & to)
-                (*attackedSquares)[1] |= to;
-            else
-                (*attackedSquares)[0] |= to;
+            AppendAttack(attackedSquares, to);
 
             // Attack moves
             U64 attackMoves = to & board.colorBB[(int) oppColor];
@@ -164,10 +161,7 @@ U8 MoveGen::GetKingMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
 
     int lsbPiece = Utilities::LSB_Pop(&pieces);
     U64 to = KingMoves[lsbPiece];
-    if ((*attackedSquares)[0] & to)
-        (*attackedSquares)[1] |= to;
-    else
-        (*attackedSquares)[0] |= to;
+    AppendAttack(attackedSquares, to);
     // Attack moves
     U64 attackMoves = to & board.colorBB[(int) oppColor];
     to &= ~board.occupiedBB;
@@ -204,10 +198,7 @@ U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Boar
     int counter = 1;
     while (pieces) {
         pieces = BitShifts::Shift(pieces & Utilities::NotEdge(direction), direction, 1) & ~board.colorBB[(int) color];
-        if ((*attackedSquares)[0] & pieces)
-            (*attackedSquares)[1] |= pieces;
-        else
-            (*attackedSquares)[0] |= pieces;
+        AppendAttack(attackedSquares, pieces);
         U64 attackMoves = pieces & board.occupiedBB;
         pieces &= ~board.occupiedBB;
 

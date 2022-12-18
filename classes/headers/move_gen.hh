@@ -50,11 +50,19 @@ private:
     bool IsSafeMove(Board board, Square square);
 
     inline void AppendMove(std::array<Move, MAXMOVECOUNT> *moves, int index, U8* moveCount, Move move);
+    inline void AppendAttack(U64 (*attackedSquares)[2], U64 newAttack);
 };
 
 inline void MoveGen::AppendMove(std::array<Move, MAXMOVECOUNT> *moves, int index, U8* moveCount, Move move) {
     moves->at(index) = move;
     (*moveCount)++;
+}
+
+inline void MoveGen::AppendAttack(U64 (*attackedSquares)[2], U64 newAttack) {
+    if ((*attackedSquares)[0] & newAttack)
+        (*attackedSquares)[1] |= newAttack;
+    else
+        (*attackedSquares)[0] |= newAttack;
 }
 
 #endif // MOVE_GEN
