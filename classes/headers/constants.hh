@@ -51,7 +51,7 @@ enum class PieceValue : U64 {
     Rook = 50,
     Queen = 90,
     King = 20000,
-    Inf = 30000,
+    Inf = 300000,
     None
 };
 
