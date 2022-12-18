@@ -1,6 +1,7 @@
 # Tests
 ## Import FEN
 add_executable(GetBestMove tests/minimax/get_best_move.cpp ${sources})
+add_executable(GetBestMoveSeq tests/minimax/get_best_move_seq.cpp ${sources})
 add_executable(GetAnythingBut tests/minimax/anything_but.cpp ${sources})
 
 ## Easy to find
@@ -10,6 +11,9 @@ add_test(GetBestMove_FreeQueen_3 GetBestMove "rnbqkb1r/pppppppp/7n/8/4P1Q1/8/PPP
 add_test(GetBestMove_FreeQueen_1w GetBestMove "rnb1kbnr/pppp1ppp/8/4p3/4P1Qq/8/PPPP1PPP/RNB1KBNR w KQkq - 2 3" 1 "g4h4")
 add_test(GetBestMove_FreeQueen_2w GetBestMove "rnb1kbnr/pppp1ppp/8/4p3/4P1Qq/8/PPPP1PPP/RNB1KBNR w KQkq - 2 3" 2 "g4h4")
 add_test(GetBestMove_FreeQueen_3w GetBestMove "rnb1kbnr/pppp1ppp/8/4p3/4P1Qq/8/PPPP1PPP/RNB1KBNR w KQkq - 2 3" 3 "g4h4")
+add_test(GetBestMove_Retreat_1 GetBestMove "rn1qkb1r/ppp2ppp/4pn2/3p1B2/3P4/4P3/PPP2PPP/RNBQK1NR w KQkq - 0 5" 5 "f5d3")
+add_test(GetBestMove_Retreat_1s GetBestMoveSeq "d2d4 d7d5 e2e3 g8f6 f1d3 c8f5 d3f5 e7e6" 5 "f5d3")
+
 
 ## Avoid obvious blunder
 add_test(AnythingBut_MoveBlunder_1 GetAnythingBut "r2q1rk1/ppp2ppp/2n1bn2/3pB3/2PP4/4PN2/P2N1PPP/R2QKB1R b KQ - 0 9" 1 "d8d6")

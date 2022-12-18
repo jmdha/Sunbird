@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
         move = Move(moveType, fromSquare, toSquare, toPiece);
     }
 
-    board.DoMove(&move);
+    board.DoMove(move);
     board.UndoMove(move);
 
     if (priorBoard == board)
