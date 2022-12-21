@@ -35,6 +35,9 @@ int MiniMax::NegaMax(int depth, int alpha, int beta, U64 attackedSquares[2]) {
     U64 attackSquares[2] = { attackedSquares[0], attackedSquares[1] };
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, *board, &attackSquares);
 
+    if (moveCount == 0)
+        return evaluator.Evalute(*board);
+
     for (int moveType = 0; moveType < 2; moveType++) 
         for (int i = 0; i < moveCount; i++) {
             // Do capture before quiet
@@ -68,6 +71,9 @@ int MiniMax::Quiesce(int alpha, int beta, U64 attackedSquares[2]) {
     std::array<Move, MAXMOVECOUNT> moves;
     U64 attackSquares[2] = { attackedSquares[0], attackedSquares[1] };
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, *board, &attackSquares);    
+
+    if (moveCount == 0)
+        return evaluator.Evalute(*board);
 
     for (int i = 0; i < moveCount; i++) {
         if (!moves[i].IsCapture())
