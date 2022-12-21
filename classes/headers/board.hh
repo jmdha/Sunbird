@@ -30,6 +30,7 @@ public:
     inline Color GetOriginalColor() const;
     inline U64 GetHash() const; 
     inline Stats GetStats() const;
+    inline bool IsThreefoldRep() const;
 
     bool friend operator==(const Board & lhs, const Board & rhs) {
         if (lhs.color != rhs.color || lhs.occupiedBB != rhs.occupiedBB)
@@ -120,6 +121,10 @@ inline U64 Board::GetHash() const {
 inline Board::Stats Board::GetStats() const {
     return stats;
 };
+
+inline bool Board::IsThreefoldRep() const {
+    return zobrist.IsThreefoldRep();
+}
 
 inline void Board::PlacePiece(Square square, PieceChar pieceChar) {
     PlacePiece(square, Utilities::GetPieceType(pieceChar), Utilities::GetPieceColor(pieceChar));

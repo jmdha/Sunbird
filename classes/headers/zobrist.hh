@@ -16,6 +16,7 @@ public:
     inline void FlipSqure(Square square, PieceType type, Color color);
     inline void IncrementHash();
     inline void DecrementHash();
+    inline bool IsThreefoldRep() const;
 
 private:
     // Static
@@ -49,6 +50,10 @@ inline void Zobrist::DecrementHash() {
     hashOccurances.at(hash)--;
     if (hashOccurances.at(hash) == 0)
         hashOccurances.erase(hash);
+}
+
+inline bool Zobrist::IsThreefoldRep() const {
+    return hashOccurances.at(hash) >= 3;
 }
 
 #endif // ZOBRIST

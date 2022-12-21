@@ -41,6 +41,8 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
 
     if (moveCount == 0)
         return std::min(evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board)), beta);
+    if (board->IsThreefoldRep())
+        return std::min(0, beta);
 
     for (int moveType = 0; moveType < 2; moveType++) 
         for (int i = 0; i < moveCount; i++) {
@@ -83,6 +85,8 @@ int MiniMax::Quiesce(int alpha, int beta) {
 
     if (moveCount == 0)
         return std::min(evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board)), beta);
+    if (board->IsThreefoldRep())
+        return std::min(0, beta);
 
     for (int i = 0; i < moveCount; i++) {
         if (!moves[i].IsCapture())
