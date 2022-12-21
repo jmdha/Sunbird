@@ -312,15 +312,12 @@ U64 MoveGen::GetSlidingAttacks(const Board *board, const U64 pieceIndex, const D
         for (int offSet = 1; offSet < 8; offSet++) {
             workingPiece = BitShifts::Shift(workingPiece & Utilities::NotEdge(directions[dirIndex]), directions[dirIndex], 1);
             
-            // If hitting friendly
-            if (workingPiece & (board->GetOccupiedBB() & board->colorBB[(int) Utilities::GetOppositeColor(board->GetColor())]))
-                break;
-
-            // If hitting friendly
-            if (workingPiece & (board->GetOccupiedBB() & board->colorBB[(int) board->GetColor()])) {
+            // If hitting a piece
+            if (workingPiece & board->GetOccupiedBB()) {
                 attacks |= workingPiece;
                 break;
             }
+            
             // If unoccupied
             attacks |= workingPiece;
         }

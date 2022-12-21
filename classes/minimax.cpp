@@ -16,8 +16,9 @@ Move MiniMax::NegaMax(int depth) {
     int bestScore = -(int) PieceValue::Inf;
 
     for (int i = 0; i < moveCount; i++) {
+        //printf("%s\n", moves[i].ToString().c_str());
         board->DoMove(moves[i]);
-        int score = -NegaMax(depth - 1, -(int) PieceValue::Inf, (int) PieceValue::Inf);
+        int score = -NegaMax(depth - 1, -(int) PieceValue::Inf, -bestScore);
         board->UndoMove(moves[i]);
         //printf("%s %d\n", moves[i].ToString().c_str(), score);
 
@@ -39,7 +40,7 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
 
     if (moveCount == 0)
-        return -evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board));
+        return std::min(evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board)), beta);
 
     for (int moveType = 0; moveType < 2; moveType++) 
         for (int i = 0; i < moveCount; i++) {
@@ -81,7 +82,7 @@ int MiniMax::Quiesce(int alpha, int beta) {
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);    
 
     if (moveCount == 0)
-        return -evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board));
+        return std::min(evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board)), beta);
 
     for (int i = 0; i < moveCount; i++) {
         if (!moves[i].IsCapture())
@@ -91,7 +92,7 @@ int MiniMax::Quiesce(int alpha, int beta) {
         int score = -Quiesce(-beta, -alpha);
         board->UndoMove(moves[i]);
 
-        if(score >= beta)
+        if(score >= beta) 
             return beta;   //  fail hard beta-cutoff
         if(score > alpha)
             alpha = score; // alpha acts like max in MiniMax
