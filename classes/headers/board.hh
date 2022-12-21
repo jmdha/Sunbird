@@ -6,6 +6,7 @@
 #include "constants.hh"
 #include "utilities.hh"
 #include "move.hh"
+#include "zobrist.hh"
 
 // Class representing the current state of a game of chess
 class Board {
@@ -60,6 +61,7 @@ private:
     U8 popCount[COLORCOUNT][PIECECOUNT] = { 0 };
     bool castlingAllowed[2][2] = { 0 };
     Stats stats = Stats();
+    Zobrist zobrist = Zobrist();
 
     // Pieces
     inline void PlacePiece(Square square, PieceChar pieceChar);
@@ -129,6 +131,7 @@ inline void Board::PlacePiece(Square square, PieceType type, Color color) {
     colorBB[(U8) color] |= bit;
     occupiedBB |= bit;
     popCount[(U8) color][(U8) type]++;
+    zobrist.FlipSqure(square, type, color);
 }
 
 inline void Board::RemovePiece(Square square, PieceType type, Color color) {
@@ -137,6 +140,7 @@ inline void Board::RemovePiece(Square square, PieceType type, Color color) {
     colorBB[(U8) color] ^= bit;
     occupiedBB ^= bit;
     popCount[(U8) color][(U8) type]--;
+    zobrist.FlipSqure(square, type, color);
 }
 
 #endif // BOARD

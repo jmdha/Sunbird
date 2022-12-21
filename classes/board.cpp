@@ -108,9 +108,11 @@ void Board::DoMove(Move &move) {
     }
 
     color = Utilities::GetOppositeColor(color);
+    zobrist.IncrementHash();
 }
 
 void Board::UndoMove(Move move) {
+    zobrist.DecrementHash();
     PieceType toType;
     if (move.GetType() == MoveType::KingCastle) {
         if (color == Color::Black) {

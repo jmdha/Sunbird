@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 include(CTest)
 enable_testing()
 
-file(GLOB_RECURSE sources CONFIGURE_DEPENDS classes/*.cpp classes/*.h)
+file(GLOB_RECURSE sources CONFIGURE_DEPENDS classes/*.cpp classes/*.hh)
 
 add_executable(main builds/main.cpp ${sources})
 add_executable(test_run builds/test_run.cpp ${sources})
