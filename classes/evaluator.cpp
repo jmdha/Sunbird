@@ -3,17 +3,8 @@
 Evaluator::~Evaluator() {
 #ifdef STATS
     printf("Evaluator: %d - %llu evaluations\n", (int) oColor, stats.evalCount);
+    printf("Evaluator: %d - %llu no move evaluations\n", (int) oColor, stats.noMoveEvalCount);
 #endif
-}
-
-int Evaluator::Evalute(const Board &board) {
-#ifdef STATS
-    stats.evalCount++;
-#endif
-    int value = EvaluatePieceCount(board) + EvaluatePositionValue(board);
-    if (board.color == Color::Black)
-        value *= -1;
-    return value;
 }
 
 int Evaluator::EvaluatePieceCount(const Board &board) {
@@ -29,13 +20,13 @@ int Evaluator::EvaluatePositionValue(const Board &board) {
 
 int Evaluator::EvaluatePositionValue(const Board &board, Color color) {
     int value   = 0;
-    U64 pawns   = board.pieceBB[(int) PieceType::Pawn]      & board.colorBB[(int) color];
-    U64 knights = board.pieceBB[(int) PieceType::Knight]    & board.colorBB[(int) color];
-    U64 bishops = board.pieceBB[(int) PieceType::Bishop]    & board.colorBB[(int) color];
-    U64 rooks   = board.pieceBB[(int) PieceType::Rook]      & board.colorBB[(int) color];
-    U64 queens  = board.pieceBB[(int) PieceType::Queen]     & board.colorBB[(int) color];
-    U64 kings   = board.pieceBB[(int) PieceType::King]      & board.colorBB[(int) color];
-
+    U64 pawns   = board.pieceBB[(int) PieceType::Pawn]   & board.colorBB[(int) color];
+    U64 knights = board.pieceBB[(int) PieceType::Knight] & board.colorBB[(int) color];
+    U64 bishops = board.pieceBB[(int) PieceType::Bishop] & board.colorBB[(int) color];
+    U64 rooks   = board.pieceBB[(int) PieceType::Rook]   & board.colorBB[(int) color];
+    U64 queens  = board.pieceBB[(int) PieceType::Queen]  & board.colorBB[(int) color];
+    U64 kings   = board.pieceBB[(int) PieceType::King]   & board.colorBB[(int) color];
+    
     if (color == Color::White) {
         while (pawns)   value += PosValuePawn      [Utilities::LSB_Pop(&pawns)];
         while (knights) value += PosValueKnight    [Utilities::LSB_Pop(&knights)];

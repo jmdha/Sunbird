@@ -227,8 +227,8 @@ add_test(MoveGen_King_Move_b_Corner4 GenerateKingMoves    3  "8/8/8/8/8/8/8/7k b
 add_test(MoveGen_King_Move_W_Blocked GenerateKingMoves    0  "8/8/8/2RRR3/2RKR3/2RRR3/8/8 w - " 1)
 add_test(MoveGen_King_Move_B_Blocked GenerateKingMoves    0  "8/8/8/2rrr3/2rkr3/2rrr3/8/8 b - " 1)
 
-add_test(MoveGen_King_Move_W_Attack GenerateKingMoves    4  "8/8/8/3R4/3Kr3/3R4/8/8 w - " 1)
-add_test(MoveGen_King_Move_B_Attack GenerateKingMoves    4  "8/8/8/8/2rkr3/3R4/8/8 b - " 1)
+add_test(MoveGen_King_Move_W_Attack GenerateKingMoves    3  "8/8/8/3R4/3Kr3/3R4/8/8 w - " 0)
+add_test(MoveGen_King_Move_B_Attack GenerateKingMoves    3  "8/8/8/8/2rkr3/3R4/8/8 b - " 0)
 
 add_test(MoveGen_King_W_Castle GenerateKingMoves        7  "8/8/8/8/8/8/8/R3K2R w KQ - 0 1" 1)
 add_test(MoveGen_King_W_Castle_King GenerateKingMoves   6  "8/8/8/8/8/8/8/R3K2R w K - 0 1" 1)

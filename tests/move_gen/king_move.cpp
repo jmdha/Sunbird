@@ -11,15 +11,11 @@ int main(int argc, char* argv[]) {
     BitShifts::Init();
     Board board = Board();
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
-    MoveGen moveGen = MoveGen(board.GetColor());
-    MoveGen oppMoveGen = MoveGen(Utilities::GetOppositeColor(board.GetColor()));
+    MoveGen moveGens[2] = { MoveGen(Color::White), MoveGen(Color::Black) };
+    
     std::array<Move, MAXMOVECOUNT> moves;
-    std::array<Move, MAXMOVECOUNT> fakeMoves;
-    U64 priorAttacks[2] = { 0, 0 };
-    // Generate attackboard
-    oppMoveGen.GetAllMoves(&fakeMoves, board, &priorAttacks);
-    U64 attackSquares[2] = { 0, 0 };
-    int moveCount = moveGen.GetKingMoves(&moves, 0, board, (bool)std::atoi(argv[3]), &attackSquares, priorAttacks);
+    U64 attackedSquares = moveGens[(int) Utilities::GetOppositeColor(board.GetColor())].GetAttackSquares(&board);
+    int moveCount = moveGens[(int) board.GetColor()].GetKingMoves(&moves, 0, &board, (bool)std::atoi(argv[3]), attackedSquares);
 
     if (moveCount == std::atoi(argv[1]))
         exit(EXIT_SUCCESS);

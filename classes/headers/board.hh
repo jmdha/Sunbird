@@ -17,7 +17,9 @@ public:
     void Initialize();
     // Pieces
     inline PieceType GetType(Square square) const;
-    inline int GetPieceCount(const Color color, const PieceType type);
+    inline int GetPieceCount(const Color color, const PieceType type) const;
+    inline U64 GetPiecePos(const Color color, const PieceType type) const;
+    inline U64 GetOccupiedBB() const;
     // Moves
     void DoMove(Move &move);
     void UndoMove(Move move);
@@ -80,8 +82,16 @@ inline PieceType Board::GetType(Square square) const {
     return PieceType::None;	
 }
 
-inline int Board::GetPieceCount(const Color color, const PieceType type) {
+inline int Board::GetPieceCount(const Color color, const PieceType type) const {
     return popCount[(int) color][(int) type];
+}
+
+inline U64 Board::GetPiecePos(const Color color, const PieceType type) const {
+    return pieceBB[(int) type] & colorBB[(int) color];
+}
+
+inline U64 Board::GetOccupiedBB() const {
+    return occupiedBB;
 }
 
 inline Color Board::GetColor() const {

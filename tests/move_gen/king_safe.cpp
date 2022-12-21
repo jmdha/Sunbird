@@ -13,8 +13,9 @@ int main(int argc, char* argv[]) {
     BoardImporter::ImportFEN(&board, (std::string) argv[1]);
     int expectedBool = std::atoi(argv[2]);
 
-    MoveGen gen = MoveGen(board.GetColor());
-    int kingSafe = (int) gen.IsKingSafe(board);
+    MoveGen moveGens[2] = { MoveGen(Color::White), MoveGen(Color::Black) };
+    
+    int kingSafe = (int) moveGens[(int) board.GetColor()].IsKingSafe(&board);
 
 
     if (expectedBool == kingSafe)

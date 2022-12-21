@@ -20,7 +20,7 @@ private:
 
     unsigned int moveTypeCount[16] = { 0 };
 
-    int Run(int depth, U64 attackedSquares[2]);
+    int Run(int depth);
 
 };
 #endif // PERFT

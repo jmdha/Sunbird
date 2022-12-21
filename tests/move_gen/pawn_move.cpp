@@ -11,11 +11,11 @@ int main(int argc, char* argv[]) {
     BitShifts::Init();
     Board board = Board();
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
-    MoveGen moveGen = MoveGen(board.GetColor());
-
+    MoveGen moveGens[2] = { MoveGen(Color::White), MoveGen(Color::Black) };
+    
     std::array<Move, MAXMOVECOUNT> moves;
-    U64 attackMoves[2] = { 0, 0 };
-    int moveCount = moveGen.GetPawnMoves(&moves, 0, board, (bool)std::atoi(argv[3]), &attackMoves);
+    U64 attackedSquares = moveGens[(int) Utilities::GetOppositeColor(board.GetColor())].GetAttackSquares(&board);
+    int moveCount = moveGens[(int) board.GetColor()].GetPawnMoves(&moves, 0, &board, (bool)std::atoi(argv[3]), attackedSquares);
 
     if (moveCount == std::atoi(argv[1]))
         exit(EXIT_SUCCESS);

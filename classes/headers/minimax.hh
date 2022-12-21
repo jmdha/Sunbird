@@ -26,7 +26,7 @@ private:
     Evaluator evaluator;
 
     Move NegaMax(int depth);
-    int NegaMax(int depth, int alpha, int beta, U64 attackedSquares[2]);
-    int Quiesce(int alpha, int beta, U64 attackedSquares[2]);
+    int NegaMax(int depth, int alpha, int beta);
+    int Quiesce(int alpha, int beta);
 };
 #endif // MINIMAX
