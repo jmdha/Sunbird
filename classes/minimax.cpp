@@ -81,7 +81,7 @@ int MiniMax::Quiesce(int alpha, int beta) {
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);    
 
     if (moveCount == 0)
-        return evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board));
+        return -evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board));
 
     for (int i = 0; i < moveCount; i++) {
         if (!moves[i].IsCapture())
