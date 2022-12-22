@@ -17,6 +17,7 @@ public:
     inline void IncrementHash();
     inline void DecrementHash();
     inline bool IsThreefoldRep() const;
+    inline U64 GetHash() const;
 
 private:
     // Static
@@ -54,6 +55,10 @@ inline void Zobrist::DecrementHash() {
 
 inline bool Zobrist::IsThreefoldRep() const {
     return hashOccurances.at(hash) >= 3;
+}
+
+inline U64 Zobrist::GetHash() const {
+    return hash;
 }
 
 #endif // ZOBRIST

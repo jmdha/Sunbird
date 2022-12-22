@@ -10,3 +10,7 @@ add_test(Board_UndoMove_Castling_KW Undo "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1" 
 add_test(Board_UndoMove_Castling_QW Undo "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1" "O-O-O")
 add_test(Board_UndoMove_Castling_KB Undo "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1" "o-o")
 add_test(Board_UndoMove_Castling_QB Undo "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1" "o-o-o")
+
+### En Passant
+add_test(Board_UndoMove_EP1 Undo "4k3/8/8/8/3Pp3/8/8/3K4 b - d3 0 1" "e4d3")
+add_test(Board_UndoMove_EP2 Undo "4k3/8/8/3pP3/8/8/8/4K3 w - d6 0 2" "e5d6")

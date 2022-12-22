@@ -32,10 +32,15 @@ int main(int argc, char* argv[]) {
         Square fromSquare = Utilities::GetSquare(sMove[0], sMove[1]);
         Square toSquare = Utilities::GetSquare(sMove[2], sMove[3]);
 
+        PieceType fromPiece = board.GetType(fromSquare);
         PieceType toPiece = board.GetType(toSquare);
-        MoveType moveType = (toPiece == PieceType::None) ? MoveType::Quiet : MoveType::Capture;
+        if (fromPiece == PieceType::Pawn && Utilities::GetColumn(fromSquare) != Utilities::GetColumn(toSquare) && toPiece == PieceType::None)
+            move = Move(MoveType::EPCapture, fromSquare, toSquare, PieceType::None);
+        else {
+            MoveType moveType = (toPiece == PieceType::None) ? MoveType::Quiet : MoveType::Capture;
 
-        move = Move(moveType, fromSquare, toSquare, toPiece);
+            move = Move(moveType, fromSquare, toSquare, toPiece);
+        }
     }
 
     board.DoMove(move);

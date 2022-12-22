@@ -73,7 +73,7 @@ void Board::DoMove(Move &move) {
         if (move.IsCapture()) {
             if (move.GetType() == MoveType::EPCapture) {
                 Square captureSquare = (Square) ((color == Color::White) ? (int) move.GetTo() - 8 : (int) move.GetTo() + 8);
-                RemovePiece(captureSquare, move.GetCapturedPiece(), Utilities::GetOppositeColor(color));
+                RemovePiece(captureSquare, PieceType::Pawn, Utilities::GetOppositeColor(color));
             }
             else 
                 RemovePiece(move.GetTo(), move.GetCapturedPiece(), Utilities::GetOppositeColor(color));   
@@ -109,6 +109,7 @@ void Board::DoMove(Move &move) {
 
     color = Utilities::GetOppositeColor(color);
     zobrist.IncrementHash();
+    ply++;
 }
 
 void Board::UndoMove(Move move) {
@@ -154,7 +155,7 @@ void Board::UndoMove(Move move) {
         if (move.IsCapture()) {
             if (move.GetType() == MoveType::EPCapture) {
                 Square captureSquare = (Square) ((color == Color::Black) ? (int) move.GetTo() - 8 : (int) move.GetTo() + 8);
-                PlacePiece(captureSquare, move.GetCapturedPiece(), color);
+                PlacePiece(captureSquare, PieceType::Pawn, color);
             }
             else 
                 PlacePiece(move.GetTo(), move.GetCapturedPiece(), color);
@@ -162,6 +163,7 @@ void Board::UndoMove(Move move) {
     }
     EnableCastling(move);
     color = Utilities::GetOppositeColor(color);
+    ply--;
 }
 
 void Board::EnableCastling(Move &move) {

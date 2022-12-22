@@ -55,9 +55,9 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
                     continue;
             }
 
-            /* for (int i = 0; i < (2 - depth); i++)
-                printf("\t");
-            printf("%s\n", moves[i].ToString().c_str()); */
+            //for (int i = 0; i < (8 - depth); i++)
+                //printf("\t");
+            //printf("%s\n", moves[i].ToString().c_str());
 
             board->DoMove(moves[i]);
             int score = -NegaMax(depth - 1, -beta, -alpha);

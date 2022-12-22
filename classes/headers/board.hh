@@ -33,7 +33,7 @@ public:
     inline bool IsThreefoldRep() const;
 
     bool friend operator==(const Board & lhs, const Board & rhs) {
-        if (lhs.color != rhs.color || lhs.occupiedBB != rhs.occupiedBB)
+        if (lhs.color != rhs.color || lhs.occupiedBB != rhs.occupiedBB || lhs.GetHash() != rhs.GetHash())
             return false;
         for (U8 i = 0; i < PIECECOUNT; i++)
             if (lhs.pieceBB[i] != rhs.pieceBB[i])
@@ -63,6 +63,7 @@ private:
     bool castlingAllowed[2][2] = { 0 };
     Stats stats = Stats();
     Zobrist zobrist = Zobrist();
+    int ply = 0;
 
     // Pieces
     inline void PlacePiece(Square square, PieceChar pieceChar);
@@ -115,7 +116,7 @@ inline Color Board::GetOriginalColor() const {
 };
 
 inline U64 Board::GetHash() const {
-    return occupiedBB;
+    return zobrist.GetHash();
 };
 
 inline Board::Stats Board::GetStats() const {
