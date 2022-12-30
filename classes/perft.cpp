@@ -19,3 +19,7 @@ int Perft::Run(int depth) {
 
     return leafCount;
 }
+
+int Perft::RunFromPosition(int depth) {
+    return this->Run(depth);
+}

@@ -53,7 +53,7 @@ private:
 };
 
 inline bool MoveGen::IsKingSafe(Board *board, U64 tempOccuracyBoard, U64 tempEnemyBoard) {
-    return IsKingSafe(board, tempOccuracyBoard, tempEnemyBoard, board->GetPiecePos(this->color, PieceType::King) & board->GetColorBB(color));
+    return IsKingSafe(board, tempOccuracyBoard, tempEnemyBoard, board->GetPiecePos(color, PieceType::King));
 }
 
 inline bool MoveGen::IsKingSafe(Board *board, U64 tempOccuracyBoard) {

@@ -224,8 +224,8 @@ bool MoveGen::IsKingSafe(Board *board, U64 tempOccuracyBoard, U64 tempEnemyBoard
     U64 kingPos = tempKingBoard;
     U64 kingPosIndex = Utilities::LSB_Pop(&kingPos);
 
-    U64 enemyRooks = board->GetPiecePos(PieceType::Rook) | board->GetPiecePos(PieceType::Queen) & tempEnemyBoard;
-    U64 enemyBishops = board->GetPiecePos(PieceType::Bishop) | board->GetPiecePos(PieceType::Queen) & tempEnemyBoard;
+    U64 enemyRooks = (board->GetPiecePos(PieceType::Rook) | board->GetPiecePos(PieceType::Queen)) & tempEnemyBoard;
+    U64 enemyBishops = (board->GetPiecePos(PieceType::Bishop) | board->GetPiecePos(PieceType::Queen)) & tempEnemyBoard;
     U64 enemyKnights = board->GetPiecePos(PieceType::Knight) & tempEnemyBoard;
     U64 enemyPawns = board->GetPiecePos(PieceType::Pawn) & tempEnemyBoard;
 

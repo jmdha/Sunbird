@@ -12,6 +12,8 @@ class Perft {
 public:
     explicit Perft(Board* board) : board(board), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {};
 
+    int RunFromPosition(int depth);
+
 private:
     Board* board;
     MoveGen moveGens[2];
