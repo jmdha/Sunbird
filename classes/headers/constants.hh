@@ -16,6 +16,7 @@
 
 #define PIECECOUNT 6
 #define COLORCOUNT 2
+#define DIRECTIONCOUNT 8
 
 #define PAWNROWWHITE 1
 #define PAWNROWBLACK 6
@@ -133,6 +134,8 @@ enum class DirectionIndex : U8 {
     SouthWest
 };
 
+constexpr Direction directions[8] = {Direction::North, Direction::East, Direction::South, Direction::West,
+                                     Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
 constexpr Direction rookDirections[4]   = { Direction::North, Direction::East, Direction::South, Direction::West };
 constexpr Direction bishopDirections[4] = { Direction::NorthWest, Direction::NorthEast, Direction::SouthWest, Direction::SouthEast };
 constexpr Direction queenDirections[8]  = { Direction::North, Direction::East, Direction::South, Direction::West, 
