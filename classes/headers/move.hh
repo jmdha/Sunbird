@@ -8,8 +8,8 @@
 
 class Move {
 public:
-    Move() {};
-    Move(MoveType type) : move(0)/* , type(type), capturedPiece(PieceType::None) */ {
+    Move() = default;
+    explicit Move(MoveType type) : move(0)/* , type(type), capturedPiece(PieceType::None) */ {
         SetType(type);
     };
 
@@ -26,17 +26,17 @@ public:
         SetCapture(capturedPiece);
     };
 
-    inline std::string ToString() const;
+    [[nodiscard]] inline std::string ToString() const;
     // Properties
-    inline MoveType GetType() const;
-    inline Square GetFrom() const;
-    inline Square GetTo() const;
-    inline PieceType GetCapturedPiece() const;
-    inline bool IsCapture() const;
-    inline bool IsPromotion() const;
-    inline bool IsEP() const;
-    inline bool IsDC() const;
-    inline bool IsDC(Color color, Castling side) const;
+    [[nodiscard]] inline MoveType GetType() const;
+    [[nodiscard]] inline Square GetFrom() const;
+    [[nodiscard]] inline Square GetTo() const;
+    [[nodiscard]] inline PieceType GetCapturedPiece() const;
+    [[nodiscard]] inline bool IsCapture() const;
+    [[nodiscard]] inline bool IsPromotion() const;
+    [[nodiscard]] inline bool IsEP() const;
+    [[nodiscard]] inline bool IsDC() const;
+    [[nodiscard]] inline bool IsDC(Color color, Castling side) const;
     inline void SetDisableCastle(Color color, Castling side);
     
 
@@ -55,10 +55,10 @@ private:
 };
 
 inline std::string Move::ToString() const {
-    std::string move = "";        
-    move += Utilities::GetSquareString(GetFrom());
-    move += Utilities::GetSquareString(GetTo());
-    return move;
+    std::string tempMove;
+    tempMove += Utilities::GetSquareString(GetFrom());
+    tempMove += Utilities::GetSquareString(GetTo());
+    return tempMove;
 }
 
 inline MoveType Move::GetType() const {

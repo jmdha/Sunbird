@@ -1,13 +1,11 @@
 #include "headers/minimax.hh"
 
-#include <stdio.h>
-
 Move MiniMax::GetBestMove(int depth) {
     return NegaMax(depth);
 }
 
 Move MiniMax::NegaMax(int depth) {
-    std::array<Move, MAXMOVECOUNT> moves;
+    std::array<Move, MAXMOVECOUNT> moves{};
 
     U64 attackedSquares = moveGens[(int) Utilities::GetOppositeColor(board->GetColor())].GetAttackSquares(board);
     U8 moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
@@ -35,7 +33,7 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
     if (depth == 0)
         return Quiesce(alpha, beta);
     
-    std::array<Move, MAXMOVECOUNT> moves;
+    std::array<Move, MAXMOVECOUNT> moves{};
     U64 attackedSquares = moveGens[(int) Utilities::GetOppositeColor(board->GetColor())].GetAttackSquares(board);
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
 
@@ -79,7 +77,7 @@ int MiniMax::Quiesce(int alpha, int beta) {
     if (alpha < standPat)
         alpha = standPat;
 
-    std::array<Move, MAXMOVECOUNT> moves;
+    std::array<Move, MAXMOVECOUNT> moves{};
     U64 attackedSquares = moveGens[(int) Utilities::GetOppositeColor(board->GetColor())].GetAttackSquares(board);
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);    
 

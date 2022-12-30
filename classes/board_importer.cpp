@@ -24,10 +24,10 @@ void BoardImporter::ImportFEN(Board* board, std::string FEN) {
 
 	// import turn
 	if(FEN[0] == 'w') {
-		board->color = Color::White;
+		board->turn = Color::White;
 		board->originalColor = Color::White;
 	} else {
-		board->color = Color::Black;
+		board->turn = Color::Black;
 		board->originalColor = Color::Black;
 	}
 		
@@ -63,7 +63,7 @@ void BoardImporter::ImportFEN(Board* board, std::string FEN) {
 
 void BoardImporter::ImportMoveSequence(Board* board, std::string moves) {
 	board->Initialize();
-	std::string move = "";
+	std::string move;
 	for (int i = 0; i < moves.length(); i++) {
 		if (moves[i] != ' ')
 			move.push_back(moves[i]);
@@ -74,7 +74,6 @@ void BoardImporter::ImportMoveSequence(Board* board, std::string moves) {
 			PieceType fromType = board->GetType(fromSquare);
 			PieceType toType = board->GetType(toSquare);
 			Color fromColor = board->GetColor(fromSquare);
-			Color toColor = board->GetColor(toSquare);
 			MoveType type;
 			// Is castling?
 			//// Is kingside castle

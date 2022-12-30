@@ -18,8 +18,8 @@ public:
     void Initialize();
     // Pieces
     inline PieceType GetType(Square square) const;
-    inline int GetPieceCount(const Color color, const PieceType type) const;
-    inline U64 GetPiecePos(const Color color, const PieceType type) const;
+    inline int GetPieceCount(Color color, PieceType type) const;
+    inline U64 GetPiecePos(Color color, PieceType type) const;
     inline U64 GetOccupiedBB() const;
     // Moves
     void DoMove(Move &move);
@@ -33,7 +33,7 @@ public:
     inline bool IsThreefoldRep() const;
 
     bool friend operator==(const Board & lhs, const Board & rhs) {
-        if (lhs.color != rhs.color || lhs.occupiedBB != rhs.occupiedBB || lhs.GetHash() != rhs.GetHash())
+        if (lhs.turn != rhs.turn || lhs.occupiedBB != rhs.occupiedBB || lhs.GetHash() != rhs.GetHash())
             return false;
         for (U8 i = 0; i < PIECECOUNT; i++)
             if (lhs.pieceBB[i] != rhs.pieceBB[i])
@@ -53,7 +53,7 @@ public:
     }
 
 private:
-    Color color = Color::None;
+    Color turn = Color::None;
     Color originalColor = Color::None;
     U64 pieceBB[PIECECOUNT] = { 0 };
     U64 colorBB[COLORCOUNT] = { 0 };
@@ -72,8 +72,6 @@ private:
     // Castling
     void EnableCastling(Move &move);
     void DisableCastling(Move &move, Color color, Castling side);
-    void IncrementCastling();
-    void DecrementCastling();
     friend class Evaluator;
     friend class MoveGen;
     friend class BoardImporter;
@@ -99,7 +97,7 @@ inline U64 Board::GetOccupiedBB() const {
 }
 
 inline Color Board::GetColor() const {
-    return color;
+    return turn;
 };
 
 inline Color Board::GetColor(Square sq) const {
@@ -137,7 +135,7 @@ inline void Board::PlacePiece(Square square, PieceType type, Color color) {
     colorBB[(U8) color] |= bit;
     occupiedBB |= bit;
     popCount[(U8) color][(U8) type]++;
-    zobrist.FlipSqure(square, type, color);
+    zobrist.FlipSquare(square, type, color);
 }
 
 inline void Board::RemovePiece(Square square, PieceType type, Color color) {
@@ -146,7 +144,7 @@ inline void Board::RemovePiece(Square square, PieceType type, Color color) {
     colorBB[(U8) color] ^= bit;
     occupiedBB ^= bit;
     popCount[(U8) color][(U8) type]--;
-    zobrist.FlipSqure(square, type, color);
+    zobrist.FlipSquare(square, type, color);
 }
 
 #endif // BOARD

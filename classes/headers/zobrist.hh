@@ -13,7 +13,7 @@ public:
     Zobrist() {
         InitHashTable();
     }
-    inline void FlipSqure(Square square, PieceType type, Color color);
+    inline void FlipSquare(Square square, PieceType type, Color color);
     inline void IncrementHash();
     inline void DecrementHash();
     inline bool IsThreefoldRep() const;
@@ -21,7 +21,7 @@ public:
 
 private:
     // Static
-    U64 hashTable[64][PIECECOUNT][COLORCOUNT];
+    U64 hashTable[64][PIECECOUNT][COLORCOUNT]{};
 
     U64 hash = 0;
     std::unordered_map<U64, U8> hashOccurances;
@@ -38,7 +38,7 @@ private:
     }
 };
 
-inline void Zobrist::FlipSqure(Square square, PieceType type, Color color) {
+inline void Zobrist::FlipSquare(Square square, PieceType type, Color color) {
     auto value = hashTable[(int) square][(int) type][(int) color];
     hash ^= value;
 }

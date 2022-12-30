@@ -11,15 +11,15 @@ public:
         U64 noMoveEvalCount = 0;
     };
     // Init
-    Evaluator(Color color) : stats(Stats()), oColor(color) {};
+    explicit Evaluator(Color color) : stats(Stats()), oColor(color) {};
     ~Evaluator();
     // Evaluation
-    int EvaluatePieceCount(const Board &board);
-    int EvaluatePositionValue(const Board &board);
-    int EvaluatePositionValue(const Board &board, Color color);
+    static int EvaluatePieceCount(const Board &board);
+    static int EvaluatePositionValue(const Board &board);
+    static int EvaluatePositionValue(const Board &board, Color color);
     inline int Evaluate(const Board &board);
-    inline int EvaluateNoMoves(const Board &board, const bool isKingSafe);
-    inline int SideModifier(const Board &board, const int value);
+    inline int EvaluateNoMoves(const Board &board, bool isKingSafe);
+    static inline int SideModifier(const Board &board, int value);
     // Misc
     inline Stats GetStats();
 private:
@@ -53,7 +53,7 @@ inline int Evaluator::EvaluateNoMoves(const Board &board, const bool isKingSafe)
 }
 
 inline int Evaluator::SideModifier(const Board &board, const int value) {
-    if (board.color == Color::Black)
+    if (board.turn == Color::Black)
         return -value;
     else
         return value;
