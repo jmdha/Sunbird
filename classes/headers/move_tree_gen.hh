@@ -1,7 +1,7 @@
 #ifndef MOVE_TREE_GEN
 #define MOVE_TREE_GEN
 
-#include <stdio.h>
+#include <cstdio>
 #include <string>
 
 #include "constants.hh"

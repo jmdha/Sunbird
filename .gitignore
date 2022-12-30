@@ -48,3 +48,10 @@ build/*
 
 # VSCode
 .vscode/*
+/cmake-build-debug/
+/cmake-build-release/
+.idea/vcs.xml
+.idea/modules.xml
+.idea/misc.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/chess_engine.iml

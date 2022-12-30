@@ -1,10 +1,5 @@
 #include "headers/perft.hh"
 
-int Perft::RunFromPosition(int depth) {
-    int leafCount = Run(depth);
-    return leafCount;
-}
-
 int Perft::Run(int depth) {
     if (depth == 0)
         return 1;

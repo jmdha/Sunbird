@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     
     std::array<Move, MAXMOVECOUNT> moves;
     U64 attackedSquares = moveGens[(int) Utilities::GetOppositeColor(board.GetColor())].GetAttackSquares(&board);
-    int moveCount = moveGens[(int) board.GetColor()].GetQueenMoves(&moves, 0, &board, (bool)std::atoi(argv[3]), attackedSquares);
+    int moveCount = moveGens[(int) board.GetColor()].GetQueenMoves(&moves, 0, &board, (bool) std::atoi(argv[3]));
 
     if (moveCount == std::atoi(argv[1]))
         exit(EXIT_SUCCESS);
