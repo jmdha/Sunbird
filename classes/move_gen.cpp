@@ -289,21 +289,12 @@ U64 MoveGen::GetAttackSquares(Board *board) {
 U64 MoveGen::GetSlidingAttacks(const Board *board, const U64 pieceIndex, const Direction directions[], const int directionCount) {
     U64 attacks = 0;
 
-    U64 piece = C64(pieceIndex);
     for (int dirIndex = 0; dirIndex < directionCount; dirIndex++) {
-        U64 workingPiece = piece;
-        for (int offSet = 1; offSet < 8; offSet++) {
-            workingPiece = BitShifts::Shift(workingPiece & Utilities::NotEdge(directions[dirIndex]), directions[dirIndex], 1);
-
-            // If hitting a piece
-            if (workingPiece & board->GetOccupiedBB()) {
-                attacks |= workingPiece;
-                break;
-            }
-
-            // If unoccupied
-            attacks |= workingPiece;
-        }
+        U64 tempAttacks = BitShifts::GetRay(pieceIndex, directions[dirIndex]);
+        const U64 blocker = Utilities::LSB(tempAttacks & board->GetOccupiedBB());
+        if (blocker != 0)
+            tempAttacks ^= BitShifts::GetBehind(pieceIndex, blocker);
+        attacks |= tempAttacks;
     }
 
     return attacks;

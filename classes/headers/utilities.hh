@@ -236,6 +236,29 @@ namespace Utilities {
         return square;
     }
 
+    static inline DirectionIndex GetDirectionIndex(Direction direction) {
+        switch (direction) {
+            case Direction::North:
+                return DirectionIndex::North;
+            case Direction::East:
+                return DirectionIndex::East;
+            case Direction::South:
+                return DirectionIndex::South;
+            case Direction::West:
+                return DirectionIndex::West;
+            case Direction::NorthWest:
+                return DirectionIndex::NorthWest;
+            case Direction::NorthEast:
+                return DirectionIndex::NorthEast;
+            case Direction::SouthWest:
+                return DirectionIndex::SouthWest;
+            case Direction::SouthEast:
+                return DirectionIndex::SouthEast;
+            case Direction::None:
+                return DirectionIndex::None;
+        }
+    }
+
     static inline DirectionIndex GetDirectionIndex(Square from, Square to) {
         if (GetRowIndex(from) < GetRowIndex(to)) {
             if (GetColumnIndex(from) < GetColumnIndex(to))

@@ -13,6 +13,8 @@ public:
 
     static inline U64 GetRay(Square square, DirectionIndex direction);
     static inline U64 GetRay(U64 square, DirectionIndex direction);
+    static inline U64 GetRay(U64 square, Direction direction);
+    static inline U64 GetBehind(U64 from, U64 to);
     static inline U64 Shift(U64 b, Direction dir, int times);
 private:
     inline static U64 rays[SQUARECOUNT][DIRECTIONCOUNT];
@@ -24,13 +26,21 @@ private:
     inline static U64 GenerateBehind(U8 from, U8 to);
 };
 
-inline U64 BitShifts::GetRay(Square square, DirectionIndex direction) {
+inline U64 BitShifts::GetRay(const Square square, DirectionIndex direction) {
     return rays[(int) square][(int) direction];
 };
 
-inline U64 BitShifts::GetRay(U64 square, DirectionIndex direction) {
+inline U64 BitShifts::GetRay(const U64 square, DirectionIndex direction) {
     return rays[square][(int) direction];
 };
+
+inline U64 BitShifts::GetRay(const U64 square, Direction direction) {
+    return GetRay(square, Utilities::GetDirectionIndex(direction));
+};
+
+inline U64 BitShifts::GetBehind(U64 from, U64 to) {
+    return behind[from][to];
+}
 
 inline U64 BitShifts::Shift(U64 b, Direction dir, int times) {
     if ((int) dir > 0)
