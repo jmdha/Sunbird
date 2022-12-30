@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include "constants.hh"
+#include "utilities.hh"
 
 class BitShifts {
 public:
@@ -19,7 +20,8 @@ private:
     inline static U64 blockersAndBeyond[PIECECOUNT][SQUARECOUNT];
     inline static U64 behind[SQUARECOUNT][SQUARECOUNT];
 
-    inline static U64 GenerateRay(U64 square, DirectionIndex direction);
+    inline static U64 GenerateRay(U8 square, DirectionIndex direction);
+    inline static U64 GenerateBehind(U8 from, U8 to);
 };
 
 inline U64 BitShifts::GetRay(Square square, DirectionIndex direction) {
@@ -37,14 +39,19 @@ inline U64 BitShifts::Shift(U64 b, Direction dir, int times) {
         return b >> std::abs((int) dir) * times;
 }
 
-U64 BitShifts::GenerateRay(U64 square, DirectionIndex direction) {
-    square = C64(square);
+U64 BitShifts::GenerateRay(U8 square, DirectionIndex direction) {
+    U64 bit = C64((U64) square);
     U64 ray = 0;
-    while (square) {
-        square = Shift(square, directions[(int) direction], 1);
-        ray |= square;
+    while (bit & (U64) notEdges[(int) direction]) {
+        bit = Shift(bit, directions[(int) direction], 1);
+        ray |= bit;
     }
     return ray;
+}
+
+// Uses rays
+U64 BitShifts::GenerateBehind(U8 from, U8 to) {
+    return rays[to][(int) Utilities::GetDirectionIndex((Square) from, (Square) to)];
 }
 
 #endif // BIT_SHIFTS

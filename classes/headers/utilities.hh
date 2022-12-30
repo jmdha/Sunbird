@@ -235,6 +235,30 @@ namespace Utilities {
         square += '1' + row;
         return square;
     }
+
+    static inline DirectionIndex GetDirectionIndex(Square from, Square to) {
+        if (GetRowIndex(from) < GetRowIndex(to)) {
+            if (GetColumnIndex(from) < GetColumnIndex(to))
+                return DirectionIndex::NorthEast;
+            else if (GetColumnIndex(from) > GetColumnIndex(to))
+                return DirectionIndex::NorthWest;
+            else
+                return DirectionIndex::North;
+        } else if (GetRowIndex(from) > GetRowIndex(to)) {
+            if (GetColumnIndex(from) < GetColumnIndex(to))
+                return DirectionIndex::SouthEast;
+            else if (GetColumnIndex(from) > GetColumnIndex(to))
+                return DirectionIndex::SouthWest;
+            else
+                return DirectionIndex::South;
+        } else {
+            if (GetColumnIndex(from) < GetColumnIndex(to))
+                return DirectionIndex::East;
+            else if (GetColumnIndex(from) > GetColumnIndex(to))
+                return DirectionIndex::West;
+        }
+        return DirectionIndex::None;
+    }
 }
 
 #endif // UTILITIES

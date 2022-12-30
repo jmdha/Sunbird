@@ -131,11 +131,14 @@ enum class DirectionIndex : U8 {
     NorthEast,
     NorthWest,
     SouthEast,
-    SouthWest
+    SouthWest,
+    None
 };
 
 constexpr Direction directions[8] = {Direction::North, Direction::East, Direction::South, Direction::West,
                                      Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
+constexpr Direction oppDirections[8] = {Direction::South, Direction::West, Direction::North, Direction::East,
+                                     Direction::SouthWest, Direction::SouthEast, Direction::NorthWest, Direction::NorthEast };
 constexpr Direction rookDirections[4]   = { Direction::North, Direction::East, Direction::South, Direction::West };
 constexpr Direction bishopDirections[4] = { Direction::NorthWest, Direction::NorthEast, Direction::SouthWest, Direction::SouthEast };
 constexpr Direction queenDirections[8]  = { Direction::North, Direction::East, Direction::South, Direction::West, 
@@ -145,8 +148,15 @@ enum class NotEdge : U64 {
     North = 0xffffffffffffff,
     East = 0x7f7f7f7f7f7f7f7f,
     South = 0xffffffffffffff00,
-    West = 0xfefefefefefefefe
+    West = 0xfefefefefefefefe,
+    NorthEast = North & East,
+    NorthWest = North & West,
+    SouthEast = South & East,
+    SouthWest = South & West,
 };
+
+constexpr NotEdge notEdges[8] = { NotEdge::North, NotEdge::East, NotEdge::South, NotEdge::West,
+                                  NotEdge::NorthEast, NotEdge::NorthWest, NotEdge::SouthEast, NotEdge::SouthWest };
 
 enum class NotEdgeKnight : U64 {
     North = 0xffffffffffff,
