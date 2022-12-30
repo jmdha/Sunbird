@@ -170,10 +170,10 @@ U8 MoveGen::GetKingMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
     // Castling
     if (board->IsCastlingAllowed(color, Castling::King) && !(board->GetOccupiedBB() & (U64) castlingBlock[(int) Castling::King]) && !(attackedSquares & (U64) castlingAttack[(int) Castling::King]))
         if (isKingSafe)
-            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::KingCastle, ((color == Color::White) ? Square::E1 : Square::E8), (color == Color::White) ? Square::G1 : Square::G8));
+            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::KingCastle));
     if (board->IsCastlingAllowed(color, Castling::Queen) && !(board->GetOccupiedBB() & (U64) castlingBlock[(int) Castling::Queen]) && !(attackedSquares & (U64) castlingAttack[(int) Castling::Queen]))
         if (isKingSafe)
-            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::QueenCastle, ((color == Color::White) ? Square::E1 : Square::E8), (color == Color::White) ? Square::C1 : Square::C8));
+            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::QueenCastle));
         
     return moveCount;
 }

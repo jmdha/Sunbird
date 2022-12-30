@@ -3,7 +3,6 @@
 Move MiniMax::GetBestMove(int depth) {
     return NegaMax(depth);
 }
-
 Move MiniMax::NegaMax(int depth) {
     std::array<Move, MAXMOVECOUNT> moves{};
 
@@ -14,7 +13,7 @@ Move MiniMax::NegaMax(int depth) {
     int bestScore = -(int) PieceValue::Inf;
 
     for (int i = 0; i < moveCount; i++) {
-        //printf("%s\n", moves[i].ToString().c_str());
+        printf("\n\n\n\n\n\n\n\n\n\n\n\n%s\n", moves[i].ToString().c_str());
         board->DoMove(moves[i]);
         int score = -NegaMax(depth - 1, -(int) PieceValue::Inf, -bestScore);
         board->UndoMove(moves[i]);
@@ -31,7 +30,7 @@ Move MiniMax::NegaMax(int depth) {
 
 int MiniMax::NegaMax(int depth, int alpha, int beta) {
     if (depth == 0)
-        return Quiesce(alpha, beta);
+        return evaluator.Evaluate(*board);//Quiesce(alpha, beta);
     
     std::array<Move, MAXMOVECOUNT> moves{};
     U64 attackedSquares = moveGens[(int) Utilities::GetOppositeColor(board->GetColor())].GetAttackSquares(board);
@@ -53,9 +52,9 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
                     continue;
             }
 
-            //for (int i = 0; i < (8 - depth); i++)
-                //printf("\t");
-            //printf("%s\n", moves[i].ToString().c_str());
+            for (int i = 0; i <= (3 - depth); i++)
+                printf(" ");
+            printf("%s\n", moves[i].ToString().c_str());
 
             board->DoMove(moves[i]);
             int score = -NegaMax(depth - 1, -beta, -alpha);
