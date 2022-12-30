@@ -54,3 +54,4 @@ build/*
 /cmake-build-relwithdebinfo/
 
 .idea/*
+/cmake-build-relwithdebinfo-coverage/

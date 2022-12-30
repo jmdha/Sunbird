@@ -38,7 +38,7 @@ U8 MoveGen::GetAllMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64
 
 U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe) {
     // Generate single and double step moves
-    U64 pieces = board->pieceBB[(int) PieceType::Pawn] & board->colorBB[(int) color];
+    U64 pieces = board->GetPiecePos(color, PieceType::Pawn);
     if (pieces == 0)
         return 0;
         
@@ -49,29 +49,29 @@ U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
 
         // Attack moves
         //// Diagonal
-        U64 captures = board->colorBB[(int) oppColor] & PawnAttacks[(int) color][(int) lsb];
+        U64 captures = board->GetColorBB(oppColor) & PawnAttacks[(int) color][(int) lsb];
         while (captures) {
             U64 capturePiece = Utilities::LSB_Pop(&captures);
-            if (isKingSafe || IsKingSafe(board, board->occupiedBB ^ C64(lsb), board->colorBB[(int) oppColor] ^ C64(capturePiece)))
+            if (isKingSafe || IsKingSafe(board, board->GetOccupiedBB() ^ C64(lsb), board->GetColorBB(oppColor) ^ C64(capturePiece)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsb, (Square) capturePiece, board->GetType((Square) capturePiece)));
         }
 
         //// En Passant
-        captures = board->enPassant & PawnAttacks[(int) color][(int) lsb] & (U64) enPassantRank;
+        captures = board->GetEnPassant() & PawnAttacks[(int) color][(int) lsb] & (U64) enPassantRank;
         while (captures) {
             U64 capturePiece = Utilities::LSB_Pop(&captures);
-            if (isKingSafe || IsKingSafe(board, board->occupiedBB ^ C64(lsb),  board->colorBB[(int) oppColor] ^ C64(capturePiece)))
+            if (isKingSafe || IsKingSafe(board, board->GetOccupiedBB() ^ C64(lsb),  board->GetColorBB(oppColor) ^ C64(capturePiece)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::EPCapture, (Square) lsb, (Square) capturePiece, PieceType::Pawn));
         }
 
         // Quiet move
         //// Single push
-        if (!(board->occupiedBB & pawnSingleMove[(int) lsb]))
-            if (isKingSafe || IsKingSafe(board, (board->occupiedBB ^ C64(lsb)) | C64(lsb + (int) up)))
+        if (!(board->GetOccupiedBB() & pawnSingleMove[(int) lsb]))
+            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | C64(lsb + (int) up)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) lsb, (Square) (lsb + (int) up)));
         //// Double push
-        if (C64(lsb) & (U64) doubleRank && !(board->occupiedBB & pawnDoubleMove[(int) lsb]))
-            if (isKingSafe || IsKingSafe(board, (board->occupiedBB ^ C64(lsb)) | C64(lsb + (int) up * 2)))
+        if (C64(lsb) & (U64) doubleRank && !(board->GetOccupiedBB() & pawnDoubleMove[(int) lsb]))
+            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | C64(lsb + (int) up * 2)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::DoublePawnPush, (Square) lsb, (Square) (lsb + (int) up * 2)));
     }
     return moveCount;
@@ -80,7 +80,7 @@ U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
 U8 MoveGen::GetRookMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe) {
     int moveCount = 0;
 
-    U64 pieces = board->pieceBB[(int) PieceType::Rook] & board->colorBB[(int) color];
+    U64 pieces = board->GetPiecePos(color, PieceType::Rook);
     for (auto rookDirection : rookDirections)
         moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, rookDirection, isKingSafe);
     return moveCount;
@@ -89,7 +89,7 @@ U8 MoveGen::GetRookMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
 U8 MoveGen::GetBishopMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe) {
     int moveCount = 0;
 
-    U64 pieces = board->pieceBB[(int) PieceType::Bishop] & board->colorBB[(int) color];
+    U64 pieces = board->GetPiecePos(color, PieceType::Bishop);
     for (auto bishopDirection : bishopDirections)
         moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, bishopDirection, isKingSafe);
     return moveCount;
@@ -98,14 +98,14 @@ U8 MoveGen::GetBishopMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex
 U8 MoveGen::GetQueenMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe) {
     int moveCount = 0;
 
-    U64 pieces = board->pieceBB[(int) PieceType::Queen] & board->colorBB[(int) color];
+    U64 pieces = board->GetPiecePos(color, PieceType::Queen);
     for (auto queenDirection : queenDirections)
         moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, queenDirection, isKingSafe);
     return moveCount;
 }
 
 U8 MoveGen::GetKnightMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe) {
-    U64 pieces = board->pieceBB[(int) PieceType::Knight] & board->colorBB[(int) color];
+    U64 pieces = board->GetPiecePos(color, PieceType::Knight);
     if (pieces == 0)
         return 0;
     U8 moveCount = 0;
@@ -115,20 +115,20 @@ U8 MoveGen::GetKnightMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex
             U64 to = KnightMoves[lsbPiece];
 
             // Attack moves
-            U64 attackMoves = to & board->colorBB[(int) oppColor];
-            to &= ~board->occupiedBB;
+            U64 attackMoves = to & board->GetColorBB(oppColor);
+            to &= ~board->GetOccupiedBB();
 
             while (attackMoves) {
                 U64 lsb = Utilities::LSB_Pop(&attackMoves);
-                if (isKingSafe || IsKingSafe(board, board->occupiedBB ^ C64(lsbPiece), board->colorBB[(int) oppColor] ^ C64(lsb)))
+                if (isKingSafe || IsKingSafe(board, board->GetOccupiedBB() ^ C64(lsbPiece), board->GetColorBB(oppColor) ^ C64(lsb)))
                     AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, board->GetType((Square) lsb)));
             }
 
             // Quiet moves
-            U64 quietMoves = to & (~board->occupiedBB);
+            U64 quietMoves = to & (~board->GetOccupiedBB());
             while (quietMoves) {
                 U64 lsb = Utilities::LSB_Pop(&quietMoves);
-                if (isKingSafe || IsKingSafe(board, (board->occupiedBB ^ C64(lsbPiece) | C64(lsb))))
+                if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsbPiece) | C64(lsb))))
                     AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) lsbPiece, (Square) lsb));
             }
     }
@@ -137,7 +137,7 @@ U8 MoveGen::GetKnightMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex
 }
 
 U8 MoveGen::GetKingMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe, U64 attackedSquares) {
-    U64 pieces = board->pieceBB[(int) PieceType::King] & board->colorBB[(int) color];
+    U64 pieces = board->GetPiecePos(color, PieceType::King);
     if (pieces == 0)
         return 0;
     U8 moveCount = 0;
@@ -145,9 +145,9 @@ U8 MoveGen::GetKingMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
     U64 lsbPiece = Utilities::LSB_Pop(&pieces);
     U64 to = KingMoves[lsbPiece];
     // Attack moves
-    U64 attackMoves = to & board->colorBB[(int) oppColor];
+    U64 attackMoves = to & board->GetColorBB(oppColor);
     // King cannot move onto a piece, without it being an attack
-    to &= ~board->occupiedBB;
+    to &= ~board->GetOccupiedBB();
     // King cannot move to an attacked square
     to &= ~attackedSquares;
     // King cannot attack an attacked square
@@ -155,23 +155,23 @@ U8 MoveGen::GetKingMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
 
     while (attackMoves) {
         U64 lsb = Utilities::LSB_Pop(&attackMoves);
-        if (isKingSafe || IsKingSafe(board, board->occupiedBB ^ C64(lsbPiece), board->colorBB[(int) oppColor] ^ C64(lsb), C64(lsb)))
+        if (isKingSafe || IsKingSafe(board, board->GetOccupiedBB() ^ C64(lsbPiece), board->GetColorBB(oppColor) ^ C64(lsb), C64(lsb)))
             AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, board->GetType((Square) lsb)));
     }
 
     // Quiet moves
-    U64 quietMoves = to & (~board->occupiedBB);
+    U64 quietMoves = to & (~board->GetOccupiedBB());
     while (quietMoves) {
         U64 lsb = Utilities::LSB_Pop(&quietMoves);
-        if (isKingSafe || IsKingSafe(board, (board->occupiedBB ^ C64(lsbPiece) | C64(lsb)), board->colorBB[(int) oppColor], C64(lsb)))
+        if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsbPiece) | C64(lsb)), board->GetColorBB(oppColor), C64(lsb)))
             AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) lsbPiece, (Square) lsb));
     }
 
     // Castling
-    if (board->castlingAllowed[(int)color][(int) Castling::King] && !(board->occupiedBB & (U64) castlingBlock[(int) Castling::King]) && !(attackedSquares & (U64) castlingAttack[(int) Castling::King]))
+    if (board->IsCastlingAllowed(color, Castling::King) && !(board->GetOccupiedBB() & (U64) castlingBlock[(int) Castling::King]) && !(attackedSquares & (U64) castlingAttack[(int) Castling::King]))
         if (isKingSafe)
             AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::KingCastle, ((color == Color::White) ? Square::E1 : Square::E8), (color == Color::White) ? Square::G1 : Square::G8));
-    if (board->castlingAllowed[(int)color][(int) Castling::Queen] && !(board->occupiedBB & (U64) castlingBlock[(int) Castling::Queen]) && !(attackedSquares & (U64) castlingAttack[(int) Castling::Queen]))
+    if (board->IsCastlingAllowed(color, Castling::Queen) && !(board->GetOccupiedBB() & (U64) castlingBlock[(int) Castling::Queen]) && !(attackedSquares & (U64) castlingAttack[(int) Castling::Queen]))
         if (isKingSafe)
             AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::QueenCastle, ((color == Color::White) ? Square::E1 : Square::E8), (color == Color::White) ? Square::C1 : Square::C8));
         
@@ -182,13 +182,13 @@ U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Boar
     U8 moveCount = 0;
     int counter = 1;
     while (pieces) {
-        pieces = BitShifts::Shift(pieces & Utilities::NotEdge(direction), direction, 1) & ~board->colorBB[(int) color];
-        U64 attackMoves = pieces & board->occupiedBB;
-        pieces &= ~board->occupiedBB;
+        pieces = BitShifts::Shift(pieces & Utilities::NotEdge(direction), direction, 1) & ~board->GetColorBB(color);
+        U64 attackMoves = pieces & board->GetOccupiedBB();
+        pieces &= ~board->GetOccupiedBB();
 
         while (attackMoves) {
             U64 lsb = Utilities::LSB_Pop(&attackMoves);
-            if (isKingSafe || IsKingSafe(board, board->occupiedBB ^ C64(lsb - (int) direction * counter), board->colorBB[(int) oppColor] ^ C64(lsb)))
+            if (isKingSafe || IsKingSafe(board, board->GetOccupiedBB() ^ C64(lsb - (int) direction * counter), board->GetColorBB(oppColor) ^ C64(lsb)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) (lsb - (int) direction * counter), (Square) lsb, board->GetType((Square) lsb)));
         }
 
@@ -196,7 +196,7 @@ U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Boar
 
         while (quietMoves) {
             U8 lsb = Utilities::LSB_Pop(&quietMoves);
-            if (isKingSafe || IsKingSafe(board, (board->occupiedBB ^ C64(lsb - (int) direction * counter) | C64(lsb))))
+            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb - (int) direction * counter) | C64(lsb))))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) (lsb - (int) direction * counter), (Square) lsb));
         }
 
@@ -224,10 +224,10 @@ bool MoveGen::IsKingSafe(Board *board, U64 tempOccuracyBoard, U64 tempEnemyBoard
     U64 kingPos = tempKingBoard;
     U64 kingPosIndex = Utilities::LSB_Pop(&kingPos);
 
-    U64 enemyRooks = (board->pieceBB[(int) PieceType::Rook] | board->pieceBB[(int) PieceType::Queen]) & tempEnemyBoard;
-    U64 enemyBishops = (board->pieceBB[(int) PieceType::Bishop] | board->pieceBB[(int) PieceType::Queen]) & tempEnemyBoard;
-    U64 enemyKnights = board->pieceBB[(int) PieceType::Knight] & tempEnemyBoard;
-    U64 enemyPawns = board->pieceBB[(int) PieceType::Pawn] & tempEnemyBoard;
+    U64 enemyRooks = board->GetPiecePos(PieceType::Rook) | board->GetPiecePos(PieceType::Queen) & tempEnemyBoard;
+    U64 enemyBishops = board->GetPiecePos(PieceType::Bishop) | board->GetPiecePos(PieceType::Queen) & tempEnemyBoard;
+    U64 enemyKnights = board->GetPiecePos(PieceType::Knight) & tempEnemyBoard;
+    U64 enemyPawns = board->GetPiecePos(PieceType::Pawn) & tempEnemyBoard;
 
     if (BitShifts::rays[kingPosIndex][(int) DirectionIndex::North] & enemyRooks)
         if (Utilities::LSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::North] & enemyRooks) == Utilities::LSB(BitShifts::rays[kingPosIndex][(int) DirectionIndex::North] & tempOccuracyBoard))
@@ -262,18 +262,6 @@ bool MoveGen::IsKingSafe(Board *board, U64 tempOccuracyBoard, U64 tempEnemyBoard
         return false;
 
     return true;
-}
-
-bool MoveGen::IsKingSafe(Board *board, U64 tempOccuracyBoard, U64 tempEnemyBoard) {
-    return IsKingSafe(board, tempOccuracyBoard, tempEnemyBoard, board->pieceBB[(int) PieceType::King] & board->colorBB[(int) color]);
-}
-
-bool MoveGen::IsKingSafe(Board *board, U64 tempOccuracyBoard) {
-    return IsKingSafe(board, tempOccuracyBoard, board->colorBB[(int) oppColor]);
-}
-
-bool MoveGen::IsKingSafe(Board *board) {
-    return IsKingSafe(board, board->occupiedBB);
 }
 
 U64 MoveGen::GetAttackSquares(Board *board) {

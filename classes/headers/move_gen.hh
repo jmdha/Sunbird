@@ -27,9 +27,9 @@ public:
     U64 GetAttackSquares(Board *board);
 
     bool IsKingSafe(Board *board, U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard);
-    bool IsKingSafe(Board *board, U64 tempOccuracyBoard, U64 tempEnemyBoard);
-    bool IsKingSafe(Board *board, U64 tempOccuracyBoard);
-    bool IsKingSafe(Board *board);
+    inline bool IsKingSafe(Board *board, U64 tempOccuracyBoard, U64 tempEnemyBoard);
+    inline bool IsKingSafe(Board *board, U64 tempOccuracyBoard);
+    inline bool IsKingSafe(Board *board);
 
 private:
     Color color;
@@ -51,6 +51,18 @@ private:
 
     static inline void AppendMove(std::array<Move, MAXMOVECOUNT> *moves, int index, U8* moveCount, Move move);
 };
+
+inline bool MoveGen::IsKingSafe(Board *board, U64 tempOccuracyBoard, U64 tempEnemyBoard) {
+    return IsKingSafe(board, tempOccuracyBoard, tempEnemyBoard, board->GetPiecePos(this->color, PieceType::King) & board->GetColorBB(color));
+}
+
+inline bool MoveGen::IsKingSafe(Board *board, U64 tempOccuracyBoard) {
+    return IsKingSafe(board, tempOccuracyBoard, board->GetColorBB(oppColor));
+}
+
+inline bool MoveGen::IsKingSafe(Board *board) {
+    return IsKingSafe(board, board->GetOccupiedBB());
+}
 
 inline void MoveGen::AppendMove(std::array<Move, MAXMOVECOUNT> *moves, int index, U8* moveCount, Move move) {
     moves->at(index) = move;

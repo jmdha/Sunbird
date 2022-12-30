@@ -53,7 +53,7 @@ inline int Evaluator::EvaluateNoMoves(const Board &board, const bool isKingSafe)
 }
 
 inline int Evaluator::SideModifier(const Board &board, const int value) {
-    if (board.turn == Color::Black)
+    if (board.GetColor() == Color::Black)
         return -value;
     else
         return value;

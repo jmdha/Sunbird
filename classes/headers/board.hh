@@ -19,8 +19,10 @@ public:
     // Pieces
     inline PieceType GetType(Square square) const;
     inline int GetPieceCount(Color color, PieceType type) const;
+    inline U64 GetPiecePos(PieceType type) const;
     inline U64 GetPiecePos(Color color, PieceType type) const;
     inline U64 GetOccupiedBB() const;
+    inline U64 GetColorBB(Color color) const;
     // Moves
     void DoMove(Move &move);
     void UndoMove(Move move);
@@ -28,6 +30,8 @@ public:
     inline Color GetColor() const;
     inline Color GetColor(Square sq) const;
     inline Color GetOriginalColor() const;
+    inline U64 GetEnPassant() const;
+    inline bool IsCastlingAllowed(Color color, Castling side);
     inline U64 GetHash() const; 
     inline Stats GetStats() const;
     inline bool IsThreefoldRep() const;
@@ -72,8 +76,7 @@ private:
     // Castling
     void EnableCastling(Move &move);
     void DisableCastling(Move &move, Color color, Castling side);
-    friend class Evaluator;
-    friend class MoveGen;
+
     friend class BoardImporter;
 };
 
@@ -86,6 +89,10 @@ inline PieceType Board::GetType(Square square) const {
 
 inline int Board::GetPieceCount(const Color color, const PieceType type) const {
     return popCount[(int) color][(int) type];
+}
+
+U64 Board::GetPiecePos(PieceType type) const {
+    return pieceBB[(int) type];
 }
 
 inline U64 Board::GetPiecePos(const Color color, const PieceType type) const {
@@ -145,6 +152,18 @@ inline void Board::RemovePiece(Square square, PieceType type, Color color) {
     occupiedBB ^= bit;
     popCount[(U8) color][(U8) type]--;
     zobrist.FlipSquare(square, type, color);
+}
+
+U64 Board::GetColorBB(Color color) const {
+    return colorBB[(int) color];
+}
+
+U64 Board::GetEnPassant() const {
+    return enPassant;
+}
+
+bool Board::IsCastlingAllowed(Color color, Castling side) {
+    return castlingAllowed[(int) color][(int) side];
 }
 
 #endif // BOARD
