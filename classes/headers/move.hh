@@ -9,17 +9,17 @@
 class Move {
 public:
     Move() = default;
-    explicit Move(MoveType type) : move(0)/* , type(type), capturedPiece(PieceType::None) */ {
+    explicit Move(MoveType type) : move(0)/* , type(type), capturedPiece(PieceType::None) */{
         SetType(type);
     };
 
-    Move(MoveType type, Square from, Square to) : move(0)/* , type(type), from(from), to(to), capturedPiece(PieceType::None) */ {
+    Move(MoveType type, Square from, Square to) : move(0)/* , type(type), from(from), to(to), capturedPiece(PieceType::None)  */{
         SetType(type);
         SetFrom(from);
         SetTo(to);
     };
 
-    Move(MoveType type, Square from, Square to, PieceType capturedPiece) : move(0)/* , type(type), from(from), to(to), capturedPiece(capturedPiece) */ {
+    Move(MoveType type, Square from, Square to, PieceType capturedPiece) : move(0)/* , type(type), from(from), to(to), capturedPiece(capturedPiece)  */{
         SetType(type);
         SetFrom(from);
         SetTo(to);
@@ -43,10 +43,10 @@ public:
 private:
     uint32_t move;
     // These are for debug information
-/*     MoveType type;
+    /*MoveType type;
     Square from;
-    Square to;
-    PieceType capturedPiece; */
+    Square to;*/
+    PieceType capturedPiece;
 
     inline void SetType(MoveType type);
     inline void SetFrom(Square square);

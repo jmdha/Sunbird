@@ -3,6 +3,7 @@
 
 #define U8  unsigned short
 #define U64 unsigned long long int
+#define C8(x) (U8)1 << ((U8) x)
 #define C64(x) (U64)1 << ((U64) x)
 
 #define WIDTH 8

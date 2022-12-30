@@ -182,8 +182,9 @@ namespace Utilities {
             return Column::G;
         case 7:
             return Column::H;
+        default:
+            return Column::None;
         }
-        return Column::None;
     }
 
     static inline U8 GetColumnIndex(Square square) {
@@ -213,8 +214,9 @@ namespace Utilities {
             return Row::Row7;
         case 7:
             return Row::Row8;
+        default:
+            return Row::None;
         }
-        return Row::None;
     }
 
     static inline U8 GetRowIndex(Square square) {
@@ -225,27 +227,8 @@ namespace Utilities {
         return GetRow(GetRowIndex(square));
     }
 
-    static inline void AddSquares(U64 (*attackSquares)[2], U64 addedSquares) {
-        while (addedSquares) {
-            U64 lsb = LSB_Pop(&addedSquares);
-            if (lsb & (*attackSquares)[0])
-                (*attackSquares)[1] |= lsb;
-            else
-                (*attackSquares)[0] |= lsb;
-        }
-    }
-    static inline void RemoveSquares(U64 (*attackSquares)[2], U64 removedSquares) {
-        while (removedSquares) {
-            U64 lsb = LSB_Pop(&removedSquares);
-            if (lsb & (*attackSquares)[1])
-                (*attackSquares)[1] ^= lsb;
-            else
-                (*attackSquares)[0] ^= lsb;
-        }
-    }
-
     static inline std::string GetSquareString(Square sq) {
-        std::string square = "";
+        std::string square;
         U8 col = GetColumnIndex(sq);
         U8 row = GetRowIndex(sq);
         square += 'a' + col;

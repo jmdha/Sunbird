@@ -37,7 +37,9 @@ public:
     inline bool IsThreefoldRep() const;
 
     bool friend operator==(const Board & lhs, const Board & rhs) {
-        if (lhs.turn != rhs.turn || lhs.occupiedBB != rhs.occupiedBB || lhs.GetHash() != rhs.GetHash())
+        if (lhs.turn != rhs.turn || lhs.originalColor != rhs.originalColor ||
+        lhs.occupiedBB != rhs.occupiedBB || lhs.GetHash() != rhs.GetHash() ||
+        lhs.enPassant != rhs.enPassant)
             return false;
         for (U8 i = 0; i < PIECECOUNT; i++)
             if (lhs.pieceBB[i] != rhs.pieceBB[i])
