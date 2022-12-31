@@ -268,35 +268,14 @@ bool MoveGen::IsKingSafe(Board *board, U64 tempOccuracyBoard, U64 tempEnemyBoard
 U64 MoveGen::GetAttackSquares(Board *board) {
     U64 attacks = 0;
 
-    U64 pawns   = board->GetPiecePos(color, PieceType::Pawn);
-    U64 knights = board->GetPiecePos(color, PieceType::Knight);
-    U64 bishops = board->GetPiecePos(color, PieceType::Bishop);
-    U64 rooks   = board->GetPiecePos(color, PieceType::Rook);
-    U64 queens  = board->GetPiecePos(color, PieceType::Queen);
-    U64 kings   = board->GetPiecePos(color, PieceType::King);
+    U64 pieces[PIECECOUNT];
+    for (U8 pIndex = 0; pIndex < PIECECOUNT; pIndex++)
+        pieces[pIndex] = board->GetPiecePos(color, (PieceType) pIndex);
 
-    // Non-sliding Pieces
-    while (pawns)   attacks |= PawnAttacks[(int) color][Utilities::LSB_Pop(&pawns)];
-    while (knights) attacks |= KnightMoves             [Utilities::LSB_Pop(&knights)];
-    while (kings)   attacks |= KingMoves               [Utilities::LSB_Pop(&kings)];
-    // Sliding Pieces
-    while (bishops) attacks |= GetAttacks(board, Utilities::LSB_Pop(&bishops), PieceType::Bishop);
-    while (rooks)   attacks |= GetAttacks(board, Utilities::LSB_Pop(&rooks), PieceType::Rook);
-    while (queens)  attacks |= GetAttacks(board, Utilities::LSB_Pop(&queens), PieceType::Queen);
+    while (pieces[(U8) PieceType::Pawn]) attacks |= PawnAttacks[(int) color][Utilities::LSB_Pop(&pieces[(U8) PieceType::Pawn])];
 
-    return attacks;
-}
-
-U64 MoveGen::GetSlidingAttacks(const Board *board, const U64 pieceIndex, const Direction directions[], const int directionCount) {
-    U64 attacks = 0;
-
-    for (int dirIndex = 0; dirIndex < directionCount; dirIndex++) {
-        U64 tempAttacks = BitShifts::GetRay(pieceIndex, directions[dirIndex]);
-        const U64 blocker = Utilities::LSB(tempAttacks & board->GetOccupiedBB());
-        if (blocker != 0)
-            tempAttacks ^= BitShifts::GetBehind(pieceIndex, blocker);
-        attacks |= tempAttacks;
-    }
+    for (U8 pIndex = 1; pIndex < PIECECOUNT; pIndex++)
+        while (pieces[pIndex]) attacks |= GetAttacks(board, Utilities::LSB_Pop(&pieces[pIndex]), (PieceType) pIndex);
 
     return attacks;
 }

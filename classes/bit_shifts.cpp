@@ -9,6 +9,8 @@ void BitShifts::Init () {
             if (from != to)
                 behind[from][to] = GenerateBehind(from, to);
     for (U8 square = 0; square < SQUARECOUNT; square++) {
+        pieceAttacks[(int) PieceType::Knight][square] = KnightMoves[square];
+        pieceAttacks[(int) PieceType::King][square] = KingMoves[square];
         pieceAttacks[(int) PieceType::Rook][square] = GetRay(square, DirectionIndex::North) |
                                                       GetRay(square, DirectionIndex::East) |
                                                       GetRay(square, DirectionIndex::South) |

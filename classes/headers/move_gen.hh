@@ -47,8 +47,7 @@ private:
     U8 GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, U64 pieces, Direction direction, bool isKingSafe);
     void GeneratePawnMoves();
 
-    U64 GetAttacks(const Board *board, U8 pos, PieceType type);
-    static U64 GetSlidingAttacks(const Board *board, U64 pieceIndex, const Direction directions[], int directionCount);
+    static U64 GetAttacks(const Board *board, U8 pos, PieceType type);
 
     static inline void AppendMove(std::array<Move, MAXMOVECOUNT> *moves, int index, U8* moveCount, Move move);
 };
