@@ -13,6 +13,7 @@ public:
     explicit Perft(Board* board) : board(board), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {};
 
     int RunFromPosition(int depth);
+    int PerftDivide(int depth);
 
 private:
     Board* board;

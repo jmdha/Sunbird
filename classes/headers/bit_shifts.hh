@@ -72,7 +72,10 @@ U64 BitShifts::GetAttacks(unsigned long long int square, PieceType pieceType) {
 }
 
 U64 BitShifts::GenerateBB(unsigned short sq, PieceType type) {
-    return GetAttacks(sq, type) ^ EDGE;
+    if (sq & EDGE)
+        return GetAttacks(sq, type) & (~CORNER);
+    else
+        return GetAttacks(sq, type) & (~EDGE);
 }
 
 U64 BitShifts::GetBB(unsigned short sq, PieceType type) {

@@ -191,6 +191,30 @@ namespace Utilities {
         return (U8) square % 8;
     }
 
+    static inline U8 GetColumnIndex(Column col) {
+        switch (col) {
+
+            case Column::A:
+                return 0;
+            case Column::B:
+                return 1;
+            case Column::C:
+                return 2;
+            case Column::D:
+                return 3;
+            case Column::E:
+                return 4;
+            case Column::F:
+                return 5;
+            case Column::G:
+                return 6;
+            case Column::H:
+                return 7;
+            case Column::None:
+                return 0;
+        }
+    }
+
     static inline Column GetColumn(Square square) {
         return GetColumn(GetColumnIndex(square));
     }

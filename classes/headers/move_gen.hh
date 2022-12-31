@@ -40,6 +40,9 @@ private:
     NotEdge notPromotionRank;
     CastlingBlockSquares castlingBlock[2]{};
     CastlingAttackSquares castlingAttack[2]{};
+    Square kingPos;
+    Square castleKSide;
+    Square castleQSide;
 
     U64 pawnSingleMove[64] = { 0 };
     U64 pawnDoubleMove[64] = { 0 };

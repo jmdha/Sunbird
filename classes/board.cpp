@@ -53,6 +53,9 @@ void Board::DoMove(Move &move) {
             RemovePiece(Square::H8, PieceType::Rook, Color::Black);
         }
         fromType = PieceType::King;
+#ifdef STATS
+        stats.castlingMoves++;
+#endif
     } else if (move.GetType() == MoveType::QueenCastle) {
         if (turn == Color::White) {
             PlacePiece(Square::C1, PieceType::King, Color::White);
@@ -66,6 +69,9 @@ void Board::DoMove(Move &move) {
             RemovePiece(Square::A8, PieceType::Rook, Color::Black);
         }
         fromType = PieceType::King;
+#ifdef STATS
+        stats.castlingMoves++;
+#endif
     } else {
         fromType = GetType(move.GetFrom());
         RemovePiece(move.GetFrom(), fromType, turn);
@@ -84,9 +90,13 @@ void Board::DoMove(Move &move) {
         PlacePiece(move.GetTo(), fromType, turn);
     }
 
-    // En passant    
+    // En passant
+    //// Check if there is old
+    if (enPassant)
+        move.SetDisableEnPassant((Column) enPassant);
+    //// Set new
     if (move.GetType() == MoveType::DoublePawnPush)
-        enPassant |= (U64) Utilities::GetColumn(move.GetFrom());
+        enPassant = (U64) Utilities::GetColumn(move.GetFrom());
     else
         enPassant = 0;
     
@@ -118,6 +128,11 @@ void Board::DoMove(Move &move) {
 void Board::UndoMove(Move move) {
     zobrist.DecrementHash();
     PieceType toType;
+
+    // Check if old en passant
+    if (move.IsDEP())
+        enPassant = (U64) move.GetDEP();
+
     if (move.GetType() == MoveType::KingCastle) {
         if (turn == Color::Black) {
             RemovePiece(Square::G1, PieceType::King, Color::White);

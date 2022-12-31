@@ -9,17 +9,17 @@
 class Move {
 public:
     Move() = default;
-    explicit Move(MoveType type) : move(0)/* , type(type), capturedPiece(PieceType::None) */{
+    explicit Move(MoveType type) : move(0)/*, type(type), capturedPiece(PieceType::None)*/ {
         SetType(type);
     };
 
-    Move(MoveType type, Square from, Square to) : move(0)/* , type(type), from(from), to(to), capturedPiece(PieceType::None)  */{
+    Move(MoveType type, Square from, Square to) : move(0)/*, type(type), from(from), to(to), capturedPiece(PieceType::None)*/ {
         SetType(type);
         SetFrom(from);
         SetTo(to);
     };
 
-    Move(MoveType type, Square from, Square to, PieceType capturedPiece) : move(0)/* , type(type), from(from), to(to), capturedPiece(capturedPiece)  */{
+    Move(MoveType type, Square from, Square to, PieceType capturedPiece) : move(0)/*, type(type), from(from), to(to), capturedPiece(capturedPiece)*/ {
         SetType(type);
         SetFrom(from);
         SetTo(to);
@@ -32,21 +32,25 @@ public:
     [[nodiscard]] inline Square GetFrom() const;
     [[nodiscard]] inline Square GetTo() const;
     [[nodiscard]] inline PieceType GetCapturedPiece() const;
+    [[nodiscard]] inline Column GetDEP() const;
     [[nodiscard]] inline bool IsCapture() const;
     [[nodiscard]] inline bool IsPromotion() const;
+    [[nodiscard]] inline bool IsCastle() const;
     [[nodiscard]] inline bool IsEP() const;
+    [[nodiscard]] inline bool IsDEP() const;
     [[nodiscard]] inline bool IsDC() const;
     [[nodiscard]] inline bool IsDC(Color color, Castling side) const;
     inline void SetDisableCastle(Color color, Castling side);
-    
+    inline void SetDisableEnPassant(Column col);
+
 
 private:
     uint32_t move;
     // These are for debug information
     /*MoveType type;
     Square from;
-    Square to;*/
-    PieceType capturedPiece;
+    Square to;
+    PieceType capturedPiece;*/
 
     inline void SetType(MoveType type);
     inline void SetFrom(Square square);
@@ -77,6 +81,10 @@ inline PieceType Move::GetCapturedPiece() const {
     return (PieceType) ((move >> 20) & 0xf);
 }
 
+inline Column Move::GetDEP() const {
+    return (Column) Utilities::GetColumn((move >> 28) & 0x7);
+};
+
 inline bool Move::IsCapture() const {
     return ((U8) GetType() & CaptureBit) != 0;
 }
@@ -85,8 +93,16 @@ inline bool Move::IsPromotion() const {
     return ((U8) GetType() & PromotionBit) != 0;
 }
 
+inline bool Move::IsCastle() const {
+    return ((U8) GetType() & CastlingBit) != 0 && !IsPromotion();
+}
+
 inline bool Move::IsEP() const {
     return GetType() == MoveType::EPCapture;
+}
+
+inline bool Move::IsDEP() const {
+    return ((move >> 28) & 0x7) != 0;
 }
 
 inline bool Move::IsDC() const {
@@ -115,6 +131,10 @@ inline void Move::SetCapture(PieceType capturedType) {
 
 inline void Move::SetDisableCastle(Color color, Castling side) {
     move |= (U8) std::pow(2, (U8) (2 * (U8) color + (U8) side)) << 24;
+}
+
+inline void Move::SetDisableEnPassant(Column col) {
+    move |= Utilities::GetColumnIndex(col) << 28;
 }
 
 #endif // MOVE

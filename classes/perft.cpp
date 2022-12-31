@@ -23,3 +23,21 @@ int Perft::Run(int depth) {
 int Perft::RunFromPosition(int depth) {
     return this->Run(depth);
 }
+
+int Perft::PerftDivide(int depth) {
+    int total = 0;
+
+    std::array<Move, MAXMOVECOUNT> moves{};
+    U64 attackedSquares = moveGens[(int) Utilities::GetOppositeColor(board->GetColor())].GetAttackSquares(board);
+    int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
+
+    for (int i = 0; i < moveCount; i++) {
+        board->DoMove(moves[i]);
+        int count = Run(depth - 1);
+        board->UndoMove(moves[i]);
+        printf("%s: %d\n", moves.at(i).ToString().c_str(), count);
+        total += count;
+    }
+
+    return total;
+}

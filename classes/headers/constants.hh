@@ -28,6 +28,7 @@
 #define CASTLINGQUEEN 0
 
 #define EDGE 0xff818181818181ff
+#define CORNER 0x8100000000000081
 
 //#define DEBUGGING true
 #define STATS true
@@ -186,6 +187,7 @@ enum class MoveType : U8 {
 
 #define PromotionBit 0x8
 #define CaptureBit 0x4
+#define CastlingBit 0x2
 
 enum class Castling : U8 {
     King,

@@ -8,7 +8,10 @@ oppColor(Utilities::GetOppositeColor(color)),
 up((color == Color::White) ? Direction::North : Direction::South),
 doubleRank((color == Color::White) ? Row::Row2 : Row::Row7),
 enPassantRank((color == Color::White) ? Row::Row6 : Row::Row3),
-notPromotionRank((color == Color::White) ? NotEdge::North : NotEdge::South) {
+notPromotionRank((color == Color::White) ? NotEdge::North : NotEdge::South),
+kingPos((color == Color::White) ? Square::E1 : Square::E8),
+castleKSide((color == Color::White) ? Square::G1 : Square::G8),
+castleQSide((color == Color::White) ? Square::C1 : Square::C8) {
     if (color == Color::White) {
         castlingBlock[(int) Castling::King] = CastlingBlockSquares::KSideWhite;
         castlingBlock[(int) Castling::Queen] = CastlingBlockSquares::QSideWhite;
@@ -167,10 +170,10 @@ U8 MoveGen::GetKingMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
     // Castling
     if (board->IsCastlingAllowed(color, Castling::King) && !(board->GetOccupiedBB() & (U64) castlingBlock[(int) Castling::King]) && !(attackedSquares & (U64) castlingAttack[(int) Castling::King]))
         if (isKingSafe)
-            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::KingCastle));
+            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::KingCastle, kingPos, castleKSide));
     if (board->IsCastlingAllowed(color, Castling::Queen) && !(board->GetOccupiedBB() & (U64) castlingBlock[(int) Castling::Queen]) && !(attackedSquares & (U64) castlingAttack[(int) Castling::Queen]))
         if (isKingSafe)
-            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::QueenCastle));
+            AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::QueenCastle, kingPos, castleQSide));
         
     return moveCount;
 }

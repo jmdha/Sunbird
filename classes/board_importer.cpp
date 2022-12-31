@@ -52,9 +52,13 @@ void BoardImporter::ImportFEN(Board* board, std::string FEN) {
 		FEN.erase(0, 1);
 	}
 
-	// import king availibity
+    FEN.erase(0, 1);
 
 	// import en-passant
+    if (FEN[0] != '-') {
+        auto sq = Utilities::GetSquare(FEN[0], FEN[1]);
+        board->enPassant = (U64) Utilities::GetColumn(sq);
+    }
 
 	// import half move
 
