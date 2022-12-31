@@ -3,7 +3,7 @@
 int Perft::Run(int depth) {
     if (depth == 0)
         return 1;
-    std::array<Move, MAXMOVECOUNT> moves;
+    std::array<Move, MAXMOVECOUNT> moves{};
     U64 attackedSquares = moveGens[(int) Utilities::GetOppositeColor(board->GetColor())].GetAttackSquares(board);
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
     int leafCount = 0;

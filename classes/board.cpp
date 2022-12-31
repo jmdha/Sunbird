@@ -74,6 +74,9 @@ void Board::DoMove(Move &move) {
             if (move.GetType() == MoveType::EPCapture) {
                 auto captureSquare = (Square) ((turn == Color::White) ? (int) move.GetTo() - 8 : (int) move.GetTo() + 8);
                 RemovePiece(captureSquare, PieceType::Pawn, Utilities::GetOppositeColor(turn));
+#ifdef STATS
+                stats.epMoves++;
+#endif
             }
             else 
                 RemovePiece(move.GetTo(), move.GetCapturedPiece(), Utilities::GetOppositeColor(turn));

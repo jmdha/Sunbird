@@ -15,15 +15,18 @@ public:
     static inline U64 GetRay(U64 square, DirectionIndex direction);
     static inline U64 GetRay(U64 square, Direction direction);
     static inline U64 GetBehind(U64 from, U64 to);
+    static inline U64 GetAttacks(U64 square, PieceType pieceType);
+    static inline U64 GetBB(U8 sq, PieceType type);
     static inline U64 Shift(U64 b, Direction dir, int times);
 private:
-    inline static U64 rays[SQUARECOUNT][DIRECTIONCOUNT];
-    inline static U64 pieceAttacks[PIECECOUNT][SQUARECOUNT];
-    inline static U64 blockersAndBeyond[PIECECOUNT][SQUARECOUNT];
-    inline static U64 behind[SQUARECOUNT][SQUARECOUNT];
+    inline static U64 rays[SQUARECOUNT][DIRECTIONCOUNT] = { 0 };
+    inline static U64 pieceAttacks[PIECECOUNT][SQUARECOUNT] = { 0 };
+    inline static U64 blockersAndBeyond[PIECECOUNT][SQUARECOUNT] = { 0 };
+    inline static U64 behind[SQUARECOUNT][SQUARECOUNT] = { 0 };
 
     inline static U64 GenerateRay(U8 square, DirectionIndex direction);
     inline static U64 GenerateBehind(U8 from, U8 to);
+    inline static U64 GenerateBB(U8 sq, PieceType type);
 };
 
 inline U64 BitShifts::GetRay(const Square square, DirectionIndex direction) {
@@ -62,6 +65,18 @@ U64 BitShifts::GenerateRay(U8 square, DirectionIndex direction) {
 // Uses rays
 U64 BitShifts::GenerateBehind(U8 from, U8 to) {
     return rays[to][(int) Utilities::GetDirectionIndex((Square) from, (Square) to)];
+}
+
+U64 BitShifts::GetAttacks(unsigned long long int square, PieceType pieceType) {
+    return pieceAttacks[(int) pieceType][square];
+}
+
+U64 BitShifts::GenerateBB(unsigned short sq, PieceType type) {
+    return GetAttacks(sq, type) ^ EDGE;
+}
+
+U64 BitShifts::GetBB(unsigned short sq, PieceType type) {
+    return blockersAndBeyond[(int) type][sq];
 }
 
 #endif // BIT_SHIFTS

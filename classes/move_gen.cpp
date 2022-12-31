@@ -181,6 +181,7 @@ U8 MoveGen::GetKingMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
 U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, U64 pieces, Direction direction, bool isKingSafe) {
     U8 moveCount = 0;
     int counter = 1;
+
     while (pieces) {
         pieces = BitShifts::Shift(pieces & Utilities::NotEdge(direction), direction, 1) & ~board->GetColorBB(color);
         U64 attackMoves = pieces & board->GetOccupiedBB();
@@ -202,6 +203,24 @@ U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Boar
 
         counter++;
     }
+
+    return moveCount;
+}
+
+U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, PieceType type) {
+    U8 moveCount = 0;
+    U64 pieces = board->GetPiecePos(color, type);
+    while (pieces)
+        moveCount += GetMoves(moves, startIndex + moveCount, board, type, Utilities::LSB_Pop(&pieces));
+    return moveCount;
+}
+// Assumes sliding piece
+U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, PieceType type, U8 pos) {
+    U8 moveCount = 0;
+    U64 tempMoves = BitShifts::GetAttacks(pos, type);
+
+    for (U64 b = board->GetOccupiedBB() & BitShifts::GetBB(pos, type); b != 0; b &= (b - 1))
+
 
     return moveCount;
 }
@@ -279,9 +298,9 @@ U64 MoveGen::GetAttackSquares(Board *board) {
     while (knights) attacks |= KnightMoves             [Utilities::LSB_Pop(&knights)];
     while (kings)   attacks |= KingMoves               [Utilities::LSB_Pop(&kings)];
     // Sliding Pieces
-    while (bishops) attacks |= GetSlidingAttacks(board, Utilities::LSB_Pop(&bishops), bishopDirections, 4);
-    while (rooks)   attacks |= GetSlidingAttacks(board, Utilities::LSB_Pop(&rooks),   rookDirections,   4);
-    while (queens)  attacks |= GetSlidingAttacks(board, Utilities::LSB_Pop(&queens),  queenDirections,  8);
+    while (bishops) attacks |= GetAttacks(board, Utilities::LSB_Pop(&bishops), PieceType::Bishop);
+    while (rooks)   attacks |= GetAttacks(board, Utilities::LSB_Pop(&rooks), PieceType::Rook);
+    while (queens)  attacks |= GetAttacks(board, Utilities::LSB_Pop(&queens), PieceType::Queen);
 
     return attacks;
 }
@@ -296,6 +315,15 @@ U64 MoveGen::GetSlidingAttacks(const Board *board, const U64 pieceIndex, const D
             tempAttacks ^= BitShifts::GetBehind(pieceIndex, blocker);
         attacks |= tempAttacks;
     }
+
+    return attacks;
+}
+
+U64 MoveGen::GetAttacks(const Board *board, unsigned short pos, PieceType type) {
+    U64 attacks = BitShifts::GetAttacks(pos, type);
+
+    for (U64 b = board->GetOccupiedBB() & BitShifts::GetBB(pos, type); b != 0; b &= (b - 1))
+        attacks &= ~BitShifts::GetBehind(pos, Utilities::LSB(b));
 
     return attacks;
 }

@@ -13,6 +13,7 @@ class Board {
 public:
     struct Stats {
         U64 totalMoves = 0;
+        U64 epMoves = 0;
     };
     // Initialization
     void Initialize();

@@ -27,6 +27,8 @@
 #define CASTLINGKING 1
 #define CASTLINGQUEEN 0
 
+#define EDGE 0xff818181818181ff
+
 //#define DEBUGGING true
 #define STATS true
 

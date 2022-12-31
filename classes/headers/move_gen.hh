@@ -45,9 +45,12 @@ private:
     U64 pawnDoubleMove[64] = { 0 };
 
     U8 GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, U64 pieces, Direction direction, bool isKingSafe);
+    U8 GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, PieceType type);
+    U8 GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, PieceType type, U8 pos);
     void GeneratePawnMoves();
 
-    static U64 GetSlidingAttacks(const Board *board, U64 pieceIndex, const Direction directions[], int directionCount) ;
+    U64 GetAttacks(const Board *board, U8 pos, PieceType type);
+    static U64 GetSlidingAttacks(const Board *board, U64 pieceIndex, const Direction directions[], int directionCount);
 
     static inline void AppendMove(std::array<Move, MAXMOVECOUNT> *moves, int index, U8* moveCount, Move move);
 };
