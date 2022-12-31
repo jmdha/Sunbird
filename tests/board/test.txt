@@ -21,3 +21,9 @@ add_test(Board_UndoMove_Castling_QB Undo "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1" 
 add_test(Board_UndoMove_EP1 Undo "4k3/8/8/8/3Pp3/8/8/3K4 b - d3 0 1" "e4d3")
 add_test(Board_UndoMove_EP2 Undo "4k3/8/8/3pP3/8/8/8/4K3 w - d6 0 2" "e5d6")
 add_test(Board_UndoMove_EP3 Undo "rnbqkbnr/p1pp1ppp/8/4P3/1pP2B2/4P3/PP3PPP/RN1QKBNR b KQkq c3 0 5" "b4c3")
+
+### Promotion
+add_test(Board_UndoMove_P1 Undo "4k3/P7/8/8/8/8/8/4K3 w - - 0 1" "a7a8q")
+add_test(Board_UndoMove_P2 Undo "4k3/P7/8/8/8/8/8/4K3 w - - 0 1" "a7a8r")
+add_test(Board_UndoMove_P3 Undo "4k3/P7/8/8/8/8/8/4K3 w - - 0 1" "a7a8b")
+add_test(Board_UndoMove_P4 Undo "4k3/P7/8/8/8/8/8/4K3 w - - 0 1" "a7a8n")

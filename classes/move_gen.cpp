@@ -8,6 +8,7 @@ oppColor(Utilities::GetOppositeColor(color)),
 up((color == Color::White) ? Direction::North : Direction::South),
 doubleRank((color == Color::White) ? Row::Row2 : Row::Row7),
 enPassantRank((color == Color::White) ? Row::Row6 : Row::Row3),
+promotionRank((color == Color::White) ? Row::Row7 : Row::Row2),
 notPromotionRank((color == Color::White) ? NotEdge::North : NotEdge::South),
 kingPos((color == Color::White) ? Square::E1 : Square::E8),
 castleKSide((color == Color::White) ? Square::G1 : Square::G8),
@@ -66,8 +67,17 @@ U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
         // Quiet move
         //// Single push
         if (!(board->GetOccupiedBB() & pawnSingleMove[(int) lsb]))
-            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | BitShifts::Shift(C64(lsb), up, 1)))
-                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) lsb, (Square) (lsb + (int) up)));
+            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | BitShifts::Shift(C64(lsb), up, 1))) {
+                // If Promotion
+                if (C64(lsb) & (U64) promotionRank) {
+                    AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::BPromotion, (Square) lsb, (Square) (lsb + (int) up)));
+                    AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::NPromotion, (Square) lsb, (Square) (lsb + (int) up)));
+                    AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::QPromotion, (Square) lsb, (Square) (lsb + (int) up)));
+                    AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::RPromotion, (Square) lsb, (Square) (lsb + (int) up)));
+                } else
+                    AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) lsb, (Square) (lsb + (int) up)));
+            }
+
         //// Double push
         if (C64(lsb) & (U64) doubleRank && !(board->GetOccupiedBB() & pawnDoubleMove[(int) lsb]))
             if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | BitShifts::Shift(C64(lsb), up, 2)))

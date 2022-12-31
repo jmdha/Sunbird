@@ -30,7 +30,16 @@ int main(int argc, char* argv[]) {
         PieceType toPiece = board.GetType(toSquare);
         if (fromPiece == PieceType::Pawn && Utilities::GetColumn(fromSquare) != Utilities::GetColumn(toSquare) && toPiece == PieceType::None)
             move = Move(MoveType::EPCapture, fromSquare, toSquare, PieceType::None);
-        else {
+        else if (fromPiece == PieceType::Pawn && sMove.size() == 5) {
+            if (sMove[4] == 'q')
+                move = Move(MoveType::QPromotion, fromSquare, toSquare);
+            else if (sMove[4] == 'r')
+                move = Move(MoveType::RPromotion, fromSquare, toSquare);
+            else if (sMove[4] == 'b')
+                move = Move(MoveType::BPromotion, fromSquare, toSquare);
+            else if (sMove[4] == 'n')
+                move = Move(MoveType::NPromotion, fromSquare, toSquare);
+        } else {
             MoveType moveType = (toPiece == PieceType::None) ? MoveType::Quiet : MoveType::Capture;
 
             move = Move(moveType, fromSquare, toSquare, toPiece);

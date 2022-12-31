@@ -37,6 +37,7 @@ private:
     Direction up;
     Row doubleRank;
     Row enPassantRank;
+    Row promotionRank;
     NotEdge notPromotionRank;
     CastlingBlockSquares castlingBlock[2]{};
     CastlingAttackSquares castlingAttack[2]{};

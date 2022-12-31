@@ -87,7 +87,17 @@ void Board::DoMove(Move &move) {
             else 
                 RemovePiece(move.GetTo(), move.GetCapturedPiece(), Utilities::GetOppositeColor(turn));
         }
-        PlacePiece(move.GetTo(), fromType, turn);
+        if (move.IsPromotion()){
+            if (move.GetType() == MoveType::RPromotion)
+                PlacePiece(move.GetTo(), PieceType::Rook, turn);
+            else if (move.GetType() == MoveType::BPromotion)
+                PlacePiece(move.GetTo(), PieceType::Bishop, turn);
+            else if (move.GetType() == MoveType::NPromotion)
+                PlacePiece(move.GetTo(), PieceType::Knight, turn);
+            else if (move.GetType() == MoveType::QPromotion)
+                PlacePiece(move.GetTo(), PieceType::Queen, turn);
+        } else
+            PlacePiece(move.GetTo(), fromType, turn);
     }
 
     // En passant
@@ -161,7 +171,7 @@ void Board::UndoMove(Move move) {
         toType = GetType(move.GetTo());
         if (move.IsPromotion()) {
             RemovePiece(move.GetTo(), toType, Utilities::GetOppositeColor(turn));
-            PlacePiece(move.GetTo(), PieceType::Pawn, Utilities::GetOppositeColor(turn));
+            PlacePiece(move.GetFrom(), PieceType::Pawn, Utilities::GetOppositeColor(turn));
         } else {
             RemovePiece(move.GetTo(), toType, Utilities::GetOppositeColor(turn));
             PlacePiece(move.GetFrom(), toType, Utilities::GetOppositeColor(turn));
