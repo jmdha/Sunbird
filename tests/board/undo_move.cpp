@@ -32,13 +32,13 @@ int main(int argc, char* argv[]) {
             move = Move(MoveType::EPCapture, fromSquare, toSquare, PieceType::None);
         else if (fromPiece == PieceType::Pawn && sMove.size() == 5) {
             if (sMove[4] == 'q')
-                move = Move(MoveType::QPromotion, fromSquare, toSquare);
+                move = Move((toPiece == PieceType::None) ? MoveType::QPromotion : MoveType::QPromotionCapture, fromSquare, toSquare, toPiece);
             else if (sMove[4] == 'r')
-                move = Move(MoveType::RPromotion, fromSquare, toSquare);
+                move = Move((toPiece == PieceType::None) ? MoveType::RPromotion : MoveType::RPromotionCapture, fromSquare, toSquare, toPiece);
             else if (sMove[4] == 'b')
-                move = Move(MoveType::BPromotion, fromSquare, toSquare);
+                move = Move((toPiece == PieceType::None) ? MoveType::BPromotion : MoveType::BPromotionCapture, fromSquare, toSquare, toPiece);
             else if (sMove[4] == 'n')
-                move = Move(MoveType::NPromotion, fromSquare, toSquare);
+                move = Move((toPiece == PieceType::None) ? MoveType::NPromotion : MoveType::NPromotionCapture, fromSquare, toSquare, toPiece);
         } else {
             MoveType moveType = (toPiece == PieceType::None) ? MoveType::Quiet : MoveType::Capture;
 

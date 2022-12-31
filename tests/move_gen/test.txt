@@ -71,6 +71,8 @@ add_test(MoveGen_Pawn_KingSafety_Capture GeneratePawnMoves   2   "8/8/6p1/1k5R/8
 
 add_test(MoveGen_Pawn_Promotion1W GeneratePawnMoves   8   "4k3/P6P/8/8/8/8/8/4K3 w - - 0 1" 1)
 add_test(MoveGen_Pawn_Promotion1B GeneratePawnMoves   8   "4k3/8/8/8/8/8/p6p/4K3 b - - 0 1" 1)
+add_test(MoveGen_Pawn_Promotion_Capture1W GeneratePawnMoves   24   "r1q1kr1n/1P4P1/8/8/8/8/8/4K3 w - - 0 1" 1)
+add_test(MoveGen_Pawn_Promotion_Capture1B GeneratePawnMoves   24   "4k3/8/8/8/8/8/1p4p1/N1Q1KB1R b - - 0 1" 1)
 
 ## RookMoves
 add_executable(GenerateRookMoves tests/move_gen/rook_move.cpp ${sources})

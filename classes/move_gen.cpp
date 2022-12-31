@@ -52,8 +52,27 @@ U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
         U64 captures = board->GetColorBB(oppColor) & PawnAttacks[(int) color][(int) lsb];
         while (captures) {
             U64 capturePiece = Utilities::LSB_Pop(&captures);
-            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | C64(capturePiece), board->GetColorBB(oppColor) ^ C64(capturePiece)))
-                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsb, (Square) capturePiece, board->GetType((Square) capturePiece)));
+            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | C64(capturePiece), board->GetColorBB(oppColor) ^ C64(capturePiece))) {
+                // If Promotion
+                if (C64(lsb) & (U64) promotionRank) {
+                    AppendMove(moves, startIndex + moveCount, &moveCount,
+                               Move(MoveType::QPromotionCapture, (Square) lsb, (Square) capturePiece,
+                                    board->GetType((Square) capturePiece)));
+                    AppendMove(moves, startIndex + moveCount, &moveCount,
+                               Move(MoveType::RPromotionCapture, (Square) lsb, (Square) capturePiece,
+                                    board->GetType((Square) capturePiece)));
+                    AppendMove(moves, startIndex + moveCount, &moveCount,
+                               Move(MoveType::BPromotionCapture, (Square) lsb, (Square) capturePiece,
+                                    board->GetType((Square) capturePiece)));
+                    AppendMove(moves, startIndex + moveCount, &moveCount,
+                               Move(MoveType::NPromotionCapture, (Square) lsb, (Square) capturePiece,
+                                    board->GetType((Square) capturePiece)));
+                } else {
+                    AppendMove(moves, startIndex + moveCount, &moveCount,
+                               Move(MoveType::Capture, (Square) lsb, (Square) capturePiece,
+                                    board->GetType((Square) capturePiece)));
+                }
+            }
         }
 
         //// En Passant

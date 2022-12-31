@@ -88,13 +88,13 @@ void Board::DoMove(Move &move) {
                 RemovePiece(move.GetTo(), move.GetCapturedPiece(), Utilities::GetOppositeColor(turn));
         }
         if (move.IsPromotion()){
-            if (move.GetType() == MoveType::RPromotion)
+            if (move.GetType() == MoveType::RPromotion || move.GetType() == MoveType::RPromotionCapture)
                 PlacePiece(move.GetTo(), PieceType::Rook, turn);
-            else if (move.GetType() == MoveType::BPromotion)
+            else if (move.GetType() == MoveType::BPromotion || move.GetType() == MoveType::BPromotionCapture)
                 PlacePiece(move.GetTo(), PieceType::Bishop, turn);
-            else if (move.GetType() == MoveType::NPromotion)
+            else if (move.GetType() == MoveType::NPromotion || move.GetType() == MoveType::NPromotionCapture)
                 PlacePiece(move.GetTo(), PieceType::Knight, turn);
-            else if (move.GetType() == MoveType::QPromotion)
+            else if (move.GetType() == MoveType::QPromotion || move.GetType() == MoveType::QPromotionCapture)
                 PlacePiece(move.GetTo(), PieceType::Queen, turn);
         } else
             PlacePiece(move.GetTo(), fromType, turn);
