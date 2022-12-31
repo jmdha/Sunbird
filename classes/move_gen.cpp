@@ -81,7 +81,7 @@ U8 MoveGen::GetRookMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
     int moveCount = 0;
 
     U64 pieces = board->GetPiecePos(color, PieceType::Rook);
-    for (auto rookDirection : rookDirections)
+    for (const auto & rookDirection : rookDirections)
         moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, rookDirection, isKingSafe);
     return moveCount;
 }
@@ -90,7 +90,7 @@ U8 MoveGen::GetBishopMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex
     int moveCount = 0;
 
     U64 pieces = board->GetPiecePos(color, PieceType::Bishop);
-    for (auto bishopDirection : bishopDirections)
+    for (const auto & bishopDirection : bishopDirections)
         moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, bishopDirection, isKingSafe);
     return moveCount;
 }
@@ -99,7 +99,7 @@ U8 MoveGen::GetQueenMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex,
     int moveCount = 0;
 
     U64 pieces = board->GetPiecePos(color, PieceType::Queen);
-    for (auto queenDirection : queenDirections)
+    for (const auto & queenDirection : queenDirections)
         moveCount += GetMoves(moves, startIndex + moveCount, board, pieces, queenDirection, isKingSafe);
     return moveCount;
 }
@@ -120,7 +120,7 @@ U8 MoveGen::GetKnightMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex
 
             while (attackMoves) {
                 U64 lsb = Utilities::LSB_Pop(&attackMoves);
-                if (isKingSafe || IsKingSafe(board, board->GetOccupiedBB() ^ C64(lsbPiece), board->GetColorBB(oppColor) ^ C64(lsb)))
+                if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsbPiece)) | C64(lsb), board->GetColorBB(oppColor) ^ C64(lsb)))
                     AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, board->GetType((Square) lsb)));
             }
 
@@ -189,7 +189,7 @@ U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Boar
 
         while (attackMoves) {
             U64 lsb = Utilities::LSB_Pop(&attackMoves);
-            if (isKingSafe || IsKingSafe(board, board->GetOccupiedBB() ^ C64(lsb - (int) direction * counter), board->GetColorBB(oppColor) ^ C64(lsb)))
+            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb - (int) direction * counter)) | C64(lsb), board->GetColorBB(oppColor) ^ C64(lsb)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) (lsb - (int) direction * counter), (Square) lsb, board->GetType((Square) lsb)));
         }
 
