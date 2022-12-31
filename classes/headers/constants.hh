@@ -87,6 +87,9 @@ enum class Square : U8 {
     A8, B8, C8, D8, E8, F8, G8, H8,
 };
 
+constexpr Square initRookPos[2][2] = { { Square::H1, Square::A1 }, { Square::H8, Square::A8 } };
+
+
 enum class Row : U64 {
     Row1 = 0xff,
     Row2 = 0xff00,

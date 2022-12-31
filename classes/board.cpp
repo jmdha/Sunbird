@@ -32,6 +32,7 @@ void Board::Initialize() {
             castlingAllowed[i][i2] = true;
 
     turn = Color::White;
+    oppColor = Color::Black;
     originalColor = Color::White;
 }
 
@@ -79,13 +80,19 @@ void Board::DoMove(Move &move) {
         if (move.IsCapture()) {
             if (move.GetType() == MoveType::EPCapture) {
                 auto captureSquare = (Square) ((turn == Color::White) ? (int) move.GetTo() - 8 : (int) move.GetTo() + 8);
-                RemovePiece(captureSquare, PieceType::Pawn, Utilities::GetOppositeColor(turn));
+                RemovePiece(captureSquare, PieceType::Pawn, oppColor);
 #ifdef STATS
                 stats.epMoves++;
 #endif
-            }
-            else 
-                RemovePiece(move.GetTo(), move.GetCapturedPiece(), Utilities::GetOppositeColor(turn));
+            } else
+                RemovePiece(move.GetTo(), move.GetCapturedPiece(), oppColor);
+
+            if (move.GetCapturedPiece() == PieceType::Rook && move.GetTo() == initRookPos[(U8) oppColor][(U8) Castling::King])
+                if (castlingAllowed[(U8) oppColor][(U8) Castling::King])
+                    DisableCastling(move, oppColor, Castling::King);
+            if (move.GetCapturedPiece() == PieceType::Rook && move.GetTo() == initRookPos[(U8) oppColor][(U8) Castling::Queen])
+                if (castlingAllowed[(U8) oppColor][(U8) Castling::Queen])
+                    DisableCastling(move, oppColor, Castling::Queen);
         }
         if (move.IsPromotion()){
             if (move.GetType() == MoveType::RPromotion || move.GetType() == MoveType::RPromotionCapture)
@@ -131,6 +138,7 @@ void Board::DoMove(Move &move) {
     }
 
     turn = Utilities::GetOppositeColor(turn);
+    oppColor = Utilities::GetOppositeColor(turn);
     zobrist.IncrementHash();
     ply++;
 }
@@ -170,11 +178,11 @@ void Board::UndoMove(Move move) {
     } else {
         toType = GetType(move.GetTo());
         if (move.IsPromotion()) {
-            RemovePiece(move.GetTo(), toType, Utilities::GetOppositeColor(turn));
-            PlacePiece(move.GetFrom(), PieceType::Pawn, Utilities::GetOppositeColor(turn));
+            RemovePiece(move.GetTo(), toType, oppColor);
+            PlacePiece(move.GetFrom(), PieceType::Pawn, oppColor);
         } else {
-            RemovePiece(move.GetTo(), toType, Utilities::GetOppositeColor(turn));
-            PlacePiece(move.GetFrom(), toType, Utilities::GetOppositeColor(turn));
+            RemovePiece(move.GetTo(), toType, oppColor);
+            PlacePiece(move.GetFrom(), toType, oppColor);
         }
         
 
@@ -189,6 +197,7 @@ void Board::UndoMove(Move move) {
     }
     EnableCastling(move);
     turn = Utilities::GetOppositeColor(turn);
+    oppColor = Utilities::GetOppositeColor(turn);
     ply--;
 }
 

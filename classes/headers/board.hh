@@ -62,6 +62,7 @@ public:
 
 private:
     Color turn = Color::None;
+    Color oppColor = Color::None;
     Color originalColor = Color::None;
     U64 pieceBB[PIECECOUNT] = { 0 };
     U64 colorBB[COLORCOUNT] = { 0 };

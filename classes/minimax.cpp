@@ -52,7 +52,7 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
                     continue;
             }
 
-            //for (int i = 0; i <= (3 - depth); i++)
+            //for (int i = 0; i <= (2 - depth); i++)
                 //printf(" ");
             //printf("%s\n", moves[i].ToString().c_str());
 
