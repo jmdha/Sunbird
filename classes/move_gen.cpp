@@ -184,7 +184,7 @@ U8 MoveGen::GetKingMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
 
     while (attackMoves) {
         U64 lsb = Utilities::LSB_Pop(&attackMoves);
-        if (isKingSafe || IsKingSafe(board, board->GetOccupiedBB() ^ C64(lsbPiece), board->GetColorBB(oppColor) ^ C64(lsb), C64(lsb)))
+        if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsbPiece)) | C64(lsb), board->GetColorBB(oppColor) ^ C64(lsb), C64(lsb)))
             AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, board->GetType((Square) lsb)));
     }
 
