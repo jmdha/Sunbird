@@ -37,11 +37,7 @@ U8 MoveGen::GetAllMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64
 }
 
 U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe) {
-    // Generate single and double step moves
     U64 pieces = board->GetPiecePos(color, PieceType::Pawn);
-    if (pieces == 0)
-        return 0;
-        
     U8 moveCount = 0;
 
     while (pieces) {
@@ -52,7 +48,7 @@ U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
         U64 captures = board->GetColorBB(oppColor) & PawnAttacks[(int) color][(int) lsb];
         while (captures) {
             U64 capturePiece = Utilities::LSB_Pop(&captures);
-            if (isKingSafe || IsKingSafe(board, board->GetOccupiedBB() ^ C64(lsb), board->GetColorBB(oppColor) ^ C64(capturePiece)))
+            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | C64(capturePiece), board->GetColorBB(oppColor) ^ C64(capturePiece)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsb, (Square) capturePiece, board->GetType((Square) capturePiece)));
         }
 
@@ -60,7 +56,7 @@ U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
         captures = board->GetEnPassant() & PawnAttacks[(int) color][(int) lsb] & (U64) enPassantRank;
         while (captures) {
             U64 capturePiece = Utilities::LSB_Pop(&captures);
-            if (isKingSafe || IsKingSafe(board, board->GetOccupiedBB() ^ C64(lsb),  board->GetColorBB(oppColor) ^ C64(capturePiece)))
+            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | C64(capturePiece),  board->GetColorBB(oppColor) ^ C64(capturePiece)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::EPCapture, (Square) lsb, (Square) capturePiece, PieceType::Pawn));
         }
 
@@ -74,6 +70,7 @@ U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
             if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | C64(lsb + (int) up * 2)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::DoublePawnPush, (Square) lsb, (Square) (lsb + (int) up * 2)));
     }
+
     return moveCount;
 }
 
