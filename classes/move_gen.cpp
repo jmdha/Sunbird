@@ -207,24 +207,6 @@ U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Boar
     return moveCount;
 }
 
-U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, PieceType type) {
-    U8 moveCount = 0;
-    U64 pieces = board->GetPiecePos(color, type);
-    while (pieces)
-        moveCount += GetMoves(moves, startIndex + moveCount, board, type, Utilities::LSB_Pop(&pieces));
-    return moveCount;
-}
-// Assumes sliding piece
-U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, PieceType type, U8 pos) {
-    U8 moveCount = 0;
-    U64 tempMoves = BitShifts::GetAttacks(pos, type);
-
-    for (U64 b = board->GetOccupiedBB() & BitShifts::GetBB(pos, type); b != 0; b &= (b - 1))
-
-
-    return moveCount;
-}
-
 void MoveGen::GeneratePawnMoves() {
     for (int i = 0; i < 64; i++) {
         U64 bit = C64(i);

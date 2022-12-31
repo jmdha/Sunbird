@@ -45,8 +45,6 @@ private:
     U64 pawnDoubleMove[64] = { 0 };
 
     U8 GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, U64 pieces, Direction direction, bool isKingSafe);
-    U8 GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, PieceType type);
-    U8 GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, PieceType type, U8 pos);
     void GeneratePawnMoves();
 
     U64 GetAttacks(const Board *board, U8 pos, PieceType type);
