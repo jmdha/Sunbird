@@ -63,11 +63,11 @@ U8 MoveGen::GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
         // Quiet move
         //// Single push
         if (!(board->GetOccupiedBB() & pawnSingleMove[(int) lsb]))
-            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | C64(lsb + (int) up)))
+            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | BitShifts::Shift(C64(lsb), up, 1)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) lsb, (Square) (lsb + (int) up)));
         //// Double push
         if (C64(lsb) & (U64) doubleRank && !(board->GetOccupiedBB() & pawnDoubleMove[(int) lsb]))
-            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | C64(lsb + (int) up * 2)))
+            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb)) | BitShifts::Shift(C64(lsb), up, 2)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::DoublePawnPush, (Square) lsb, (Square) (lsb + (int) up * 2)));
     }
 
@@ -186,7 +186,7 @@ U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Boar
 
         while (attackMoves) {
             U64 lsb = Utilities::LSB_Pop(&attackMoves);
-            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb - (int) direction * counter)) | C64(lsb), board->GetColorBB(oppColor) ^ C64(lsb)))
+            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ BitShifts::Shift(C64(lsb), Utilities::GetOppositeDirection(direction), counter)) | C64(lsb), board->GetColorBB(oppColor) ^ C64(lsb)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) (lsb - (int) direction * counter), (Square) lsb, board->GetType((Square) lsb)));
         }
 
@@ -194,7 +194,7 @@ U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Boar
 
         while (quietMoves) {
             U8 lsb = Utilities::LSB_Pop(&quietMoves);
-            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsb - (int) direction * counter) | C64(lsb))))
+            if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ BitShifts::Shift(C64(lsb), Utilities::GetOppositeDirection(direction), counter) | C64(lsb))))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) (lsb - (int) direction * counter), (Square) lsb));
         }
 
