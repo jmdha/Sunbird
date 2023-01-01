@@ -1,7 +1,6 @@
 #include "headers/minimax.hh"
 
 Move MiniMax::GetBestMove(int depth) {
-    bestCheckmateDepth = -1;
     return NegaMax(depth);
 }
 Move MiniMax::NegaMax(int depth) {
@@ -12,7 +11,6 @@ Move MiniMax::NegaMax(int depth) {
 
     Move bestMove = Move(MoveType::Quiet);
     int bestScore = -(int) PieceValue::Inf;
-    int bestPly = -1;
 
     for (int i = 0; i < moveCount; i++) {
         //printf("\n\n\n\n\n\n\n\n\n\n\n\n%s\n", moves[i].ToString().c_str());
@@ -21,10 +19,9 @@ Move MiniMax::NegaMax(int depth) {
         board->UndoMove(moves[i]);
         //printf("%s %d\n", moves[i].ToString().c_str(), score);
 
-        if (score > bestScore || (score == bestScore && (bestPly > bestCheckmateDepth || (bestPly == -1 && bestCheckmateDepth != -1)))) {
+        if (score > bestScore) {
             bestScore = score;
             bestMove = moves[i];
-            bestPly = bestCheckmateDepth;
         }
     }
 
@@ -39,13 +36,10 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
     U64 attackedSquares = moveGens[(int) Utilities::GetOppositeColor(board->GetColor())].GetAttackSquares(board);
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
 
-    if (moveCount == 0) {
-        if (board->GetPly() < bestCheckmateDepth || bestCheckmateDepth == -1)
-            bestCheckmateDepth = board->GetPly();
-        return evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board));
-    }
+    if (moveCount == 0)
+        return std::min(evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board)), beta);
     if (board->IsThreefoldRep())
-        return beta;
+        return std::min(0, beta);
 
     for (int moveType = 0; moveType < 2; moveType++) 
         for (int i = 0; i < moveCount; i++) {

@@ -25,8 +25,6 @@ private:
     MoveGen moveGens[2];
     Evaluator evaluator;
 
-    int bestCheckmateDepth = -1;
-
     Move NegaMax(int depth);
     int NegaMax(int depth, int alpha, int beta);
     int Quiesce(int alpha, int beta);

@@ -36,7 +36,6 @@ public:
     inline bool IsCastlingAllowed(Color color, Castling side);
     inline U64 GetHash() const; 
     inline Stats GetStats() const;
-    inline int GetPly() const;
     inline bool IsThreefoldRep() const;
 
     bool friend operator==(const Board & lhs, const Board & rhs) {
@@ -133,10 +132,6 @@ inline U64 Board::GetHash() const {
 inline Board::Stats Board::GetStats() const {
     return stats;
 };
-
-inline int Board::GetPly() const {
-    return ply;
-}
 
 inline bool Board::IsThreefoldRep() const {
     return zobrist.IsThreefoldRep();
