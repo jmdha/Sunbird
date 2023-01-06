@@ -4,7 +4,7 @@ Move MiniMax::GetBestMove(int depth) {
     return NegaMax(depth);
 }
 Move MiniMax::NegaMax(int depth) {
-    std::array<Move, MAXMOVECOUNT> moves{};
+    std::array<Move, MAXMOVECOUNT> moves;
 
     U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
     U8 moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
@@ -32,39 +32,30 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
     if (depth == 0)
         return Quiesce(alpha, beta);
     
-    std::array<Move, MAXMOVECOUNT> moves{};
+    std::array<Move, MAXMOVECOUNT> moves;
     U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
+    ReOrderMoves(moves, moveCount);
 
     if (moveCount == 0)
         return std::min(evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board)), beta);
     if (board->IsThreefoldRep())
         return std::min(0, beta);
 
-    for (int moveType = 0; moveType < 2; moveType++) 
-        for (int i = 0; i < moveCount; ++i) {
-            // Do capture before quiet
-            if (moves.at(i).IsCapture()) {
-                if (moveType == 1)
-                    continue;
-            } else {
-                if (moveType == 0)
-                    continue;
-            }
+    for (int i = 0; i < moveCount; ++i) {
+        //for (int i = 0; i <= (2 - depth); i++)
+            //printf(" ");
+        //printf("%s\n", moves[i].ToString().c_str());
 
-            //for (int i = 0; i <= (2 - depth); i++)
-                //printf(" ");
-            //printf("%s\n", moves[i].ToString().c_str());
+        board->DoMove(moves[i]);
+        int score = -NegaMax(depth - 1, -beta, -alpha);
+        board->UndoMove(moves[i]);
 
-            board->DoMove(moves[i]);
-            int score = -NegaMax(depth - 1, -beta, -alpha);
-            board->UndoMove(moves[i]);
-
-            if(score >= beta)
-                return beta;   //  fail hard beta-cutoff
-            if(score > alpha)
-                alpha = score; // alpha acts like max in MiniMax
-        }
+        if(score >= beta)
+            return beta;   //  fail hard beta-cutoff
+        if(score > alpha)
+            alpha = score; // alpha acts like max in MiniMax
+    }
 
     return alpha;
 }
@@ -76,9 +67,10 @@ int MiniMax::Quiesce(int alpha, int beta) {
     if (alpha < standPat)
         alpha = standPat;
 
-    std::array<Move, MAXMOVECOUNT> moves{};
+    std::array<Move, MAXMOVECOUNT> moves;
     U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
-    int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);    
+    int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
+    ReOrderMoves(moves, moveCount);
 
     if (moveCount == 0)
         return std::min(evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board)), beta);

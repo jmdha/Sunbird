@@ -28,5 +28,26 @@ private:
     Move NegaMax(int depth);
     int NegaMax(int depth, int alpha, int beta);
     int Quiesce(int alpha, int beta);
+    static inline void ReOrderMoves(std::array<Move, MAXMOVECOUNT> &moves, U8 moveCount);
 };
+
+inline void MiniMax::ReOrderMoves(std::array<Move, MAXMOVECOUNT> &moves, U8 moveCount) {
+    struct {
+        bool operator()(Move &a, Move &b) const {
+            if (a.IsCapture()) {
+                if (!b.IsCapture())
+                    return true;
+                else
+                    return false;
+            } else {
+                if (!a.IsCapture())
+                    return false;
+                else
+                    return true;
+            }
+        }
+    } moveCompare;
+    std::sort(moves.begin(), std::next(moves.begin(), moveCount), moveCompare);
+}
+
 #endif // MINIMAX
