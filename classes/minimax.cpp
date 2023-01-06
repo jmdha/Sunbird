@@ -12,7 +12,7 @@ Move MiniMax::NegaMax(int depth) {
     Move bestMove = Move(MoveType::Quiet);
     int bestScore = -(int) PieceValue::Inf;
 
-    for (int i = 0; i < moveCount; i++) {
+    for (int i = 0; i < moveCount; ++i) {
         //printf("\n\n\n\n\n\n\n\n\n\n\n\n%s\n", moves[i].ToString().c_str());
         board->DoMove(moves[i]);
         int score = -NegaMax(depth - 1, -(int) PieceValue::Inf, -bestScore);
@@ -42,7 +42,7 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
         return std::min(0, beta);
 
     for (int moveType = 0; moveType < 2; moveType++) 
-        for (int i = 0; i < moveCount; i++) {
+        for (int i = 0; i < moveCount; ++i) {
             // Do capture before quiet
             if (moves.at(i).IsCapture()) {
                 if (moveType == 1)
@@ -85,7 +85,7 @@ int MiniMax::Quiesce(int alpha, int beta) {
     if (board->IsThreefoldRep())
         return std::min(0, beta);
 
-    for (int i = 0; i < moveCount; i++) {
+    for (int i = 0; i < moveCount; ++i) {
         if (!moves[i].IsCapture())
             continue;
 

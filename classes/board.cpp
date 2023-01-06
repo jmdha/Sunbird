@@ -2,7 +2,7 @@
 #include "headers/bit_shifts.hh"
 
 void Board::Initialize() {
-    for (U8 x = 0; x < WIDTH; x++) {
+    for (U8 x = 0; x < WIDTH; ++x) {
         PlacePiece(Utilities::GetSquare(x, PAWNROWWHITE), PieceType::Pawn, Color::White);
         PlacePiece(Utilities::GetSquare(x, PAWNROWBLACK), PieceType::Pawn, Color::Black);
     }
@@ -28,8 +28,8 @@ void Board::Initialize() {
     PlacePiece(Square::E1, PieceType::King, Color::White);
     PlacePiece(Square::E8, PieceType::King, Color::Black);
     
-    for (U8 i = 0; i < COLORCOUNT; i++)
-        for (U8 i2 = 0; i2 < 2; i2++)
+    for (U8 i = 0; i < COLORCOUNT; ++i)
+        for (U8 i2 = 0; i2 < 2; ++i2)
             castlingAllowed[i][i2] = true;
 
     turn = Color::White;
@@ -40,7 +40,7 @@ void Board::Initialize() {
 void Board::DoMove(Move &move) {
     PieceType fromType;
 #ifdef STATS
-    stats.totalMoves++;
+    ++stats.totalMoves;
 #endif
     if (move.GetType() == MoveType::KingCastle) {
         if (turn == Color::White) {
@@ -56,7 +56,7 @@ void Board::DoMove(Move &move) {
         }
         fromType = PieceType::King;
 #ifdef STATS
-        stats.castlingMoves++;
+        ++stats.castlingMoves;
 #endif
     } else if (move.GetType() == MoveType::QueenCastle) {
         if (turn == Color::White) {
@@ -83,7 +83,7 @@ void Board::DoMove(Move &move) {
                 auto captureSquare = (Square) ((turn == Color::White) ? (int) move.GetTo() - 8 : (int) move.GetTo() + 8);
                 RemovePiece(captureSquare, PieceType::Pawn, oppColor);
 #ifdef STATS
-                stats.epMoves++;
+                ++stats.epMoves;
 #endif
             } else
                 RemovePiece(move.GetTo(), move.GetCapturedPiece(), oppColor);
@@ -141,7 +141,7 @@ void Board::DoMove(Move &move) {
     turn = Utilities::GetOppositeColor(turn);
     oppColor = Utilities::GetOppositeColor(turn);
     zobrist.IncrementHash();
-    ply++;
+    ++ply;
 }
 
 void Board::UndoMove(Move move) {
@@ -199,7 +199,7 @@ void Board::UndoMove(Move move) {
     EnableCastling(move);
     turn = Utilities::GetOppositeColor(turn);
     oppColor = Utilities::GetOppositeColor(turn);
-    ply--;
+    --ply;
 }
 
 void Board::EnableCastling(Move &move) {
@@ -229,7 +229,7 @@ U64 Board::GenerateAttackSquares(Color color) const {
 
     while (tempPieces[(U8) PieceType::Pawn]) attacks |= PawnAttacks[(int) color][Utilities::LSB_Pop(&tempPieces[(U8) PieceType::Pawn])];
 
-    for (U8 pIndex = 1; pIndex < PIECECOUNT; pIndex++)
+    for (U8 pIndex = 1; pIndex < PIECECOUNT; ++pIndex)
         while (tempPieces[pIndex]) {
             unsigned short pos = Utilities::LSB_Pop(&tempPieces[pIndex]);
             U64 attacks1 = BitShifts::GetAttacks(pos, (PieceType) pIndex);

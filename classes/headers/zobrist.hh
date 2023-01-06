@@ -31,9 +31,9 @@ private:
         std::mt19937 gen(0);
 	    std::uniform_int_distribution<unsigned long long> distribution(0, ULLONG_MAX);
 
-        for (int i = 0; i < WIDTH * HEIGHT; i++)
-            for (int j = 0; j < PIECECOUNT; j++)
-                for (int t = 0; t < COLORCOUNT; t++)
+        for (int i = 0; i < WIDTH * HEIGHT; ++i)
+            for (int j = 0; j < PIECECOUNT; ++j)
+                for (int t = 0; t < COLORCOUNT; ++t)
                     hashTable[i][j][t] = distribution(gen);
     }
 };
@@ -44,12 +44,11 @@ inline void Zobrist::FlipSquare(Square square, PieceType type, Color color) {
 }
 
 inline void Zobrist::IncrementHash() {
-    hashOccurances[hash]++;
+    ++hashOccurances[hash];
 }
 
 inline void Zobrist::DecrementHash() {
-    hashOccurances.at(hash)--;
-    if (hashOccurances.at(hash) == 0)
+    if (--hashOccurances.at(hash) == 0)
         hashOccurances.erase(hash);
 }
 

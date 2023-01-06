@@ -237,7 +237,7 @@ U8 MoveGen::GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Boar
 }
 
 void MoveGen::GeneratePawnMoves() {
-    for (int i = 0; i < 64; i++) {
+    for (int i = 0; i < 64; ++i) {
         U64 bit = C64(i);
         if (bit & (U64) notPromotionRank) {
             U64 upOne = BitShifts::Shift(bit, up, 1);

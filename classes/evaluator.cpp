@@ -9,7 +9,7 @@ Evaluator::~Evaluator() {
 
 int Evaluator::EvaluatePieceCount(const Board &board) {
     int value = 0;
-    for (int i = 0; i < PIECECOUNT; i++)
+    for (int i = 0; i < PIECECOUNT; ++i)
         value += (board.GetPieceCount(Color::White, (PieceType) i) - board.GetPieceCount(Color::Black, (PieceType) i)) * Utilities::GetPieceValue((PieceType) i);
     return value;
 }

@@ -33,7 +33,7 @@ inline Evaluator::Stats Evaluator::GetStats() {
 
 inline int Evaluator::Evaluate(const Board &board) {
 #ifdef STATS
-    stats.evalCount++;
+    ++stats.evalCount;
 #endif
     int value = EvaluatePieceCount(board) + EvaluatePositionValue(board);
     
@@ -42,7 +42,7 @@ inline int Evaluator::Evaluate(const Board &board) {
 
 inline int Evaluator::EvaluateNoMoves(const Board &board, const bool isKingSafe) {
 #ifdef STATS
-    stats.noMoveEvalCount++;
+    ++stats.noMoveEvalCount;
 #endif
     // Checkmate
     if (!isKingSafe)

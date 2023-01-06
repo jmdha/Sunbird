@@ -111,7 +111,7 @@ namespace Utilities {
     static inline U8 PopCount(U64 x) {
         U8 count = 0;
         while (x) {
-            count++;
+            ++count;
             x &= x - 1;
         }
         return count;
@@ -133,7 +133,7 @@ namespace Utilities {
         U64 index = 0;
         while (1 < x) {
             x = x >> 1;
-            index++;
+            ++index;
         }
         return index;
     }

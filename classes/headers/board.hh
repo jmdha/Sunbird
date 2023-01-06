@@ -45,18 +45,18 @@ public:
         lhs.occupiedBB != rhs.occupiedBB || lhs.GetHash() != rhs.GetHash() ||
         lhs.enPassant != rhs.enPassant)
             return false;
-        for (U8 i = 0; i < PIECECOUNT; i++)
+        for (U8 i = 0; i < PIECECOUNT; ++i)
             if (lhs.pieceBB[i] != rhs.pieceBB[i])
                 return false;
-        for (U8 i = 0; i < COLORCOUNT; i++)
+        for (U8 i = 0; i < COLORCOUNT; ++i)
             if (lhs.colorBB[i] != rhs.colorBB[i])
                 return false;
-        for (int i = 0; i < COLORCOUNT; i++)
-            for (int t = 0; t < PIECECOUNT; t++)
+        for (int i = 0; i < COLORCOUNT; ++i)
+            for (int t = 0; t < PIECECOUNT; ++t)
                 if (lhs.popCount[i][t] != rhs.popCount[i][t])
                     return false;
-        for (int i = 0; i < 2; i++)
-            for (int t = 0; t < 2; t++)
+        for (int i = 0; i < 2; ++i)
+            for (int t = 0; t < 2; ++t)
                 if (lhs.castlingAllowed[i][t] != rhs.castlingAllowed[i][t])
                     return false;
         return true;
@@ -88,7 +88,7 @@ private:
 };
 
 inline PieceType Board::GetType(Square square) const {
-    for (U8 i = 0; i < PIECECOUNT; i++)
+    for (U8 i = 0; i < PIECECOUNT; ++i)
         if (pieceBB[i] & C64(square))
             return (PieceType) i;
     return PieceType::None;	

@@ -62,7 +62,7 @@ inline bool MoveGen::IsKingSafe(Board *board) {
 
 inline void MoveGen::AppendMove(std::array<Move, MAXMOVECOUNT> *moves, int index, U8* moveCount, Move move) {
     moves->at(index) = move;
-    (*moveCount)++;
+    ++(*moveCount);
 }
 
 #endif // MOVE_GEN
