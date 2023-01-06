@@ -30,6 +30,7 @@ public:
     void UndoMove(Move move);
     // Misc
     inline Color GetColor() const;
+    inline Color GetOppColor() const;
     inline Color GetColor(Square sq) const;
     inline Color GetOriginalColor() const;
     inline U64 GetEnPassant() const;
@@ -37,6 +38,7 @@ public:
     inline U64 GetHash() const; 
     inline Stats GetStats() const;
     inline bool IsThreefoldRep() const;
+    U64 GenerateAttackSquares(Color color) const;
 
     bool friend operator==(const Board & lhs, const Board & rhs) {
         if (lhs.turn != rhs.turn || lhs.originalColor != rhs.originalColor ||
@@ -110,6 +112,10 @@ inline U64 Board::GetOccupiedBB() const {
 
 inline Color Board::GetColor() const {
     return turn;
+};
+
+inline Color Board::GetOppColor() const {
+    return oppColor;
 };
 
 inline Color Board::GetColor(Square sq) const {

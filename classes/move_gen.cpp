@@ -293,27 +293,3 @@ bool MoveGen::IsKingSafe(Board *board, U64 tempOccuracyBoard, U64 tempEnemyBoard
 
     return true;
 }
-
-U64 MoveGen::GetAttackSquares(Board *board) {
-    U64 attacks = 0;
-
-    U64 pieces[PIECECOUNT];
-    for (U8 pIndex = 0; pIndex < PIECECOUNT; pIndex++)
-        pieces[pIndex] = board->GetPiecePos(color, (PieceType) pIndex);
-
-    while (pieces[(U8) PieceType::Pawn]) attacks |= PawnAttacks[(int) color][Utilities::LSB_Pop(&pieces[(U8) PieceType::Pawn])];
-
-    for (U8 pIndex = 1; pIndex < PIECECOUNT; pIndex++)
-        while (pieces[pIndex]) attacks |= GetAttacks(board, Utilities::LSB_Pop(&pieces[pIndex]), (PieceType) pIndex);
-
-    return attacks;
-}
-
-U64 MoveGen::GetAttacks(const Board *board, unsigned short pos, PieceType type) {
-    U64 attacks = BitShifts::GetAttacks(pos, type);
-
-    for (U64 b = board->GetOccupiedBB() & BitShifts::GetBB(pos, type); b != 0; b &= (b - 1))
-        attacks &= ~BitShifts::GetBehind(pos, Utilities::LSB(b));
-
-    return attacks;
-}

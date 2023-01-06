@@ -12,19 +12,13 @@
 class MoveGen {
 public:
     explicit MoveGen(Color color);
-    U8 GetAllMoves     (std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 attackedSquares);
-
-    U8 GetPawnMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe);
-
-    U8 GetRookMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe);
-
+    U8 GetAllMoves   (std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 attackedSquares);
+    U8 GetPawnMoves  (std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe);
+    U8 GetRookMoves  (std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe);
     U8 GetBishopMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe);
-
-    U8 GetQueenMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe);
-
+    U8 GetQueenMoves (std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe);
     U8 GetKnightMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe);
-    U8 GetKingMoves    (std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe, U64 attackedSquares);
-    U64 GetAttackSquares(Board *board);
+    U8 GetKingMoves  (std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, bool isKingSafe, U64 attackedSquares);
 
     bool IsKingSafe(Board *board, U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard);
     inline bool IsKingSafe(Board *board, U64 tempOccuracyBoard, U64 tempEnemyBoard);
@@ -50,8 +44,6 @@ private:
 
     U8 GetMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, Board *board, U64 pieces, Direction direction, bool isKingSafe);
     void GeneratePawnMoves();
-
-    static U64 GetAttacks(const Board *board, U8 pos, PieceType type);
 
     static inline void AppendMove(std::array<Move, MAXMOVECOUNT> *moves, int index, U8* moveCount, Move move);
 };

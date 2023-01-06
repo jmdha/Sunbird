@@ -53,7 +53,7 @@ MoveTreeNode MoveTreeGenerator::NegaMax(int depth, bool useAB, int outputDepth, 
     if (depth == 0)
         return MoveTreeNode(evaluator.EvaluatePieceCount(*board), evaluator.EvaluatePositionValue(*board));
     std::array<Move, MAXMOVECOUNT> moves;
-    U64 attackedSquares = moveGens[(int) Utilities::GetOppositeColor(board->GetColor())].GetAttackSquares(board);
+    U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
     
     MoveTreeNode node = MoveTreeNode(-(int)PieceValue::Inf, depth);

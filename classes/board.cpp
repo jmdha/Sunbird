@@ -1,4 +1,5 @@
 #include "headers/board.hh"
+#include "headers/bit_shifts.hh"
 
 void Board::Initialize() {
     for (U8 x = 0; x < WIDTH; x++) {
@@ -217,4 +218,27 @@ void Board::EnableCastling(Move &move) {
 void Board::DisableCastling(Move &move, Color color, Castling side) {
     castlingAllowed[(U8) color][(U8) side] = false;
     move.SetDisableCastle(color, side);
+}
+
+U64 Board::GenerateAttackSquares(Color color) const {
+    U64 attacks = 0;
+
+    U64 tempPieces[PIECECOUNT];
+    for (U8 pIndex = 0; pIndex < PIECECOUNT; pIndex++)
+        tempPieces[pIndex] = GetPiecePos(color, (PieceType) pIndex);
+
+    while (tempPieces[(U8) PieceType::Pawn]) attacks |= PawnAttacks[(int) color][Utilities::LSB_Pop(&tempPieces[(U8) PieceType::Pawn])];
+
+    for (U8 pIndex = 1; pIndex < PIECECOUNT; pIndex++)
+        while (tempPieces[pIndex]) {
+            unsigned short pos = Utilities::LSB_Pop(&tempPieces[pIndex]);
+            U64 attacks1 = BitShifts::GetAttacks(pos, (PieceType) pIndex);
+
+            for (U64 b = occupiedBB & BitShifts::GetBB(pos, (PieceType) pIndex); b != 0; b &= (b - 1))
+                attacks1 &= ~BitShifts::GetBehind(pos, Utilities::LSB(b));
+
+            attacks |= attacks1;
+        }
+
+    return attacks;
 }
