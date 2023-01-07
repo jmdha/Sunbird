@@ -2,7 +2,7 @@
 #include "headers/minimax.hh"
 
 Move MiniMax::GetBestMove(int depth) {
-    U64 timeLimit = 5000;
+    U64 timeLimit = 2000;
     std::vector<U64> timeUsed;
     int workingDepth = 1;
     MoveVals moveScores;
@@ -13,6 +13,8 @@ Move MiniMax::GetBestMove(int depth) {
         auto t1 = std::chrono::steady_clock::now();
         timeUsed.push_back((U64) std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count());
         moveScores.Sort();
+        if (moveScores.scores.at(0) == (U64) PieceValue::Inf)
+            break;
         //printf("Checking depth: %d, time used %llu ms\n", workingDepth, timeUsed.at(timeUsed.size() - 1));
     } while (
             timeUsed.size() <= 2 ||
