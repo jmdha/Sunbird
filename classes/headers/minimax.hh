@@ -21,12 +21,32 @@ public:
     Move GetBestMove(int depth);
     
 private:
+    struct MoveVals {
+        std::array<Move, MAXMOVECOUNT> moves;
+        std::array<int, MAXMOVECOUNT> scores;
+        int moveCount;
+        MoveVals() : moveCount(-1) {};
+        void Sort() {
+            struct {
+                bool operator()(std::pair<Move, int> &a, std::pair<Move, int> &b) const {
+                    return a.second > b.second;
+                }
+            } moveCompare;
+            std::array<std::pair<Move, int>, MAXMOVECOUNT> moveVals;
+            for (int i = 0; i < moveCount; ++i)
+                moveVals.at(i) = std::make_pair(moves.at(i), scores.at(i));
+            std::sort(moveVals.begin(), std::next(moveVals.begin(), moveCount), moveCompare);
+            for (int i = 0; i < moveCount; ++i) {
+                moves.at(i) = moveVals.at(i).first;
+                scores.at(i) = moveVals.at(i).second;
+            }
+        }
+    };
     Board *board;
     MoveGen moveGens[2];
     Evaluator evaluator;
-    int forcePly = -1;
 
-    Move NegaMax(int depth);
+    MiniMax::MoveVals NegaMax(int depth, MoveVals moveVals = MoveVals());
     int NegaMax(int depth, int alpha, int beta);
     int Quiesce(int alpha, int beta);
     static inline void ReOrderMoves(std::array<Move, MAXMOVECOUNT> &moves, U8 moveCount);
