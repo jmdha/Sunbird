@@ -25,6 +25,7 @@ public:
     inline U64 GetPiecePos(Color color, PieceType type) const;
     inline U64 GetOccupiedBB() const;
     inline U64 GetColorBB(Color color) const;
+    inline int GetPly() const;
     // Moves
     void DoMove(Move &move);
     void UndoMove(Move move);
@@ -137,6 +138,10 @@ inline U64 Board::GetHash() const {
 
 inline Board::Stats Board::GetStats() const {
     return stats;
+};
+
+inline int Board::GetPly() const {
+    return ply;
 };
 
 inline bool Board::IsThreefoldRep() const {

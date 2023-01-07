@@ -24,6 +24,7 @@ private:
     Board *board;
     MoveGen moveGens[2];
     Evaluator evaluator;
+    int forcePly = -1;
 
     Move NegaMax(int depth);
     int NegaMax(int depth, int alpha, int beta);

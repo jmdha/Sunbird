@@ -11,16 +11,20 @@ Move MiniMax::NegaMax(int depth) {
 
     Move bestMove = Move(MoveType::Quiet);
     int bestScore = -(int) PieceValue::Inf;
-
+    int workingPly = -1;
     for (int i = 0; i < moveCount; ++i) {
         //printf("\n\n\n\n\n\n\n\n\n\n\n\n%s\n", moves[i].ToString().c_str());
         board->DoMove(moves[i]);
         int score = -NegaMax(depth - 1, -(int) PieceValue::Inf, -bestScore);
         board->UndoMove(moves[i]);
-        //printf("%s %d\n", moves[i].ToString().c_str(), score);
+        printf("%s %d\n", moves[i].ToString().c_str(), score);
 
         if (score > bestScore) {
+            workingPly = forcePly;
             bestScore = score;
+            bestMove = moves[i];
+        } else if (score == bestScore && forcePly < workingPly) {
+            workingPly = forcePly;
             bestMove = moves[i];
         }
     }
@@ -37,10 +41,12 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
     ReOrderMoves(moves, moveCount);
 
-    if (moveCount == 0)
-        return std::min(evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board)), beta);
+    if (moveCount == 0) {
+        forcePly = board->GetPly();
+        return evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board));
+    }
     if (board->IsThreefoldRep())
-        return std::min(0, beta);
+        return 0;
 
     for (int i = 0; i < moveCount; ++i) {
         //for (int i = 0; i <= (2 - depth); i++)
@@ -72,10 +78,12 @@ int MiniMax::Quiesce(int alpha, int beta) {
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
     ReOrderMoves(moves, moveCount);
 
-    if (moveCount == 0)
-        return std::min(evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board)), beta);
+    if (moveCount == 0) {
+        forcePly = board->GetPly();
+        return evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board));
+    }
     if (board->IsThreefoldRep())
-        return std::min(0, beta);
+        return 0;
 
     for (int i = 0; i < moveCount; ++i) {
         if (!moves[i].IsCapture())
