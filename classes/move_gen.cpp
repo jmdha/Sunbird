@@ -141,12 +141,9 @@ U8 MoveGen::GetKnightMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex
 
     while (pieces) {
             U64 lsbPiece = Utilities::LSB_Pop(&pieces);
-            U64 to = KnightMoves[lsbPiece];
 
             // Attack moves
-            U64 attackMoves = to & board->GetColorBB(oppColor);
-            to &= ~board->GetOccupiedBB();
-
+            U64 attackMoves = KnightMoves[lsbPiece] & board->GetColorBB(oppColor);
             while (attackMoves) {
                 U64 lsb = Utilities::LSB_Pop(&attackMoves);
                 if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsbPiece)) | C64(lsb), board->GetColorBB(oppColor) ^ C64(lsb)))
@@ -154,7 +151,7 @@ U8 MoveGen::GetKnightMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex
             }
 
             // Quiet moves
-            U64 quietMoves = to & (~board->GetOccupiedBB());
+            U64 quietMoves = KnightMoves[lsbPiece] & (~board->GetOccupiedBB());
             while (quietMoves) {
                 U64 lsb = Utilities::LSB_Pop(&quietMoves);
                 if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsbPiece) | C64(lsb))))
@@ -172,16 +169,9 @@ U8 MoveGen::GetKingMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
     U8 moveCount = 0;
 
     U64 lsbPiece = Utilities::LSB_Pop(&pieces);
-    U64 to = KingMoves[lsbPiece];
-    // Attack moves
-    U64 attackMoves = to & board->GetColorBB(oppColor);
-    // King cannot move onto a piece, without it being an attack
-    to &= ~board->GetOccupiedBB();
-    // King cannot move to an attacked square
-    to &= ~attackedSquares;
-    // King cannot attack an attacked square
-    attackMoves &= ~attackedSquares;
 
+    // Attack moves
+    U64 attackMoves = KingMoves[lsbPiece] & board->GetColorBB(oppColor) & ~attackedSquares;
     while (attackMoves) {
         U64 lsb = Utilities::LSB_Pop(&attackMoves);
         if (isKingSafe || IsKingSafe(board, board->GetOccupiedBB() ^ C64(lsbPiece), board->GetColorBB(oppColor) ^ C64(lsb), C64(lsb)))
@@ -189,7 +179,7 @@ U8 MoveGen::GetKingMoves(std::array<Move, MAXMOVECOUNT> *moves, int startIndex, 
     }
 
     // Quiet moves
-    U64 quietMoves = to & (~board->GetOccupiedBB());
+    U64 quietMoves = KingMoves[lsbPiece] & ~board->GetOccupiedBB() & ~attackedSquares;
     while (quietMoves) {
         U64 lsb = Utilities::LSB_Pop(&quietMoves);
         if (isKingSafe || IsKingSafe(board, (board->GetOccupiedBB() ^ C64(lsbPiece) | C64(lsb)), board->GetColorBB(oppColor), C64(lsb)))
