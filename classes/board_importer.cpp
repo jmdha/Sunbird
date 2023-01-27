@@ -120,8 +120,12 @@ void BoardImporter::ImportMoveSequence(Board* board, std::string moves) {
 					}
 				} else if (toType != PieceType::None)
 					type = MoveType::Capture; 
-				else
-					type = MoveType::Quiet;
+				else {
+                    if (Utilities::GetColumn(fromSquare) != Utilities::GetColumn(toSquare))
+                        type = MoveType::EPCapture;
+                    else
+                        type = MoveType::Quiet;
+                }
 			} else if (toType != PieceType::None)
 				type = MoveType::Capture; 
 			else
