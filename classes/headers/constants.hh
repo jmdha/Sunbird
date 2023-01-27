@@ -31,7 +31,7 @@
 #define CORNER 0x8100000000000081
 
 //#define DEBUGGING true
-#define STATS true
+//#define STATS true
 
 enum class Color : U8 {
     White,

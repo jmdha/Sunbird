@@ -34,6 +34,7 @@ public:
     inline Color GetOppColor() const;
     inline Color GetColor(Square sq) const;
     inline Color GetOriginalColor() const;
+    inline void SetOriginalColor(Color color);
     inline U64 GetEnPassant() const;
     inline bool IsCastlingAllowed(Color color, Castling side);
     inline U64 GetHash() const; 
@@ -180,6 +181,10 @@ U64 Board::GetEnPassant() const {
 
 bool Board::IsCastlingAllowed(Color color, Castling side) {
     return castlingAllowed[(int) color][(int) side];
+}
+
+void Board::SetOriginalColor(Color color) {
+    originalColor = color;
 }
 
 #endif // BOARD

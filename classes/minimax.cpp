@@ -6,6 +6,7 @@ Move MiniMax::GetBestMove(int depth) {
     std::vector<U64> timeUsed;
     int workingDepth = 1;
     MoveVals moveScores;
+    board->SetOriginalColor(board->GetColor());
 
     do {
         auto t0 = std::chrono::steady_clock::now();
@@ -33,6 +34,7 @@ MiniMax::MoveVals MiniMax::NegaMax(int depth, MoveVals moveVals) {
         board->DoMove(moveVals.moves[i]);
         moveVals.scores.at(i) = -NegaMax(depth - 1, -(int) PieceValue::Inf, (int) PieceValue::Inf);
         board->UndoMove(moveVals.moves[i]);
+        //printf("%s %d\n", moveVals.moves.at(i).ToString().c_str(), moveVals.scores.at(i));
     }
 
     return moveVals;
