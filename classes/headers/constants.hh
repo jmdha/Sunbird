@@ -49,6 +49,8 @@ enum class PieceType : U8 {
     None
 };
 
+constexpr PieceType pieceTypes[PIECECOUNT] { PieceType::Pawn, PieceType::Knight, PieceType::Bishop, PieceType::Rook, PieceType::Queen, PieceType::King };
+
 enum class PieceValue : U64 {
     Pawn = 100,
     Knight = 300,

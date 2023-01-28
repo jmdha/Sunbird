@@ -24,4 +24,15 @@ void BitShifts::Init () {
         blockersAndBeyond[(int) PieceType::Bishop][square] = GenerateBB(square, PieceType::Bishop);
         blockersAndBeyond[(int) PieceType::Queen][square] = GenerateBB(square, PieceType::Queen);
     }
+    for (U8 square = 0; square < SQUARECOUNT; square++)
+        for (U8 offset = 1; offset < 8; offset++)
+            rings[square][offset] = GenerateRing(square, offset);
+    for (U8 from = 0; from < SQUARECOUNT; from++)
+        for (U8 to = 0; to < SQUARECOUNT; to++)
+            if (from != to)
+                sqRays[from][to] = GenerateSqRay(from, to);
+    for (U8 color = 0; color < COLORCOUNT; color++)
+        for (const auto & type : pieceTypes)
+            for (U8 sq = 0; sq < SQUARECOUNT; sq++)
+                pieceMoves[color][(U8) type][sq] = GeneratePieceMoves((Color) color, type, sq);
 }
