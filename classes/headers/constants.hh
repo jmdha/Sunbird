@@ -31,7 +31,7 @@
 #define CORNER 0x8100000000000081
 
 //#define DEBUGGING true
-#define STATS true
+//#define STATS true
 
 enum class Color : U8 {
     White,
@@ -282,7 +282,7 @@ constexpr int PosValueQueen[64] = {
 };
 
 constexpr int PosValueKing_Early[64] = {
-	50, 60, 10,  -10,  -10, 10, 60, 50,
+	20, 30, 10,  0,  0, 10, 30, 20,
     20, 20,  0,  0,  0,  0, 20, 20,
     -10,-20,-20,-20,-20,-20,-20,-10,
     -20,-30,-30,-40,-40,-30,-30,-20,
