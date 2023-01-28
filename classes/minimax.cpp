@@ -16,7 +16,7 @@ Move MiniMax::GetBestMove(int depth) {
         moveScores.Sort();
         if (moveScores.scores.at(0) == (U64) PieceValue::Inf)
             break;
-        printf("Checking depth: %d, time used %llu ms\n", workingDepth, timeUsed.at(timeUsed.size() - 1));
+        //printf("Checking depth: %d, time used %llu ms\n", workingDepth, timeUsed.at(timeUsed.size() - 1));
     } while (depth == -1 &&
             (timeUsed.size() <= 2 ||
              timeUsed.at(timeUsed.size() - 1) < 10 ||
