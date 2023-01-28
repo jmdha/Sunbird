@@ -29,7 +29,7 @@ castleQSide((color == Color::White) ? Square::C1 : Square::C8) {
 
 U8 MoveGen::GetAllMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 attackedSquares) {
     int moveCount = 0;
-    bool isKingSafe = IsKingSafe(board);
+    bool isKingSafe = false;//IsKingSafe(board);
     moveCount += GetPawnMoves(moves, moveCount, board, isKingSafe);
     moveCount += GetRookMoves(moves, moveCount, board, isKingSafe);
     moveCount += GetBishopMoves(moves, moveCount, board, isKingSafe);
