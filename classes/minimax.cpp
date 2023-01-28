@@ -4,7 +4,7 @@
 Move MiniMax::GetBestMove(int depth) {
     U64 timeLimit = 2000;
     std::vector<U64> timeUsed;
-    int workingDepth = 1;
+    int workingDepth = (depth == -1) ? 1 : depth;
     MoveVals moveScores;
     board->SetOriginalColor(board->GetColor());
 
@@ -18,10 +18,11 @@ Move MiniMax::GetBestMove(int depth) {
             break;
         //printf("Checking depth: %d, time used %llu ms\n", workingDepth, timeUsed.at(timeUsed.size() - 1));
     } while (
-            timeUsed.size() <= 2 ||
-            timeUsed.at(timeUsed.size() - 1) < 10 ||
-            timeUsed.at(timeUsed.size() - 2) < 10 ||
-            timeUsed.at(timeUsed.size() - 1) * timeUsed.at(timeUsed.size() - 1) / timeUsed.at(timeUsed.size() - 2) < timeLimit);
+            depth == -1 &&
+            (   timeUsed.size() <= 2 ||
+                timeUsed.at(timeUsed.size() - 1) < 10 ||
+                timeUsed.at(timeUsed.size() - 2) < 10 ||
+                timeUsed.at(timeUsed.size() - 1) * timeUsed.at(timeUsed.size() - 1) / timeUsed.at(timeUsed.size() - 2) < timeLimit));
 
     return moveScores.moves.at(0);
 }

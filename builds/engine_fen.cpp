@@ -11,6 +11,6 @@ int main(int argc, char* argv[]) {
     Board board = Board();
     BoardImporter::ImportFEN(&board, argv[1]);
     MiniMax max = MiniMax(&board);
-    Move move = max.GetBestMove(6);
+    Move move = max.GetBestMove();
     printf("%s\n", move.ToString().c_str());
 }

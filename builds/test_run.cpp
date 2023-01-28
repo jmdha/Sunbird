@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
     Board board = Board();
     BoardImporter::ImportMoveSequence(&board, "");
     MiniMax max = MiniMax(&board);
-    Move move = max.GetBestMove(7);
+    Move move = max.GetBestMove();
     printf("Move found %s\n", move.ToString().c_str());
     printf("Moves made %llu\n", board.GetStats().totalMoves);
 }

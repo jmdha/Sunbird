@@ -18,7 +18,7 @@ public:
         U64 quiesceExpansionCount = 0;
     };
     MiniMax(Board* board) : board(board), evaluator(Evaluator(board->GetColor())), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {}
-    Move GetBestMove(int depth);
+    Move GetBestMove(int depth = -1);
     
 private:
     struct MoveVals {
