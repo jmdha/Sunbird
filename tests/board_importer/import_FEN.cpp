@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
         for (int y = 0; y < HEIGHT; y++)
             if (expectedBoard.GetType(Utilities::GetSquare(x, y)) != 
                 boardFEN->GetType(Utilities::GetSquare(x, y)))
-                throw std::logic_error("Unexpected Piece | Expected " 
+                throw std::logic_error("Unexpected PieceGen | Expected "
                                 + std::to_string((char)expectedBoard.GetType(Utilities::GetSquare(x, y))) + 
                 " - Actual "    + std::to_string((char)boardFEN->GetType(Utilities::GetSquare(x, y))) + 
                 + " | Expected "+ ((char)expectedBoard.GetType(Utilities::GetSquare(x, y))) + 

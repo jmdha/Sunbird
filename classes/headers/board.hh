@@ -29,6 +29,11 @@ public:
     // Moves
     void DoMove(Move &move);
     void UndoMove(Move move);
+    // King Safety
+    bool IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard);
+    inline bool IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard);
+    inline bool IsKingSafe(U64 tempOccuracyBoard);
+    inline bool IsKingSafe();
     // Misc
     inline Color GetColor() const;
     inline Color GetOppColor() const;
@@ -110,6 +115,18 @@ inline U64 Board::GetPiecePos(const Color color, const PieceType type) const {
 
 inline U64 Board::GetOccupiedBB() const {
     return occupiedBB;
+}
+
+inline bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard) {
+    return IsKingSafe(tempOccuracyBoard, tempEnemyBoard, GetPiecePos(turn, PieceType::King));
+}
+
+inline bool Board::IsKingSafe(U64 tempOccuracyBoard) {
+    return IsKingSafe(tempOccuracyBoard, GetColorBB(oppColor));
+}
+
+inline bool Board::IsKingSafe() {
+    return IsKingSafe(GetOccupiedBB());
 }
 
 inline Color Board::GetColor() const {

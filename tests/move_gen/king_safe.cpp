@@ -5,7 +5,7 @@
 #include "../../classes/headers/constants.hh"
 #include "../../classes/headers/board.hh"
 #include "../../classes/headers/board_importer.hh"
-#include "../../classes/headers/move_gen.hh"
+#include "../../classes/move_gen/headers/move_gen.hh"
 
 int main(int argc, char* argv[]) {
     BitShifts::Init();
@@ -13,9 +13,7 @@ int main(int argc, char* argv[]) {
     BoardImporter::ImportFEN(&board, (std::string) argv[1]);
     int expectedBool = std::atoi(argv[2]);
 
-    MoveGen moveGen = MoveGen(board.GetColor());
-    
-    int kingSafe = (int) moveGen.IsKingSafe(&board);
+    int kingSafe = board.IsKingSafe();
 
     if (expectedBool == kingSafe)
         exit(EXIT_SUCCESS);

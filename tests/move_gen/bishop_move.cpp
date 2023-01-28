@@ -5,17 +5,18 @@
 #include "../../classes/headers/constants.hh"
 #include "../../classes/headers/board.hh"
 #include "../../classes/headers/board_importer.hh"
-#include "../../classes/headers/move_gen.hh"
+#include "../../classes/move_gen/headers/bishop_gen.hh"
+#include "../../classes/headers/bit_shifts.hh"
 
 int main(int argc, char* argv[]) {
     BitShifts::Init();
     Board board = Board();
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
-    MoveGen moveGens[2] = { MoveGen(Color::White), MoveGen(Color::Black) };
+    BishopGen moveGens[2] = { BishopGen(Color::White), BishopGen(Color::Black) };
     
     std::array<Move, MAXMOVECOUNT> moves;
     U64 attackedSquares = board.GenerateAttackSquares(board.GetOppColor());
-    int moveCount = moveGens[(int) board.GetColor()].GetBishopMoves(&moves, 0, &board, (bool) std::atoi(argv[3]));
+    int moveCount = moveGens[(int) board.GetColor()].GetALlMoves(&moves, &board, attackedSquares, (bool) std::atoi(argv[3]), 0);
 
     if (moveCount == std::atoi(argv[1]))
         exit(EXIT_SUCCESS);

@@ -16,13 +16,12 @@ Move MiniMax::GetBestMove(int depth) {
         moveScores.Sort();
         if (moveScores.scores.at(0) == (U64) PieceValue::Inf)
             break;
-        //printf("Checking depth: %d, time used %llu ms\n", workingDepth, timeUsed.at(timeUsed.size() - 1));
-    } while (
-            depth == -1 &&
-            (   timeUsed.size() <= 2 ||
-                timeUsed.at(timeUsed.size() - 1) < 10 ||
-                timeUsed.at(timeUsed.size() - 2) < 10 ||
-                timeUsed.at(timeUsed.size() - 1) * timeUsed.at(timeUsed.size() - 1) / timeUsed.at(timeUsed.size() - 2) < timeLimit));
+        printf("Checking depth: %d, time used %llu ms\n", workingDepth, timeUsed.at(timeUsed.size() - 1));
+    } while (depth == -1 &&
+            (timeUsed.size() <= 2 ||
+             timeUsed.at(timeUsed.size() - 1) < 10 ||
+             timeUsed.at(timeUsed.size() - 2) < 10 ||
+             timeUsed.at(timeUsed.size() - 1) * timeUsed.at(timeUsed.size() - 1) / timeUsed.at(timeUsed.size() - 2) < timeLimit));
 
     return moveScores.moves.at(0);
 }
@@ -51,7 +50,7 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
     ReOrderMoves(moves, moveCount);
 
     if (moveCount == 0)
-        return evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board));
+        return evaluator.EvaluateNoMoves(*board, board->IsKingSafe());
     if (board->IsThreefoldRep())
         return 0;
 
@@ -82,18 +81,15 @@ int MiniMax::Quiesce(int alpha, int beta) {
 
     std::array<Move, MAXMOVECOUNT> moves;
     U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
-    int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
+    int moveCount = moveGens[(int) board->GetColor()].GetAttackMoves(&moves, board, attackedSquares);
     ReOrderMoves(moves, moveCount);
 
     if (moveCount == 0)
-        return evaluator.EvaluateNoMoves(*board, moveGens[(int) board->GetColor()].IsKingSafe(board));
+        return evaluator.EvaluateNoMoves(*board, board->IsKingSafe());
     if (board->IsThreefoldRep())
         return 0;
 
     for (int i = 0; i < moveCount; ++i) {
-        if (!moves[i].IsCapture())
-            continue;
-
         board->DoMove(moves[i]);
         int score = -Quiesce(-beta, -alpha);
         board->UndoMove(moves[i]);

@@ -242,3 +242,47 @@ U64 Board::GenerateAttackSquares(Color color) const {
 
     return attacks;
 }
+
+bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard) {
+    U64 kingPos = tempKingBoard;
+    U64 kingPosIndex = Utilities::LSB_Pop(&kingPos);
+
+    U64 enemyRooks = (GetPiecePos(PieceType::Rook) | GetPiecePos(PieceType::Queen)) & tempEnemyBoard;
+    U64 enemyBishops = (GetPiecePos(PieceType::Bishop) | GetPiecePos(PieceType::Queen)) & tempEnemyBoard;
+    U64 enemyKnights = GetPiecePos(PieceType::Knight) & tempEnemyBoard;
+    U64 enemyPawns = GetPiecePos(PieceType::Pawn) & tempEnemyBoard;
+
+    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::North) & enemyRooks)
+        if (Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::North) & enemyRooks) == Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::North) & tempOccuracyBoard))
+            return false;
+    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::East) & enemyRooks)
+        if (Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::East) & enemyRooks) == Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::East) & tempOccuracyBoard))
+            return false;
+    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::South) & enemyRooks)
+        if (Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::South) & enemyRooks) == Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::South) & tempOccuracyBoard))
+            return false;
+    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::West) & enemyRooks)
+        if (Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::West) & enemyRooks) == Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::West) & tempOccuracyBoard))
+            return false;
+
+    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::NorthEast) & enemyBishops)
+        if (Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::NorthEast) & enemyBishops) == Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::NorthEast) & tempOccuracyBoard))
+            return false;
+    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::NorthWest) & enemyBishops)
+        if (Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::NorthWest) & enemyBishops) == Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::NorthWest) & tempOccuracyBoard))
+            return false;
+    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::SouthEast) & enemyBishops)
+        if (Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::SouthEast) & enemyBishops) == Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::SouthEast) & tempOccuracyBoard))
+            return false;
+    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::SouthWest) & enemyBishops)
+        if (Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::SouthWest) & enemyBishops) == Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::SouthWest) & tempOccuracyBoard))
+            return false;
+
+    if (KnightMoves[kingPosIndex] & enemyKnights)
+        return false;
+
+    if (PawnAttacks[(int) turn][kingPosIndex] & enemyPawns)
+        return false;
+
+    return true;
+}
