@@ -20,7 +20,8 @@ public:
 private:
     Color color;
     PieceGen *pieceGen[PIECECOUNT];
-
+    static void RemoveIllegal(std::array<Move, MAXMOVECOUNT> *moves, U8 *moveCount, Board *board, U64 attackedSquares);
+    static bool IsIllegal(Board *board, unsigned long long int attackedSquares, Move move);
 };
 
 #endif // MOVE_GEN

@@ -9,48 +9,48 @@
 class Move {
 public:
     Move() = default;
-    explicit Move(MoveType type) : move(0)/*, type(type), capturedPiece(PieceType::None)*/ {
+    explicit Move(MoveType type) : move(0), type(type), capturedPiece(PieceType::None) {
         SetType(type);
     };
 
-    Move(MoveType type, Square from, Square to) : move(0)/*, type(type), from(from), to(to), capturedPiece(PieceType::None)*/ {
+    Move(MoveType type, Square from, Square to) : move(0), type(type), from(from), to(to), capturedPiece(PieceType::None) {
         SetType(type);
         SetFrom(from);
         SetTo(to);
     };
 
-    Move(MoveType type, Square from, Square to, PieceType capturedPiece) : move(0)/*, type(type), from(from), to(to), capturedPiece(capturedPiece)*/ {
+    Move(MoveType type, Square from, Square to, PieceType capturedPiece) : move(0), type(type), from(from), to(to), capturedPiece(capturedPiece) {
         SetType(type);
         SetFrom(from);
         SetTo(to);
         SetCapture(capturedPiece);
     };
 
-    [[nodiscard]] inline std::string ToString() const;
+    inline std::string ToString() const;
     // Properties
-    [[nodiscard]] inline MoveType GetType() const;
-    [[nodiscard]] inline Square GetFrom() const;
-    [[nodiscard]] inline Square GetTo() const;
-    [[nodiscard]] inline PieceType GetCapturedPiece() const;
-    [[nodiscard]] inline Column GetDEP() const;
-    [[nodiscard]] inline bool IsCapture() const;
-    [[nodiscard]] inline bool IsPromotion() const;
-    [[nodiscard]] inline bool IsCastle() const;
-    [[nodiscard]] inline bool IsEP() const;
-    [[nodiscard]] inline bool IsDEP() const;
-    [[nodiscard]] inline bool IsDC() const;
-    [[nodiscard]] inline bool IsDC(Color color, Castling side) const;
+    inline MoveType GetType() const;
+    inline Square GetFrom() const;
+    inline Square GetTo() const;
+    inline PieceType GetCapturedPiece() const;
+    inline Column GetDEP() const;
+    inline bool IsCapture() const;
+    inline bool IsPromotion() const;
+    inline bool IsCastle() const;
+    inline bool IsEP() const;
+    inline bool IsDEP() const;
+    inline bool IsDC() const;
+    inline bool IsDC(Color color, Castling side) const;
+    inline bool IsDefined() const { return move != 0; };
     inline void SetDisableCastle(Color color, Castling side);
     inline void SetDisableEnPassant(Column col);
 
-
 private:
-    uint32_t move;
+    uint32_t move = 0;
     // These are for debug information
-    /*MoveType type;
+    MoveType type;
     Square from;
     Square to;
-    PieceType capturedPiece;*/
+    PieceType capturedPiece;
 
     inline void SetType(MoveType type);
     inline void SetFrom(Square square);

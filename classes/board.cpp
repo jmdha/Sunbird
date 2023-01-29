@@ -138,8 +138,7 @@ void Board::DoMove(Move &move) {
         }
     }
 
-    turn = Utilities::GetOppositeColor(turn);
-    oppColor = Utilities::GetOppositeColor(turn);
+    SwitchTurn();
     zobrist.IncrementHash();
     ++ply;
 }
@@ -197,8 +196,7 @@ void Board::UndoMove(Move move) {
         }
     }
     EnableCastling(move);
-    turn = Utilities::GetOppositeColor(turn);
-    oppColor = Utilities::GetOppositeColor(turn);
+    SwitchTurn();
     --ply;
 }
 

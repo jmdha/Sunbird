@@ -10,10 +10,8 @@ int Perft::Run(int depth) {
 
     for (int i = 0; i < moveCount; i++) {
         board->DoMove(moves[i]);
-        if (board->IsKingSafe()) {
-            moveTypeCount[(int) moves[i].GetType()]++;
-            leafCount += Run(depth - 1);
-        }
+        moveTypeCount[(int) moves[i].GetType()]++;
+        leafCount += Run(depth - 1);
         board->UndoMove(moves[i]);
     }
 

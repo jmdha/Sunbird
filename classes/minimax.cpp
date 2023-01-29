@@ -34,7 +34,7 @@ MiniMax::MoveVals MiniMax::NegaMax(int depth, MoveVals moveVals) {
         board->DoMove(moveVals.moves[i]);
         moveVals.scores.at(i) = -NegaMax(depth - 1, -(int) PieceValue::Inf, (int) PieceValue::Inf);
         board->UndoMove(moveVals.moves[i]);
-        //printf("%s %d\n", moveVals.moves.at(i).ToString().c_str(), moveVals.scores.at(i));
+        printf("%s %d\n", moveVals.moves.at(i).ToString().c_str(), moveVals.scores.at(i));
     }
 
     return moveVals;
@@ -83,11 +83,6 @@ int MiniMax::Quiesce(int alpha, int beta) {
     U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
     int moveCount = moveGens[(int) board->GetColor()].GetAttackMoves(&moves, board, attackedSquares);
     ReOrderMoves(moves, moveCount);
-
-    if (moveCount == 0)
-        return evaluator.EvaluateNoMoves(*board, board->IsKingSafe());
-    if (board->IsThreefoldRep())
-        return 0;
 
     for (int i = 0; i < moveCount; ++i) {
         board->DoMove(moves[i]);

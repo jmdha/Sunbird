@@ -46,7 +46,7 @@ inline int Evaluator::EvaluateNoMoves(const Board &board, const bool isKingSafe)
 #endif
     // Checkmate
     if (!isKingSafe)
-        return (board.GetOriginalColor() == board.GetColor()) ? (int) PieceValue::Inf : -(int) PieceValue::Inf ;
+        return SideModifier(board, -(int) PieceValue::Inf);
     // Stalemate
     else
         return 0;
