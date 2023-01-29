@@ -18,10 +18,12 @@ Move MiniMax::GetBestMove(int depth) {
             break;
         //printf("Checking depth: %d, time used %llu ms\n", workingDepth, timeUsed.at(timeUsed.size() - 1));
     } while (depth == -1 &&
-            (timeUsed.size() <= 2 ||
-             timeUsed.at(timeUsed.size() - 1) < 10 ||
-             timeUsed.at(timeUsed.size() - 2) < 10 ||
-             timeUsed.at(timeUsed.size() - 1) * timeUsed.at(timeUsed.size() - 1) / timeUsed.at(timeUsed.size() - 2) < timeLimit));
+            // If iterative it will do what's below
+            (workingDepth < 1000/*Relevant to late game where each iteration is 0ms*/ && (
+                 timeUsed.size() <= 2 ||
+                 timeUsed.at(timeUsed.size() - 1) < 10 ||
+                 timeUsed.at(timeUsed.size() - 2) < 10 ||
+                 timeUsed.at(timeUsed.size() - 1) * timeUsed.at(timeUsed.size() - 1) / timeUsed.at(timeUsed.size() - 2) < timeLimit)));
 
     return moveScores.moves.at(0);
 }
