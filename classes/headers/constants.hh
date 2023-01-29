@@ -31,7 +31,7 @@
 #define CORNER 0x8100000000000081
 
 //#define DEBUGGING true
-#define STATS true
+//#define STATS true
 
 enum class Color : U8 {
     White,
@@ -51,7 +51,7 @@ enum class PieceType : U8 {
 
 constexpr PieceType pieceTypes[PIECECOUNT] { PieceType::Pawn, PieceType::Knight, PieceType::Bishop, PieceType::Rook, PieceType::Queen, PieceType::King };
 
-enum class PieceValue : U64 {
+enum class PieceValue : int {
     Pawn = 100,
     Knight = 300,
     Bishop = 300,
@@ -60,6 +60,11 @@ enum class PieceValue : U64 {
     King = 20000,
     Inf = 300000,
     None
+};
+
+enum class PawnStructureValue : int {
+	Doubled = -10, // If one pawn is in front of another
+	Connected = 10 // If another pawn is being attacked by the given pawn
 };
 
 enum class PieceChar : char {

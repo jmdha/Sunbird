@@ -35,4 +35,9 @@ void BitShifts::Init () {
         for (const auto & type : pieceTypes)
             for (U8 sq = 0; sq < SQUARECOUNT; sq++)
                 pieceMoves[color][(U8) type][sq] = GeneratePieceMoves((Color) color, type, sq);
+    for (U8 color = 0; color < COLORCOUNT; color++)
+        for (U8 sq = 0; sq < SQUARECOUNT; sq++) {
+            doubledPawns[color][sq] = GenerateDoubledPawns((Color) color, sq);
+            connectedPawns[color][sq] = GenerateConnectedPawns((Color) color, sq);
+        }
 }

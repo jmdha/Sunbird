@@ -1,5 +1,7 @@
 #include "headers/evaluator.hh"
 
+#include "headers/bit_shifts.hh"
+
 Evaluator::~Evaluator() {
 #ifdef STATS
     printf("Evaluator: %d - %llu evaluations\n", (int) oColor, stats.evalCount);
@@ -14,18 +16,40 @@ int Evaluator::EvaluatePieceCount(const Board &board) {
     return value;
 }
 
+int Evaluator::EvaluatePawnStructure(const Board &board) {
+    return EvaluatePawnStructure(board, Color::White) - EvaluatePawnStructure(board, Color::Black);
+}
+
+int Evaluator::EvaluatePawnStructure(const Board &board, Color color) {
+    int value = 0;
+    U64 pawns = board.GetPiecePos(color, PieceType::Pawn);
+    while (pawns) {
+        const U8 pawn = Utilities::LSB_Pop(&pawns);
+        // Doubled Pawns
+        if (C64(pawn) & BitShifts::GetDoubled(color, pawn))
+            value += (int) PawnStructureValue::Doubled;
+        // Connected Pawns
+        U64 connected = board.GetPiecePos(color, PieceType::Pawn) & BitShifts::GetConnected(color, pawn);
+        while (connected) {
+            Utilities::LSB_Pop(&connected);
+            value += (int) PawnStructureValue::Connected;
+        }
+    }
+    return value;
+}
+
 int Evaluator::EvaluatePositionValue(const Board &board) {
     return EvaluatePositionValue(board, Color::White) - EvaluatePositionValue(board, Color::Black);
 }
 
 int Evaluator::EvaluatePositionValue(const Board &board, Color color) {
     int value   = 0;
-    U64 pawns   = board.GetPiecePos(color, PieceType::Pawn)   & board.GetColorBB(color);
-    U64 knights = board.GetPiecePos(color, PieceType::Knight) & board.GetColorBB(color);
-    U64 bishops = board.GetPiecePos(color, PieceType::Bishop) & board.GetColorBB(color);
-    U64 rooks   = board.GetPiecePos(color, PieceType::Rook)   & board.GetColorBB(color);
-    U64 queens  = board.GetPiecePos(color, PieceType::Queen)  & board.GetColorBB(color);
-    U64 kings   = board.GetPiecePos(color, PieceType::King)   & board.GetColorBB(color);
+    U64 pawns   = board.GetPiecePos(color, PieceType::Pawn);
+    U64 knights = board.GetPiecePos(color, PieceType::Knight);
+    U64 bishops = board.GetPiecePos(color, PieceType::Bishop);
+    U64 rooks   = board.GetPiecePos(color, PieceType::Rook);
+    U64 queens  = board.GetPiecePos(color, PieceType::Queen);
+    U64 kings   = board.GetPiecePos(color, PieceType::King);
     
     if (color == Color::White) {
         while (pawns)   value += PosValuePawn      [Utilities::LSB_Pop(&pawns)];

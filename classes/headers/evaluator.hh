@@ -17,6 +17,8 @@ public:
     static int EvaluatePieceCount(const Board &board);
     static int EvaluatePositionValue(const Board &board);
     static int EvaluatePositionValue(const Board &board, Color color);
+    static int EvaluatePawnStructure(const Board &board);
+    static int EvaluatePawnStructure(const Board &board, Color color);
     inline int Evaluate(const Board &board);
     inline int EvaluateNoMoves(const Board &board, bool isKingSafe);
     static inline int SideModifier(const Board &board, int value);
@@ -35,7 +37,7 @@ inline int Evaluator::Evaluate(const Board &board) {
 #ifdef STATS
     ++stats.evalCount;
 #endif
-    int value = EvaluatePieceCount(board) + EvaluatePositionValue(board);
+    int value = EvaluatePieceCount(board) + EvaluatePositionValue(board) + EvaluatePawnStructure(board);
     
     return SideModifier(board, value);
 }

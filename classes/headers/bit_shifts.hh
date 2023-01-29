@@ -19,6 +19,8 @@ public:
     static inline U64 GetAttacks(U64 square, PieceType pieceType) { return pieceAttacks[(int) pieceType][square]; };
     static inline U64 GetBB(U8 sq, PieceType type) { return blockersAndBeyond[(int) type][sq]; };
     static inline U64 GetRing(U8 sq, U8 offset) { return rings[sq][offset]; };
+    static inline U64 GetDoubled(Color col, U8 sq) { return rings[(U8) col][sq]; };
+    static inline U64 GetConnected(Color col, U8 sq) { return rings[(U8) col][sq]; };
     static inline U64 GetMoves(Color color, U8 sq, PieceType type) { return pieceMoves[(U8) color][(U8) type][sq]; };
     static inline U64 Shift(U64 b, Direction dir, int times);
 private:
@@ -30,11 +32,16 @@ private:
     inline static U64 behind[SQUARECOUNT][SQUARECOUNT] = { 0 };
     inline static U64 rings[SQUARECOUNT][7] = { 0 };
 
+    inline static U64 doubledPawns[COLORCOUNT][SQUARECOUNT] = { 0 };
+    inline static U64 connectedPawns[COLORCOUNT][SQUARECOUNT] = { 0 };
+
     inline static U64 GenerateRay(U8 square, DirectionIndex direction);
     inline static U64 GenerateSqRay(U8 from, U8 to);
     inline static U64 GenerateBehind(U8 from, U8 to);
     inline static U64 GenerateBB(U8 sq, PieceType type);
     inline static U64 GenerateRing(U8 sq, U8 offset);
+    inline static U64 GenerateDoubledPawns(Color color, U8 sq);
+    inline static U64 GenerateConnectedPawns(Color color, U8 sq);
     inline static unsigned long long int GeneratePieceMoves(Color color, PieceType type, U8 sq);
 };
 
@@ -140,6 +147,21 @@ unsigned long long int BitShifts::GeneratePieceMoves(Color color, PieceType type
             throw std::invalid_argument("");
     }
     return moves;
+}
+
+U64 BitShifts::GenerateDoubledPawns(Color color, unsigned short sq) {
+    U64 c = C64(sq);
+    if (c & ((color == Color::White) ? ((U64) Row::Row7 | (U64) Row::Row8) : ((U64) Row::Row1 | (U64) Row::Row2)))
+        return 0;
+    return Shift(c, (color == Color::White) ? Direction::North : Direction::South, 1);
+}
+
+U64 BitShifts::GenerateConnectedPawns(Color color, unsigned short sq) {
+    U64 c = C64(sq);
+    if (c & ((color == Color::White) ? ((U64) Row::Row7 | (U64) Row::Row8) : ((U64) Row::Row1 | (U64) Row::Row2)))
+        return 0;
+    return Shift(c, (color == Color::White) ? Direction::NorthEast : Direction::SouthEast, 1) |
+           Shift(c, (color == Color::White) ? Direction::NorthWest : Direction::SouthWest, 1);
 }
 
 #endif // BIT_SHIFTS

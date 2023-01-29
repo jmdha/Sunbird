@@ -15,7 +15,7 @@ Move MiniMax::GetBestMove(int depth) {
         timeUsed.push_back((U64) std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count());
         if (moveScores.scores.at(0) == (U64) PieceValue::Inf)
             break;
-        printf("Checking depth: %d, time used %llu ms\n", workingDepth, timeUsed.at(timeUsed.size() - 1));
+        //printf("Checking depth: %d, time used %llu ms\n", workingDepth, timeUsed.at(timeUsed.size() - 1));
     } while (depth == -1 &&
             // If iterative it will do what's below
             (workingDepth < 1000/*Relevant to late game where each iteration is 0ms*/ && (
