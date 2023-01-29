@@ -34,7 +34,7 @@ MiniMax::MoveVals MiniMax::NegaMax(int depth, MoveVals moveVals) {
         board->DoMove(moveVals.moves[i]);
         moveVals.scores.at(i) = -NegaMax(depth - 1, -(int) PieceValue::Inf, (int) PieceValue::Inf);
         board->UndoMove(moveVals.moves[i]);
-        printf("%s %d\n", moveVals.moves.at(i).ToString().c_str(), moveVals.scores.at(i));
+        //printf("%s %d\n", moveVals.moves.at(i).ToString().c_str(), moveVals.scores.at(i));
     }
 
     return moveVals;
