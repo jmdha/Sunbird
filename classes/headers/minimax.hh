@@ -10,6 +10,7 @@
 #include "../move_gen/headers/move_gen.hh"
 #include "move.hh"
 #include "evaluator.hh"
+#include "transposition_table.hh"
 
 class MiniMax {
 public:
@@ -19,8 +20,10 @@ public:
     };
     MiniMax(Board* board) : board(board), evaluator(Evaluator(board->GetColor())), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {}
     Move GetBestMove(int depth = -1);
-    
+    inline Stats GetStats() const { return stats; };
+
 private:
+    Stats stats = Stats();
     struct MoveVals {
         std::array<Move, MAXMOVECOUNT> moves;
         std::array<int, MAXMOVECOUNT> scores;
@@ -45,6 +48,7 @@ private:
     Board *board;
     MoveGen moveGens[2];
     Evaluator evaluator;
+    //TranspositionTable tt;
 
     MiniMax::MoveVals NegaMax(int depth, MoveVals moveVals = MoveVals());
     int NegaMax(int depth, int alpha, int beta);

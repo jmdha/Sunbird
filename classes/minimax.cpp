@@ -13,10 +13,9 @@ Move MiniMax::GetBestMove(int depth) {
         moveScores = NegaMax(workingDepth++, moveScores);
         auto t1 = std::chrono::steady_clock::now();
         timeUsed.push_back((U64) std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count());
-        moveScores.Sort();
         if (moveScores.scores.at(0) == (U64) PieceValue::Inf)
             break;
-        //printf("Checking depth: %d, time used %llu ms\n", workingDepth, timeUsed.at(timeUsed.size() - 1));
+        printf("Checking depth: %d, time used %llu ms\n", workingDepth, timeUsed.at(timeUsed.size() - 1));
     } while (depth == -1 &&
             // If iterative it will do what's below
             (workingDepth < 1000/*Relevant to late game where each iteration is 0ms*/ && (
@@ -39,6 +38,8 @@ MiniMax::MoveVals MiniMax::NegaMax(int depth, MoveVals moveVals) {
         //printf("%s %d\n", moveVals.moves.at(i).ToString().c_str(), moveVals.scores.at(i));
     }
 
+    moveVals.Sort();
+
     return moveVals;
 }
 
@@ -56,6 +57,7 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
     if (board->IsThreefoldRep())
         return 0;
 
+    Move bestMove;
     for (int i = 0; i < moveCount; ++i) {
         //for (int i = 0; i <= (2 - depth); i++)
             //printf(" ");
@@ -67,8 +69,10 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
 
         if(score >= beta)
             return beta;   //  fail hard beta-cutoff
-        if(score > alpha)
+        if(score > alpha) {
             alpha = score; // alpha acts like max in MiniMax
+            bestMove = moves.at(i);
+        }
     }
 
     return alpha;
@@ -86,15 +90,18 @@ int MiniMax::Quiesce(int alpha, int beta) {
     int moveCount = moveGens[(int) board->GetColor()].GetAttackMoves(&moves, board, attackedSquares);
     ReOrderMoves(moves, moveCount);
 
+    Move bestMove;
     for (int i = 0; i < moveCount; ++i) {
         board->DoMove(moves[i]);
         int score = -Quiesce(-beta, -alpha);
         board->UndoMove(moves[i]);
 
-        if(score >= beta) 
+        if(score >= beta)
             return beta;   //  fail hard beta-cutoff
-        if(score > alpha)
+        if(score > alpha) {
             alpha = score; // alpha acts like max in MiniMax
+            bestMove = moves.at(i);
+        }
     }
 
     return alpha;

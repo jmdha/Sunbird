@@ -1,13 +1,12 @@
 #include <stdexcept>
 #include <string>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include <string>
 
 #include "../../classes/headers/constants.hh"
 #include "../../classes/headers/board.hh"
 #include "../../classes/headers/board_importer.hh"
-#include "../../classes/headers/move.hh"
 
 int main(int argc, char* argv[]) {
     std::string FEN = std::string(argv[1]);
