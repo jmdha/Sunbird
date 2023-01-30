@@ -13,6 +13,7 @@ set(sources
 add_executable(main builds/main.cpp ${sources})
 add_executable(chess_engine builds/engine.cpp ${sources})
 add_executable(move_tree builds/move_tree.cpp ${sources} "src/move_tree_gen.cpp" "src/move_tree_node.cpp")
+add_executable(perft builds/perft.cpp ${sources} "src/perft.cpp")
 
 include_directories("src" "src/headers" "src/move_gen" "src/move_gen/headers")
 
