@@ -33,27 +33,3 @@ U8 MoveGen::GetAttackMoves(std::array<Move, 128> *moves, Board *board, unsigned 
     //RemoveIllegal(moves, &moveCount, board, attackedSquares);
     return moveCount;
 }
-
-void MoveGen::RemoveIllegal(std::array<Move, 128> *moves, U8 *moveCount, Board *board,
-                            unsigned long long int attackedSquares) {
-    for (U8 i = 0; i < *moveCount; i++) {
-        if (IsIllegal(board, attackedSquares, moves->at(i))) {
-            if (*moveCount != 1 && i != *moveCount - 1)
-                moves->at(i) = moves->at(--*moveCount);
-            else {
-                moves->at(i) = Move();
-                (*moveCount)--;
-            }
-        }
-    }
-}
-
-bool MoveGen::IsIllegal(Board *board, unsigned long long int attackedSquares, Move move) {
-    bool kingSafe;
-    board->DoMove(move);
-    board->SwitchTurn();
-    kingSafe = board->IsKingSafe();
-    board->SwitchTurn();
-    board->UndoMove(move);
-    return !kingSafe;
-}
