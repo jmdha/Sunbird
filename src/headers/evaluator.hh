@@ -15,9 +15,9 @@ public:
     ~Evaluator();
     // Evaluation
     static int EvaluatePieceCount(const Board &board);
-    static int EvaluatePositionValue(const Board &board);
+    static inline int EvaluatePositionValue(const Board &board);
     static int EvaluatePositionValue(const Board &board, Color color);
-    static int EvaluatePawnStructure(const Board &board);
+    static inline int EvaluatePawnStructure(const Board &board);
     static int EvaluatePawnStructure(const Board &board, Color color);
     inline int Evaluate(const Board &board);
     inline int EvaluateNoMoves(const Board &board, bool isKingSafe);
@@ -52,6 +52,14 @@ inline int Evaluator::EvaluateNoMoves(const Board &board, const bool isKingSafe)
     // Stalemate
     else
         return 0;
+}
+
+inline int Evaluator::EvaluatePositionValue(const Board &board) {
+    return EvaluatePositionValue(board, Color::White) - EvaluatePositionValue(board, Color::Black);
+}
+
+inline int Evaluator::EvaluatePawnStructure(const Board &board) {
+    return EvaluatePawnStructure(board, Color::White) - EvaluatePawnStructure(board, Color::Black);
 }
 
 inline int Evaluator::SideModifier(const Board &board, const int value) {

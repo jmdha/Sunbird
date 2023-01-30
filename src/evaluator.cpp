@@ -16,27 +16,20 @@ int Evaluator::EvaluatePieceCount(const Board &board) {
     return value;
 }
 
-int Evaluator::EvaluatePawnStructure(const Board &board) {
-    return EvaluatePawnStructure(board, Color::White) - EvaluatePawnStructure(board, Color::Black);
-}
-
 int Evaluator::EvaluatePawnStructure(const Board &board, Color color) {
     int value = 0;
-    U64 pawns = board.GetPiecePos(color, PieceType::Pawn);
-    while (pawns) {
-        const U8 pawn = Utilities::LSB_Pop(&pawns);
+    const U64 pawns = board.GetPiecePos(color, PieceType::Pawn);
+    U64 tempPawns = board.GetPiecePos(color, PieceType::Pawn);
+    while (tempPawns) {
+        const U8 pawn = Utilities::LSB_Pop(&tempPawns);
         // Doubled Pawns
-        if (C64(pawn) & BitShifts::GetDoubled(color, pawn))
+        if (pawns & BitShifts::GetDoubled(color, pawn))
             value += (int) PawnStructureValue::Doubled;
         // Connected Pawns
         value += (int) PawnStructureValue::Connected *
                 Utilities::PopCount(board.GetPiecePos(color, PieceType::Pawn) & BitShifts::GetConnected(color, pawn));
     }
     return value;
-}
-
-int Evaluator::EvaluatePositionValue(const Board &board) {
-    return EvaluatePositionValue(board, Color::White) - EvaluatePositionValue(board, Color::Black);
 }
 
 int Evaluator::EvaluatePositionValue(const Board &board, Color color) {
