@@ -21,7 +21,8 @@ U8 PieceGen::GetSlidingMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board
         U64 quietMoves = pieces;
         while (quietMoves) {
             U8 lsb = Utilities::LSB_Pop(&quietMoves);
-            if ((isKingSafe && ((C64(lsb) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ BitShifts::Shift(C64(lsb), Utilities::GetOppositeDirection(direction), counter) | C64(lsb))))
+            U64 oriPiece = BitShifts::Shift(C64(lsb), Utilities::GetOppositeDirection(direction), counter);
+            if ((isKingSafe && ((oriPiece & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ oriPiece | C64(lsb))))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) (lsb - (int) direction * counter), (Square) lsb));
         }
 
@@ -43,7 +44,8 @@ U8 PieceGen::GetSlidingAttacks(std::array<Move, MAXMOVECOUNT> *moves, Board *boa
 
         while (attackMoves) {
             U64 lsb = Utilities::LSB_Pop(&attackMoves);
-            if ((isKingSafe && ((C64(lsb) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ BitShifts::Shift(C64(lsb), Utilities::GetOppositeDirection(direction), counter)) | C64(lsb), board->GetColorBB(oppColor) ^ C64(lsb)))
+            U64 oriPiece = BitShifts::Shift(C64(lsb), Utilities::GetOppositeDirection(direction), counter);
+            if ((isKingSafe && ((oriPiece & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ oriPiece) | C64(lsb), board->GetColorBB(oppColor) ^ C64(lsb)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) (lsb - (int) direction * counter), (Square) lsb, board->GetType((Square) lsb)));
         }
 
