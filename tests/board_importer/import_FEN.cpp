@@ -2,7 +2,7 @@
 #include <string>
 #include <cstdlib>
 
-#include "../../classes/headers/board_importer.hh"
+#include "board_importer.hh"
 
 int main(int argc, char* argv[]) {
     std::string FEN = std::string(argv[1]);

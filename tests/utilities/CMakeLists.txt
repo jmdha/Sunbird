@@ -1,19 +1,19 @@
 # Tests
 ## GetPieceChar
 ### From char
-add_executable(GetPieceCharFromChar tests/utilities/get_piece_char_from_char.cpp "classes/headers/utilities.hh")
+add_executable(GetPieceCharFromChar tests/utilities/get_piece_char_from_char.cpp "src/headers/utilities.hh")
 
 add_test(Utilities_GetPieceChar_Char_P GetPieceCharFromChar 80 P)
 add_test(Utilities_GetPieceChar_Char_k GetPieceCharFromChar 107 k)
 
 ### From type
-add_executable(GetPieceCharFromType tests/utilities/get_piece_char_from_type.cpp "classes/headers/utilities.hh")
+add_executable(GetPieceCharFromType tests/utilities/get_piece_char_from_type.cpp "src/headers/utilities.hh")
 
 add_test(Utilities_GetPieceChar_Type_P GetPieceCharFromType 80 0 0)
 add_test(Utilities_GetPieceChar_Type_k GetPieceCharFromType 107 5 1)
 
 ## GetPieceType
-add_executable(GetPieceType tests/utilities/get_piece_type.cpp "classes/headers/utilities.hh")
+add_executable(GetPieceType tests/utilities/get_piece_type.cpp "src/headers/utilities.hh")
 
 add_test(Utilities_GetPieceType_P GetPieceType 0 P)
 add_test(Utilities_GetPieceType_p GetPieceType 0 p)
@@ -24,7 +24,7 @@ add_test(Utilities_GetPieceType_Q GetPieceType 4 Q)
 add_test(Utilities_GetPieceType_K GetPieceType 5 K)
 
 ## GetPieceColor
-add_executable(GetPieceColor tests/utilities/get_piece_color.cpp "classes/headers/utilities.hh")
+add_executable(GetPieceColor tests/utilities/get_piece_color.cpp "src/headers/utilities.hh")
 
 add_test(Utilities_GetPieceColor_P GetPieceColor 0 P)
 add_test(Utilities_GetPieceColor_p GetPieceColor 1 p)
@@ -32,7 +32,7 @@ add_test(Utilities_GetPieceColor_R GetPieceColor 0 R)
 add_test(Utilities_GetPieceColor_r GetPieceColor 1 r)
 
 ## GetSquare
-add_executable(GetSquare tests/utilities/get_square.cpp "classes/headers/utilities.hh")
+add_executable(GetSquare tests/utilities/get_square.cpp "src/headers/utilities.hh")
 
 add_test(Utilities_GetSquare_A1 GetSquare 0 0 0)
 add_test(Utilities_GetSquare_A2 GetSquare 1 1 0)

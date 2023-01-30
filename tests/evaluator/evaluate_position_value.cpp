@@ -2,10 +2,10 @@
 #include <string>
 #include <stdlib.h>
 
-#include "../../classes/headers/constants.hh"
-#include "../../classes/headers/board.hh"
-#include "../../classes/headers/board_importer.hh"
-#include "../../classes/headers/evaluator.hh"
+#include "constants.hh"
+#include "board.hh"
+#include "board_importer.hh"
+#include "evaluator.hh"
 
 int main(int argc, char* argv[]) {
     Board board = Board();

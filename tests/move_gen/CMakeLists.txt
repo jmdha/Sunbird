@@ -1,6 +1,6 @@
 # Tests
 ## King Safe
-add_executable(IsKingSafe tests/move_gen/king_safe.cpp "classes/bit_shifts.cpp" "classes/board.cpp" "classes/board_importer.cpp")
+add_executable(IsKingSafe tests/move_gen/king_safe.cpp "src/bit_shifts.cpp" "src/board.cpp" "src/board_importer.cpp")
 
 add_test(MoveGen_IsKingSafe_StartPos IsKingSafe "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" 1)
 add_test(MoveGen_IsKingSafe_PureRook IsKingSafe "bbbbbbbb/bbbbbbbb/bbbbbbbb/1bbbbbbb/b1bbbbb1/bb1bbb1b/bbb1b1bb/bbbbKbbb w - - 0 1" 1)
@@ -25,8 +25,8 @@ add_test(MoveGen_IsKingSafe_Blocked_Bishops_Enemy IsKingSafe "8/8/8/8/1b6/8/3r4/
 add_test(MoveGen_IsKingSafe_Multi IsKingSafe "r3k2r/p4ppp/1pnbB3/4p3/PpP5/3P1Pn1/8/3Kq3 w kq - 0 23" 0)
 
 ## PawnMoves
-add_executable(GeneratePawnMoves tests/move_gen/pawn_move.cpp "classes/bit_shifts.cpp" "classes/board.cpp" "classes/board_importer.cpp"
-        "classes/move_gen/piece_gen.cpp" "classes/move_gen/pawn_gen.cpp")
+add_executable(GeneratePawnMoves tests/move_gen/pawn_move.cpp "src/bit_shifts.cpp" "src/board.cpp" "src/board_importer.cpp"
+        "src/move_gen/piece_gen.cpp" "src/move_gen/pawn_gen.cpp")
 
 add_test(MoveGen_Pawn_Move_Initial GeneratePawnMoves            16  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" 1)
 add_test(MoveGen_Pawn_Move_W_OnlyPawns GeneratePawnMoves        16  "8/pppppppp/8/8/8/8/PPPPPPPP/8 w KQkq - 0 1" 1)
@@ -76,8 +76,8 @@ add_test(MoveGen_Pawn_Promotion_Capture1W GeneratePawnMoves   24   "r1q1kr1n/1P4
 add_test(MoveGen_Pawn_Promotion_Capture1B GeneratePawnMoves   24   "4k3/8/8/8/8/8/1p4p1/N1Q1KB1R b - - 0 1" 1)
 
 ## RookMoves
-add_executable(GenerateRookMoves tests/move_gen/rook_move.cpp "classes/bit_shifts.cpp" "classes/board.cpp" "classes/board_importer.cpp"
-        "classes/move_gen/piece_gen.cpp" "classes/move_gen/rook_gen.cpp")
+add_executable(GenerateRookMoves tests/move_gen/rook_move.cpp "src/bit_shifts.cpp" "src/board.cpp" "src/board_importer.cpp"
+        "src/move_gen/piece_gen.cpp" "src/move_gen/rook_gen.cpp")
 
 add_test(MoveGen_Rook_Move_W_Corner1 GenerateRookMoves    14  "R7/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
 add_test(MoveGen_Rook_Move_W_Corner2 GenerateRookMoves    14  "7R/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
@@ -117,8 +117,8 @@ add_test(MoveGen_Rook_KingSafety_Capture GenerateRookMoves   1   "8/3k4/8/8/8/8/
 add_test(MoveGen_Rook_KingSafety_None GenerateRookMoves   0   "8/3k4/8/8/3R4/8/3R2r1/8 b - - 0 1" 0)
 
 ## BishopMoves
-add_executable(GenerateBishopMoves tests/move_gen/bishop_move.cpp "classes/bit_shifts.cpp" "classes/board.cpp" "classes/board_importer.cpp"
-        "classes/move_gen/piece_gen.cpp" "classes/move_gen/bishop_gen.cpp")
+add_executable(GenerateBishopMoves tests/move_gen/bishop_move.cpp "src/bit_shifts.cpp" "src/board.cpp" "src/board_importer.cpp"
+        "src/move_gen/piece_gen.cpp" "src/move_gen/bishop_gen.cpp")
 
 add_test(MoveGen_Bishop_Move_W_Corner1 GenerateBishopMoves    7  "B7/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
 add_test(MoveGen_Bishop_Move_W_Corner2 GenerateBishopMoves    7  "7B/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
@@ -158,8 +158,8 @@ add_test(MoveGen_Bishop_KingSafety_Capture GenerateBishopMoves   1   "8/2k5/8/8/
 add_test(MoveGen_Bishop_KingSafety_None GenerateBishopMoves   0   "8/2k5/8/4B3/5B2/8/3b4/8 b - - 0 1" 0)
 
 ## QueenMoves
-add_executable(GenerateQueenMoves tests/move_gen/queen_move.cpp "classes/bit_shifts.cpp" "classes/board.cpp" "classes/board_importer.cpp"
-        "classes/move_gen/piece_gen.cpp" "classes/move_gen/queen_gen.cpp")
+add_executable(GenerateQueenMoves tests/move_gen/queen_move.cpp "src/bit_shifts.cpp" "src/board.cpp" "src/board_importer.cpp"
+        "src/move_gen/piece_gen.cpp" "src/move_gen/queen_gen.cpp")
 
 add_test(MoveGen_Queen_Move_W_Corner1 GenerateQueenMoves    21  "Q7/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
 add_test(MoveGen_Queen_Move_W_Corner2 GenerateQueenMoves    21  "7Q/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
@@ -199,8 +199,8 @@ add_test(MoveGen_Queen_KingSafety_Capture GenerateQueenMoves   1   "7Q/8/8/8/8/8
 add_test(MoveGen_Queen_KingSafety_None GenerateQueenMoves   0   "7Q/8/5Q2/8/8/8/8/k6q b - - 0 1" 0)
 
 ## KnightMoves
-add_executable(GenerateKnightMoves tests/move_gen/knight_move.cpp "classes/bit_shifts.cpp" "classes/board.cpp" "classes/board_importer.cpp"
-        "classes/move_gen/piece_gen.cpp" "classes/move_gen/knight_gen.cpp")
+add_executable(GenerateKnightMoves tests/move_gen/knight_move.cpp "src/bit_shifts.cpp" "src/board.cpp" "src/board_importer.cpp"
+        "src/move_gen/piece_gen.cpp" "src/move_gen/knight_gen.cpp")
 
 add_test(MoveGen_Knight_Move_W_Corner1 GenerateKnightMoves    2  "N7/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
 add_test(MoveGen_Knight_Move_W_Corner2 GenerateKnightMoves    2  "7N/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
@@ -222,8 +222,8 @@ add_test(MoveGen_Knight_KingSafety_Move GenerateKnightMoves   2   "8/8/3K4/8/8/b
 add_test(MoveGen_Knight_KingSafety_Capture GenerateKnightMoves   1   "8/4N3/8/3n1k2/8/8/8/8 b - - 0 1" 0)
 
 ## KingMoves
-add_executable(GenerateKingMoves tests/move_gen/king_move.cpp "classes/bit_shifts.cpp" "classes/board.cpp" "classes/board_importer.cpp"
-        "classes/move_gen/piece_gen.cpp" "classes/move_gen/king_gen.cpp")
+add_executable(GenerateKingMoves tests/move_gen/king_move.cpp "src/bit_shifts.cpp" "src/board.cpp" "src/board_importer.cpp"
+        "src/move_gen/piece_gen.cpp" "src/move_gen/king_gen.cpp")
 
 add_test(MoveGen_King_Move_W_Corner1 GenerateKingMoves    3  "K7/8/8/8/8/8/8/8 w - " 1)
 add_test(MoveGen_King_Move_W_Corner2 GenerateKingMoves    3  "7K/8/8/8/8/8/8/8 w - " 1)

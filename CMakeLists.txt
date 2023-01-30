@@ -6,16 +6,17 @@ set(CMAKE_CXX_STANDARD 17)
 include(CTest)
 enable_testing()
 
-file(GLOB_RECURSE sources CONFIGURE_DEPENDS classes/*.cpp classes/*.hh)
+set(sources
+        src/bit_shifts.cpp src/board.cpp src/board_importer.cpp src/evaluator.cpp src/minimax.cpp
+        src/move_gen/move_gen.cpp src/move_gen/piece_gen.cpp src/move_gen/bishop_gen.cpp src/move_gen/king_gen.cpp src/move_gen/knight_gen.cpp src/move_gen/pawn_gen.cpp src/move_gen/queen_gen.cpp src/move_gen/rook_gen.cpp)
 
 add_executable(main builds/main.cpp ${sources})
-add_executable(test_run builds/test_run.cpp ${sources})
 add_executable(chess_engine builds/engine.cpp ${sources})
-add_executable(chess_engine_fen builds/engine_fen.cpp ${sources})
-add_executable(move_tree builds/move_tree.cpp ${sources})
-add_executable(testBuild builds/test.cpp ${sources})
+add_executable(move_tree builds/move_tree.cpp ${sources} "src/move_tree_gen.cpp" "src/move_tree_node.cpp")
+
+include_directories("src" "src/headers" "src/move_gen" "src/move_gen/headers")
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
-include(tests/CMakeTests.txt)
+include("tests/CMakeLists.txt")
