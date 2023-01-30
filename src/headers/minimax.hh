@@ -14,16 +14,10 @@
 
 class MiniMax {
 public:
-    struct Stats {
-        U64 negamaxExpansionCount = 0;
-        U64 quiesceExpansionCount = 0;
-    };
     MiniMax(Board* board) : board(board), evaluator(Evaluator(board->GetColor())), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {}
     Move GetBestMove(int depth = -1);
-    inline Stats GetStats() const { return stats; };
 
 private:
-    Stats stats = Stats();
     struct MoveVals {
         std::array<Move, MAXMOVECOUNT> moves;
         std::array<int, MAXMOVECOUNT> scores;

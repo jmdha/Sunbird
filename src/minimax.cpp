@@ -46,7 +46,7 @@ MiniMax::MoveVals MiniMax::NegaMax(int depth, MoveVals moveVals) {
 int MiniMax::NegaMax(int depth, int alpha, int beta) {
     if (depth == 0)
         return Quiesce(alpha, beta);
-    
+
     std::array<Move, MAXMOVECOUNT> moves;
     U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
