@@ -10,9 +10,8 @@ int main(int argc, char* argv[]) {
     Board board = Board();
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     int expectedEval = std::atoi(argv[1]);
-    Evaluator evaluator = Evaluator(board.GetColor());
 
-    int eval = evaluator.EvaluatePieceCount(board);
+    int eval = Evaluator::EvaluatePieceCount(board);
 
     if (eval == expectedEval)
         exit(EXIT_SUCCESS);

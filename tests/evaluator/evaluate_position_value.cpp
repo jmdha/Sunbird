@@ -11,9 +11,8 @@ int main(int argc, char* argv[]) {
     Board board = Board();
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     int expectedEval = std::atoi(argv[1]);
-    Evaluator evaluator = Evaluator(board.GetColor());
 
-    int eval = evaluator.EvaluatePositionValue(board);
+    int eval = Evaluator::EvaluatePositionValue(board);
 
     if (eval == expectedEval)
         exit(EXIT_SUCCESS);
