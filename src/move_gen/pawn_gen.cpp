@@ -72,7 +72,7 @@ U8 PawnGen::GetAttackMoves(std::array<Move, 128> *moves, Board *board, unsigned 
             U64 toSquare = Utilities::LSB_Pop(&captures);
             U64 capturePiece = Utilities::LSB( BitShifts::Shift(C64(toSquare), down, 1));
             if ((isKingSafe && (((C64(lsb) | C64(capturePiece)) & attackedSquares) == 0)) ||
-            board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb) ^ C64(capturePiece)) | C64(toSquare),  board->GetColorBB(oppColor) ^ C64(capturePiece) | C64(lsb)))
+            board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb) ^ C64(capturePiece)) | C64(toSquare),  board->GetColorBB(oppColor) ^ C64(capturePiece) | C64(toSquare)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::EPCapture, (Square) lsb, (Square) toSquare, PieceType::Pawn));
         }
     }
