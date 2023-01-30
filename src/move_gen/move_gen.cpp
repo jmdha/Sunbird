@@ -33,3 +33,12 @@ U8 MoveGen::GetAttackMoves(std::array<Move, 128> *moves, Board *board, unsigned 
     //RemoveIllegal(moves, &moveCount, board, attackedSquares);
     return moveCount;
 }
+
+U8 MoveGen::GetQuietMoves(std::array<Move, 128> *moves, Board *board, unsigned long long int attackedSquares) {
+    U8 moveCount = 0;
+    bool isKingSafe = board->IsKingSafe();
+    for (const auto & gen : pieceGen)
+        moveCount += gen->GetQuietMoves(moves, board, attackedSquares, isKingSafe, moveCount);
+    //RemoveIllegal(moves, &moveCount, board, attackedSquares);
+    return moveCount;
+}

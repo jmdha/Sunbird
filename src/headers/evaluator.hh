@@ -48,7 +48,7 @@ inline int Evaluator::EvaluateNoMoves(const Board &board, const bool isKingSafe)
 #endif
     // Checkmate
     if (!isKingSafe)
-        return SideModifier(board, -(int) PieceValue::Inf);
+        return -(int) PieceValue::Inf;
     // Stalemate
     else
         return 0;

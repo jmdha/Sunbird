@@ -50,7 +50,6 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
     std::array<Move, MAXMOVECOUNT> moves;
     U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
     int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
-    ReOrderMoves(moves, moveCount);
 
     if (moveCount == 0)
         return evaluator.EvaluateNoMoves(*board, board->IsKingSafe());
@@ -79,16 +78,21 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
 }
 
 int MiniMax::Quiesce(int alpha, int beta) {
+    std::array<Move, MAXMOVECOUNT> moves;
+    U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
+    int moveCount = moveGens[(int) board->GetColor()].GetAttackMoves(&moves, board, attackedSquares);
+
+    if (moveCount == 0 && (attackedSquares & board->GetPiecePos(board->GetColor(), PieceType::King))) {
+        moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moves, board, attackedSquares);
+        if (moveCount == 0)
+            return evaluator.EvaluateNoMoves(*board, false);
+    }
+
     int standPat = evaluator.Evaluate(*board);
     if (standPat >= beta)
         return beta;
     if (alpha < standPat)
         alpha = standPat;
-
-    std::array<Move, MAXMOVECOUNT> moves;
-    U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
-    int moveCount = moveGens[(int) board->GetColor()].GetAttackMoves(&moves, board, attackedSquares);
-    ReOrderMoves(moves, moveCount);
 
     Move bestMove;
     for (int i = 0; i < moveCount; ++i) {
