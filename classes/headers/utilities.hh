@@ -3,7 +3,7 @@
 
 #include <strings.h>
 #include <stdexcept>
-#include <math.h>
+#include <cmath>
 #include <bitset>
 
 #include "constants.hh"

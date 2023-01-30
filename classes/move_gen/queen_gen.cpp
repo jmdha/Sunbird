@@ -5,7 +5,7 @@ U8 QueenGen::GetQuietMoves (std::array<Move, MAXMOVECOUNT> *moves, Board *board,
 
     U64 pieces = board->GetPiecePos(color, PieceType::Queen);
     for (const auto & dir : queenDirections)
-        moveCount += GetSlidingMoves(moves, board, pieces, dir, isKingSafe, startIndex + moveCount);
+        moveCount += GetSlidingMoves(moves, board, pieces, dir, isKingSafe, startIndex + moveCount, attackedSquares);
 
     return moveCount;
 }
@@ -15,7 +15,7 @@ U8 QueenGen::GetAttackMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board,
 
     U64 pieces = board->GetPiecePos(color, PieceType::Queen);
     for (const auto & dir : queenDirections)
-        moveCount += GetSlidingAttacks(moves, board, pieces, dir, isKingSafe, startIndex + moveCount);
+        moveCount += GetSlidingAttacks(moves, board, pieces, dir, isKingSafe, startIndex + moveCount, attackedSquares);
 
     return moveCount;
 }

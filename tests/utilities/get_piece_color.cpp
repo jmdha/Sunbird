@@ -1,9 +1,9 @@
 #include <stdexcept>
 #include <string>
-#include <stdlib.h>
+#include <cstdlib>
 
-#include "../../classes/headers/constants.hh"
-#include "../../classes/headers/utilities.hh"
+#include "constants.hh"
+#include "utilities.hh"
 
 int main(int argc, char* argv[]) {
     Color expectedColor = (Color) std::atoi(argv[1]);

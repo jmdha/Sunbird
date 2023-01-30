@@ -1,7 +1,0 @@
-include(tests/board/test.txt)
-include(tests/board_importer/test.txt)
-include(tests/utilities/test.txt)
-include(tests/evaluator/test.txt)
-include(tests/move_gen/test.txt)
-include(tests/minimax/test.txt)
-include(tests/perft/test.txt)

@@ -1,16 +1,13 @@
 #include <stdexcept>
 #include <string>
-#include <stdlib.h>
+#include <cstdlib>
 
-#include <string>
-
-#include "../../classes/headers/constants.hh"
-#include "../../classes/headers/board.hh"
-#include "../../classes/headers/board_importer.hh"
-#include "../../classes/headers/move.hh"
-#include "../../classes/headers/minimax.hh"
+#include "board.hh"
+#include "board_importer.hh"
+#include "minimax.hh"
 
 int main(int argc, char* argv[]) {
+    BitShifts::Init();
     std::string fen = std::string(argv[1]);
     Board board = Board();
     BoardImporter::ImportMoveSequence(&board, fen);

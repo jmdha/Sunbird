@@ -1,4 +1,4 @@
-#include "headers/knight_gen.hh"
+#include "knight_gen.hh"
 
 U8 KnightGen::GetQuietMoves(std::array<Move, 128> *moves, Board *board, unsigned long long int attackedSquares,
                           bool isKingSafe, unsigned short startIndex) {
@@ -13,7 +13,7 @@ U8 KnightGen::GetQuietMoves(std::array<Move, 128> *moves, Board *board, unsigned
         U64 quietMoves = KnightMoves[lsbPiece] & (~board->GetOccupiedBB());
         while (quietMoves) {
             U64 lsb = Utilities::LSB_Pop(&quietMoves);
-            if (isKingSafe || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsbPiece)) | C64(lsb), board->GetColorBB(oppColor) ^ C64(lsb)))
+            if ((isKingSafe && ((C64(lsb) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsbPiece)) | C64(lsb), board->GetColorBB(oppColor) ^ C64(lsb)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) lsbPiece, (Square) lsb));
         }
     }
@@ -34,7 +34,7 @@ U8 KnightGen::GetAttackMoves(std::array<Move, 128> *moves, Board *board, unsigne
         U64 attackMoves = KnightMoves[lsbPiece] & board->GetColorBB(oppColor);
         while (attackMoves) {
             U64 lsb = Utilities::LSB_Pop(&attackMoves);
-            if (isKingSafe || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsbPiece)) | C64(lsb), board->GetColorBB(oppColor) ^ C64(lsb)))
+            if ((isKingSafe && ((C64(lsb) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsbPiece)) | C64(lsb), board->GetColorBB(oppColor) ^ C64(lsb)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) lsbPiece, (Square) lsb, board->GetType((Square) lsb)));
         }
     }

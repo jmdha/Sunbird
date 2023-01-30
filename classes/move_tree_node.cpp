@@ -1,4 +1,4 @@
-#include "headers/move_tree_node.hh"
+#include "move_tree_node.hh"
 
 MoveTreeNode::MoveTreeNode(int materialScore, int positionScore) : materialScore(materialScore), positionScore(positionScore) {
     score = materialScore + positionScore;

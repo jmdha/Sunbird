@@ -1,9 +1,9 @@
 #include <stdexcept>
 #include <string>
-#include <stdlib.h>
+#include <cstdlib>
 
-#include "../../classes/headers/constants.hh"
-#include "../../classes/headers/utilities.hh"
+#include "constants.hh"
+#include "utilities.hh"
 
 int main(int argc, char* argv[]) {
     Square expectedSquare = (Square) std::atoi((argv[1]));

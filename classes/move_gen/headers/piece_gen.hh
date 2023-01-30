@@ -1,10 +1,10 @@
 #ifndef PIECE_HH
 #define PIECE_HH
 
-#include "../../headers/constants.hh"
-#include "../../headers/move.hh"
-#include "../../headers/board.hh"
-#include "../../headers/utilities.hh"
+#include "constants.hh"
+#include "move.hh"
+#include "board.hh"
+#include "utilities.hh"
 
 
 class PieceGen {
@@ -16,8 +16,12 @@ public:
 protected:
     Color color;
     Color oppColor;
-    U8 GetSlidingMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 pieces, Direction direction, bool isKingSafe, U8 startIndex);
-    U8 GetSlidingAttacks(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 pieces, Direction direction, bool isKingSafe, U8 startIndex);
+
+    U8 GetSlidingMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 pieces, Direction direction,
+                       bool isKingSafe, U8 startIndex, U64 attackedSquares);
+
+    U8 GetSlidingAttacks(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 pieces, Direction direction,
+                         bool isKingSafe, U8 startIndex, U64 attackedSquares);
 
     static inline void AppendMove(std::array<Move, MAXMOVECOUNT> *moves, int index, U8* moveCount, Move move);
 };

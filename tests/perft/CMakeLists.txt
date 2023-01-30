@@ -1,6 +1,6 @@
 # Tests
 ## Run From Position
-add_executable(RunPosition tests/perft/run_from_position.cpp ${sources})
+add_executable(RunPosition tests/perft/run_from_position.cpp ${sources} "classes/perft.cpp")
 
 ### Initial Pos
 add_test(Perft_RunPosition_Init_0 RunPosition 1 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" 0)

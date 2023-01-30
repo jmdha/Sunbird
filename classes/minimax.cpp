@@ -1,5 +1,5 @@
 #include <chrono>
-#include "headers/minimax.hh"
+#include "minimax.hh"
 
 Move MiniMax::GetBestMove(int depth) {
     U64 timeLimit = 2000;

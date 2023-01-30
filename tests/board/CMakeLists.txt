@@ -1,6 +1,6 @@
 # Tests
 ## Import FEN
-add_executable(Undo tests/board/undo_move.cpp ${sources})
+add_executable(Undo tests/board/undo_move.cpp "classes/board.cpp" "classes/board_importer.cpp")
 
 add_test(Board_UndoMove_Capture_Bishop Undo "8/7b/8/8/8/8/8/1B6 w - - 0 1" "b1h7")
 add_test(Board_UndoMove_Quiet_D4 Undo "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" "d2d4")

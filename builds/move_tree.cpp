@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "../classes/headers/board.hh"
-#include "../classes/headers/board_importer.hh"
-#include "../classes/headers/move_tree_gen.hh"
+#include "board.hh"
+#include "board_importer.hh"
+#include "move_tree_gen.hh"
 
 int main(int argc, char* argv[]) {
     BitShifts::Init();

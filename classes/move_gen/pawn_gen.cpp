@@ -11,7 +11,7 @@ U8 PawnGen::GetQuietMoves(std::array<Move, 128> *moves, Board *board, unsigned l
 
         // Single push
         if (!(board->GetOccupiedBB() & singleMove[(int) lsb]))
-            if (isKingSafe || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | BitShifts::Shift(C64(lsb), up, 1))) {
+            if ((isKingSafe && ((C64(lsb) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | BitShifts::Shift(C64(lsb), up, 1))) {
                 // If Promotion
                 if (C64(lsb) & (U64) promotionRank) {
                     AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::BPromotion, (Square) lsb, (Square) (lsb + (int) up)));
@@ -24,7 +24,7 @@ U8 PawnGen::GetQuietMoves(std::array<Move, 128> *moves, Board *board, unsigned l
 
         // Double push
         if (C64(lsb) & (U64) doubleRank && !(board->GetOccupiedBB() & doubleMove[(int) lsb]))
-            if (isKingSafe || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | BitShifts::Shift(C64(lsb), up, 2)))
+            if ((isKingSafe && ((C64(lsb) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | BitShifts::Shift(C64(lsb), up, 2)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::DoublePawnPush, (Square) lsb, (Square) (lsb + (int) up * 2)));
     }
 
@@ -43,7 +43,7 @@ U8 PawnGen::GetAttackMoves(std::array<Move, 128> *moves, Board *board, unsigned 
         U64 captures = board->GetColorBB(oppColor) & PawnAttacks[(int) color][(int) lsb];
         while (captures) {
             U64 capturePiece = Utilities::LSB_Pop(&captures);
-            if (isKingSafe || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | C64(capturePiece), board->GetColorBB(oppColor) ^ C64(capturePiece))) {
+            if ((isKingSafe && ((C64(lsb) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | C64(capturePiece), board->GetColorBB(oppColor) ^ C64(capturePiece))) {
                 // If Promotion
                 if (C64(lsb) & (U64) promotionRank) {
                     AppendMove(moves, startIndex + moveCount, &moveCount,
@@ -70,7 +70,7 @@ U8 PawnGen::GetAttackMoves(std::array<Move, 128> *moves, Board *board, unsigned 
         captures = board->GetEnPassant() & PawnAttacks[(int) color][(int) lsb] & (U64) enPassantRank;
         while (captures) {
             U64 capturePiece = Utilities::LSB_Pop(&captures);
-            if (isKingSafe || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | C64(capturePiece),  board->GetColorBB(oppColor) ^ C64(capturePiece)))
+            if ((isKingSafe && ((C64(lsb) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | C64(capturePiece),  board->GetColorBB(oppColor) ^ C64(capturePiece)))
                 AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::EPCapture, (Square) lsb, (Square) capturePiece, PieceType::Pawn));
         }
     }

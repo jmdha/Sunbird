@@ -2,11 +2,11 @@
 #include <string>
 #include <stdlib.h>
 
-#include "../../classes/headers/constants.hh"
-#include "../../classes/headers/board.hh"
-#include "../../classes/headers/board_importer.hh"
-#include "../../classes/move_gen/headers/move_gen.hh"
-#include "../../classes/move_gen/headers/pawn_gen.hh"
+#include "constants.hh"
+#include "board.hh"
+#include "board_importer.hh"
+#include "move_gen.hh"
+#include "pawn_gen.hh"
 
 int main(int argc, char* argv[]) {
     BitShifts::Init();

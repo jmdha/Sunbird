@@ -7,7 +7,7 @@
 
 #include "constants.hh"
 #include "board.hh"
-#include "../move_gen/headers/move_gen.hh"
+#include "move_gen.hh"
 #include "move.hh"
 #include "evaluator.hh"
 #include "transposition_table.hh"

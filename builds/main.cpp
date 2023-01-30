@@ -1,12 +1,10 @@
 #include <iostream>
 #include <chrono>
 
-#include "../classes/headers/bit_shifts.hh"
-#include "../classes/headers/board.hh"
-#include "../classes/headers/board_importer.hh"
-#include "../classes/headers/minimax.hh"
-#include "../classes/move_gen/headers/move_gen.hh"
-#include "../classes/headers/perft.hh"
+#include "headers/bit_shifts.hh"
+#include "headers/board.hh"
+#include "headers/board_importer.hh"
+#include "headers/minimax.hh"
 
 int main(int argc, char* argv[]) {
     BitShifts::Init();

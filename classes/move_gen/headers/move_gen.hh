@@ -4,10 +4,10 @@
 #include <vector>
 #include <strings.h>
 
-#include "../../headers/board.hh"
-#include "../../headers/bit_shifts.hh"
-#include "../../headers/constants.hh"
-#include "../../headers/move.hh"
+#include "board.hh"
+#include "bit_shifts.hh"
+#include "constants.hh"
+#include "move.hh"
 #include "piece_gen.hh"
 
 class MoveGen {

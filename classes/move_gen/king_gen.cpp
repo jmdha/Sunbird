@@ -1,4 +1,4 @@
-#include "headers/king_gen.hh"
+#include "king_gen.hh"
 
 U8 KingGen::GetQuietMoves(std::array<Move, 128> *moves, Board *board, unsigned long long int attackedSquares,
                             bool isKingSafe, unsigned short startIndex) {

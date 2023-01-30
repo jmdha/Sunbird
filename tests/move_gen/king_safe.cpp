@@ -2,10 +2,9 @@
 #include <string>
 #include <stdlib.h>
 
-#include "../../classes/headers/constants.hh"
-#include "../../classes/headers/board.hh"
-#include "../../classes/headers/board_importer.hh"
-#include "../../classes/move_gen/headers/move_gen.hh"
+#include "bit_shifts.hh"
+#include "board.hh"
+#include "board_importer.hh"
 
 int main(int argc, char* argv[]) {
     BitShifts::Init();

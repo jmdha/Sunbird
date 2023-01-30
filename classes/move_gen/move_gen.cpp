@@ -1,10 +1,10 @@
-#include "headers/move_gen.hh"
-#include "headers/pawn_gen.hh"
-#include "headers/knight_gen.hh"
-#include "headers/bishop_gen.hh"
-#include "headers/rook_gen.hh"
-#include "headers/queen_gen.hh"
-#include "headers/king_gen.hh"
+#include "move_gen.hh"
+#include "pawn_gen.hh"
+#include "knight_gen.hh"
+#include "bishop_gen.hh"
+#include "rook_gen.hh"
+#include "queen_gen.hh"
+#include "king_gen.hh"
 
 
 MoveGen::MoveGen(Color color): color(color) {

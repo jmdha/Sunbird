@@ -1,12 +1,12 @@
 #include <stdexcept>
 #include <string>
-#include <stdlib.h>
+#include <cstdlib>
 
-#include "../../classes/headers/constants.hh"
-#include "../../classes/headers/board.hh"
-#include "../../classes/headers/board_importer.hh"
-#include "../../classes/move_gen/headers/bishop_gen.hh"
-#include "../../classes/headers/bit_shifts.hh"
+#include "constants.hh"
+#include "board.hh"
+#include "board_importer.hh"
+#include "bishop_gen.hh"
+#include "bit_shifts.hh"
 
 int main(int argc, char* argv[]) {
     BitShifts::Init();

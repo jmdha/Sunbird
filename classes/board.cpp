@@ -1,5 +1,5 @@
-#include "headers/board.hh"
-#include "headers/bit_shifts.hh"
+#include "board.hh"
+#include "bit_shifts.hh"
 
 void Board::Initialize() {
     for (U8 x = 0; x < WIDTH; ++x) {
@@ -242,8 +242,7 @@ U64 Board::GenerateAttackSquares(Color color) const {
 }
 
 bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard) {
-    U64 kingPos = tempKingBoard;
-    U64 kingPosIndex = Utilities::LSB_Pop(&kingPos);
+    U64 kingPosIndex = Utilities::LSB_Pop(&tempKingBoard);
 
     U64 enemyRooks = (GetPiecePos(PieceType::Rook) | GetPiecePos(PieceType::Queen)) & tempEnemyBoard;
     U64 enemyBishops = (GetPiecePos(PieceType::Bishop) | GetPiecePos(PieceType::Queen)) & tempEnemyBoard;

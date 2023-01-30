@@ -1,0 +1,7 @@
+include(tests/board/CMakeLists.txt)
+include(tests/board_importer/CMakeLists.txt)
+include(tests/utilities/CMakeLists.txt)
+include(tests/evaluator/CMakeLists.txt)
+include(tests/move_gen/CMakeLists.txt)
+include(tests/minimax/CMakeLists.txt)
+include(tests/perft/CMakeLists.txt)

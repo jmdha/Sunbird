@@ -1,4 +1,4 @@
-#include "headers/perft.hh"
+#include "perft.hh"
 
 int Perft::Run(int depth) {
     if (depth == 0)

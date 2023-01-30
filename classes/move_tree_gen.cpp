@@ -1,4 +1,4 @@
-#include "headers/move_tree_gen.hh"
+#include "move_tree_gen.hh"
 
 MoveTreeGenerator::MoveTreeGenerator(Board* board, std::string outputPath, bool useAB) : 
 board(board), 

@@ -1,4 +1,4 @@
-#include "headers/board_importer.hh"
+#include "board_importer.hh"
 
 void BoardImporter::ImportFEN(Board* board, std::string FEN) {
     (*board) = Board();

@@ -1,4 +1,4 @@
-#include "headers/bit_shifts.hh"
+#include "bit_shifts.hh"
 
 void BitShifts::Init () {
     for (U64 square = 0; square < SQUARECOUNT; square++)

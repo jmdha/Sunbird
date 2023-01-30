@@ -1,6 +1,6 @@
-#include "headers/evaluator.hh"
+#include "evaluator.hh"
 
-#include "headers/bit_shifts.hh"
+#include "bit_shifts.hh"
 
 Evaluator::~Evaluator() {
 #ifdef STATS
