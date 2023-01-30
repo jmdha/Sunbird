@@ -8,12 +8,12 @@
 
 
 MoveGen::MoveGen(Color color): color(color) {
-    pieceGen[(int) PieceType::Pawn] = new PawnGen(color);
-    pieceGen[(int) PieceType::Knight] = new KnightGen(color);
-    pieceGen[(int) PieceType::Bishop] = new BishopGen(color);
-    pieceGen[(int) PieceType::Rook] = new RookGen(color);
-    pieceGen[(int) PieceType::Queen] = new QueenGen(color);
     pieceGen[(int) PieceType::King] = new KingGen(color);
+    pieceGen[(int) PieceType::Queen] = new QueenGen(color);
+    pieceGen[(int) PieceType::Rook] = new RookGen(color);
+    pieceGen[(int) PieceType::Bishop] = new BishopGen(color);
+    pieceGen[(int) PieceType::Knight] = new KnightGen(color);
+    pieceGen[(int) PieceType::Pawn] = new PawnGen(color);
 }
 
 U8 MoveGen::GetAllMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 attackedSquares) {
