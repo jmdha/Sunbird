@@ -57,7 +57,7 @@ enum class PieceValue : int {
     Bishop = 300,
     Rook = 500,
     Queen = 900,
-    King = 20000,
+    //King = 20000,
     Inf = 300000,
     None
 };

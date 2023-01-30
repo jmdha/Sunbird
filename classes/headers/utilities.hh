@@ -82,8 +82,6 @@ namespace Utilities {
         switch(type) {
         case PieceType::Bishop:
             return (U64) PieceValue::Bishop;
-        case PieceType::King:
-            return (U64) PieceValue::King;
         case PieceType::Knight:
             return (U64) PieceValue::Knight;
         case PieceType::Pawn:
