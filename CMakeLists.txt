@@ -8,7 +8,7 @@ enable_testing()
 
 set(sources
         src/bit_shifts.cpp src/board.cpp src/board_importer.cpp src/evaluator.cpp src/minimax.cpp
-        src/move_gen/move_gen.cpp src/move_gen/piece_gen.cpp src/move_gen/bishop_gen.cpp src/move_gen/king_gen.cpp src/move_gen/knight_gen.cpp src/move_gen/pawn_gen.cpp src/move_gen/queen_gen.cpp src/move_gen/rook_gen.cpp)
+        src/move_gen/move_gen.cpp src/move_gen/piece_gen.cpp src/move_gen/king_gen.cpp src/move_gen/knight_gen.cpp src/move_gen/pawn_gen.cpp)
 
 add_executable(main builds/main.cpp ${sources})
 add_executable(chess_engine builds/engine.cpp ${sources})

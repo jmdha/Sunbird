@@ -77,7 +77,7 @@ add_test(MoveGen_Pawn_Promotion_Capture1B GeneratePawnMoves   24   "4k3/8/8/8/8/
 
 ## RookMoves
 add_executable(GenerateRookMoves tests/move_gen/rook_move.cpp "src/bit_shifts.cpp" "src/board.cpp" "src/board_importer.cpp"
-        "src/move_gen/piece_gen.cpp" "src/move_gen/rook_gen.cpp")
+        "src/move_gen/piece_gen.cpp" "src/move_gen/headers/rook_gen.hh")
 
 add_test(MoveGen_Rook_Move_W_Corner1 GenerateRookMoves    14  "R7/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
 add_test(MoveGen_Rook_Move_W_Corner2 GenerateRookMoves    14  "7R/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
@@ -118,7 +118,7 @@ add_test(MoveGen_Rook_KingSafety_None GenerateRookMoves   0   "8/3k4/8/8/3R4/8/3
 
 ## BishopMoves
 add_executable(GenerateBishopMoves tests/move_gen/bishop_move.cpp "src/bit_shifts.cpp" "src/board.cpp" "src/board_importer.cpp"
-        "src/move_gen/piece_gen.cpp" "src/move_gen/bishop_gen.cpp")
+        "src/move_gen/piece_gen.cpp" "src/move_gen/headers/bishop_gen.hh")
 
 add_test(MoveGen_Bishop_Move_W_Corner1 GenerateBishopMoves    7  "B7/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
 add_test(MoveGen_Bishop_Move_W_Corner2 GenerateBishopMoves    7  "7B/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
@@ -159,7 +159,7 @@ add_test(MoveGen_Bishop_KingSafety_None GenerateBishopMoves   0   "8/2k5/8/4B3/5
 
 ## QueenMoves
 add_executable(GenerateQueenMoves tests/move_gen/queen_move.cpp "src/bit_shifts.cpp" "src/board.cpp" "src/board_importer.cpp"
-        "src/move_gen/piece_gen.cpp" "src/move_gen/queen_gen.cpp")
+        "src/move_gen/piece_gen.cpp" "src/move_gen/headers/queen_gen.hh")
 
 add_test(MoveGen_Queen_Move_W_Corner1 GenerateQueenMoves    21  "Q7/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
 add_test(MoveGen_Queen_Move_W_Corner2 GenerateQueenMoves    21  "7Q/8/8/8/8/8/8/8 w KQkq - 0 1" 1)

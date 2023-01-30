@@ -17,7 +17,7 @@ protected:
     Color color;
     Color oppColor;
 
-    U8 GetSlidingMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 pieces, Direction direction,
+    U8 GetSlidingMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, PieceType type,
                        bool isKingSafe, U8 startIndex, U64 attackedSquares);
 
     U8 GetSlidingAttacks(std::array<Move, MAXMOVECOUNT> *moves, Board *board, PieceType type,

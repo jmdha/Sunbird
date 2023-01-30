@@ -9,24 +9,28 @@ U8 PieceGen::GetALlMoves(std::array<Move, 128> *moves, Board *board, unsigned lo
     return moveCount;
 }
 
-U8 PieceGen::GetSlidingMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 pieces, Direction direction,
+U8 PieceGen::GetSlidingMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, PieceType type,
                              bool isKingSafe, U8 startIndex, U64 attackedSquares) {
     U8 moveCount = 0;
-    int counter = 1;
+    U64 pieces = board->GetPiecePos(color, type);
 
     while (pieces) {
-        pieces = BitShifts::Shift(pieces & Utilities::NotEdge(direction), direction, 1) & ~board->GetColorBB(color);
-        pieces &= ~board->GetOccupiedBB();
+        U8 piece = Utilities::LSB_Pop(&pieces);
+        U64 unblocked = (0xffffffffffffffff ^ C64(piece)) & BitShifts::GetAttacks(piece, type);
+        for (U8 i = 1; i < 8 && unblocked & BitShifts::GetAttacks(piece, type); i++) {
+            U64 potMoves = BitShifts::GetRing(piece, i) & unblocked;
+            U64 blockers = potMoves & board->GetOccupiedBB();
+            potMoves ^= blockers;
 
-        U64 quietMoves = pieces;
-        while (quietMoves) {
-            U8 lsb = Utilities::LSB_Pop(&quietMoves);
-            U64 oriPiece = BitShifts::Shift(C64(lsb), Utilities::GetOppositeDirection(direction), counter);
-            if ((isKingSafe && ((oriPiece & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ oriPiece | C64(lsb))))
-                AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) (lsb - (int) direction * counter), (Square) lsb));
+            while (blockers)
+                unblocked ^= BitShifts::GetSqRay(piece, Utilities::LSB_Pop(&blockers));
+
+            while (potMoves) {
+                U8 sq = Utilities::LSB_Pop(&potMoves);
+                if ((isKingSafe && ((C64(piece) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ C64(piece) | C64(sq))))
+                    AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) piece, (Square) sq));
+            }
         }
-
-        counter++;
     }
 
     return moveCount;
