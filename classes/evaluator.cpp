@@ -29,11 +29,8 @@ int Evaluator::EvaluatePawnStructure(const Board &board, Color color) {
         if (C64(pawn) & BitShifts::GetDoubled(color, pawn))
             value += (int) PawnStructureValue::Doubled;
         // Connected Pawns
-        U64 connected = board.GetPiecePos(color, PieceType::Pawn) & BitShifts::GetConnected(color, pawn);
-        while (connected) {
-            Utilities::LSB_Pop(&connected);
-            value += (int) PawnStructureValue::Connected;
-        }
+        value += (int) PawnStructureValue::Connected *
+                Utilities::PopCount(board.GetPiecePos(color, PieceType::Pawn) & BitShifts::GetConnected(color, pawn));
     }
     return value;
 }
