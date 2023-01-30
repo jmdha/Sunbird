@@ -56,12 +56,12 @@ int Evaluator::EvaluatePositionValue(const Board &board, Color color) {
         while (queens)  value += PosValueQueen     [Utilities::LSB_Pop(&queens)];
         while (kings)   value += PosValueKing_Early[Utilities::LSB_Pop(&kings)];
     } else {
-        while (pawns)   value += PosValuePawn      [63 - Utilities::LSB_Pop(&pawns)];
-        while (knights) value += PosValueKnight    [63 - Utilities::LSB_Pop(&knights)];
-        while (bishops) value += PosValueBishop    [63 - Utilities::LSB_Pop(&bishops)];
-        while (rooks)   value += PosValueRook      [63 - Utilities::LSB_Pop(&rooks)];
-        while (queens)  value += PosValueQueen     [63 - Utilities::LSB_Pop(&queens)];
-        while (kings)   value += PosValueKing_Early[63 - Utilities::LSB_Pop(&kings)];
+        while (pawns)   value += IPosValuePawn      [Utilities::LSB_Pop(&pawns)];
+        while (knights) value += IPosValueKnight    [Utilities::LSB_Pop(&knights)];
+        while (bishops) value += IPosValueBishop    [Utilities::LSB_Pop(&bishops)];
+        while (rooks)   value += IPosValueRook      [Utilities::LSB_Pop(&rooks)];
+        while (queens)  value += IPosValueQueen     [Utilities::LSB_Pop(&queens)];
+        while (kings)   value += IPosValueKing      [Utilities::LSB_Pop(&kings)];
     }
     return value;
 }

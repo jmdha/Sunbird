@@ -1,6 +1,8 @@
 #ifndef CONSTANTS
 #define CONSTANTS
 
+#include <array>
+
 #define U8  unsigned short
 #define U64 unsigned long long int
 #define C8(x) (U8)1 << ((U8) x)
@@ -309,5 +311,42 @@ constexpr int PosValueKing_Late[64] = {
     -30,-20,-10,  0,  0,-10,-20,-30,
     -50,-40,-30,-20,-20,-30,-40,-50
 };
+
+constexpr std::array<int, 64> IPosValuePawn = [] {
+    auto s = decltype(IPosValuePawn){};
+    for (int i = 0; i < 64; i++)
+        s[i] = PosValuePawn[63 - i];
+    return s;
+}();
+constexpr std::array<int, 64> IPosValueBishop  = [] {
+    auto s = decltype(IPosValuePawn){};
+    for (int i = 0; i < 64; i++)
+        s[i] = PosValueBishop[63 - i];
+    return s;
+}();
+constexpr std::array<int, 64> IPosValueKnight  = [] {
+    auto s = decltype(IPosValuePawn){};
+    for (int i = 0; i < 64; i++)
+        s[i] = PosValueKnight[63 - i];
+    return s;
+}();
+constexpr std::array<int, 64> IPosValueRook  = [] {
+    auto s = decltype(IPosValuePawn){};
+    for (int i = 0; i < 64; i++)
+        s[i] = PosValueRook[63 - i];
+    return s;
+}();
+constexpr std::array<int, 64> IPosValueQueen  = [] {
+    auto s = decltype(IPosValuePawn){};
+    for (int i = 0; i < 64; i++)
+        s[i] = PosValueQueen[63 - i];
+    return s;
+}();
+constexpr std::array<int, 64> IPosValueKing  = [] {
+    auto s = decltype(IPosValuePawn){};
+    for (int i = 0; i < 64; i++)
+        s[i] = PosValueKing_Early[63 - i];
+    return s;
+}();
 
 #endif // CONSTANTS
