@@ -37,7 +37,7 @@ inline int Evaluator::Evaluate(const Board &board) {
 #ifdef STATS
     ++stats.evalCount;
 #endif
-    int value = EvaluatePieceCount(board) + EvaluatePositionValue(board) + EvaluatePawnStructure(board);
+    int value = EvaluatePieceCount(board) + EvaluatePositionValue(board)/* + EvaluatePawnStructure(board)*/;
     
     return SideModifier(board, value);
 }

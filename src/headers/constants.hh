@@ -65,8 +65,8 @@ enum class PieceValue : int {
 };
 
 enum class PawnStructureValue : int {
-	Doubled = -10, // If one pawn is in front of another
-	Connected = 10 // If another pawn is being attacked by the given pawn
+	Doubled = -50, // If one pawn is in front of another
+	Connected = 50 // If another pawn is being attacked by the given pawn
 };
 
 enum class PieceChar : char {

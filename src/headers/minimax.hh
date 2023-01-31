@@ -42,7 +42,7 @@ private:
     Board *board;
     MoveGen moveGens[2];
     Evaluator evaluator;
-    //TranspositionTable tt;
+    TranspositionTable tt = TranspositionTable();
 
     MiniMax::MoveVals NegaMax(int depth, MoveVals moveVals = MoveVals());
     int NegaMax(int depth, int alpha, int beta);

@@ -7,7 +7,7 @@
 #include "move.hh"
 
 #define TABLE_SIZE 8192
-#define CLUSTER_SIZE 4
+#define CLUSTER_SIZE 8
 
 enum class TTFlag : U8 {
     Exact, // Searched all possible moves
@@ -21,10 +21,10 @@ struct TTNode {
     U8 depth;
     TTFlag flag;
     int eval;
-    Move bestMove;
+    U8 bestMoveIndex;
     TTNode() : flag(TTFlag::Undefined) {};
-    TTNode(U64 zobrist, U8 depth, TTFlag flag, int eval, const Move &bestMove)
-            : zobrist(zobrist), depth(depth), eval(eval), bestMove(bestMove), flag(flag) {}
+    TTNode(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex)
+            : zobrist(zobrist), depth(depth), eval(eval), bestMoveIndex(bestMoveIndex), flag(flag) {}
     inline bool IsDefined() const { return flag == TTFlag::Undefined; };
 };
 
@@ -37,9 +37,9 @@ struct TTCluster {
         return nullptr;
     }
 
-    void Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, Move bestMove) {
+    void Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex) {
         if (count < CLUSTER_SIZE) {
-            nodes.at(count++) = new TTNode(zobrist, depth, flag, eval, bestMove);
+            nodes.at(count++) = new TTNode(zobrist, depth, flag, eval, bestMoveIndex);
             if (depth < lowestDepth) {
                 lowestDepth = depth;
                 lowestIndex = count - 1;
@@ -58,7 +58,7 @@ struct TTCluster {
         rNode->depth = depth;
         rNode->flag = flag;
         rNode->eval = eval;
-        rNode->bestMove = bestMove;
+        rNode->bestMoveIndex = bestMoveIndex;
     }
     inline U8 GetCount() const { return count; };
 private:
@@ -85,7 +85,7 @@ public:
     }
     // Retrieves a node with corresponding zobrist, or a nullptr if no such node exists
     inline TTNode* Retrieve(U64 zobrist);
-    inline void Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, Move bestMove);
+    inline void Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex);
 private:
     Stats stats = Stats();
     std::array<TTCluster, TABLE_SIZE> table;
@@ -109,8 +109,8 @@ TTNode *TranspositionTable::Retrieve(U64 zobrist) {
     }*/
 }
 
-void TranspositionTable::Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, Move bestMove) {
-    table.at(GetTableKey(zobrist)).Insert(zobrist, depth, flag, eval, bestMove);
+void TranspositionTable::Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex) {
+    table.at(GetTableKey(zobrist)).Insert(zobrist, depth, flag, eval, bestMoveIndex);
     /*if (node != nullptr) {
         //if (depth >= node->depth) {
             table.at(GetTableKey(zobrist)) = new TTNode(zobrist, depth, flag, eval, bestMove, clock);
