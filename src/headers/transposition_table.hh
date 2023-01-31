@@ -22,9 +22,10 @@ struct TTNode {
     TTFlag flag;
     int eval;
     U8 bestMoveIndex;
+    Color col;
     TTNode() : flag(TTFlag::Undefined) {};
-    TTNode(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex)
-            : zobrist(zobrist), depth(depth), eval(eval), bestMoveIndex(bestMoveIndex), flag(flag) {}
+    TTNode(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex, Color col)
+            : zobrist(zobrist), depth(depth), eval(eval), bestMoveIndex(bestMoveIndex), flag(flag), col(col) {}
     inline bool IsDefined() const { return flag == TTFlag::Undefined; };
 };
 
@@ -37,9 +38,9 @@ struct TTCluster {
         return nullptr;
     }
 
-    void Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex) {
+    void Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex, Color col) {
         if (count < CLUSTER_SIZE) {
-            nodes.at(count++) = new TTNode(zobrist, depth, flag, eval, bestMoveIndex);
+            nodes.at(count++) = new TTNode(zobrist, depth, flag, eval, bestMoveIndex, col);
             if (depth < lowestDepth) {
                 lowestDepth = depth;
                 lowestIndex = count - 1;
@@ -85,7 +86,7 @@ public:
     }
     // Retrieves a node with corresponding zobrist, or a nullptr if no such node exists
     inline TTNode* Retrieve(U64 zobrist);
-    inline void Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex);
+    inline void Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex, Color col);
 private:
     Stats stats = Stats();
     std::array<TTCluster, TABLE_SIZE> table;
@@ -109,8 +110,8 @@ TTNode *TranspositionTable::Retrieve(U64 zobrist) {
     }*/
 }
 
-void TranspositionTable::Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex) {
-    table.at(GetTableKey(zobrist)).Insert(zobrist, depth, flag, eval, bestMoveIndex);
+void TranspositionTable::Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex, Color col) {
+    table.at(GetTableKey(zobrist)).Insert(zobrist, depth, flag, eval, bestMoveIndex, col);
     /*if (node != nullptr) {
         //if (depth >= node->depth) {
             table.at(GetTableKey(zobrist)) = new TTNode(zobrist, depth, flag, eval, bestMove, clock);

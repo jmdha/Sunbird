@@ -44,7 +44,7 @@ private:
     Evaluator evaluator;
     TranspositionTable tt = TranspositionTable();
 
-    MiniMax::MoveVals NegaMax(int depth, MoveVals moveVals = MoveVals());
+    MiniMax::MoveVals NegaMax(int depth, U64 timeLimit, U64 *timeUsed, MoveVals moveVals = MoveVals());
     int NegaMax(int depth, int alpha, int beta);
     int Quiesce(int alpha, int beta);
     static inline void ReOrderMoves(std::array<Move, MAXMOVECOUNT> &moves, U8 moveCount);

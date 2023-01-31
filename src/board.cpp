@@ -110,13 +110,14 @@ void Board::DoMove(Move &move) {
 
     // En passant
     //// Check if there is old
-    if (enPassant)
-        move.SetDisableEnPassant((Column) enPassant);
+    if (enPassant != Column::None)
+        move.SetDisableEnPassant(enPassant);
     //// Set new
-    if (move.GetType() == MoveType::DoublePawnPush)
-        enPassant = (U64) Utilities::GetColumn(move.GetFrom());
-    else
-        enPassant = 0;
+    if (move.GetType() == MoveType::DoublePawnPush) {
+        SetEnPassant(Utilities::GetColumn(move.GetFrom()));
+    } else
+        SetEnPassant(Column::None);
+
     
     // Castling rights
     if (fromType == PieceType::King) {
@@ -148,8 +149,11 @@ void Board::UndoMove(Move move) {
     PieceType toType;
 
     // Check if old en passant
-    if (move.IsDEP())
-        enPassant = (U64) move.GetDEP();
+    bool priorEP = false;
+    if (move.IsDEP()) {
+        SetEnPassant(move.GetDEP());
+        priorEP = true;
+    }
 
     if (move.GetType() == MoveType::KingCastle) {
         if (turn == Color::Black) {
@@ -183,6 +187,9 @@ void Board::UndoMove(Move move) {
         } else {
             RemovePiece(move.GetTo(), toType, oppColor);
             PlacePiece(move.GetFrom(), toType, oppColor);
+            if (move.GetType() == MoveType::DoublePawnPush)
+                if (!priorEP)
+                    SetEnPassant(Column::None);
         }
         
 
@@ -202,18 +209,27 @@ void Board::UndoMove(Move move) {
 
 void Board::EnableCastling(Move &move) {
     if (move.IsDC()) {
-        if (move.IsDC(Color::White, Castling::King))
+        if (move.IsDC(Color::White, Castling::King)) {
             castlingAllowed[(int) Color::White][(int) Castling::King] = true;
-        if (move.IsDC(Color::White, Castling::Queen))
+            zobrist.FlipCastling(Color::White, Castling::King);
+        }
+        if (move.IsDC(Color::White, Castling::Queen)) {
             castlingAllowed[(int) Color::White][(int) Castling::Queen] = true;
-        if (move.IsDC(Color::Black, Castling::King))
+            zobrist.FlipCastling(Color::White, Castling::Queen);
+        }
+        if (move.IsDC(Color::Black, Castling::King)) {
             castlingAllowed[(int) Color::Black][(int) Castling::King] = true;
-        if (move.IsDC(Color::Black, Castling::Queen))
+            zobrist.FlipCastling(Color::Black, Castling::King);
+        }
+        if (move.IsDC(Color::Black, Castling::Queen)) {
             castlingAllowed[(int) Color::Black][(int) Castling::Queen] = true;
+            zobrist.FlipCastling(Color::Black, Castling::Queen);
+        }
     }
 }
 
 void Board::DisableCastling(Move &move, Color color, Castling side) {
+    zobrist.FlipCastling(color, side);
     castlingAllowed[(U8) color][(U8) side] = false;
     move.SetDisableCastle(color, side);
 }
@@ -284,4 +300,13 @@ bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBo
         return false;
 
     return true;
+}
+
+void Board::SetEnPassant(Column col) {
+    if (enPassant != Column::None)
+        zobrist.FlipEnPassant(enPassant);
+    if (col != Column::None)
+        zobrist.FlipEnPassant(col);
+    enPassant = col;
+
 }

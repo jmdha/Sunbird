@@ -59,7 +59,7 @@ void BoardImporter::ImportFEN(Board* board, std::string FEN) {
 	// import en-passant
     if (FEN[0] != '-') {
         auto sq = Utilities::GetSquare(FEN[0], FEN[1]);
-        board->enPassant = (U64) Utilities::GetColumn(sq);
+        board->enPassant = Utilities::GetColumn(sq);
     }
 
 	// import half move

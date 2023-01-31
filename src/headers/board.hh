@@ -41,7 +41,7 @@ public:
     inline Color GetOriginalColor() const;
     inline void SwitchTurn();
     inline void SetOriginalColor(Color color);
-    inline U64 GetEnPassant() const;
+    inline Column GetEnPassant() const;
     inline bool IsCastlingAllowed(Color color, Castling side);
     inline U64 GetHash() const; 
     inline Stats GetStats() const;
@@ -77,7 +77,7 @@ private:
     U64 pieceBB[PIECECOUNT] = { 0 };
     U64 colorBB[COLORCOUNT] = { 0 };
     U64 occupiedBB = 0;
-    U64 enPassant = 0;
+    Column enPassant = Column::None;
     U8 popCount[COLORCOUNT][PIECECOUNT] = { 0 };
     bool castlingAllowed[2][2] = { 0 };
     Stats stats = Stats();
@@ -91,6 +91,8 @@ private:
     // Castling
     void EnableCastling(Move &move);
     void DisableCastling(Move &move, Color color, Castling side);
+    // Misc
+    void SetEnPassant(Column col);
 
     friend class BoardImporter;
 };
@@ -193,7 +195,7 @@ U64 Board::GetColorBB(Color color) const {
     return colorBB[(int) color];
 }
 
-U64 Board::GetEnPassant() const {
+Column Board::GetEnPassant() const {
     return enPassant;
 }
 

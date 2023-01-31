@@ -92,12 +92,10 @@ inline PieceType Move::GetCapturedPiece() const {
 }
 
 inline Column Move::GetDEP() const {
-    return (Column) Utilities::GetColumn((move >> 28) & 0x7);
+    return (Column) Utilities::GetColumn(((move >> 28) & 0xf) - 1);
 };
 
 inline bool Move::IsCapture() const {
-    auto tempType = (U8) GetType();
-    auto temp = (U8) GetType() & CaptureBit;
     return ((U8) GetType() & CaptureBit) != 0;
 }
 
@@ -114,7 +112,7 @@ inline bool Move::IsEP() const {
 }
 
 inline bool Move::IsDEP() const {
-    return ((move >> 28) & 0x7) != 0;
+    return ((move >> 28) & 0xf) != 0;
 }
 
 inline bool Move::IsDC() const {
@@ -134,7 +132,7 @@ inline void Move::SetFrom(Square square) {
 }
 
 inline void Move::SetTo(Square square) {
-    move |= (((U8)square & 0x3f)) << 12;
+    move |= ((U8)square & 0x3f) << 12;
 }
 
 inline void Move::SetCapture(PieceType capturedType) {
@@ -146,7 +144,7 @@ inline void Move::SetDisableCastle(Color color, Castling side) {
 }
 
 inline void Move::SetDisableEnPassant(Column col) {
-    move |= Utilities::GetColumnIndex(col) << 28;
+    move |= (Utilities::GetColumnIndex(col) + 1) << 28;
 }
 
 #endif // MOVE

@@ -10,33 +10,31 @@ Move MiniMax::GetBestMove(int depth) {
     board->SetOriginalColor(board->GetColor());
 
     do {
-        auto t0 = std::chrono::steady_clock::now();
-        moveScores = NegaMax(workingDepth++, moveScores);
-        auto t1 = std::chrono::steady_clock::now();
-        timeUsed.push_back((U64) std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count());
-        totalTime += timeUsed.back();
+        moveScores = NegaMax(workingDepth++, timeLimit, &totalTime, moveScores);
         if (moveScores.scores.at(0) == (U64) PieceValue::Inf)
             break;
-        //printf("Checking depth: %d, time used %llu ms\n", workingDepth, timeUsed.at(timeUsed.size() - 1));
+        //printf("Checking depth: %d, time used %llu ms\n", workingDepth, totalTime);
     } while (depth == -1 &&
             // If iterative it will do what's below
             (workingDepth < 1000/*Relevant to late game where each iteration is 0ms*/ && (
-                 timeUsed.size() <= 2 ||
-                 timeUsed.at(timeUsed.size() - 1) < 10 ||
-                 timeUsed.at(timeUsed.size() - 2) < 10 ||
-                 timeUsed.at(timeUsed.size() - 1) * timeUsed.at(timeUsed.size() - 1) / timeUsed.at(timeUsed.size() - 2) < timeLimit)));
+                 totalTime < timeLimit)));
 
     return moveScores.moves.at(0);
 }
-MiniMax::MoveVals MiniMax::NegaMax(int depth, MoveVals moveVals) {
+MiniMax::MoveVals MiniMax::NegaMax(int depth, U64 timeLimit, U64 *timeUsed, MoveVals moveVals) {
     U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
     if (moveVals.moveCount == -1)
         moveVals.moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moveVals.moves, board, attackedSquares);
 
     for (int i = 0; i < moveVals.moveCount; ++i) {
+        auto t0 = std::chrono::steady_clock::now();
         board->DoMove(moveVals.moves[i]);
         moveVals.scores.at(i) = -NegaMax(depth - 1, -(int) PieceValue::Inf, (int) PieceValue::Inf);
         board->UndoMove(moveVals.moves[i]);
+        auto t1 = std::chrono::steady_clock::now();
+        (*timeUsed) += (U64) std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+        if (*timeUsed > timeLimit)
+            break;
         //printf("%s %d\n", moveVals.moves.at(i).ToString().c_str(), moveVals.scores.at(i));
     }
 
@@ -46,14 +44,19 @@ MiniMax::MoveVals MiniMax::NegaMax(int depth, MoveVals moveVals) {
 }
 
 int MiniMax::NegaMax(int depth, int alpha, int beta) {
-    if (depth == 0)
-        return Quiesce(alpha, beta);
-
     auto ttNode = tt.Retrieve(board->GetHash());
     if (ttNode != nullptr) {
-        if (ttNode->depth >= depth)
-            return ttNode->eval;
+        if (ttNode->depth >= depth) {
+            if (ttNode->col == board->GetColor())
+                return ttNode->eval;
+            else
+                return -ttNode->eval;
+        }
+
     }
+
+    if (depth == 0)
+        return evaluator.Evaluate(*board);//Quiesce(alpha, beta);
 
     std::array<Move, MAXMOVECOUNT> moves;
     U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
@@ -64,11 +67,11 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
     if (board->IsThreefoldRep())
         return 0;
 
-    if (ttNode != nullptr) {
+    /*if (ttNode != nullptr) {
         Move tempMove = moves.at(0);
         moves.at(0) = moves.at(ttNode->bestMoveIndex);
         moves.at(ttNode->bestMoveIndex) = tempMove;
-    }
+    }*/
 
     U8 bestMoveIndex = 0;
     for (int i = 0; i < moveCount; ++i) {
@@ -88,7 +91,7 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
         }
     }
 
-    tt.Insert(board->GetHash(), depth, TTFlag::Exact, alpha, bestMoveIndex);
+    tt.Insert(board->GetHash(), depth, TTFlag::Exact, alpha, bestMoveIndex, board->GetColor());
 
     return alpha;
 }
@@ -110,7 +113,6 @@ int MiniMax::Quiesce(int alpha, int beta) {
     if (alpha < standPat)
         alpha = standPat;
 
-    Move bestMove;
     for (int i = 0; i < moveCount; ++i) {
         board->DoMove(moves[i]);
         int score = -Quiesce(-beta, -alpha);
@@ -118,13 +120,9 @@ int MiniMax::Quiesce(int alpha, int beta) {
 
         if(score >= beta)
             return beta;   //  fail hard beta-cutoff
-        if(score > alpha) {
+        if(score > alpha)
             alpha = score; // alpha acts like max in MiniMax
-            bestMove = moves.at(i);
-        }
     }
-
-    //tt.Insert(board->GetHash(), 0, TTFlag::Exact, alpha, bestMove);
 
     return alpha;
 }

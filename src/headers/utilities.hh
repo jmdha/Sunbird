@@ -209,7 +209,7 @@ namespace Utilities {
             case Column::H:
                 return 7;
             case Column::None:
-                return 0;
+                throw std::logic_error("Invalid argument");
         }
     }
 

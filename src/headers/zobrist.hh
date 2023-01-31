@@ -14,6 +14,8 @@ public:
         InitHashTable();
     }
     inline void FlipSquare(Square square, PieceType type, Color color);
+    inline void FlipCastling(Color col, Castling side);
+    inline void FlipEnPassant(Column col);
     inline void IncrementHash();
     inline void DecrementHash();
     inline bool IsThreefoldRep() const;
@@ -22,6 +24,8 @@ public:
 private:
     // Static
     U64 hashTable[64][PIECECOUNT][COLORCOUNT]{};
+    U64 castlingHashes[2][2]{};
+    U64 enPassantHashes[8]{};
 
     U64 hash = 0;
     std::unordered_map<U64, U8> hashOccurances;
@@ -35,13 +39,26 @@ private:
             for (int j = 0; j < PIECECOUNT; ++j)
                 for (int t = 0; t < COLORCOUNT; ++t)
                     hashTable[i][j][t] = distribution(gen);
+        for (int i = 0; i < 2; i++)
+            for (int j = 0; j < 2; j++)
+                castlingHashes[i][j] = distribution(gen);
+        for (int i = 0; i < 8; i++)
+            enPassantHashes[i] = distribution(gen);
     }
 };
 
 inline void Zobrist::FlipSquare(Square square, PieceType type, Color color) {
-    auto value = hashTable[(int) square][(int) type][(int) color];
-    hash ^= value;
+    hash ^= hashTable[(int) square][(int) type][(int) color];
 }
+
+inline void Zobrist::FlipCastling(Color col, Castling side) {
+    hash ^= castlingHashes[(int) col][(int) side];
+}
+
+inline void Zobrist::FlipEnPassant(Column col) {
+    hash ^= enPassantHashes[Utilities::GetColumnIndex(col)];
+}
+
 
 inline void Zobrist::IncrementHash() {
     ++hashOccurances[hash];
