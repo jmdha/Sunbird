@@ -16,6 +16,11 @@ MoveGen::MoveGen(Color color): color(color) {
     pieceGen[(int) PieceType::Pawn] = new PawnGen(color);
 }
 
+MoveGen::~MoveGen() {
+    for (int i = 0; i < PIECECOUNT; i++)
+        delete pieceGen[i];
+}
+
 U8 MoveGen::GetAllMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 attackedSquares) {
     U8 moveCount = 0;
     bool isKingSafe = board->IsKingSafe();
@@ -42,3 +47,5 @@ U8 MoveGen::GetQuietMoves(std::array<Move, 128> *moves, Board *board, unsigned l
     //RemoveIllegal(moves, &moveCount, board, attackedSquares);
     return moveCount;
 }
+
+

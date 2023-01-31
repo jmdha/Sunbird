@@ -13,6 +13,7 @@
 class MoveGen {
 public:
     explicit MoveGen(Color color);
+    ~MoveGen();
     U8 GetAllMoves   (std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 attackedSquares);
     U8 GetAttackMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 attackedSquares);
     U8 GetQuietMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 attackedSquares);

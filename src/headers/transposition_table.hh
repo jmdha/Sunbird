@@ -31,6 +31,10 @@ struct TTNode {
 
 struct TTCluster {
     std::array<TTNode*, CLUSTER_SIZE> nodes { nullptr };
+    ~TTCluster() {
+        for (int i = 0; i < count; i++)
+            delete nodes.at(i);
+    }
     TTNode* Retrieve(U64 zobrist) {
         for (U8 i = 0; i < count; i++)
             if (nodes.at(i)->zobrist == zobrist)
