@@ -10,6 +10,7 @@ Move MiniMax::GetBestMove(int depth) {
     board->SetOriginalColor(board->GetColor());
 
     do {
+        //printf("Depth %d\n", workingDepth);
         moveScores = NegaMax(workingDepth++, timeLimit, &totalTime, moveScores);
         if (moveScores.scores.at(0) == (U64) PieceValue::Inf)
             break;
@@ -27,6 +28,7 @@ MiniMax::MoveVals MiniMax::NegaMax(int depth, U64 timeLimit, U64 *timeUsed, Move
         moveVals.moveCount = moveGens[(int) board->GetColor()].GetAllMoves(&moveVals.moves, board, attackedSquares);
 
     for (int i = 0; i < moveVals.moveCount; ++i) {
+        assert(moveVals.moves.at(i).GetValue() != 0);
         auto t0 = std::chrono::steady_clock::now();
         board->DoMove(moveVals.moves[i]);
         moveVals.scores.at(i) = -NegaMax(depth - 1, -(int) PieceValue::Inf, (int) PieceValue::Inf);
@@ -56,7 +58,7 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
     }
 
     if (depth == 0)
-        return evaluator.Evaluate(*board);//Quiesce(alpha, beta);
+        return Quiesce(alpha, beta);
 
     std::array<Move, MAXMOVECOUNT> moves;
     U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
@@ -67,14 +69,19 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
     if (board->IsThreefoldRep())
         return 0;
 
-    /*if (ttNode != nullptr) {
-        Move tempMove = moves.at(0);
-        moves.at(0) = moves.at(ttNode->bestMoveIndex);
-        moves.at(ttNode->bestMoveIndex) = tempMove;
-    }*/
+    if (ttNode != nullptr) {
+        if (ttNode->bestMoveIndex < moveCount && moves.at(ttNode->bestMoveIndex).GetValue() == ttNode->bestMove.GetValue()) {
+            Move tempMove = moves.at(0);
+            moves.at(0) = moves.at(ttNode->bestMoveIndex);
+            moves.at(ttNode->bestMoveIndex) = tempMove;
+        }
+    }
 
     U8 bestMoveIndex = 0;
     for (int i = 0; i < moveCount; ++i) {
+        assert(moves.at(i).GetValue() != 0);
+        Move move = moves.at(i);
+        PieceType type = board->GetType(move.GetFrom());
         //for (int i = 0; i <= (2 - depth); i++)
             //printf(" ");
         //printf("%s\n", moves[i].ToString().c_str());
@@ -91,7 +98,7 @@ int MiniMax::NegaMax(int depth, int alpha, int beta) {
         }
     }
 
-    tt.Insert(board->GetHash(), depth, TTFlag::Exact, alpha, bestMoveIndex, board->GetColor());
+    tt.Insert(board->GetHash(), depth, TTFlag::Exact, alpha, bestMoveIndex, moves.at(bestMoveIndex), board->GetColor());
 
     return alpha;
 }

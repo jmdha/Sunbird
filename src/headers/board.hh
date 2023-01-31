@@ -2,6 +2,7 @@
 #define BOARD
 
 #include <string>
+#include <cassert>
 
 #include "constants.hh"
 #include "utilities.hh"
@@ -105,14 +106,17 @@ inline PieceType Board::GetType(Square square) const {
 }
 
 inline int Board::GetPieceCount(const Color color, const PieceType type) const {
+    assert(type != PieceType::None);
     return popCount[(int) color][(int) type];
 }
 
 U64 Board::GetPiecePos(PieceType type) const {
+    assert(type != PieceType::None);
     return pieceBB[(int) type];
 }
 
 inline U64 Board::GetPiecePos(const Color color, const PieceType type) const {
+    assert(type != PieceType::None);
     return pieceBB[(int) type] & colorBB[(int) color];
 }
 
@@ -174,6 +178,7 @@ inline void Board::PlacePiece(Square square, PieceChar pieceChar) {
 }
 
 inline void Board::PlacePiece(Square square, PieceType type, Color color) {
+    assert(type != PieceType::None);
     U64 bit = C64(square);
     pieceBB[(U8) type] |= bit;
     colorBB[(U8) color] |= bit;
@@ -183,6 +188,7 @@ inline void Board::PlacePiece(Square square, PieceType type, Color color) {
 }
 
 inline void Board::RemovePiece(Square square, PieceType type, Color color) {
+    assert(type != PieceType::None);
     U64 bit = C64(square);
     pieceBB[(U8) type] ^= bit;
     colorBB[(U8) color] ^= bit;

@@ -10,6 +10,7 @@
 class PieceGen {
 public:
     explicit PieceGen(Color color) : color(color), oppColor(Utilities::GetOppositeColor(color)) {};
+    virtual ~PieceGen() = default;
     U8 GetALlMoves (std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 attackedSquares, bool isKingSafe, U8 startIndex);
     virtual U8 GetQuietMoves (std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 attackedSquares, bool isKingSafe, U8 startIndex) = 0;
     virtual U8 GetAttackMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 attackedSquares, bool isKingSafe, U8 startIndex) = 0;

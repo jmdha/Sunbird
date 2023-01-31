@@ -2,6 +2,7 @@
 #define MOVE
 
 #include <string>
+#include <cassert>
 
 #include "constants.hh"
 #include "utilities.hh"
@@ -17,6 +18,7 @@ public:
         SetType(type);
         SetFrom(from);
         SetTo(to);
+        assert(move != 0);
     };
 
     Move(MoveType type, Square from, Square to, PieceType capturedPiece) : move(0)/*, type(type), from(from), to(to), capturedPiece(capturedPiece)*/ {
@@ -24,10 +26,12 @@ public:
         SetFrom(from);
         SetTo(to);
         SetCapture(capturedPiece);
+        assert(move != 0);
     };
 
     inline std::string ToString() const;
     // Properties
+    inline uint32_t GetValue() const { return move; };
     inline MoveType GetType() const;
     inline Square GetFrom() const;
     inline Square GetTo() const;

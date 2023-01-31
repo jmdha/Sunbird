@@ -3,6 +3,7 @@
 
 #include <array>
 #include <algorithm>
+#include <cassert>
 
 #include "constants.hh"
 #include "utilities.hh"
@@ -11,13 +12,13 @@ class BitShifts {
 public:
     static void Init();
 
-    static inline U64 GetRay(Square square, DirectionIndex direction) { return rays[(int) square][(int) direction]; };
-    static inline U64 GetRay(U64 square, DirectionIndex direction) { return rays[square][(int) direction]; };
-    static inline U64 GetRay(U64 square, Direction direction) { return GetRay(square, Utilities::GetDirectionIndex(direction)); };
+    static inline U64 GetRay(Square square, DirectionIndex direction) { assert(direction != DirectionIndex::None); return rays[(int) square][(int) direction]; };
+    static inline U64 GetRay(U64 square, DirectionIndex direction) { assert(direction != DirectionIndex::None); return rays[square][(int) direction]; };
+    static inline U64 GetRay(U64 square, Direction direction) { assert(direction != Direction::None); return GetRay(square, Utilities::GetDirectionIndex(direction)); };
     static inline U64 GetSqRay(U8 from, U8 to) { return sqRays[from][to]; };
     static inline U64 GetBehind(U64 from, U64 to) { return behind[from][to]; };
     static inline U64 GetAttacks(U64 square, PieceType pieceType) { return pieceAttacks[(int) pieceType][square]; };
-    static inline U64 GetBB(U8 sq, PieceType type) { return blockersAndBeyond[(int) type][sq]; };
+    static inline U64 GetBB(U8 sq, PieceType type) { assert(type != PieceType::None); return blockersAndBeyond[(int) type][sq]; };
     static inline U64 GetRing(U8 sq, U8 offset) { return rings[sq][offset]; };
     static inline U64 GetDoubled(Color col, U8 sq) { return rings[(U8) col][sq]; };
     static inline U64 GetConnected(Color col, U8 sq) { return rings[(U8) col][sq]; };
