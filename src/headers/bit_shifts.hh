@@ -78,10 +78,21 @@ U64 BitShifts::GenerateBehind(U8 from, U8 to) {
 }
 
 U64 BitShifts::GenerateBB(unsigned short sq, PieceType type) {
-    if (sq & EDGE)
-        return GetAttacks(sq, type) & (~CORNER);
-    else
+    if ((C64(sq) & EDGE) == 0)
         return GetAttacks(sq, type) & (~EDGE);
+
+    if (C64(sq) & CORNER)
+        return GetAttacks(sq, type) & (~CORNER);
+
+    if (C64(sq) & (U64) Row::Row1)
+        return GetAttacks(sq, type) & (~( (U64) Row::Row8 | (U64) Column::A | (U64) Column::H));
+    if (C64(sq) & (U64) Row::Row8)
+        return GetAttacks(sq, type) & (~( (U64) Row::Row1 | (U64) Column::A | (U64) Column::H));
+    if (C64(sq) & (U64) Column::A)
+        return GetAttacks(sq, type) & (~( (U64) Row::Row1 | (U64) Row::Row8 | (U64) Column::H));
+    if (C64(sq) & (U64) Column::H)
+        return GetAttacks(sq, type) & (~( (U64) Row::Row1 | (U64) Row::Row8 | (U64) Column::A));
+    throw std::logic_error("Unexpected square");
 }
 
 U64 BitShifts::GenerateRing(U8 sq, U8 offset) {
