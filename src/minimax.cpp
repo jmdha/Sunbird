@@ -3,9 +3,12 @@
 #include "headers/openings.hh"
 
 Move MiniMax::GetBestMove(int depth) {
+#ifdef OPENINGBOOK
     Move openingMove;
     if (OpeningBook::GetMove(board->GetHash(), &openingMove))
         return openingMove;
+#endif
+
     U64 timeLimit = 1000;
     std::vector<U64> timeUsed;
     U64 totalTime = 0;
