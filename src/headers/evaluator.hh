@@ -11,42 +11,30 @@ public:
         U64 noMoveEvalCount = 0;
     };
     // Init
-    explicit Evaluator(Color color) : stats(Stats()), oColor(color) {};
+    explicit Evaluator(Color color) : oColor(color), sPieceValues(pieceValues) {};
+    explicit Evaluator(Color color, std::array<int, PIECECOUNT> pValues) : oColor(color), sPieceValues(pValues) {};
     ~Evaluator();
     // Evaluation
-    static int EvaluatePieceCount(const Board &board);
+    int EvaluatePieceCount(const Board &board) const;
     static inline int EvaluatePositionValue(const Board &board);
     static int EvaluatePositionValue(const Board &board, Color color);
     static inline int EvaluatePawnStructure(const Board &board);
     static int EvaluatePawnStructure(const Board &board, Color color);
-    inline int Evaluate(const Board &board);
-    inline int EvaluateNoMoves(const Board &board, bool isKingSafe);
+    inline int Evaluate(const Board &board) const;
+    static inline int EvaluateNoMoves(const Board &board, bool isKingSafe) ;
     static inline int SideModifier(const Board &board, int value);
-    // Misc
-    inline Stats GetStats();
 private:
-    Stats stats;
     Color oColor;
-    int PieceValues[PieceValue]
+    const std::array<int, PIECECOUNT> sPieceValues;
 };
 
-inline Evaluator::Stats Evaluator::GetStats() {
-    return stats;
-}
-
-inline int Evaluator::Evaluate(const Board &board) {
-#ifdef STATS
-    ++stats.evalCount;
-#endif
+inline int Evaluator::Evaluate(const Board &board) const {
     int value = EvaluatePieceCount(board) + EvaluatePositionValue(board)/* + EvaluatePawnStructure(board)*/;
     
     return SideModifier(board, value);
 }
 
 inline int Evaluator::EvaluateNoMoves(const Board &board, const bool isKingSafe) {
-#ifdef STATS
-    ++stats.noMoveEvalCount;
-#endif
     // Checkmate
     if (!isKingSafe)
         return -(int) PieceValue::Inf;

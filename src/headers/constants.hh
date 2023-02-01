@@ -34,7 +34,7 @@
 
 //#define DEBUGGING true
 //#define STATS true
-#define OPENINGBOOK true
+//#define OPENINGBOOK true
 
 enum class Color : U8 {
     White,
@@ -65,7 +65,7 @@ enum class PieceValue : int {
     None
 };
 
-constexpr int pieceValues[PIECECOUNT - 1] { (int) PieceValue::Pawn, (int) PieceValue::Knight, (int) PieceValue::Rook, (int) PieceValue::Queen };
+constexpr std::array<int, PIECECOUNT> pieceValues { (int) PieceValue::Pawn, (int) PieceValue::Knight, (int) PieceValue::Rook, (int) PieceValue::Queen };
 
 enum class PawnStructureValue : int {
 	Doubled = -50, // If one pawn is in front of another

@@ -2,17 +2,14 @@
 
 #include "bit_shifts.hh"
 
-Evaluator::~Evaluator() {
-#ifdef STATS
-    printf("Evaluator: %d - %llu evaluations\n", (int) oColor, stats.evalCount);
-    printf("Evaluator: %d - %llu no move evaluations\n", (int) oColor, stats.noMoveEvalCount);
-#endif
-}
+Evaluator::~Evaluator() = default;
 
-int Evaluator::EvaluatePieceCount(const Board &board) {
+int Evaluator::EvaluatePieceCount(const Board &board) const {
     int value = 0;
     for (int i = 0; i < PIECECOUNT - 1; ++i)
-        value += (board.GetPieceCount(Color::White, (PieceType) i) - board.GetPieceCount(Color::Black, (PieceType) i)) * Utilities::GetPieceValue((PieceType) i);
+        value +=
+                (board.GetPieceCount(Color::White, (PieceType) i) - board.GetPieceCount(Color::Black, (PieceType) i)) *
+                sPieceValues.at(i);
     return value;
 }
 
