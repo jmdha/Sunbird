@@ -27,6 +27,7 @@ public:
 private:
     Stats stats;
     Color oColor;
+    int PieceValues[PieceValue]
 };
 
 inline Evaluator::Stats Evaluator::GetStats() {

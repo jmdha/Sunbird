@@ -13,6 +13,7 @@ set(sources
 add_executable(main builds/main.cpp ${sources})
 add_executable(chess_engine builds/engine.cpp ${sources})
 add_executable(perft builds/perft.cpp ${sources} "src/perft.cpp")
+add_executable(tune builds/tune.cpp ${sources})
 
 include_directories("src" "src/headers" "src/move_gen" "src/move_gen/headers")
 

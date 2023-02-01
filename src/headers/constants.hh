@@ -65,6 +65,8 @@ enum class PieceValue : int {
     None
 };
 
+constexpr int pieceValues[PIECECOUNT - 1] { (int) PieceValue::Pawn, (int) PieceValue::Knight, (int) PieceValue::Rook, (int) PieceValue::Queen };
+
 enum class PawnStructureValue : int {
 	Doubled = -50, // If one pawn is in front of another
 	Connected = 50 // If another pawn is being attacked by the given pawn
