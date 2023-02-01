@@ -1,7 +1,11 @@
 #include <chrono>
 #include "minimax.hh"
+#include "headers/openings.hh"
 
 Move MiniMax::GetBestMove(int depth) {
+    Move openingMove;
+    if (OpeningBook::GetMove(board->GetHash(), &openingMove))
+        return openingMove;
     U64 timeLimit = 1000;
     std::vector<U64> timeUsed;
     U64 totalTime = 0;

@@ -48,6 +48,10 @@ public:
     inline void SetDisableCastle(Color color, Castling side);
     inline void SetDisableEnPassant(Column col);
 
+    friend bool operator == (Move const& lhs, Move const& rhs) {
+        return lhs.move == rhs.move;
+    }
+
 private:
     uint32_t move = 0;
     // These are for debug information

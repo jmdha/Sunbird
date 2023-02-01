@@ -7,7 +7,7 @@ include(CTest)
 enable_testing()
 
 set(sources
-        src/bit_shifts.cpp src/board.cpp src/board_importer.cpp src/evaluator.cpp src/minimax.cpp
+        src/bit_shifts.cpp src/board.cpp src/board_importer.cpp src/evaluator.cpp src/minimax.cpp src/headers/openings.hh
         src/move_gen/move_gen.cpp src/move_gen/piece_gen.cpp src/move_gen/king_gen.cpp src/move_gen/knight_gen.cpp src/move_gen/pawn_gen.cpp)
 
 add_executable(main builds/main.cpp ${sources})
