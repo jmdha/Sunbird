@@ -55,29 +55,35 @@ int main(int argc, char* argv[]) {
     const int paramCount = 1;
     std::vector<Parameter> activeParameters;
     std::vector<MiniMax*> engines { new MiniMax(&board), new MiniMax(&board) };
-    auto positions = Positions::GetPositions(100);
+    auto positions = Positions::GetPositions(10);
     std::vector<U64> winCount { 0, 0 };
-    for (const auto & position : positions) {
-        BoardImporter::ImportFEN(&board, position);
-        bool gameOver = false;
-        bool draw = false;
-        while (!gameOver) {
-            Move move;
-            if (board.GetColor() == Color::White)
-                move = engines.at(0)->GetBestMove(3);
-            else
-                move = engines.at(1)->GetBestMove(3);
-            if (move.GetType() == MoveType::SPECIAL_DRAW)
-                draw = true;
-            if (move.GetValue() != 0 && move.GetType() != MoveType::SPECIAL_DRAW) {
-                board.DoMove(move);
-            } else
-                gameOver = true;
+    for (int i = 0; i < 2; i++)
+        for (const auto & position : positions) {
+            BoardImporter::ImportFEN(&board, position);
+            bool gameOver = false;
+            bool draw = false;
+            while (!gameOver) {
+                Move move;
+                if ((int) board.GetColor() == i)
+                    move = engines.at(0)->GetBestMove();
+                else
+                    move = engines.at(1)->GetBestMove(1);
+                if (move.GetType() == MoveType::SPECIAL_DRAW)
+                    draw = true;
+                if (move.GetValue() != 0 && move.GetType() != MoveType::SPECIAL_DRAW) {
+                    board.DoMove(move);
+                } else
+                    gameOver = true;
+            }
+            if (!draw) {
+                if ((int) board.GetOppColor() == i)
+                    winCount.at(0)++;
+                else
+                    winCount.at(1)++;
+            }
+
+            printf("%llu - %llu\n", winCount.at(0), winCount.at(1) );
         }
-        if (!draw)
-            winCount.at(1 - (int) board.GetColor())++;
-        printf("%llu - %llu\n", winCount.at(0), winCount.at(1) );
-    }
 }
 
 #pragma clang diagnostic pop
