@@ -10,9 +10,9 @@ Move MiniMax::GetBestMove(int depth) {
 #endif
 
     if (board->GetPly() > 150)
-        return Move();
+        return Move(MoveType::SPECIAL_DRAW);
 
-    U64 timeLimit = 100;
+    U64 timeLimit = 10;
     std::vector<U64> timeUsed;
     U64 totalTime = 0;
     int workingDepth = (depth == -1) ? 1 : depth;

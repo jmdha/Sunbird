@@ -34,7 +34,7 @@
 
 //#define DEBUGGING true
 //#define STATS true
-//#define OPENINGBOOK true
+#define OPENINGBOOK true
 
 enum class Color : U8 {
     White,
@@ -197,7 +197,9 @@ enum class MoveType : U8 {
     NPromotionCapture = 12,
     BPromotionCapture = 13,
     RPromotionCapture = 14,
-    QPromotionCapture = 15
+    QPromotionCapture = 15,
+    SPECIAL_DRAW = 16,
+    SPECIAL_CHECKMATE = 17
 };
 
 #define PromotionBit 0x8

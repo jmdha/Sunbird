@@ -11,8 +11,8 @@ namespace OpeningBook {
     const std::unordered_map<U64, std::vector<Move>> moves{
             // v|Start pos
             {8350766115355486690LLU,  {
-                Move(MoveType::DoublePawnPush, Square::E2, Square::E4)/*,
-                Move(MoveType::Quiet, Square::D2, Square::D4)*/}},
+                Move(MoveType::DoublePawnPush, Square::E2, Square::E4),
+                Move(MoveType::Quiet, Square::D2, Square::D4)}},
             // v|Queens pawn - rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1
             {6421916850053666185LLU,  {
                 Move(MoveType::Quiet, Square::G8, Square::F6),
@@ -22,10 +22,10 @@ namespace OpeningBook {
             // v|Kings pawn - rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1
             {10094012945678312991LLU, {
                 Move(MoveType::DoublePawnPush, Square::C7, Square::C6),
-                Move(MoveType::DoublePawnPush, Square::G8, Square::F6)/*,
-                Move(MoveType::Quiet, Square::C7, Square::C5),
-                Move(MoveType::Quiet, Square::D7, Square::D5),
-                Move(MoveType::Quiet, Square::E7, Square::E5)*/}},
+                Move(MoveType::DoublePawnPush, Square::G8, Square::F6),
+                Move(MoveType::DoublePawnPush, Square::C7, Square::C5),
+                Move(MoveType::DoublePawnPush, Square::D7, Square::D5),
+                Move(MoveType::DoublePawnPush, Square::E7, Square::E5)}},
                 // v|Sicilian Defence - rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2
                 {5211104197556890052LLU,  {
                     Move(MoveType::Quiet, Square::G1, Square::F3),

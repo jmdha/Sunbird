@@ -9,6 +9,7 @@
 #include "evaluator.hh"
 #include "minimax.hh"
 #include "board_importer.hh"
+#include "positions.hh"
 
 class Parameter {
 public:
@@ -54,23 +55,27 @@ int main(int argc, char* argv[]) {
     const int paramCount = 1;
     std::vector<Parameter> activeParameters;
     std::vector<MiniMax*> engines { new MiniMax(&board), new MiniMax(&board) };
+    auto positions = Positions::GetPositions(100);
     std::vector<U64> winCount { 0, 0 };
-    for (int i = 0; i < 100; i++) {
-        BoardImporter::ImportFEN(&board, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    for (const auto & position : positions) {
+        BoardImporter::ImportFEN(&board, position);
         bool gameOver = false;
+        bool draw = false;
         while (!gameOver) {
             Move move;
             if (board.GetColor() == Color::White)
-                move = engines.at(0)->GetBestMove(1);
+                move = engines.at(0)->GetBestMove(3);
             else
-                move = engines.at(0)->GetBestMove();
-            if (move.GetValue() != 0) {
+                move = engines.at(1)->GetBestMove(3);
+            if (move.GetType() == MoveType::SPECIAL_DRAW)
+                draw = true;
+            if (move.GetValue() != 0 && move.GetType() != MoveType::SPECIAL_DRAW) {
                 board.DoMove(move);
             } else
                 gameOver = true;
-
         }
-        winCount.at(1 - (int) board.GetColor())++;
+        if (!draw)
+            winCount.at(1 - (int) board.GetColor())++;
         printf("%llu - %llu\n", winCount.at(0), winCount.at(1) );
     }
 }
