@@ -57,8 +57,6 @@ struct TTCluster {
             rNode = nodes.at(lowestIndex);
             lowestDepth = depth;
         }
-        //else if (depth > rNode->depth)
-            //return;
 
         rNode->zobrist = zobrist;
         rNode->depth = depth;
@@ -92,6 +90,7 @@ public:
     // Retrieves a node with corresponding zobrist, or a nullptr if no such node exists
     inline TTNode* Retrieve(U64 zobrist);
     inline void Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex, Move bestMove, Color col);
+    inline void Clear();
 private:
     Stats stats = Stats();
     std::array<TTCluster, TABLE_SIZE> table;
@@ -106,24 +105,15 @@ TTNode *TranspositionTable::Retrieve(U64 zobrist) {
     else
         stats.misses++;
     return node;
-    /*if (node != nullptr && node->zobrist == zobrist) {
-        ++stats.hits;
-        return node;
-    } else {
-        ++stats.misses;
-        return nullptr;
-    }*/
 }
 
 void TranspositionTable::Insert(U64 zobrist, U8 depth, TTFlag flag, int eval, U8 bestMoveIndex, Move bestMove, Color col) {
     table.at(GetTableKey(zobrist)).Insert(zobrist, depth, flag, eval, bestMoveIndex, bestMove, col);
-    /*if (node != nullptr) {
-        //if (depth >= node->depth) {
-            table.at(GetTableKey(zobrist)) = new TTNode(zobrist, depth, flag, eval, bestMove, clock);
-            delete node;
-        //}
-    } else
-        table.at(GetTableKey(zobrist)) = new TTNode(zobrist, depth, flag, eval, bestMove, clock);*/
+}
+
+void TranspositionTable::Clear() {
+    for (auto & cluster : table)
+        cluster = TTCluster();
 }
 
 #endif //TRANSPOSITION_TABLE_HH

@@ -1,7 +1,7 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "cppcoreguidelines-slicing"
 #include <iostream>
 #include <cassert>
+
+#include "indicators/indicators.hpp"
 
 #include "bit_shifts.hh"
 #include "board.hh"
@@ -11,79 +11,93 @@
 #include "board_importer.hh"
 #include "positions.hh"
 
-class Parameter {
-public:
-    enum class Type {
-        None,
-        PieceVal
-    };
-    const Type type;
-    explicit Parameter(Type type) : type(type) {};
-    virtual ~Parameter() = default;
-};
+// How much each parameter is changed for a given iteration
+// e.g. pawn value(0.2): 100 -> 120
+constexpr double delta = 0.2;
 
-class PieceValParam : public Parameter {
-public:
-    const PieceType type;
-    const int defaultVal;
-    explicit PieceValParam(PieceType type) : type(type), defaultVal(pieceValues[(int) type]), Parameter(Parameter::Type::PieceVal) {
-        assert(type != PieceType::None && type != PieceType::King);
-    };
-};
+constexpr double applyFactor = 0.1;
 
-std::vector<Parameter> parameters {
-    PieceValParam(PieceType::Pawn),
-    PieceValParam(PieceType::Bishop),
-    PieceValParam(PieceType::Knight),
-    PieceValParam(PieceType::Rook),
-    PieceValParam(PieceType::Queen)
-};
+constexpr int iterationCount = 10;
+constexpr int posCount = 5;
 
-std::array<int, PIECECOUNT> GenPieceVals(const std::vector<Parameter>& params) {
-    std::array<int, PIECECOUNT> pieceVals{pieceValues};
-    for (auto param : params) {
-        if (param.type == Parameter::Type::PieceVal) {
-            auto p = dynamic_cast<PieceValParam*>(&param);
-            pieceVals.at((int) p->type);
-        }
+std::array<int, PIECECOUNT> staPieceValues {pieceValues};
+std::array<int, PIECECOUNT> posPieceValues {pieceValues};
+std::array<int, PIECECOUNT> negPieceValues {pieceValues};
+
+void ModPieceValues(int count) {
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist(0,PIECECOUNT - 1); // All pieces except king
+    posPieceValues = staPieceValues;
+    negPieceValues = staPieceValues;
+    for (int i = 0; i < count; i++) {
+        int index = (int) dist(rng);
+        posPieceValues.at(index) += (int)((double) posPieceValues.at(index) * delta);
+        negPieceValues.at(index) -= (int)((double) negPieceValues.at(index) * delta);
     }
+
 }
 
 int main(int argc, char* argv[]) {
     BitShifts::Init();
     Board board = Board();
-    const int paramCount = 1;
-    std::vector<Parameter> activeParameters;
-    std::vector<MiniMax*> engines { new MiniMax(&board), new MiniMax(&board) };
-    auto positions = Positions::GetPositions(10);
-    std::vector<U64> winCount { 0, 0 };
-    for (int i = 0; i < 2; i++)
-        for (const auto & position : positions) {
-            BoardImporter::ImportFEN(&board, position);
-            bool gameOver = false;
-            bool draw = false;
-            while (!gameOver) {
-                Move move;
-                if ((int) board.GetColor() == i)
-                    move = engines.at(0)->GetBestMove();
-                else
-                    move = engines.at(1)->GetBestMove(1);
-                if (move.GetType() == MoveType::SPECIAL_DRAW)
-                    draw = true;
-                if (move.GetValue() != 0 && move.GetType() != MoveType::SPECIAL_DRAW) {
-                    board.DoMove(move);
-                } else
-                    gameOver = true;
-            }
-            if (!draw) {
-                if ((int) board.GetOppColor() == i)
-                    winCount.at(0)++;
-                else
-                    winCount.at(1)++;
+    indicators::ProgressBar bar {
+            indicators::option::BarWidth{50},
+            indicators::option::Start{"["},
+            indicators::option::Fill{"■"},
+            indicators::option::Lead{"■"},
+            indicators::option::Remainder{"-"},
+            indicators::option::End{"]"},
+            indicators::option::ShowPercentage{true},
+            indicators::option::ShowElapsedTime{true},
+            indicators::option::ShowRemainingTime{true}
+    };
+    printf("--Running Tests--\n");
+    const double totalGames = iterationCount * COLORCOUNT * posCount;
+    for (int iteration = 0; iteration < iterationCount; iteration++) {
+        ModPieceValues(3);
+        std::vector<MiniMax*> engines
+                { new MiniMax(&board, Evaluator(posPieceValues)), new MiniMax(&board, Evaluator(negPieceValues)) };
+        auto positions = Positions::GetPositions(posCount);
+        std::vector<U64> winCount{0, 0};
+        for (int i = 0; i < 2; i++)
+            for (int posI = 0; posI < positions.size(); posI++) {
+                double progress = (iteration * COLORCOUNT * posCount + i * posCount + posI) / totalGames * 100;
+                //printf("%f\n", progress);
+                bar.set_progress((unsigned long) progress);
+                auto position = positions.at(posI);
+                BoardImporter::ImportFEN(&board, position);
+                bool gameOver = false;
+                bool draw = false;
+                while (!gameOver) {
+                    Move move;
+                    if ((int) board.GetColor() == i)
+                        move = engines.at(0)->GetBestMove();
+                    else
+                        move = engines.at(1)->GetBestMove();
+                    if (move.GetType() == MoveType::SPECIAL_DRAW)
+                        draw = true;
+                    if (move.GetValue() != 0 && move.GetType() != MoveType::SPECIAL_DRAW) {
+                        board.DoMove(move);
+                    } else
+                        gameOver = true;
+                }
+                if (!draw) {
+                    if ((int) board.GetOppColor() == i)
+                        winCount.at(0)++;
+                    else
+                        winCount.at(1)++;
+                }
             }
 
-            printf("%llu - %llu\n", winCount.at(0), winCount.at(1) );
+        for (int i = 0; i < PIECECOUNT; i++) {
+            if (winCount[0] > winCount[1])
+                staPieceValues[i] += (int) ((double) (posPieceValues[i] - staPieceValues[i]) * applyFactor);
+            else if (winCount[0] < winCount[1])
+                staPieceValues[i] += (int) ((double) (negPieceValues[i] - staPieceValues[i]) * applyFactor);
         }
+    }
+    printf("\nFinal values:\n");
+    for (int i = 0; i < PIECECOUNT; i++)
+        printf("%d - %d\n", i, staPieceValues.at(i));
 }
-
-#pragma clang diagnostic pop

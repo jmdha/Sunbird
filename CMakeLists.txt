@@ -13,9 +13,10 @@ set(sources
 add_executable(main builds/main.cpp ${sources})
 add_executable(chess_engine builds/engine.cpp ${sources})
 add_executable(perft builds/perft.cpp ${sources} "src/perft.cpp")
-add_executable(tune builds/tune.cpp ${sources} src/headers/positions.hh)
+add_executable(tune builds/tune.cpp ${sources} src/headers/positions.hh "include/indicators/indicators.hpp")
 
 include_directories("src" "src/headers" "src/move_gen" "src/move_gen/headers")
+target_include_directories(tune PRIVATE "include")
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

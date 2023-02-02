@@ -65,7 +65,7 @@ enum class PieceValue : int {
     None
 };
 
-constexpr std::array<int, PIECECOUNT> pieceValues { (int) PieceValue::Pawn, (int) PieceValue::Knight, (int) PieceValue::Rook, (int) PieceValue::Queen };
+constexpr std::array<int, PIECECOUNT> pieceValues { (int) PieceValue::Pawn, (int) PieceValue::Knight, (int) PieceValue::Bishop, (int) PieceValue::Rook, (int) PieceValue::Queen };
 
 enum class PawnStructureValue : int {
 	Doubled = -50, // If one pawn is in front of another

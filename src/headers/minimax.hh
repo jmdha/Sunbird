@@ -14,7 +14,8 @@
 
 class MiniMax {
 public:
-    MiniMax(Board* board) : board(board), evaluator(Evaluator(board->GetColor())), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {}
+    explicit MiniMax(Board* board) : board(board), evaluator(Evaluator()), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {}
+    MiniMax(Board* board, const Evaluator& eval) : board(board), evaluator(eval), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {}
     Move GetBestMove(int depth = -1);
 
 private:

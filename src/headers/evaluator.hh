@@ -11,8 +11,8 @@ public:
         U64 noMoveEvalCount = 0;
     };
     // Init
-    explicit Evaluator(Color color) : oColor(color), sPieceValues(pieceValues) {};
-    explicit Evaluator(Color color, std::array<int, PIECECOUNT> pValues) : oColor(color), sPieceValues(pValues) {};
+    explicit Evaluator() : sPieceValues(pieceValues) {};
+    explicit Evaluator(std::array<int, PIECECOUNT> pValues) : sPieceValues(pValues) {};
     ~Evaluator();
     // Evaluation
     int EvaluatePieceCount(const Board &board) const;
@@ -24,7 +24,6 @@ public:
     static inline int EvaluateNoMoves(const Board &board, bool isKingSafe) ;
     static inline int SideModifier(const Board &board, int value);
 private:
-    Color oColor;
     const std::array<int, PIECECOUNT> sPieceValues;
 };
 
