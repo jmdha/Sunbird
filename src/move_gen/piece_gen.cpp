@@ -17,7 +17,7 @@ U8 PieceGen::GetSlidingMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board
     while (pieces) {
         U8 piece = Utilities::LSB_Pop(&pieces);
         U64 unblocked = (0xffffffffffffffff ^ C64(piece)) & BitShifts::GetAttacks(piece, type);
-        for (U8 i = 1; i < 8 && unblocked & BitShifts::GetAttacks(piece, type); i++) {
+        for (U8 i = 1; i < 8 && (unblocked & BitShifts::GetAttacks(piece, type)); i++) {
             U64 potMoves = BitShifts::GetRing(piece, i) & unblocked;
             U64 blockers = potMoves & board->GetOccupiedBB();
             potMoves ^= blockers;
@@ -40,20 +40,18 @@ U8 PieceGen::GetSlidingAttacks(std::array<Move, MAXMOVECOUNT> *moves, Board *boa
                                bool isKingSafe, U8 startIndex, U64 attackedSquares) {
     U8 moveCount = 0;
     U64 pieces = board->GetPiecePos(color, type);
-
     while (pieces) {
         U8 piece = Utilities::LSB_Pop(&pieces);
         U64 unblocked = (0xffffffffffffffff ^ C64(piece)) & BitShifts::GetAttacks(piece, type);
-        for (U8 i = 1; i < 8 && unblocked & BitShifts::GetAttacks(piece, type); i++) {
+        for (U8 i = 1; i < 8 && (unblocked & BitShifts::GetAttacks(piece, type)); i++) {
             U64 blockers = BitShifts::GetRing(piece, i) & unblocked & board->GetOccupiedBB();
-
             while (blockers) {
                 U8 blocker = Utilities::LSB_Pop(&blockers);
                 unblocked ^= BitShifts::GetSqRay(piece, blocker);
                 if (C64(blocker) & board->GetColorBB(oppColor))
                     if ((isKingSafe && ((C64(piece) & attackedSquares) == 0)) ||
                     board->IsKingSafe((board->GetOccupiedBB() ^ C64(piece)) | C64(blocker), board->GetColorBB(oppColor) ^ C64(blocker)))
-                        AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) piece, (Square) blocker, board->GetType((Square) blocker)));
+                    AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) piece, (Square) blocker, board->GetType((Square) blocker)));
             }
         }
     }

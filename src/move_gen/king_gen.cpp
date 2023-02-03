@@ -2,10 +2,8 @@
 
 U8 KingGen::GetQuietMoves(std::array<Move, 128> *moves, Board *board, unsigned long long int attackedSquares,
                             bool isKingSafe, unsigned short startIndex) {
-    U64 pieces = board->GetPiecePos(color, PieceType::King);
-    if (pieces == 0)
-        return 0;
     U8 moveCount = 0;
+    U64 pieces = board->GetPiecePos(color, PieceType::King);
 
     U64 lsbPiece = Utilities::LSB_Pop(&pieces);
 
@@ -30,10 +28,8 @@ U8 KingGen::GetQuietMoves(std::array<Move, 128> *moves, Board *board, unsigned l
 
 U8 KingGen::GetAttackMoves(std::array<Move, 128> *moves, Board *board, unsigned long long int attackedSquares,
                              bool isKingSafe, unsigned short startIndex) {
-    U64 pieces = board->GetPiecePos(color, PieceType::King);
-    if (pieces == 0)
-        return 0;
     U8 moveCount = 0;
+    U64 pieces = board->GetPiecePos(color, PieceType::King);
 
     U64 lsbPiece = Utilities::LSB_Pop(&pieces);
 

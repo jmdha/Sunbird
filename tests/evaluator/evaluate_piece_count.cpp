@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
     BoardImporter::ImportFEN(&board, (std::string) argv[2]);
     int expectedEval = std::atoi(argv[1]);
 
-    int eval = Evaluator::EvaluatePieceCount(board);
+    int eval = Evaluator().EvaluatePieceCount(board);
 
     if (eval == expectedEval)
         exit(EXIT_SUCCESS);

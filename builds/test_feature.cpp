@@ -11,7 +11,7 @@
 #include "positions.hh"
 #include "../include/indicators/indicators.hpp"
 
-constexpr int posCount = 5;
+constexpr int posCount = 1;
 
 int main(int argc, char* argv[]) {
     BitShifts::Init();
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     printf("--Running Tests--\n");
     const double totalGames = COLORCOUNT * posCount;
     std::vector<MiniMax *> engines
-            {new MiniMax(&board), new MiniMax(&board, true)};
+            {new MiniMax(&board), new MiniMax(&board, Evaluator(true))};
     auto positions = Positions::GetPositions(posCount);
     std::vector<U64> winCount{0, 0};
     for (int i = 0; i < 2; i++)

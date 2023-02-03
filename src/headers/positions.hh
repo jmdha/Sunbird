@@ -6,6 +6,7 @@
 #include <functional>
 #include <random>
 
+// This is used for testing
 namespace Positions {
     std::vector<std::string> positions {
       "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", // Start pos

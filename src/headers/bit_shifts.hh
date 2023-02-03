@@ -12,29 +12,20 @@ class BitShifts {
 public:
     static void Init();
 
-    static inline U64 GetRay(Square square, DirectionIndex direction) { assert(direction != DirectionIndex::None); return rays[(int) square][(int) direction]; };
     static inline U64 GetRay(U64 square, DirectionIndex direction) { assert(direction != DirectionIndex::None); return rays[square][(int) direction]; };
-    static inline U64 GetRay(U64 square, Direction direction) { assert(direction != Direction::None); return GetRay(square, Utilities::GetDirectionIndex(direction)); };
     static inline U64 GetSqRay(U8 from, U8 to) { return sqRays[from][to]; };
     static inline U64 GetBehind(U64 from, U64 to) { return behind[from][to]; };
     static inline U64 GetAttacks(U64 square, PieceType pieceType) { return pieceAttacks[(int) pieceType][square]; };
     static inline U64 GetBB(U8 sq, PieceType type) { assert(type != PieceType::None); return blockersAndBeyond[(int) type][sq]; };
     static inline U64 GetRing(U8 sq, U8 offset) { return rings[sq][offset]; };
-    static inline U64 GetDoubled(Color col, U8 sq) { return rings[(U8) col][sq]; };
-    static inline U64 GetConnected(Color col, U8 sq) { return rings[(U8) col][sq]; };
-    static inline U64 GetMoves(Color color, U8 sq, PieceType type) { return pieceMoves[(U8) color][(U8) type][sq]; };
     static inline U64 Shift(U64 b, Direction dir, int times);
 private:
     inline static U64 rays[SQUARECOUNT][DIRECTIONCOUNT] = { 0 };
     inline static U64 sqRays[SQUARECOUNT][SQUARECOUNT] = { 0 };
     inline static U64 pieceAttacks[PIECECOUNT][SQUARECOUNT] = { 0 };
-    inline static U64 pieceMoves[COLORCOUNT][PIECECOUNT][SQUARECOUNT] = { 0 };
     inline static U64 blockersAndBeyond[PIECECOUNT][SQUARECOUNT] = { 0 };
     inline static U64 behind[SQUARECOUNT][SQUARECOUNT] = { 0 };
     inline static U64 rings[SQUARECOUNT][7] = { 0 };
-
-    inline static U64 doubledPawns[COLORCOUNT][SQUARECOUNT] = { 0 };
-    inline static U64 connectedPawns[COLORCOUNT][SQUARECOUNT] = { 0 };
 
     inline static U64 GenerateRay(U8 square, DirectionIndex direction);
     inline static U64 GenerateSqRay(U8 from, U8 to);
@@ -141,42 +132,6 @@ U64 BitShifts::GenerateRing(U8 sq, U8 offset) {
 
 
     return ring;
-}
-
-unsigned long long int BitShifts::GeneratePieceMoves(Color color, PieceType type, U8 sq) {
-    U64 moves = 0;
-    switch (type) {
-        case PieceType::Pawn:
-            moves |= Shift(C64(sq), (color == Color::White) ? Direction::North : Direction::South, 1);
-            if ((C64(sq) & (U64) (color == Color::White ? Row::Row2 : Row::Row7)) != 0)
-                moves |= Shift(C64(sq), (color == Color::White) ? Direction::North : Direction::South, 2);
-            break;
-        case PieceType::Knight:
-        case PieceType::Bishop:
-        case PieceType::Rook:
-        case PieceType::Queen:
-        case PieceType::King:
-            moves |= pieceAttacks[(U8) type][sq];
-            break;
-        case PieceType::None:
-            throw std::invalid_argument("");
-    }
-    return moves;
-}
-
-U64 BitShifts::GenerateDoubledPawns(Color color, unsigned short sq) {
-    U64 c = C64(sq);
-    if (c & ((color == Color::White) ? ((U64) Row::Row7 | (U64) Row::Row8) : ((U64) Row::Row1 | (U64) Row::Row2)))
-        return 0;
-    return Shift(c, (color == Color::White) ? Direction::North : Direction::South, 1);
-}
-
-U64 BitShifts::GenerateConnectedPawns(Color color, unsigned short sq) {
-    U64 c = C64(sq);
-    if (c & ((color == Color::White) ? ((U64) Row::Row7 | (U64) Row::Row8) : ((U64) Row::Row1 | (U64) Row::Row2)))
-        return 0;
-    return Shift(c, (color == Color::White) ? Direction::NorthEast : Direction::SouthEast, 1) |
-           Shift(c, (color == Color::White) ? Direction::NorthWest : Direction::SouthWest, 1);
 }
 
 #endif // BIT_SHIFTS

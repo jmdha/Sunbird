@@ -10,7 +10,6 @@
 #include "move_gen.hh"
 #include "move.hh"
 #include "evaluator.hh"
-#include "transposition_table.hh"
 
 class MiniMax {
 public:
@@ -45,7 +44,6 @@ private:
     Board *board;
     MoveGen moveGens[2];
     Evaluator evaluator;
-    TranspositionTable tt = TranspositionTable();
     const bool testFeature = false;
 
     MiniMax::MoveVals NegaMax(int depth, U64 timeLimit, U64 *timeUsed, MoveVals moveVals = MoveVals());

@@ -33,9 +33,10 @@
 #define CORNER 0x8100000000000081
 
 //#define DEBUGGING true
-//#define STATS true
+#define STATS true
 #define OPENINGBOOK true
-//#define TESTFEATURE true
+#define TESTFEATURE true
+//#define TT true
 
 enum class Color : U8 {
     White,
@@ -57,11 +58,11 @@ constexpr PieceType pieceTypes[PIECECOUNT] { PieceType::Pawn, PieceType::Knight,
 
 // Found through tune.cpp
 enum class PieceValue : int {
-    Pawn = 111,
-    Knight = 306,
-    Bishop = 309,
-    Rook = 574,
-    Queen = 1127,
+    Pawn = 113,
+    Knight = 294,
+    Bishop = 329,
+    Rook = 634,
+    Queen = 1241,
     //King = 20000,
     Inf = 300000,
     None
@@ -70,8 +71,9 @@ enum class PieceValue : int {
 constexpr std::array<int, PIECECOUNT> pieceValues { (int) PieceValue::Pawn, (int) PieceValue::Knight, (int) PieceValue::Bishop, (int) PieceValue::Rook, (int) PieceValue::Queen };
 
 enum class PawnStructureValue : int {
-	Doubled = -50, // If one pawn is in front of another
-	Connected = 50 // If another pawn is being attacked by the given pawn
+	Doubled = -50,  // If one pawn is in front of another
+	Connected = 50, // If another pawn is being attacked by the given pawn
+    Isolated = -10
 };
 
 enum class PieceChar : char {

@@ -25,11 +25,9 @@ void BoardImporter::ImportFEN(Board* board, std::string FEN) {
 	// import turn
 	if(FEN[0] == 'w') {
 		board->turn = Color::White;
-		board->originalColor = Color::White;
 		board->oppColor = Color::Black;
 	} else {
 		board->turn = Color::Black;
-		board->originalColor = Color::Black;
 		board->oppColor = Color::White;
 	}
 		

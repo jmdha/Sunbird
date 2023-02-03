@@ -19,7 +19,6 @@ public:
     U8 GetQuietMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 attackedSquares);
 
 private:
-    Color color;
     PieceGen *pieceGen[PIECECOUNT];
 };
 

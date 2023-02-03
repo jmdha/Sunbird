@@ -7,7 +7,7 @@
 #include "king_gen.hh"
 
 
-MoveGen::MoveGen(Color color): color(color) {
+MoveGen::MoveGen(Color color) {
     pieceGen[(int) PieceType::King] = new KingGen(color);
     pieceGen[(int) PieceType::Queen] = new QueenGen(color);
     pieceGen[(int) PieceType::Rook] = new RookGen(color);
@@ -17,8 +17,8 @@ MoveGen::MoveGen(Color color): color(color) {
 }
 
 MoveGen::~MoveGen() {
-    for (int i = 0; i < PIECECOUNT; i++)
-        delete pieceGen[i];
+    for (auto & i : pieceGen)
+        delete i;
 }
 
 U8 MoveGen::GetAllMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64 attackedSquares) {
@@ -26,7 +26,6 @@ U8 MoveGen::GetAllMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, U64
     bool isKingSafe = board->IsKingSafe();
     for (const auto & gen : pieceGen)
         moveCount += gen->GetALlMoves(moves, board, attackedSquares, isKingSafe, moveCount);
-    //RemoveIllegal(moves, &moveCount, board, attackedSquares);
     return moveCount;
 }
 
@@ -35,7 +34,6 @@ U8 MoveGen::GetAttackMoves(std::array<Move, 128> *moves, Board *board, unsigned 
     bool isKingSafe = board->IsKingSafe();
     for (const auto & gen : pieceGen)
         moveCount += gen->GetAttackMoves(moves, board, attackedSquares, isKingSafe, moveCount);
-    //RemoveIllegal(moves, &moveCount, board, attackedSquares);
     return moveCount;
 }
 
@@ -44,7 +42,6 @@ U8 MoveGen::GetQuietMoves(std::array<Move, 128> *moves, Board *board, unsigned l
     bool isKingSafe = board->IsKingSafe();
     for (const auto & gen : pieceGen)
         moveCount += gen->GetQuietMoves(moves, board, attackedSquares, isKingSafe, moveCount);
-    //RemoveIllegal(moves, &moveCount, board, attackedSquares);
     return moveCount;
 }
 

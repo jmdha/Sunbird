@@ -3,8 +3,8 @@
 
 U8 PawnGen::GetQuietMoves(std::array<Move, 128> *moves, Board *board, unsigned long long int attackedSquares,
                           bool isKingSafe, unsigned short startIndex) {
-    U64 pieces = board->GetPiecePos(color, PieceType::Pawn);
     U8 moveCount = 0;
+    U64 pieces = board->GetPiecePos(color, PieceType::Pawn);
 
     while (pieces) {
         U64 lsb = Utilities::LSB_Pop(&pieces);
@@ -33,8 +33,8 @@ U8 PawnGen::GetQuietMoves(std::array<Move, 128> *moves, Board *board, unsigned l
 
 U8 PawnGen::GetAttackMoves(std::array<Move, 128> *moves, Board *board, unsigned long long int attackedSquares,
                            bool isKingSafe, unsigned short startIndex) {
-    U64 pieces = board->GetPiecePos(color, PieceType::Pawn);
     U8 moveCount = 0;
+    U64 pieces = board->GetPiecePos(color, PieceType::Pawn);
 
     while (pieces) {
         U64 lsb = Utilities::LSB_Pop(&pieces);

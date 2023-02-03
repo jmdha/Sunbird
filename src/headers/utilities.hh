@@ -78,23 +78,6 @@ namespace Utilities {
         return GetSquare((int) row - 97, (int) column - 49);
     }
 
-    static inline U64 GetPieceValue(PieceType type) {
-        switch(type) {
-        case PieceType::Bishop:
-            return (U64) PieceValue::Bishop;
-        case PieceType::Knight:
-            return (U64) PieceValue::Knight;
-        case PieceType::Pawn:
-            return (U64) PieceValue::Pawn;
-        case PieceType::Queen:
-            return (U64) PieceValue::Queen;
-        case PieceType::Rook:
-            return (U64) PieceValue::Rook;
-        default:
-            return (U64) PieceValue::None;
-        }
-    }
-
     static inline Color GetOppositeColor(Color color) {
         if (color == Color::White)
             return Color::Black;
@@ -303,29 +286,6 @@ namespace Utilities {
                 return DirectionIndex::West;
         }
         return DirectionIndex::None;
-    }
-
-    static inline Direction GetOppositeDirection(Direction direction) {
-        switch (direction) {
-            case Direction::North:
-                return Direction::South;
-            case Direction::East:
-                return Direction::West;
-            case Direction::South:
-                return Direction::North;
-            case Direction::West:
-                return Direction::East;
-            case Direction::NorthWest:
-                return Direction::SouthEast;
-            case Direction::NorthEast:
-                return Direction::SouthWest;
-            case Direction::SouthWest:
-                return Direction::NorthEast;
-            case Direction::SouthEast:
-                return Direction::NorthWest;
-            case Direction::None:
-                return Direction::None;
-        }
     }
 }
 

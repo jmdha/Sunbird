@@ -39,9 +39,7 @@ public:
     inline Color GetColor() const;
     inline Color GetOppColor() const;
     inline Color GetColor(Square sq) const;
-    inline Color GetOriginalColor() const;
     inline void SwitchTurn();
-    inline void SetOriginalColor(Color color);
     inline Column GetEnPassant() const;
     inline bool IsCastlingAllowed(Color color, Castling side);
     inline U64 GetHash() const; 
@@ -49,38 +47,15 @@ public:
     inline bool IsThreefoldRep() const;
     U64 GenerateAttackSquares(Color color) const;
 
-    bool friend operator==(const Board & lhs, const Board & rhs) {
-        if (lhs.turn != rhs.turn || lhs.originalColor != rhs.originalColor ||
-        lhs.occupiedBB != rhs.occupiedBB || lhs.GetHash() != rhs.GetHash() ||
-        lhs.enPassant != rhs.enPassant)
-            return false;
-        for (U8 i = 0; i < PIECECOUNT; ++i)
-            if (lhs.pieceBB[i] != rhs.pieceBB[i])
-                return false;
-        for (U8 i = 0; i < COLORCOUNT; ++i)
-            if (lhs.colorBB[i] != rhs.colorBB[i])
-                return false;
-        for (int i = 0; i < COLORCOUNT; ++i)
-            for (int t = 0; t < PIECECOUNT; ++t)
-                if (lhs.popCount[i][t] != rhs.popCount[i][t])
-                    return false;
-        for (int i = 0; i < 2; ++i)
-            for (int t = 0; t < 2; ++t)
-                if (lhs.castlingAllowed[i][t] != rhs.castlingAllowed[i][t])
-                    return false;
-        return true;
-    }
-
 private:
     Color turn = Color::None;
     Color oppColor = Color::None;
-    Color originalColor = Color::None;
-    U64 pieceBB[PIECECOUNT] = { 0 };
-    U64 colorBB[COLORCOUNT] = { 0 };
+    U64 pieceBB[PIECECOUNT] { 0 };
+    U64 colorBB[COLORCOUNT] { 0 };
     U64 occupiedBB = 0;
     Column enPassant = Column::None;
-    U8 popCount[COLORCOUNT][PIECECOUNT] = { 0 };
-    bool castlingAllowed[2][2] = { 0 };
+    U8 popCount[COLORCOUNT][PIECECOUNT] { 0 };
+    bool castlingAllowed[2][2] { false };
     Stats stats = Stats();
     Zobrist zobrist = Zobrist();
     int ply = 0;
@@ -153,10 +128,6 @@ inline Color Board::GetColor(Square sq) const {
         return Color::None;
 };
 
-inline Color Board::GetOriginalColor() const {
-    return originalColor;
-};
-
 inline U64 Board::GetHash() const {
     return zobrist.GetHash();
 };
@@ -207,10 +178,6 @@ Column Board::GetEnPassant() const {
 
 bool Board::IsCastlingAllowed(Color color, Castling side) {
     return castlingAllowed[(int) color][(int) side];
-}
-
-void Board::SetOriginalColor(Color color) {
-    originalColor = color;
 }
 
 void Board::SwitchTurn() {

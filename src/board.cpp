@@ -34,7 +34,6 @@ void Board::Initialize() {
 
     turn = Color::White;
     oppColor = Color::Black;
-    originalColor = Color::White;
 }
 
 void Board::DoMove(Move &move) {
