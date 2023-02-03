@@ -54,12 +54,13 @@ enum class PieceType : U8 {
 
 constexpr PieceType pieceTypes[PIECECOUNT] { PieceType::Pawn, PieceType::Knight, PieceType::Bishop, PieceType::Rook, PieceType::Queen, PieceType::King };
 
+// Found through tune.cpp
 enum class PieceValue : int {
-    Pawn = 100,
-    Knight = 300,
-    Bishop = 300,
-    Rook = 500,
-    Queen = 900,
+    Pawn = 111,
+    Knight = 306,
+    Bishop = 309,
+    Rook = 574,
+    Queen = 1127,
     //King = 20000,
     Inf = 300000,
     None
