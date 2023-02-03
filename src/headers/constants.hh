@@ -35,6 +35,7 @@
 //#define DEBUGGING true
 //#define STATS true
 #define OPENINGBOOK true
+//#define TESTFEATURE true
 
 enum class Color : U8 {
     White,

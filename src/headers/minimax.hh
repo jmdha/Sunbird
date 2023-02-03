@@ -15,6 +15,8 @@
 class MiniMax {
 public:
     explicit MiniMax(Board* board) : board(board), evaluator(Evaluator()), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {}
+    explicit MiniMax(Board* board, bool testFeature) :
+    board(board), evaluator(Evaluator()), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) }, testFeature(testFeature) {}
     MiniMax(Board* board, const Evaluator& eval) : board(board), evaluator(eval), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {}
     Move GetBestMove(int depth = -1);
 
@@ -44,6 +46,7 @@ private:
     MoveGen moveGens[2];
     Evaluator evaluator;
     TranspositionTable tt = TranspositionTable();
+    const bool testFeature = false;
 
     MiniMax::MoveVals NegaMax(int depth, U64 timeLimit, U64 *timeUsed, MoveVals moveVals = MoveVals());
     int NegaMax(int depth, int alpha, int beta);
