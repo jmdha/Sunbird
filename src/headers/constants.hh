@@ -23,12 +23,6 @@
 #define PAWNROWWHITE 1
 #define PAWNROWBLACK 6
 
-#define BACKROWWHITE 0
-#define BACKROWBLACK 7
-
-#define CASTLINGKING 1
-#define CASTLINGQUEEN 0
-
 #define EDGE 0xff818181818181ff
 #define CORNER 0x8100000000000081
 
@@ -36,7 +30,6 @@
 #define STATS true
 #define OPENINGBOOK true
 #define TESTFEATURE true
-//#define TT true
 
 enum class Color : U8 {
     White,
@@ -54,8 +47,6 @@ enum class PieceType : U8 {
     None
 };
 
-constexpr PieceType pieceTypes[PIECECOUNT] { PieceType::Pawn, PieceType::Knight, PieceType::Bishop, PieceType::Rook, PieceType::Queen, PieceType::King };
-
 // Found through tune.cpp
 enum class PieceValue : int {
     Pawn = 113,
@@ -69,12 +60,6 @@ enum class PieceValue : int {
 };
 
 constexpr std::array<int, PIECECOUNT> pieceValues { (int) PieceValue::Pawn, (int) PieceValue::Knight, (int) PieceValue::Bishop, (int) PieceValue::Rook, (int) PieceValue::Queen };
-
-enum class PawnStructureValue : int {
-	Doubled = -50,  // If one pawn is in front of another
-	Connected = 50, // If another pawn is being attacked by the given pawn
-    Isolated = -10
-};
 
 enum class PieceChar : char {
     PawnWhite = 'P',
@@ -159,12 +144,6 @@ enum class DirectionIndex : U8 {
 
 constexpr Direction directions[8] = {Direction::North, Direction::East, Direction::South, Direction::West,
                                      Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
-constexpr Direction oppDirections[8] = {Direction::South, Direction::West, Direction::North, Direction::East,
-                                     Direction::SouthWest, Direction::SouthEast, Direction::NorthWest, Direction::NorthEast };
-constexpr Direction rookDirections[4]   = { Direction::North, Direction::East, Direction::South, Direction::West };
-constexpr Direction bishopDirections[4] = { Direction::NorthWest, Direction::NorthEast, Direction::SouthWest, Direction::SouthEast };
-constexpr Direction queenDirections[8]  = { Direction::North, Direction::East, Direction::South, Direction::West, 
-                                            Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest };
 
 enum class NotEdge : U64 {
     North = 0xffffffffffffff,
@@ -179,13 +158,6 @@ enum class NotEdge : U64 {
 
 constexpr NotEdge notEdges[8] = { NotEdge::North, NotEdge::East, NotEdge::South, NotEdge::West,
                                   NotEdge::NorthEast, NotEdge::NorthWest, NotEdge::SouthEast, NotEdge::SouthWest };
-
-enum class NotEdgeKnight : U64 {
-    North = 0xffffffffffff,
-    East = 0x3f3f3f3f3f3f3f3f,
-    South = 0xffffffffffff0000,
-    West = 0xfcfcfcfcfcfcfcfc
-};
 
 enum class MoveType : U8 {
     Quiet = 0,
@@ -213,13 +185,6 @@ enum class MoveType : U8 {
 enum class Castling : U8 {
     King,
     Queen
-};
-
-enum class CastlingSided : U8 {
-    WK = 0,
-    WQ = 1,
-    BK = 2,
-    BQ = 3
 };
 
 enum class CastlingBlockSquares : U64 {

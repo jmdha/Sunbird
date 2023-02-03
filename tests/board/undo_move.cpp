@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
     board.DoMove(move);
     board.UndoMove(move);
 
-    if (priorBoard == board)
+    if (priorBoard.GetHash() == board.GetHash())
         exit(EXIT_SUCCESS);
     else
         throw std::logic_error("Unexpected changes from do-undo move");
