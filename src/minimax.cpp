@@ -23,7 +23,7 @@ Move MiniMax::GetBestMove(int depth) {
         moveScores = NegaMax(workingDepth++, timeLimit, &totalTime, moveScores);
         if (moveScores.scores.at(0) == (U64) PieceValue::Inf)
             break;
-        printf("Checking depth: %d, time used %llu ms\n", workingDepth, totalTime);
+        //printf("Checking depth: %d, time used %llu ms\n", workingDepth, totalTime);
     } while (depth == -1 &&
             // If iterative it will do what's below
             (workingDepth < 1000/*Relevant to late game where each iteration is 0ms*/ && (
