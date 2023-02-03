@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
     printf("Creating log file at \"./tuning_log.csv\"\n");
     std::ofstream log;
     log.open("tuning_log.csv");
-    log << "pawn_val,bishop_val,knight_val,rook_val,queen_val,king_val\n";
+    log << "pawn_val,knight_val,bishop_val,rook_val,queen_val,king_val\n";
     log.close();
     printf("--Running Tests--\n");
     const double totalGames = iterationCount * COLORCOUNT * posCount;
