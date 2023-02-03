@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cassert>
+#include <fstream>
 
 #include "indicators/indicators.hpp"
 
@@ -17,8 +18,8 @@ constexpr double delta = 0.2;
 
 constexpr double applyFactor = 0.1;
 
-constexpr int iterationCount = 10;
-constexpr int posCount = 5;
+constexpr int iterationCount = 100;
+constexpr int posCount = 10;
 
 std::array<int, PIECECOUNT> staPieceValues {pieceValues};
 std::array<int, PIECECOUNT> posPieceValues {pieceValues};
@@ -52,6 +53,11 @@ int main(int argc, char* argv[]) {
             indicators::option::ShowElapsedTime{true},
             indicators::option::ShowRemainingTime{true}
     };
+    printf("Creating log file at \"./tuning_log.csv\"\n");
+    std::ofstream log;
+    log.open("tuning_log.csv");
+    log << "pawn_val,bishop_val,knight_val,rook_val,queen_val,king_val\n";
+    log.close();
     printf("--Running Tests--\n");
     const double totalGames = iterationCount * COLORCOUNT * posCount;
     for (int iteration = 0; iteration < iterationCount; iteration++) {
@@ -89,13 +95,18 @@ int main(int argc, char* argv[]) {
                         winCount.at(1)++;
                 }
             }
-
+        log.open("tuning_log.csv", std::ios_base::app);
         for (int i = 0; i < PIECECOUNT; i++) {
             if (winCount[0] > winCount[1])
                 staPieceValues[i] += (int) ((double) (posPieceValues[i] - staPieceValues[i]) * applyFactor);
             else if (winCount[0] < winCount[1])
                 staPieceValues[i] += (int) ((double) (negPieceValues[i] - staPieceValues[i]) * applyFactor);
+            log << staPieceValues[i];
+            if (i != PIECECOUNT - 1)
+                log << ",";
         }
+        log << "\n";
+        log.close();
     }
     printf("\nFinal values:\n");
     for (int i = 0; i < PIECECOUNT; i++)
