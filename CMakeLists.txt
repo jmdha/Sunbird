@@ -12,6 +12,7 @@ set(sources
 
 add_executable(main builds/main.cpp ${sources})
 add_executable(chess_engine builds/engine.cpp ${sources})
+add_executable(chess_engine_fen builds/engine_fen.cpp ${sources})
 add_executable(perft builds/perft.cpp ${sources} "src/perft.cpp")
 add_executable(tune builds/tune.cpp ${sources} src/headers/positions.hh "include/indicators/indicators.hpp")
 add_executable(test_feature builds/test_feature.cpp ${sources} src/headers/positions.hh "include/indicators/indicators.hpp")
