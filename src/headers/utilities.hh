@@ -29,7 +29,6 @@ namespace Utilities {
         default:
             return PieceChar::None;
         }
-        throw std::logic_error("Invalid flow");
     }
 
     static inline PieceType GetPieceType(PieceChar pieceChar) {
@@ -62,7 +61,6 @@ namespace Utilities {
         default:
             return PieceType::None;
         }
-        throw std::logic_error("Invalid flow");
     }
 
     static inline Color GetPieceColor(PieceChar pieceChar) {
@@ -168,7 +166,6 @@ namespace Utilities {
         default:
             return Column::None;
         }
-        throw std::logic_error("Invalid flow");
     }
 
     static inline U8 GetColumnIndex(Square square) {

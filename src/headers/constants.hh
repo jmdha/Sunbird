@@ -14,7 +14,7 @@
 
 // 218 I believe to be the max number of moves, however such an amount of moves is unrealistic, as such, it's set to a more realistic 128.
 // Should still cover almost all positions reachable in a normal game of chess.
-#define MAXMOVECOUNT 128
+#define MAXMOVECOUNT 256
 
 #define PIECECOUNT 6
 #define COLORCOUNT 2

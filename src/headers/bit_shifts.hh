@@ -25,7 +25,7 @@ private:
     inline static U64 pieceAttacks[PIECECOUNT][SQUARECOUNT] = { 0 };
     inline static U64 blockersAndBeyond[PIECECOUNT][SQUARECOUNT] = { 0 };
     inline static U64 behind[SQUARECOUNT][SQUARECOUNT] = { 0 };
-    inline static U64 rings[SQUARECOUNT][7] = { 0 };
+    inline static U64 rings[SQUARECOUNT][8] = { 0 };
 
     inline static U64 GenerateRay(U8 square, DirectionIndex direction);
     inline static U64 GenerateSqRay(U8 from, U8 to);
