@@ -29,6 +29,7 @@ namespace Utilities {
         default:
             return PieceChar::None;
         }
+        throw std::logic_error("Invalid flow");
     }
 
     static inline PieceType GetPieceType(PieceChar pieceChar) {
@@ -61,6 +62,7 @@ namespace Utilities {
         default:
             return PieceType::None;
         }
+        throw std::logic_error("Invalid flow");
     }
 
     static inline Color GetPieceColor(PieceChar pieceChar) {
@@ -141,7 +143,7 @@ namespace Utilities {
         case Direction::None:
             throw std::invalid_argument("No direction given");
         }
-        return 0;
+        throw std::logic_error("Invalid flow");
     }
 
     static inline Column GetColumn(int columnIndex) {
@@ -166,6 +168,7 @@ namespace Utilities {
         default:
             return Column::None;
         }
+        throw std::logic_error("Invalid flow");
     }
 
     static inline U8 GetColumnIndex(Square square) {
@@ -194,6 +197,7 @@ namespace Utilities {
             case Column::None:
                 throw std::logic_error("Invalid argument");
         }
+        throw std::logic_error("Invalid flow");
     }
 
     static inline Column GetColumn(Square square) {
@@ -262,6 +266,7 @@ namespace Utilities {
             case Direction::None:
                 return DirectionIndex::None;
         }
+        throw std::logic_error("Invalid flow");
     }
 
     static inline DirectionIndex GetDirectionIndex(Square from, Square to) {

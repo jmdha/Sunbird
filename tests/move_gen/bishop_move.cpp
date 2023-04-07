@@ -8,15 +8,14 @@
 #include "bishop_gen.hh"
 #include "bit_shifts.hh"
 
-int main(int argc, char* argv[]) {
+int main(int, char* argv[]) {
     BitShifts::Init();
-    Board board = Board();
-    BoardImporter::ImportFEN(&board, (std::string) argv[2]);
+    Board board = BoardImporter::ImportFEN((std::string) argv[2]);
     BishopGen moveGens[2] = { BishopGen(Color::White), BishopGen(Color::Black) };
     
     std::array<Move, MAXMOVECOUNT> moves;
     U64 attackedSquares = board.GenerateAttackSquares(board.GetOppColor());
-    int moveCount = moveGens[(int) board.GetColor()].GetALlMoves(&moves, &board, attackedSquares, (bool) std::atoi(argv[3]), 0);
+    int moveCount = moveGens[(int) board.GetColor()].GetALlMoves(moves, std::make_shared<Board>(board), attackedSquares, (bool) std::atoi(argv[3]), 0);
 
     if (moveCount == std::atoi(argv[1]))
         exit(EXIT_SUCCESS);

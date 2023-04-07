@@ -8,10 +8,9 @@
 #include "board.hh"
 #include "board_importer.hh"
 
-int main(int argc, char* argv[]) {
+int main(int, char* argv[]) {
     std::string FEN = std::string(argv[1]);
-    Board board = Board();
-    BoardImporter::ImportFEN(&board, FEN);    
+    Board board = BoardImporter::ImportFEN(FEN);
 
     Board priorBoard = board;
 

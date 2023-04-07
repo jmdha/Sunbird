@@ -25,7 +25,7 @@ void BitShifts::Init () {
         blockersAndBeyond[(int) PieceType::Queen][square] = GenerateBB(square, PieceType::Queen);
     }
     for (U8 square = 0; square < SQUARECOUNT; square++)
-        for (U8 offset = 1; offset < 8; offset++)
+        for (U8 offset = 1; offset < 7; offset++)
             rings[square][offset] = GenerateRing(square, offset);
     for (U8 from = 0; from < SQUARECOUNT; from++)
         for (U8 to = 0; to < SQUARECOUNT; to++)

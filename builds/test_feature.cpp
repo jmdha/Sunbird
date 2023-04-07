@@ -13,7 +13,7 @@
 
 constexpr int posCount = 1;
 
-int main(int argc, char* argv[]) {
+int main() {
     BitShifts::Init();
     Board board = Board();
     indicators::ProgressBar bar{
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     printf("--Running Tests--\n");
     const double totalGames = COLORCOUNT * posCount;
     std::vector<MiniMax *> engines
-            {new MiniMax(&board), new MiniMax(&board, Evaluator(true))};
+            {new MiniMax(std::make_shared<Board>(board)), new MiniMax(std::make_shared<Board>(board), Evaluator(true))};
     auto positions = Positions::GetPositions(posCount);
     std::vector<U64> winCount{0, 0};
     for (int i = 0; i < 2; i++)
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
             double progress = (i * posCount + posI) / totalGames * 100;
             bar.set_progress((unsigned long) progress);
             auto position = positions.at(posI);
-            BoardImporter::ImportFEN(&board, position);
+            board = BoardImporter::ImportFEN(position);
             bool gameOver = false;
             bool draw = false;
             while (!gameOver) {

@@ -5,7 +5,7 @@
 #include "constants.hh"
 #include "utilities.hh"
 
-int main(int argc, char* argv[]) {
+int main(int, char* argv[]) {
     Square expectedSquare = (Square) std::atoi((argv[1]));
     int x = std::atoi(argv[2]);
     int y = std::atoi(argv[3]);

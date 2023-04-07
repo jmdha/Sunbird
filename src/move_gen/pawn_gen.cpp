@@ -87,7 +87,6 @@ void PawnGen::GeneratePawnMoves() {
             U64 upOne = BitShifts::Shift(bit, up, 1);
             singleMove[i] |= BitShifts::Shift(bit, up, 1);
             if (bit & (U64) doubleRank) {
-                int pawnDoubleMove = 0;
                 doubleMove[i] |= upOne;
                 doubleMove[i] |= BitShifts::Shift(bit, up, 2);
             }

@@ -139,6 +139,6 @@ namespace Positions {
         std::sample(positions.begin(), positions.end(), std::back_inserter(pos), count, std::mt19937{std::random_device{}()});
         return pos;
     }
-};
+}
 
 #endif //POSITIONS_HH

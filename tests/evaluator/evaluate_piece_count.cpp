@@ -6,9 +6,8 @@
 #include "board_importer.hh"
 #include "evaluator.hh"
 
-int main(int argc, char* argv[]) {
-    Board board = Board();
-    BoardImporter::ImportFEN(&board, (std::string) argv[2]);
+int main(int, char* argv[]) {
+    Board board = BoardImporter::ImportFEN((std::string) argv[2]);
     int expectedEval = std::atoi(argv[1]);
 
     int eval = Evaluator().EvaluatePieceCount(board);

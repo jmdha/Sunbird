@@ -6,10 +6,9 @@
 #include "board.hh"
 #include "board_importer.hh"
 
-int main(int argc, char* argv[]) {
+int main(int, char* argv[]) {
     BitShifts::Init();
-    Board board = Board();
-    BoardImporter::ImportFEN(&board, (std::string) argv[1]);
+    Board board = BoardImporter::ImportFEN((std::string) argv[1]);
     int expectedBool = std::atoi(argv[2]);
 
     int kingSafe = board.IsKingSafe();

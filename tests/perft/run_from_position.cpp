@@ -6,17 +6,16 @@
 #include "board_importer.hh"
 #include "perft.hh"
 
-int main(int argc, char* argv[]) {
+int main(int, char* argv[]) {
     BitShifts::Init();
     int expectedLeafCount = std::atoi(argv[1]);
 
     std::string FEN = std::string(argv[2]);
-    Board board = Board();
-    BoardImporter::ImportFEN(&board, FEN);    
+    Board board = BoardImporter::ImportFEN(FEN);
 
     int depth = std::atoi(argv[3]);
 
-    Perft perft = Perft(&board);
+    Perft perft = Perft(std::make_shared<Board>(board));
     int actualLeafCount = perft.RunFromPosition(depth);
 
     if (expectedLeafCount == actualLeafCount)

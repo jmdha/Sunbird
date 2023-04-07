@@ -5,7 +5,7 @@
 #include "constants.hh"
 #include "utilities.hh"
 
-int main(int argc, char* argv[]) {
+int main(int, char* argv[]) {
     PieceChar expectedPieceChar = (PieceChar) std::atoi(argv[1]);
     PieceType type = (PieceType) std::atoi(argv[2]);
     Color color = (Color) std::atoi(argv[3]);

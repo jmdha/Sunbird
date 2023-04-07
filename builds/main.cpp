@@ -6,7 +6,7 @@
 #include "headers/board_importer.hh"
 #include "headers/minimax.hh"
 
-int main(int argc, char* argv[]) {
+int main() {
     BitShifts::Init();
     Board board = BoardImporter::ImportFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     MiniMax max = MiniMax(std::make_shared<Board>(board));

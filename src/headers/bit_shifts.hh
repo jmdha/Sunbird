@@ -32,9 +32,6 @@ private:
     inline static U64 GenerateBehind(U8 from, U8 to);
     inline static U64 GenerateBB(U8 sq, PieceType type);
     inline static U64 GenerateRing(U8 sq, U8 offset);
-    inline static U64 GenerateDoubledPawns(Color color, U8 sq);
-    inline static U64 GenerateConnectedPawns(Color color, U8 sq);
-    inline static unsigned long long int GeneratePieceMoves(Color color, PieceType type, U8 sq);
 };
 
 inline U64 BitShifts::Shift(U64 b, Direction dir, int times) {

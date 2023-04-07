@@ -113,11 +113,11 @@ inline bool Board::IsKingSafe() {
 
 inline Color Board::GetColor() const {
     return turn;
-};
+}
 
 inline Color Board::GetOppColor() const {
     return oppColor;
-};
+}
 
 inline Color Board::GetColor(Square sq) const {
     if (colorBB[(U8) Color::White] & C64(sq))
@@ -126,19 +126,19 @@ inline Color Board::GetColor(Square sq) const {
         return Color::Black;
     else
         return Color::None;
-};
+}
 
 inline U64 Board::GetHash() const {
     return zobrist.GetHash();
-};
+}
 
 inline Board::Stats Board::GetStats() const {
     return stats;
-};
+}
 
 inline int Board::GetPly() const {
     return ply;
-};
+}
 
 inline bool Board::IsThreefoldRep() const {
     return zobrist.IsThreefoldRep();

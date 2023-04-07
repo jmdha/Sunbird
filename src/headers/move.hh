@@ -101,7 +101,7 @@ inline PieceType Move::GetCapturedPiece() const {
 
 inline Column Move::GetDEP() const {
     return (Column) Utilities::GetColumn(((move >> 28) & 0xf) - 1);
-};
+}
 
 inline bool Move::IsCapture() const {
     return ((U8) GetType() & CaptureBit) != 0;

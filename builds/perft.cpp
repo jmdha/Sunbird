@@ -6,11 +6,10 @@
 #include "board_importer.hh"
 #include "perft.hh"
 
-int main(int argc, char* argv[]) {
+int main(int, char* argv[]) {
     BitShifts::Init();
-    Board board = Board();
-    BoardImporter::ImportFEN(&board, argv[1]);
-    auto perft = Perft(&board);
+    Board board = BoardImporter::ImportFEN(argv[1]);
+    auto perft = Perft(std::make_shared<Board>(board));
     auto depth = strtol(argv[2], nullptr, 10);
     auto total = perft.PerftDivide((int) depth);
     printf("Nodes searched: %d", total);

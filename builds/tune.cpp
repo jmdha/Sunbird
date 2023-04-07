@@ -39,7 +39,7 @@ void ModPieceValues(int count) {
 
 }
 
-int main(int argc, char* argv[]) {
+int main() {
     BitShifts::Init();
     Board board = Board();
     indicators::ProgressBar bar {
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
     for (int iteration = 0; iteration < iterationCount; iteration++) {
         ModPieceValues(3);
         std::vector<MiniMax*> engines
-                { new MiniMax(&board, Evaluator(posPieceValues)), new MiniMax(&board, Evaluator(negPieceValues)) };
+                { new MiniMax(std::make_shared<Board>(board), Evaluator(posPieceValues)), new MiniMax(std::make_shared<Board>(board), Evaluator(negPieceValues)) };
         auto positions = Positions::GetPositions(posCount);
         std::vector<U64> winCount{0, 0};
         for (int i = 0; i < 2; i++)
