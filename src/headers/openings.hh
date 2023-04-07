@@ -9,7 +9,7 @@
 #include "move.hh"
 
 namespace OpeningBook {
-    const std::unordered_map<U64, std::vector<Move>> moves{
+    static inline std::unordered_map<U64, std::vector<Move>> moves{
             // v|Start pos
             {8350766115355486690LLU,  {
                 Move(MoveType::DoublePawnPush, Square::E2, Square::E4),
@@ -84,7 +84,7 @@ namespace OpeningBook {
     };
 
     std::optional<Move> GetMove(U64 boardHash) {
-        if (moves.find(boardHash) != moves.end()) {
+        if (moves.contains(boardHash)) {
             std::vector<Move> possibleMoves;
             std::sample(moves.at(boardHash).begin(), moves.at(boardHash).end(), std::back_inserter(possibleMoves), 1, std::mt19937{std::random_device{}()});
             return possibleMoves.at(0);

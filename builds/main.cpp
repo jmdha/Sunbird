@@ -8,9 +8,8 @@
 
 int main(int argc, char* argv[]) {
     BitShifts::Init();
-    Board board = Board();
-    BoardImporter::ImportFEN(&board, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-    MiniMax max = MiniMax(&board);
+    Board board = BoardImporter::ImportFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    MiniMax max = MiniMax(std::make_shared<Board>(board));
     auto t0 = std::chrono::steady_clock::now();
     Move move = max.GetBestMove();
     auto t1 = std::chrono::steady_clock::now();
