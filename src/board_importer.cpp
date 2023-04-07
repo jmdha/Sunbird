@@ -68,6 +68,7 @@ Board BoardImporter::ImportFEN(std::string FEN) {
 
 Board BoardImporter::ImportMoveSequence(std::string moves) {
 	Board board;
+    board.Initialize();
 	std::string move;
 	for (int i = 0; i < moves.length(); i++) {
 		if (moves[i] != ' ')
