@@ -9,8 +9,8 @@
 
 class BoardImporter {
 public:
-    static void ImportFEN(Board* board, std::string FEN);
-    static void ImportMoveSequence(Board* board, std::string moves);
+    static Board ImportFEN(std::string FEN);
+    static Board ImportMoveSequence(std::string moves);
 
 private:
 };

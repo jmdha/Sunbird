@@ -1,7 +1,7 @@
 #include "headers/piece_gen.hh"
 #include "../headers/bit_shifts.hh"
 
-U8 PieceGen::GetALlMoves(std::array<Move, 128> *moves, Board *board, unsigned long long int attackedSquares,
+U8 PieceGen::GetALlMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, unsigned long long int attackedSquares,
                          bool isKingSafe, unsigned short startIndex) {
     int moveCount = 0;
     moveCount += GetAttackMoves(moves, board, attackedSquares, isKingSafe, moveCount + startIndex);
@@ -9,7 +9,7 @@ U8 PieceGen::GetALlMoves(std::array<Move, 128> *moves, Board *board, unsigned lo
     return moveCount;
 }
 
-U8 PieceGen::GetSlidingMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board, PieceType type,
+U8 PieceGen::GetSlidingMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, PieceType type,
                              bool isKingSafe, U8 startIndex, U64 attackedSquares) {
     U8 moveCount = 0;
     U64 pieces = board->GetPiecePos(color, type);
@@ -29,7 +29,7 @@ U8 PieceGen::GetSlidingMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board
             while (potMoves) {
                 U8 sq = Utilities::LSB_Pop(&potMoves);
                 if ((isKingSafe && ((C64(piece) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ C64(piece) | C64(sq))))
-                    AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Quiet, (Square) piece, (Square) sq));
+                    AppendMove(moves, startIndex + moveCount, moveCount, Move(MoveType::Quiet, (Square) piece, (Square) sq));
             }
             if (!(ring & unblocked))
                 break;
@@ -39,7 +39,7 @@ U8 PieceGen::GetSlidingMoves(std::array<Move, MAXMOVECOUNT> *moves, Board *board
     return moveCount;
 }
 
-U8 PieceGen::GetSlidingAttacks(std::array<Move, MAXMOVECOUNT> *moves, Board *board, PieceType type,
+U8 PieceGen::GetSlidingAttacks(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, PieceType type,
                                bool isKingSafe, U8 startIndex, U64 attackedSquares) {
     U8 moveCount = 0;
     U64 pieces = board->GetPiecePos(color, type);
@@ -55,7 +55,7 @@ U8 PieceGen::GetSlidingAttacks(std::array<Move, MAXMOVECOUNT> *moves, Board *boa
                 if (C64(blocker) & board->GetColorBB(oppColor))
                     if ((isKingSafe && ((C64(piece) & attackedSquares) == 0)) ||
                     board->IsKingSafe((board->GetOccupiedBB() ^ C64(piece)) | C64(blocker), board->GetColorBB(oppColor) ^ C64(blocker)))
-                    AppendMove(moves, startIndex + moveCount, &moveCount, Move(MoveType::Capture, (Square) piece, (Square) blocker, board->GetType((Square) blocker)));
+                    AppendMove(moves, startIndex + moveCount, moveCount, Move(MoveType::Capture, (Square) piece, (Square) blocker, board->GetType((Square) blocker)));
             }
             if (!(ring & unblocked))
                 break;

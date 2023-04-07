@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
                 //printf("%f\n", progress);
                 bar.set_progress((unsigned long) progress);
                 auto position = positions.at(posI);
-                BoardImporter::ImportFEN(&board, position);
+                board = BoardImporter::ImportFEN(position);
                 bool gameOver = false;
                 bool draw = false;
                 while (!gameOver) {

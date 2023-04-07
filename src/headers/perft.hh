@@ -2,6 +2,8 @@
 #define PERFT
 
 #include <string>
+#include <memory>
+#include <utility>
 
 #include "constants.hh"
 #include "board.hh"
@@ -10,13 +12,13 @@
 
 class Perft {
 public:
-    explicit Perft(Board* board) : board(board), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {};
+    explicit Perft(std::shared_ptr<Board> board) : board(std::move(board)), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {};
 
     int RunFromPosition(int depth);
     int PerftDivide(int depth);
 
 private:
-    Board* board;
+    std::shared_ptr<Board> board;
     MoveGen moveGens[2];
 
     unsigned int moveTypeCount[16] = { 0 };

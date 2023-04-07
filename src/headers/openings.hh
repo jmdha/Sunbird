@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <unordered_set>
+#include <optional>
 
 #include "constants.hh"
 #include "move.hh"
@@ -82,14 +83,13 @@ namespace OpeningBook {
 #pragma endregion KingsPawn
     };
 
-    bool GetMove(U64 boardHash, Move *move) {
+    std::optional<Move> GetMove(U64 boardHash) {
         if (moves.find(boardHash) != moves.end()) {
             std::vector<Move> possibleMoves;
             std::sample(moves.at(boardHash).begin(), moves.at(boardHash).end(), std::back_inserter(possibleMoves), 1, std::mt19937{std::random_device{}()});
-            *move = possibleMoves.at(0);
-            return true;
+            return possibleMoves.at(0);
         }
-        return false;
+        return {};
     }
 }
 #endif //OPENINGS_HH
