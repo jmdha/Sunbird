@@ -42,9 +42,6 @@ private:
     std::shared_ptr<Board> board;
     MoveGen moveGens[2];
     Evaluator evaluator;
-    // Used for depth 1 move generation
-    // Declared on stack, as the reservation of the
-    std::array<std::array<Move, MAXMOVECOUNT>, MAXMOVECOUNT> lastDepthMoves;
 
     MiniMax::MoveVals NegaMax(int depth, U64 timeLimit, U64 *timeUsed, MoveVals moveVals = MoveVals());
     int NegaMax(int depth, int alpha, int beta);
