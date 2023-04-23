@@ -8,7 +8,6 @@ class Evaluator {
 public:
     // Init
     explicit Evaluator() : sPieceValues(pieceValues) {};
-    explicit Evaluator(bool testFeature) : sPieceValues(pieceValues), testFeature(testFeature) {};
     explicit Evaluator(std::array<int, PIECECOUNT> pValues) : sPieceValues(pValues) {};
     ~Evaluator();
     // Evaluation
@@ -20,7 +19,6 @@ public:
     static inline int SideModifier(const Board &board, int value);
 private:
     const std::array<int, PIECECOUNT> sPieceValues;
-    bool testFeature = false;
 };
 
 inline int Evaluator::Evaluate(const Board &board) const {

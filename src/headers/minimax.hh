@@ -14,8 +14,6 @@
 class MiniMax {
 public:
     explicit MiniMax(std::shared_ptr<Board> board) : board(board), evaluator(Evaluator()), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {}
-    explicit MiniMax(std::shared_ptr<Board> board, bool testFeature) :
-    board(board), evaluator(Evaluator()), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) }, testFeature(testFeature) {}
     MiniMax(std::shared_ptr<Board> board, const Evaluator& eval) : board(board), evaluator(eval), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {}
     Move GetBestMove(int depth = -1);
 
@@ -44,7 +42,9 @@ private:
     std::shared_ptr<Board> board;
     MoveGen moveGens[2];
     Evaluator evaluator;
-    const bool testFeature = false;
+    // Used for depth 1 move generation
+    // Declared on stack, as the reservation of the
+    std::array<std::array<Move, MAXMOVECOUNT>, MAXMOVECOUNT> lastDepthMoves;
 
     MiniMax::MoveVals NegaMax(int depth, U64 timeLimit, U64 *timeUsed, MoveVals moveVals = MoveVals());
     int NegaMax(int depth, int alpha, int beta);

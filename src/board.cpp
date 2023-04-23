@@ -71,7 +71,7 @@ void Board::DoMove(Move &move) {
         }
         fromType = PieceType::King;
 #ifdef STATS
-        stats.castlingMoves++;
+        ++stats.castlingMoves;
 #endif
     } else {
         fromType = GetType(move.GetFrom());
