@@ -125,17 +125,10 @@ void Board::DoMove(Move &move) {
         if (castlingAllowed[(U8) turn][(U8) Castling::Queen])
             DisableCastling(move, turn, Castling::Queen);
     } else if (fromType == PieceType::Rook) {
-        if (turn == Color::White) {
-            if (castlingAllowed[(U8) turn][(U8) Castling::King] && move.GetFrom() == Square::H1)
-                DisableCastling(move, turn, Castling::King);
-            else if (castlingAllowed[(U8) turn][(U8) Castling::Queen] && move.GetFrom() == Square::A1)
-                DisableCastling(move, turn, Castling::Queen);
-        } else if (turn == Color::Black) {
-            if (castlingAllowed[(U8) turn][(U8) Castling::King] && move.GetFrom() == Square::H8)
-                DisableCastling(move, turn, Castling::King);
-            else if (castlingAllowed[(U8) turn][(U8) Castling::Queen] && move.GetFrom() == Square::A8)
-                DisableCastling(move, turn, Castling::Queen);
-        }
+        if (castlingAllowed[(U8) turn][(U8) Castling::King] && Utilities::GetColumn(move.GetFrom()) == Column::H)
+            DisableCastling(move, turn, Castling::King);
+        else if (castlingAllowed[(U8) turn][(U8) Castling::Queen] && Utilities::GetColumn(move.GetFrom()) == Column::A)
+            DisableCastling(move, turn, Castling::Queen);
     }
 
     SwitchTurn();

@@ -71,7 +71,7 @@ inline void Zobrist::DecrementHash() {
 }
 
 inline bool Zobrist::IsThreefoldRep() const {
-    return hashOccurances.at(hash) >= 3;
+    return hashOccurances.at(hash) > 2;
 }
 
 inline U64 Zobrist::GetHash() const {
