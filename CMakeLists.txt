@@ -27,7 +27,7 @@ enable_testing()
 set(sources
         src/bit_shifts.cpp src/board.cpp src/board_importer.cpp src/evaluator.cpp src/minimax.cpp src/headers/openings.hh
         src/move_gen/move_gen.cpp src/move_gen/piece_gen.cpp src/move_gen/king_gen.cpp src/move_gen/knight_gen.cpp src/move_gen/pawn_gen.cpp
-        include/hash_table8.h)
+        include/robin-map/robin_growth_policy.h include/robin-map/robin_hash.h include/robin-map/robin_map.h include/robin-map/robin_set.h)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} TRACY_ENABLE")
 add_executable(main builds/main.cpp ${sources})
@@ -40,7 +40,6 @@ include_directories("src" "src/headers" "src/move_gen" "src/move_gen/headers")
 target_include_directories(tune PRIVATE "include")
 
 target_link_libraries(perft PUBLIC TracyClient pthread dl)
-
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
