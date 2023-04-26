@@ -21,8 +21,8 @@ public:
             castlingAttack[(int) Castling::Queen] = CastlingAttackSquares::QSideBlack;
         }
     };
-    U8 GetQuietMoves (std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, U64 attackedSquares, bool isKingSafe, U8 startIndex) final;
-    U8 GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, U64 attackedSquares, bool isKingSafe, U8 startIndex) final;
+    U8 GetQuietMoves (std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, U8 startIndex) final;
+    U8 GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, U8 startIndex) final;
 private:
     CastlingBlockSquares castlingBlock[2]{};
     CastlingAttackSquares castlingAttack[2]{};

@@ -1,8 +1,7 @@
 #include "headers/pawn_gen.hh"
 #include "../headers/bit_shifts.hh"
 
-U8 PawnGen::GetQuietMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, unsigned long long int attackedSquares,
-                          bool isKingSafe, unsigned short startIndex) {
+U8 PawnGen::GetQuietMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, unsigned short startIndex) {
     U8 moveCount = 0;
     U64 pieces = board->GetPiecePos(color, PieceType::Pawn);
 
@@ -11,7 +10,7 @@ U8 PawnGen::GetQuietMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shar
 
         // Single push
         if (!(board->GetOccupiedBB() & singleMove[(int) lsb]))
-            if ((isKingSafe && ((C64(lsb) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | BitShifts::Shift(C64(lsb), up, 1))) {
+            if (board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | BitShifts::Shift(C64(lsb), up, 1))) {
                 // If Promotion
                 if (C64(lsb) & (U64) promotionRank) {
                     AppendMove(moves, startIndex + moveCount, moveCount, Move(MoveType::BPromotion, (Square) lsb, (Square) (lsb + (int) up)));
@@ -24,15 +23,14 @@ U8 PawnGen::GetQuietMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shar
 
         // Double push
         if (C64(lsb) & (U64) doubleRank && !(board->GetOccupiedBB() & doubleMove[(int) lsb]))
-            if ((isKingSafe && ((C64(lsb) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | BitShifts::Shift(C64(lsb), up, 2)))
+            if (board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | BitShifts::Shift(C64(lsb), up, 2)))
                 AppendMove(moves, startIndex + moveCount, moveCount, Move(MoveType::DoublePawnPush, (Square) lsb, (Square) (lsb + (int) up * 2)));
     }
 
     return moveCount;
 }
 
-U8 PawnGen::GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, unsigned long long int attackedSquares,
-                           bool isKingSafe, unsigned short startIndex) {
+U8 PawnGen::GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, unsigned short startIndex) {
     U8 moveCount = 0;
     U64 pieces = board->GetPiecePos(color, PieceType::Pawn);
 
@@ -43,7 +41,7 @@ U8 PawnGen::GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::sha
         U64 captures = board->GetColorBB(oppColor) & PawnAttacks[(int) color][(int) lsb];
         while (captures) {
             U64 capturePiece = Utilities::LSB_Pop(&captures);
-            if ((isKingSafe && ((C64(lsb) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | C64(capturePiece), board->GetColorBB(oppColor) ^ C64(capturePiece))) {
+            if (board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb)) | C64(capturePiece), board->GetColorBB(oppColor) ^ C64(capturePiece))) {
                 // If Promotion
                 if (C64(lsb) & (U64) promotionRank) {
                     AppendMove(moves, startIndex + moveCount, moveCount,
@@ -71,8 +69,7 @@ U8 PawnGen::GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::sha
         while (captures) {
             U64 toSquare = Utilities::LSB_Pop(&captures);
             U64 capturePiece = Utilities::LSB( BitShifts::Shift(C64(toSquare), down, 1));
-            if ((isKingSafe && (((C64(lsb) | C64(capturePiece)) & attackedSquares) == 0)) ||
-            board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb) ^ C64(capturePiece)) | C64(toSquare),  board->GetColorBB(oppColor) ^ C64(capturePiece) | C64(toSquare)))
+            if (board->IsKingSafe((board->GetOccupiedBB() ^ C64(lsb) ^ C64(capturePiece)) | C64(toSquare),  board->GetColorBB(oppColor) ^ C64(capturePiece) | C64(toSquare)))
                 AppendMove(moves, startIndex + moveCount, moveCount, Move(MoveType::EPCapture, (Square) lsb, (Square) toSquare, PieceType::Pawn));
         }
     }

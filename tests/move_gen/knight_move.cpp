@@ -14,8 +14,7 @@ int main(int, char* argv[]) {
     KnightGen moveGens[2] = { KnightGen(Color::White), KnightGen(Color::Black) };
     
     std::array<Move, MAXMOVECOUNT> moves;
-    U64 attackedSquares = board.GenerateAttackSquares(board.GetOppColor());
-    int moveCount = moveGens[(int) board.GetColor()].GetALlMoves(moves, std::make_shared<Board>(board), attackedSquares, (bool) std::atoi(argv[3]), 0);
+    int moveCount = moveGens[(int) board.GetColor()].GetALlMoves(moves, std::make_shared<Board>(board), 0);
 
     if (moveCount == std::atoi(argv[1]))
         exit(EXIT_SUCCESS);

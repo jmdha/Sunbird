@@ -4,8 +4,7 @@ int Perft::Run(int depth) {
     if (depth == 0)
         return 1;
     std::array<Move, MAXMOVECOUNT> moves{};
-    U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
-    int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(moves, board, attackedSquares);
+    int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(moves, board);
     int leafCount = 0;
 
     for (int i = 0; i < moveCount; i++) {
@@ -26,8 +25,7 @@ int Perft::PerftDivide(int depth) {
     int total = 0;
 
     std::array<Move, MAXMOVECOUNT> moves{};
-    U64 attackedSquares = board->GenerateAttackSquares(board->GetOppColor());
-    int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(moves, board, attackedSquares);
+    int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(moves, board);
 
     for (int i = 0; i < moveCount; i++) {
         board->DoMove(moves[i]);

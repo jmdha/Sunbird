@@ -1,16 +1,14 @@
 #include "headers/piece_gen.hh"
 #include "../headers/bit_shifts.hh"
 
-U8 PieceGen::GetALlMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, unsigned long long int attackedSquares,
-                         bool isKingSafe, unsigned short startIndex) {
+U8 PieceGen::GetALlMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, unsigned short startIndex) {
     int moveCount = 0;
-    moveCount += GetAttackMoves(moves, board, attackedSquares, isKingSafe, moveCount + startIndex);
-    moveCount += GetQuietMoves(moves, board, attackedSquares, isKingSafe, moveCount + startIndex);
+    moveCount += GetAttackMoves(moves, board, moveCount + startIndex);
+    moveCount += GetQuietMoves(moves, board, moveCount + startIndex);
     return moveCount;
 }
 
-U8 PieceGen::GetQuietMovesGeneric(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, PieceType type,
-                                  bool isKingSafe, U8 startIndex, U64 attackedSquares) {
+U8 PieceGen::GetQuietMovesGeneric(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, PieceType type, U8 startIndex) {
     U8 moveCount = 0;
     U64 pieces = board->GetPiecePos(color, type);
 
@@ -37,8 +35,7 @@ U8 PieceGen::GetQuietMovesGeneric(std::array<Move, MAXMOVECOUNT> &moves, const s
     return moveCount;
 }
 
-U8 PieceGen::GetAttackMovesGeneric(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, PieceType type,
-                                   bool isKingSafe, U8 startIndex, U64 attackedSquares) {
+U8 PieceGen::GetAttackMovesGeneric(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, PieceType type, U8 startIndex) {
     U8 moveCount = 0;
     U64 pieces = board->GetPiecePos(color, type);
     while (pieces) {

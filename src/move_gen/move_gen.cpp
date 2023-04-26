@@ -16,27 +16,27 @@ MoveGen::MoveGen(Color color) {
     pieceGen[(int) PieceType::Pawn] = std::make_unique<PawnGen>(PawnGen(color));
 }
 
-U8 MoveGen::GetAllMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, U64 attackedSquares) {
+U8 MoveGen::GetAllMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board) {
     U8 moveCount = 0;
     bool isKingSafe = board->IsKingSafe();
     for (const auto & gen : pieceGen)
-        moveCount += gen->GetALlMoves(moves, board, attackedSquares, isKingSafe, moveCount);
+        moveCount += gen->GetALlMoves(moves, board, moveCount);
     return moveCount;
 }
 
-U8 MoveGen::GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, unsigned long long int attackedSquares) {
+U8 MoveGen::GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board) {
     U8 moveCount = 0;
     bool isKingSafe = board->IsKingSafe();
     for (const auto & gen : pieceGen)
-        moveCount += gen->GetAttackMoves(moves, board, attackedSquares, isKingSafe, moveCount);
+        moveCount += gen->GetAttackMoves(moves, board, moveCount);
     return moveCount;
 }
 
-U8 MoveGen::GetQuietMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, unsigned long long int attackedSquares) {
+U8 MoveGen::GetQuietMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board) {
     U8 moveCount = 0;
     bool isKingSafe = board->IsKingSafe();
     for (const auto & gen : pieceGen)
-        moveCount += gen->GetQuietMoves(moves, board, attackedSquares, isKingSafe, moveCount);
+        moveCount += gen->GetQuietMoves(moves, board, moveCount);
     return moveCount;
 }
 

@@ -28,7 +28,7 @@
 
 //#define DEBUGGING true
 //#define STATS true
-#define OPENINGBOOK true
+//#define OPENINGBOOK true
 
 enum class Color : U8 {
     White,
@@ -194,10 +194,10 @@ enum class CastlingBlockSquares : U64 {
 };
 
 enum class CastlingAttackSquares : U64 {
-    KSideWhite = 0x60,
-    QSideWhite = 0xc,
-    KSideBlack = 0x6000000000000000,
-    QSideBlack = 0xc00000000000000
+    KSideWhite = 0x70,
+    QSideWhite = 0x1c,
+    KSideBlack = 0x7000000000000000,
+    QSideBlack = 0x1c00000000000000
 };
 
 // These are non-sliding piece moves
