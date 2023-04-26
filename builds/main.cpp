@@ -8,8 +8,8 @@
 
 int main() {
     BitShifts::Init();
-    Board board = BoardImporter::ImportFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-    MiniMax max = MiniMax(std::make_shared<Board>(board));
+    std::shared_ptr<Board> board = std::make_shared<Board>(BoardImporter::ImportFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
+    MiniMax max = MiniMax(board);
     auto t0 = std::chrono::steady_clock::now();
     Move move = max.GetBestMove();
     auto t1 = std::chrono::steady_clock::now();
@@ -17,6 +17,6 @@ int main() {
     if (elapsed == 0)
         elapsed = 1;
     printf("Move found %s\n", move.ToString().c_str());
-    printf("Moves made %llu (%llu/s)\n", board.GetStats().totalMoves, (board.GetStats().totalMoves / elapsed) * 1000);
+    printf("Moves made %llu (%llu/s)\n", board->GetStats().totalMoves, (board->GetStats().totalMoves / elapsed) * 1000);
     printf("Elapsed %llu ms\n", elapsed);
 }
