@@ -28,7 +28,7 @@
 
 //#define DEBUGGING true
 //#define STATS true
-//#define OPENINGBOOK true
+#define OPENINGBOOK true
 
 enum class Color : U8 {
     White,
@@ -48,11 +48,11 @@ enum class PieceType : U8 {
 
 // Found through tune.cpp
 enum class PieceValue : int {
-    Pawn = 113,
+    Pawn = 111,
     Knight = 294,
-    Bishop = 329,
-    Rook = 634,
-    Queen = 1241,
+    Bishop = 349,
+    Rook = 692,
+    Queen = 1201,
     //King = 20000,
     Inf = 300000,
     None

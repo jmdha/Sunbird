@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include <fstream>
+#include <memory>
 
 #include "indicators/indicators.hpp"
 
@@ -41,7 +42,7 @@ void ModPieceValues(int count) {
 
 int main() {
     BitShifts::Init();
-    Board board = Board();
+    std::shared_ptr<Board> board = std::make_shared<Board>();
     indicators::ProgressBar bar {
             indicators::option::BarWidth{50},
             indicators::option::Start{"["},
@@ -63,7 +64,8 @@ int main() {
     for (int iteration = 0; iteration < iterationCount; iteration++) {
         ModPieceValues(3);
         std::vector<MiniMax*> engines
-                { new MiniMax(std::make_shared<Board>(board), Evaluator(posPieceValues)), new MiniMax(std::make_shared<Board>(board), Evaluator(negPieceValues)) };
+                { new MiniMax(board, Evaluator(posPieceValues)),
+                  new MiniMax(board, Evaluator(negPieceValues)) };
         auto positions = Positions::GetPositions(posCount);
         std::vector<U64> winCount{0, 0};
         for (int i = 0; i < 2; i++)
@@ -72,24 +74,24 @@ int main() {
                 //printf("%f\n", progress);
                 bar.set_progress((unsigned long) progress);
                 auto position = positions.at(posI);
-                board = BoardImporter::ImportFEN(position);
+                *board = BoardImporter::ImportFEN(position);
                 bool gameOver = false;
                 bool draw = false;
                 while (!gameOver) {
                     Move move;
-                    if ((int) board.GetColor() == i)
+                    if ((int) board->GetColor() == i)
                         move = engines.at(0)->GetBestMove();
                     else
                         move = engines.at(1)->GetBestMove();
                     if (move.GetType() == MoveType::SPECIAL_DRAW)
                         draw = true;
                     if (move.GetValue() != 0 && move.GetType() != MoveType::SPECIAL_DRAW) {
-                        board.DoMove(move);
+                        board->DoMove(move);
                     } else
                         gameOver = true;
                 }
                 if (!draw) {
-                    if ((int) board.GetOppColor() == i)
+                    if ((int) board->GetOppColor() == i)
                         winCount.at(0)++;
                     else
                         winCount.at(1)++;
