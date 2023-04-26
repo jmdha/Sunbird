@@ -15,9 +15,9 @@ U8 PieceGen::GetSlidingMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::s
     U64 pieces = board->GetPiecePos(color, type);
 
     while (pieces) {
-        U8 piece = Utilities::LSB_Pop(&pieces);
-        U64 unblocked = (0xffffffffffffffff ^ C64(piece)) & BitShifts::GetAttacks(piece, type);
-        for (U8 i = 1; i < 8; i++) {
+        const U8 piece = Utilities::LSB_Pop(&pieces);
+        U64 unblocked = (0xffffffffffffffff) & BitShifts::GetAttacks(piece, type);
+        for (U8 i = 1; i < 8; ++i) {
             const U64 ring = BitShifts::GetRing(piece, i);
             U64 potMoves = ring & unblocked;
             U64 blockers = potMoves & board->GetOccupiedBB();
@@ -27,12 +27,10 @@ U8 PieceGen::GetSlidingMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::s
                 unblocked ^= BitShifts::GetSqRay(piece, Utilities::LSB_Pop(&blockers));
 
             while (potMoves) {
-                U8 sq = Utilities::LSB_Pop(&potMoves);
-                if ((isKingSafe && ((C64(piece) & attackedSquares) == 0)) || board->IsKingSafe((board->GetOccupiedBB() ^ C64(piece) | C64(sq))))
+                const U8 sq = Utilities::LSB_Pop(&potMoves);
+                if (board->IsKingSafe((board->GetOccupiedBB() ^ C64(piece) | C64(sq))))
                     AppendMove(moves, startIndex + moveCount, moveCount, Move(MoveType::Quiet, (Square) piece, (Square) sq));
             }
-            if (!(ring & unblocked))
-                break;
         }
     }
 
@@ -44,21 +42,20 @@ U8 PieceGen::GetSlidingAttacks(std::array<Move, MAXMOVECOUNT> &moves, const std:
     U8 moveCount = 0;
     U64 pieces = board->GetPiecePos(color, type);
     while (pieces) {
-        U8 piece = Utilities::LSB_Pop(&pieces);
-        U64 unblocked = (0xffffffffffffffff ^ C64(piece)) & BitShifts::GetAttacks(piece, type);
-        for (U8 i = 1; i < 8; i++) {
+        const U8 piece = Utilities::LSB_Pop(&pieces);
+        U64 unblocked = (0xffffffffffffffff) & BitShifts::GetAttacks(piece, type);
+        for (U8 i = 1; i < 8; ++i) {
             const U64 ring = BitShifts::GetRing(piece, i);
             U64 blockers = ring & unblocked & board->GetOccupiedBB();
+            U64 tempBlockers = blockers;
+            while (tempBlockers)
+                unblocked ^= BitShifts::GetSqRay(piece, Utilities::LSB_Pop(&tempBlockers));
+            blockers &= board->GetColorBB(oppColor);
             while (blockers) {
-                U8 blocker = Utilities::LSB_Pop(&blockers);
-                unblocked ^= BitShifts::GetSqRay(piece, blocker);
-                if (C64(blocker) & board->GetColorBB(oppColor))
-                    if ((isKingSafe && ((C64(piece) & attackedSquares) == 0)) ||
-                    board->IsKingSafe((board->GetOccupiedBB() ^ C64(piece)) | C64(blocker), board->GetColorBB(oppColor) ^ C64(blocker)))
-                    AppendMove(moves, startIndex + moveCount, moveCount, Move(MoveType::Capture, (Square) piece, (Square) blocker, board->GetType((Square) blocker)));
+                const U64 blocker = Utilities::LSB_Pop(&blockers);
+                if (board->IsKingSafe((board->GetOccupiedBB() ^ C64(piece)) | C64(blocker), board->GetColorBB(oppColor) ^ C64(blocker)))
+                AppendMove(moves, startIndex + moveCount, moveCount, Move(MoveType::Capture, (Square) piece, (Square) blocker, board->GetType((Square) blocker)));
             }
-            if (!(ring & unblocked))
-                break;
         }
     }
 
