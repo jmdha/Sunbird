@@ -26,7 +26,7 @@ enable_testing()
 
 set(sources
         src/bit_shifts.cpp src/board.cpp src/board_importer.cpp src/evaluator.cpp src/minimax.cpp src/headers/openings.hh
-        src/move_gen/move_gen.cpp src/move_gen/piece_gen.cpp src/move_gen/king_gen.cpp src/move_gen/knight_gen.cpp src/move_gen/pawn_gen.cpp
+        src/move_gen/move_gen.cpp src/move_gen/piece_gen.cpp src/move_gen/king_gen.cpp src/move_gen/pawn_gen.cpp
         include/robin-map/robin_growth_policy.h include/robin-map/robin_hash.h include/robin-map/robin_map.h include/robin-map/robin_set.h)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} TRACY_ENABLE")

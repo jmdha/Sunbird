@@ -11,11 +11,11 @@ public:
 };
 
 U8 QueenGen::GetQuietMoves (std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, U64 attackedSquares, bool isKingSafe, U8 startIndex) {
-    return GetSlidingMoves(moves, board, PieceType::Queen, isKingSafe, startIndex, attackedSquares);
+    return GetQuietMovesGeneric(moves, board, PieceType::Queen, isKingSafe, startIndex, attackedSquares);
 }
 
 U8 QueenGen::GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, U64 attackedSquares, bool isKingSafe, U8 startIndex) {
-    return GetSlidingAttacks(moves, board, PieceType::Queen, isKingSafe, startIndex, attackedSquares);
+    return GetAttackMovesGeneric(moves, board, PieceType::Queen, isKingSafe, startIndex, attackedSquares);
 }
 
 #endif //QUEEN_GEN_HH

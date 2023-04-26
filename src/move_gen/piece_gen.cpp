@@ -9,8 +9,8 @@ U8 PieceGen::GetALlMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::share
     return moveCount;
 }
 
-U8 PieceGen::GetSlidingMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, PieceType type,
-                             bool isKingSafe, U8 startIndex, U64 attackedSquares) {
+U8 PieceGen::GetQuietMovesGeneric(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, PieceType type,
+                                  bool isKingSafe, U8 startIndex, U64 attackedSquares) {
     U8 moveCount = 0;
     U64 pieces = board->GetPiecePos(color, type);
 
@@ -24,7 +24,7 @@ U8 PieceGen::GetSlidingMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::s
             potMoves ^= blockers;
 
             while (blockers)
-                unblocked ^= BitShifts::GetSqRay(piece, Utilities::LSB_Pop(&blockers));
+                unblocked = unblocked & ~BitShifts::GetSqRay(piece, Utilities::LSB_Pop(&blockers));
 
             while (potMoves) {
                 const U8 sq = Utilities::LSB_Pop(&potMoves);
@@ -37,8 +37,8 @@ U8 PieceGen::GetSlidingMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::s
     return moveCount;
 }
 
-U8 PieceGen::GetSlidingAttacks(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, PieceType type,
-                               bool isKingSafe, U8 startIndex, U64 attackedSquares) {
+U8 PieceGen::GetAttackMovesGeneric(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, PieceType type,
+                                   bool isKingSafe, U8 startIndex, U64 attackedSquares) {
     U8 moveCount = 0;
     U64 pieces = board->GetPiecePos(color, type);
     while (pieces) {
@@ -49,7 +49,7 @@ U8 PieceGen::GetSlidingAttacks(std::array<Move, MAXMOVECOUNT> &moves, const std:
             U64 blockers = ring & unblocked & board->GetOccupiedBB();
             U64 tempBlockers = blockers;
             while (tempBlockers)
-                unblocked ^= BitShifts::GetSqRay(piece, Utilities::LSB_Pop(&tempBlockers));
+                unblocked = unblocked & ~BitShifts::GetSqRay(piece, Utilities::LSB_Pop(&tempBlockers));
             blockers &= board->GetColorBB(oppColor);
             while (blockers) {
                 const U64 blocker = Utilities::LSB_Pop(&blockers);

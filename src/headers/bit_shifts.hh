@@ -52,14 +52,21 @@ U64 BitShifts::GenerateRay(U8 square, DirectionIndex direction) {
 }
 
 U64 BitShifts::GenerateSqRay(U8 from, U8 to) {
-    DirectionIndex dir = Utilities::GetDirectionIndex((Square) from, (Square) to);
-    U64 c = C64(from);
-    U64 ray = 0;
-    while (c & Utilities::NotEdge(directions[(int) dir])) {
-        c = Shift(c, directions[(int) dir], 1);
-        ray |= c;
+    if (Utilities::GetRowIndex((Square)from) == Utilities::GetRowIndex((Square)to) ||
+        Utilities::GetColumnIndex((Square)from) == Utilities::GetColumnIndex((Square)to) ||
+            (std::abs((int) Utilities::GetColumnIndex((Square)from) - (int) Utilities::GetColumnIndex((Square)to)) ==
+            (std::abs((int) Utilities::GetRowIndex((Square)from) - (int) Utilities::GetRowIndex((Square)to))))) {
+        DirectionIndex dir = Utilities::GetDirectionIndex((Square) from, (Square) to);
+        U64 c = C64(from);
+        U64 ray = 0;
+        while (c & Utilities::NotEdge(directions[(int) dir])) {
+            c = Shift(c, directions[(int) dir], 1);
+            ray |= c;
+        }
+        return ray;
+    } else {
+        return to;
     }
-    return ray;
 }
 
 U64 BitShifts::GenerateBehind(U8 from, U8 to) {

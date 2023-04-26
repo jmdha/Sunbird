@@ -19,11 +19,11 @@ protected:
     Color color;
     Color oppColor;
 
-    U8 GetSlidingMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board>& board, PieceType type,
-                       bool isKingSafe, U8 startIndex, U64 attackedSquares);
+    U8 GetQuietMovesGeneric(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board>& board, PieceType type,
+                            bool isKingSafe, U8 startIndex, U64 attackedSquares);
 
-    U8 GetSlidingAttacks(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board>& board, PieceType type,
-                         bool isKingSafe, U8 startIndex, U64 attackedSquares);
+    U8 GetAttackMovesGeneric(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board>& board, PieceType type,
+                             bool isKingSafe, U8 startIndex, U64 attackedSquares);
 
     static inline void AppendMove(std::array<Move, MAXMOVECOUNT> &moves, int index, U8 &moveCount, Move move);
 };

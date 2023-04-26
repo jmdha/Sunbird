@@ -11,11 +11,11 @@ public:
 };
 
 U8 RookGen::GetQuietMoves (std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, U64 attackedSquares, bool isKingSafe, U8 startIndex) {
-    return GetSlidingMoves(moves, board, PieceType::Rook, isKingSafe, startIndex, attackedSquares);
+    return GetQuietMovesGeneric(moves, board, PieceType::Rook, isKingSafe, startIndex, attackedSquares);
 }
 
 U8 RookGen::GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board, U64 attackedSquares, bool isKingSafe, U8 startIndex) {
-    return GetSlidingAttacks(moves, board, PieceType::Rook, isKingSafe, startIndex, attackedSquares);
+    return GetAttackMovesGeneric(moves, board, PieceType::Rook, isKingSafe, startIndex, attackedSquares);
 }
 
 

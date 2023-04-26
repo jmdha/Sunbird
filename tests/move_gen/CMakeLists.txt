@@ -200,7 +200,7 @@ add_test(MoveGen_Queen_KingSafety_None GenerateQueenMoves   0   "7Q/8/5Q2/8/8/8/
 
 ## KnightMoves
 add_executable(GenerateKnightMoves tests/move_gen/knight_move.cpp "src/bit_shifts.cpp" "src/board.cpp" "src/board_importer.cpp"
-        "src/move_gen/piece_gen.cpp" "src/move_gen/knight_gen.cpp")
+        "src/move_gen/piece_gen.cpp")
 
 add_test(MoveGen_Knight_Move_W_Corner1 GenerateKnightMoves    2  "N7/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
 add_test(MoveGen_Knight_Move_W_Corner2 GenerateKnightMoves    2  "7N/8/8/8/8/8/8/8 w KQkq - 0 1" 1)
