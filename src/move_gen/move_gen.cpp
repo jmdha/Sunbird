@@ -18,7 +18,6 @@ MoveGen::MoveGen(Color color) {
 
 U8 MoveGen::GetAllMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board) {
     U8 moveCount = 0;
-    bool isKingSafe = board->IsKingSafe();
     for (const auto & gen : pieceGen)
         moveCount += gen->GetALlMoves(moves, board, moveCount);
     return moveCount;
@@ -26,7 +25,6 @@ U8 MoveGen::GetAllMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared
 
 U8 MoveGen::GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board) {
     U8 moveCount = 0;
-    bool isKingSafe = board->IsKingSafe();
     for (const auto & gen : pieceGen)
         moveCount += gen->GetAttackMoves(moves, board, moveCount);
     return moveCount;
@@ -34,7 +32,6 @@ U8 MoveGen::GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::sha
 
 U8 MoveGen::GetQuietMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board) {
     U8 moveCount = 0;
-    bool isKingSafe = board->IsKingSafe();
     for (const auto & gen : pieceGen)
         moveCount += gen->GetQuietMoves(moves, board, moveCount);
     return moveCount;
