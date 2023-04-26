@@ -31,5 +31,4 @@ void BitShifts::Init () {
         for (U8 to = 0; to < SQUARECOUNT; to++)
             if (from != to)
                 sqRays[from][to] = GenerateSqRay(from, to);
-    printf("\n");
 }
