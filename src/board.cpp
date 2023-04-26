@@ -207,23 +207,19 @@ void Board::UndoMove(Move move) {
 }
 
 void Board::EnableCastling(Move &move) {
+    auto enableCastling = [&](Color color, Castling castling) {
+        castlingAllowed[(int) color][(int) castling] = true;
+        zobrist.FlipCastling(color, castling);
+    };
     if (move.IsDC()) {
-        if (move.IsDC(Color::White, Castling::King)) {
-            castlingAllowed[(int) Color::White][(int) Castling::King] = true;
-            zobrist.FlipCastling(Color::White, Castling::King);
-        }
-        if (move.IsDC(Color::White, Castling::Queen)) {
-            castlingAllowed[(int) Color::White][(int) Castling::Queen] = true;
-            zobrist.FlipCastling(Color::White, Castling::Queen);
-        }
-        if (move.IsDC(Color::Black, Castling::King)) {
-            castlingAllowed[(int) Color::Black][(int) Castling::King] = true;
-            zobrist.FlipCastling(Color::Black, Castling::King);
-        }
-        if (move.IsDC(Color::Black, Castling::Queen)) {
-            castlingAllowed[(int) Color::Black][(int) Castling::Queen] = true;
-            zobrist.FlipCastling(Color::Black, Castling::Queen);
-        }
+        if (move.IsDC(Color::White, Castling::King))
+            enableCastling(Color::White, Castling::King);
+        if (move.IsDC(Color::White, Castling::Queen))
+            enableCastling(Color::White, Castling::Queen);
+        if (move.IsDC(Color::Black, Castling::King))
+            enableCastling(Color::Black, Castling::King);
+        if (move.IsDC(Color::Black, Castling::Queen))
+            enableCastling(Color::Black, Castling::Queen);
     }
 }
 
