@@ -72,6 +72,6 @@ This can be seen in the below gif(Do note: Very scuffed):
 
 The gif shows five bitboards: pieces, what pieces are on the board; ring, the ring with an increasing offset; attackboard, static moves possible for the given piece on an empty board; unblocked, possible squares(starting at all but initial); and combined, which shows where all the bitboards overlap.
 
-The advantage of this algorithm is that it can be used regardless of what sliding piece(bishop, rook, or queen. Although, it could be used for knight, king, and some pawn moves. However, the efficiency would be quite low) moves are being generated for.
+The advantage of this algorithm is that it can be used regardless of what sliding piece(bishop, rook, queen, or even knight. Although, it could be used for king, and some pawn moves. However, the efficiency would be quite low) moves are being generated for.
 
 See implementation [here](https://github.com/jamadaha/chess_engine/blob/main/src/move_gen/piece_gen.cpp).
