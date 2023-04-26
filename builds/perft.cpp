@@ -5,6 +5,7 @@
 #include "board.hh"
 #include "board_importer.hh"
 #include "perft.hh"
+#include "tracy/Tracy.hpp"
 
 int main(int, char* argv[]) {
     BitShifts::Init();
