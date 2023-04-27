@@ -8,7 +8,6 @@
 #include <map>
 
 #include "constants.hh"
-#include "../../include/robin-map/robin_map.h"
 
 struct Zobrist {
 public:
@@ -30,7 +29,7 @@ private:
     U64 enPassantHashes[8]{};
 
     U64 hash = 0;
-    tsl::robin_map<U64, U8> hashOccurances;
+    std::unordered_map<U64, U8> hashOccurances;
 
     void InitHashTable() {
         std::mt19937 gen(0);
