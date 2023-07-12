@@ -53,6 +53,7 @@ build/*
 /cmake-build-release/
 /cmake-build-relwithdebinfo/
 
+.cache/*
 .idea/*
 /cmake-build-relwithdebinfo-coverage/
 /cmake-build-debug-coverage/
