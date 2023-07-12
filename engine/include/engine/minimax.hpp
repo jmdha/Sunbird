@@ -9,7 +9,7 @@
 #include <chess/board.hpp>
 #include <chess/move.hpp>
 #include <chess/move_gen.hpp>
-#include "engine/evaluator.hpp"
+#include "evaluator.hpp"
 
 class MiniMax {
 public:

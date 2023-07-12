@@ -12,11 +12,6 @@
 // Class representing the current state of a game of chess
 class Board {
 public:
-    struct Stats {
-        U64 totalMoves = 0;
-        U64 epMoves = 0;
-        U64 castlingMoves = 0;
-    };
     // Initialization
     void Initialize();
     // Pieces
@@ -43,7 +38,6 @@ public:
     inline Column GetEnPassant() const;
     inline bool IsCastlingAllowed(Color color, Castling side);
     inline U64 GetHash() const; 
-    inline Stats GetStats() const;
     inline bool IsThreefoldRep() const;
     U64 GenerateAttackSquares(Color color) const;
 
@@ -56,7 +50,6 @@ private:
     Column enPassant = Column::None;
     U8 popCount[COLORCOUNT][PIECECOUNT] { 0 };
     bool castlingAllowed[2][2] { false };
-    Stats stats = Stats();
     Zobrist zobrist = Zobrist();
     int ply = 0;
 
@@ -130,10 +123,6 @@ inline Color Board::GetColor(Square sq) const {
 
 inline U64 Board::GetHash() const {
     return zobrist.GetHash();
-}
-
-inline Board::Stats Board::GetStats() const {
-    return stats;
 }
 
 inline int Board::GetPly() const {

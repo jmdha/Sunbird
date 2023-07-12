@@ -9,7 +9,7 @@ public:
     // Init
     explicit Evaluator() : sPieceValues(pieceValues) {};
     explicit Evaluator(std::array<int, PIECECOUNT> pValues) : sPieceValues(pValues) {};
-    ~Evaluator();
+    ~Evaluator() = default;
     // Evaluation
     int EvaluatePieceCount(const Board &board) const;
     static inline int EvaluatePositionValue(const Board &board);

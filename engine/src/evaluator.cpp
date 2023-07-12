@@ -1,17 +1,17 @@
-#include "engine/evaluator.hpp"
+#include <engine/evaluator.hpp>
 
 #include <chess/internal/constants.hpp>
 #include <chess/internal/bit_shifts.hpp>
 #include <chess/board.hpp>
 
-Evaluator::~Evaluator() = default;
-
 int Evaluator::EvaluatePieceCount(const Board &board) const {
     int value = 0;
-    for (int i = 0; i < PIECECOUNT - 1; ++i)
-        value +=
-                (board.GetPieceCount(Color::White, (PieceType) i) - board.GetPieceCount(Color::Black, (PieceType) i)) *
-                sPieceValues.at(i);
+    for (int i = 0; i < PIECECOUNT - 1; ++i) {
+        const int whiteCount = board.GetPieceCount(Color::White, (PieceType) i);
+        const int blackCount = board.GetPieceCount(Color::Black, (PieceType) i);
+        const int pieceValue = sPieceValues.at(i);
+        value += (whiteCount - blackCount) * pieceValue;
+    }
     return value;
 }
 
@@ -41,3 +41,4 @@ int Evaluator::EvaluatePositionValue(const Board &board, Color color) {
     }
     return value;
 }
+

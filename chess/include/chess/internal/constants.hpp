@@ -26,10 +26,6 @@
 #define EDGE 0xff818181818181ff
 #define CORNER 0x8100000000000081
 
-//#define DEBUGGING true
-//#define STATS true
-//#define OPENINGBOOK true
-
 enum class Color : U8 {
     White,
     Black,

@@ -4,12 +4,6 @@
 #include "engine/internal/openings.hpp"
 
 Move MiniMax::GetBestMove(int depth) {
-#ifdef OPENINGBOOK
-    std::optional<Move> openingMove = OpeningBook::GetMove(board->GetHash());
-    if (openingMove.has_value())
-        return openingMove.value();
-#endif
-
     if (board->GetPly() > 150)
         return Move(MoveType::SPECIAL_DRAW);
 

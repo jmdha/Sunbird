@@ -38,9 +38,6 @@ void Board::Initialize() {
 
 void Board::DoMove(Move &move) {
     PieceType fromType;
-#ifdef STATS
-    ++stats.totalMoves;
-#endif
     if (move.GetType() == MoveType::KingCastle) {
         if (turn == Color::White) {
             PlacePiece(Square::G1, PieceType::King, Color::White);
@@ -54,9 +51,6 @@ void Board::DoMove(Move &move) {
             RemovePiece(Square::H8, PieceType::Rook, Color::Black);
         }
         fromType = PieceType::King;
-#ifdef STATS
-        ++stats.castlingMoves;
-#endif
     } else if (move.GetType() == MoveType::QueenCastle) {
         if (turn == Color::White) {
             PlacePiece(Square::C1, PieceType::King, Color::White);
@@ -70,9 +64,6 @@ void Board::DoMove(Move &move) {
             RemovePiece(Square::A8, PieceType::Rook, Color::Black);
         }
         fromType = PieceType::King;
-#ifdef STATS
-        ++stats.castlingMoves;
-#endif
     } else {
         fromType = GetType(move.GetFrom());
         RemovePiece(move.GetFrom(), fromType, turn);
@@ -81,9 +72,6 @@ void Board::DoMove(Move &move) {
             if (move.GetType() == MoveType::EPCapture) {
                 auto captureSquare = (Square) ((turn == Color::White) ? (int) move.GetTo() - 8 : (int) move.GetTo() + 8);
                 RemovePiece(captureSquare, PieceType::Pawn, oppColor);
-#ifdef STATS
-                ++stats.epMoves;
-#endif
             } else
                 RemovePiece(move.GetTo(), move.GetCapturedPiece(), oppColor);
 
