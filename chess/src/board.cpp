@@ -97,8 +97,8 @@ void Board::DoMove(Move &move) {
 
     // En passant
     //// Check if there is old
-    if (enPassant != Column::None)
-        move.SetDisableEnPassant(enPassant);
+    if (EP != Column::None)
+        move.SetDisableEnPassant(EP);
     //// Set new
     if (move.GetType() == MoveType::DoublePawnPush) {
         SetEnPassant(Utilities::GetColumn(move.GetFrom()));
@@ -279,10 +279,10 @@ bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBo
 }
 
 void Board::SetEnPassant(Column col) {
-    if (enPassant != Column::None)
-        zobrist.FlipEnPassant(enPassant);
+    if (EP != Column::None)
+        zobrist.FlipEnPassant(EP);
     if (col != Column::None)
         zobrist.FlipEnPassant(col);
-    enPassant = col;
-
+    EP = col;
 }
+

@@ -34,21 +34,22 @@ public:
     inline bool IsKingSafe(U64 tempOccuracyBoard) const;
     inline bool IsKingSafe() const;
     // Castling
+    inline bool IsCastlingAllowed(Color color, Castling side) const;
     inline void EnableCastling(Color color, Castling castling);
     void EnableCastling(Move &move);
     void DisableCastling(Move &move, Color color, Castling side);
+    // EnPassant
+    inline Column GetEP() const;
+    void SetEnPassant(Column sq);
     // Misc
     inline Color GetColor() const;
     inline Color GetOppColor() const;
     inline Color GetColor(Square sq) const;
-    inline Column GetEnPassant() const;
-    inline bool IsCastlingAllowed(Color color, Castling side);
     inline U64 GetHash() const; 
     inline bool IsThreefoldRep() const;
     U64 GenerateAttackSquares(Color color) const;
     inline void SetTurn(Color color);
     inline void SwitchTurn();
-    void SetEnPassant(Column col);
 
 private:
     Color turn = Color::None;
@@ -56,7 +57,7 @@ private:
     U64 pieceBB[PIECECOUNT] { 0 };
     U64 colorBB[COLORCOUNT] { 0 };
     U64 occupiedBB = 0;
-    Column enPassant = Column::None;
+    Column EP = Column::None;
     U8 popCount[COLORCOUNT][PIECECOUNT] { 0 };
     bool castlingAllowed[2][2] { false };
     Zobrist zobrist = Zobrist();
@@ -134,8 +135,8 @@ U64 Board::GetColorBB(Color color) const {
     return colorBB[(int) color];
 }
 
-Column Board::GetEnPassant() const {
-    return enPassant;
+inline Column Board::GetEP() const {
+    return EP;
 }
 
 inline void Board::PlacePiece(Square square, PieceChar pieceChar) {
@@ -162,7 +163,7 @@ inline void Board::RemovePiece(Square square, PieceType type, Color color) {
     zobrist.FlipSquare(square, type, color);
 }
 
-bool Board::IsCastlingAllowed(Color color, Castling side) {
+bool Board::IsCastlingAllowed(Color color, Castling side) const {
     return castlingAllowed[(int) color][(int) side];
 }
 

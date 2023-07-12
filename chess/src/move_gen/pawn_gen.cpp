@@ -65,7 +65,7 @@ U8 PawnGen::GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::sha
         }
 
         // En Passant
-        captures = (U64) board->GetEnPassant() & PawnAttacks[(int) color][(int) lsb] & (U64) enPassantRank;
+        captures = (U64) board->GetEP() & PawnAttacks[(int) color][(int) lsb] & (U64) enPassantRank;
         while (captures) {
             U64 toSquare = Utilities::LSB_Pop(&captures);
             U64 capturePiece = Utilities::LSB( BitShifts::Shift(C64(toSquare), down, 1));

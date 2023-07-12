@@ -16,6 +16,7 @@ set(CHESS_HEADERS
     ${CHESS_INCLUDE_BUILD_DIR}/internal/king_gen.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/board.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/import.hpp
+    ${CHESS_INCLUDE_BUILD_DIR}/export.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/move.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/move_gen.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/perft.hpp
