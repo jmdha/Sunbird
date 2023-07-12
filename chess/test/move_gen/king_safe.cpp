@@ -4,11 +4,11 @@
 
 #include <chess/internal/bit_shifts.hpp>
 #include <chess/board.hpp>
-#include <chess/board_importer.hpp>
+#include <chess/import.hpp>
 
 int main(int, char* argv[]) {
     BitShifts::Init();
-    Board board = BoardImporter::ImportFEN((std::string) argv[1]);
+    Board board = Import::FEN((std::string) argv[1]);
     int expectedBool = std::atoi(argv[2]);
 
     int kingSafe = board.IsKingSafe();

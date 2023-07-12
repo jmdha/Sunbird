@@ -233,7 +233,7 @@ U64 Board::GenerateAttackSquares(Color color) const {
     return attacks;
 }
 
-bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard) {
+bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard) const {
     if (tempKingBoard == 0)
         return true;
     U64 kingPosIndex = Utilities::LSB_Pop(&tempKingBoard);

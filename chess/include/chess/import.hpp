@@ -1,0 +1,145 @@
+#ifndef IMPORT_FEN
+#define IMPORT_FEN
+
+#include <string>
+
+#include "internal/constants.hpp"
+#include "internal/utilities.hpp"
+#include "board.hpp"
+
+namespace Import {
+    // Format: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+    static Board FEN(std::string FEN) {
+        Board board;
+
+        // import position
+        for(int y = HEIGHT - 1; y >= 0; y--) {
+            int remainingSquares = WIDTH;
+            while(remainingSquares > 0) {
+                if(isdigit(FEN[0]))
+                    remainingSquares -= (int) FEN[0] - 48;
+                else
+                    board.PlacePiece(Utilities::GetSquare(WIDTH - (remainingSquares--), y), (PieceChar) FEN[0]);
+
+                FEN.erase(0, 1);
+            }
+            FEN.erase(0, 1);
+        }
+
+        // import turn
+        if(FEN[0] == 'w')
+            board.SetTurn(Color::White);
+        else
+            board.SetTurn(Color::Black);
+
+        FEN.erase(0, 2);
+
+        while(FEN[0] != ' ') {
+            switch (FEN[0]) {
+                case 'K':
+                    board.EnableCastling(Color::White, Castling::King);
+                    break;
+                case 'k':
+                    board.EnableCastling(Color::Black, Castling::King);
+                    break;
+                case 'Q':
+                    board.EnableCastling(Color::White, Castling::Queen);
+                    break;
+                case 'q':
+                    board.EnableCastling(Color::Black, Castling::Queen);
+                    break;
+            }
+            FEN.erase(0, 1);
+        }
+
+        FEN.erase(0, 1);
+
+        // import en-passant
+        if (FEN[0] != '-') {
+            auto sq = Utilities::GetSquare(FEN[0], FEN[1]);
+            board.SetEnPassant(Utilities::GetColumn(sq));
+        }
+
+        return board;
+    }
+
+    // Format: d2d4 e7e5 etc
+    static Board MoveSequence(std::string moves) {
+        Board board;
+        board.Initialize();
+        std::string move;
+        for (int i = 0; i < moves.length(); i++) {
+            if (moves[i] != ' ')
+                move.push_back(moves[i]);
+
+            if (moves[i] == ' ' || i == (int) moves.length() - 1) {
+                Square fromSquare = Utilities::GetSquare(move[0], move[1]);
+                Square toSquare = Utilities::GetSquare(move[2], move[3]);
+                PieceType fromType = board.GetType(fromSquare);
+                PieceType toType = board.GetType(toSquare);
+                Color fromColor = board.GetColor(fromSquare);
+                MoveType type;
+                // Is castling?
+                //// Is kingside castle
+                if (fromType == PieceType::King && (move == "e1g1" || move == "e8g8"))
+                    type = MoveType::KingCastle;
+                //// Is queenside castle
+                else if (fromType == PieceType::King && (move == "e1c1" || move == "e8c8"))
+                    type = MoveType::QueenCastle;
+
+                else if (fromType == PieceType::Pawn) {
+                    // If double pawn push
+                    if (std::abs((int) Utilities::GetRowIndex(fromSquare) - (int) Utilities::GetRowIndex(toSquare)) == 2)
+                        type = MoveType::DoublePawnPush;
+                    // If promotion
+                    else if (Utilities::GetRow(toSquare) == ((fromColor == Color::White) ? Row::Row8 : Row::Row1)) {
+                        // If none capture promotion
+                        if (toType == PieceType::None) {
+                            if (moves.length() == 5) {
+                                if (move[4] == 'r')
+                                    type = MoveType::RPromotion;
+                                else if (move[4] == 'n')
+                                    type = MoveType::NPromotion;
+                                else if (move[4] == 'b')
+                                    type = MoveType::BPromotion;
+                            } else
+                                type = MoveType::QPromotion;
+                        } else {
+                            // Capture promotion
+                            if (moves.length() == 5) {
+                                if (move[4] == 'r')
+                                    type = MoveType::RPromotionCapture;
+                                else if (move[4] == 'n')
+                                    type = MoveType::NPromotionCapture;
+                                else if (move[4] == 'b')
+                                    type = MoveType::BPromotionCapture;
+                            } else
+                                type = MoveType::QPromotionCapture;
+                        }
+                    } else if (toType != PieceType::None)
+                        type = MoveType::Capture; 
+                    else {
+                        if (Utilities::GetColumn(fromSquare) != Utilities::GetColumn(toSquare))
+                            type = MoveType::EPCapture;
+                        else
+                            type = MoveType::Quiet;
+                    }
+                } else if (toType != PieceType::None)
+                    type = MoveType::Capture; 
+                else
+                    type = MoveType::Quiet;
+                Move tempMove;
+                if (type == MoveType::Capture || type == MoveType::RPromotionCapture || type == MoveType::NPromotionCapture || type == MoveType::BPromotionCapture || type == MoveType::QPromotionCapture)
+                    tempMove = Move(type, fromSquare, toSquare, board.GetType(toSquare));
+                else
+                    tempMove = Move(type, fromSquare, toSquare);
+                board.DoMove(tempMove);
+                move = "";
+            }
+        }
+        return board;
+    }
+};
+
+#endif
+

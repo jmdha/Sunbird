@@ -6,7 +6,7 @@
 #include <chess/internal/bit_shifts.hpp>
 #include <chess/internal/constants.hpp>
 #include <chess/board.hpp>
-#include <chess/board_importer.hpp>
+#include <chess/import.hpp>
 #include <engine/internal/positions.hpp>
 #include <engine/minimax.hpp>
 #include <engine/evaluator.hpp>
@@ -60,7 +60,7 @@ int main() {
                 double progress = (iteration * COLORCOUNT * posCount + i * posCount + posI) / totalGames * 100;
                 printf("%f\n", progress);
                 auto position = positions.at(posI);
-                *board = BoardImporter::ImportFEN(position);
+                *board = Import::FEN(position);
                 bool gameOver = false;
                 bool draw = false;
                 while (!gameOver) {

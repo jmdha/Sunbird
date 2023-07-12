@@ -3,7 +3,7 @@
 #include <cstdlib>
 
 #include <chess/board.hpp>
-#include <chess/board_importer.hpp>
+#include <chess/import.hpp>
 #include <chess/perft.hpp>
 
 int main(int, char* argv[]) {
@@ -11,7 +11,7 @@ int main(int, char* argv[]) {
     int expectedLeafCount = std::atoi(argv[1]);
 
     std::string FEN = std::string(argv[2]);
-    Board board = BoardImporter::ImportFEN(FEN);
+    Board board = Import::FEN(FEN);
 
     int depth = std::atoi(argv[3]);
 

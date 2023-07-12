@@ -15,7 +15,7 @@ set(CHESS_HEADERS
     ${CHESS_INCLUDE_BUILD_DIR}/internal/queen_gen.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/internal/king_gen.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/board.hpp
-    ${CHESS_INCLUDE_BUILD_DIR}/board_importer.hpp
+    ${CHESS_INCLUDE_BUILD_DIR}/import.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/move.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/move_gen.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/perft.hpp
@@ -24,7 +24,6 @@ set(CHESS_HEADERS
 set(CHESS_SRC
     ${CHESS_SRC_DIR}/bit_shifts.cpp
     ${CHESS_SRC_DIR}/board.cpp
-    ${CHESS_SRC_DIR}/board_importer.cpp
     ${CHESS_SRC_DIR}/perft.cpp
     ${CHESS_SRC_DIR}/move_gen/move_gen.cpp
     ${CHESS_SRC_DIR}/move_gen/piece_gen.cpp

@@ -22,24 +22,33 @@ public:
     inline U64 GetOccupiedBB() const;
     inline U64 GetColorBB(Color color) const;
     inline int GetPly() const;
+    inline void PlacePiece(Square square, PieceChar pieceChar);
+    inline void PlacePiece(Square square, PieceType type, Color color);
+    inline void RemovePiece(Square square, PieceType type, Color color);
     // Moves
     void DoMove(Move &move);
     void UndoMove(Move move);
     // King Safety
-    bool IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard);
-    inline bool IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard);
-    inline bool IsKingSafe(U64 tempOccuracyBoard);
-    inline bool IsKingSafe();
+    bool IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard) const;
+    inline bool IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard) const;
+    inline bool IsKingSafe(U64 tempOccuracyBoard) const;
+    inline bool IsKingSafe() const;
+    // Castling
+    inline void EnableCastling(Color color, Castling castling);
+    void EnableCastling(Move &move);
+    void DisableCastling(Move &move, Color color, Castling side);
     // Misc
     inline Color GetColor() const;
     inline Color GetOppColor() const;
     inline Color GetColor(Square sq) const;
-    inline void SwitchTurn();
     inline Column GetEnPassant() const;
     inline bool IsCastlingAllowed(Color color, Castling side);
     inline U64 GetHash() const; 
     inline bool IsThreefoldRep() const;
     U64 GenerateAttackSquares(Color color) const;
+    inline void SetTurn(Color color);
+    inline void SwitchTurn();
+    void SetEnPassant(Column col);
 
 private:
     Color turn = Color::None;
@@ -52,18 +61,6 @@ private:
     bool castlingAllowed[2][2] { false };
     Zobrist zobrist = Zobrist();
     int ply = 0;
-
-    // Pieces
-    inline void PlacePiece(Square square, PieceChar pieceChar);
-    inline void PlacePiece(Square square, PieceType type, Color color);
-    inline void RemovePiece(Square square, PieceType type, Color color);
-    // Castling
-    void EnableCastling(Move &move);
-    void DisableCastling(Move &move, Color color, Castling side);
-    // Misc
-    void SetEnPassant(Column col);
-
-    friend class BoardImporter;
 };
 
 inline PieceType Board::GetType(Square square) const {
@@ -92,15 +89,15 @@ inline U64 Board::GetOccupiedBB() const {
     return occupiedBB;
 }
 
-inline bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard) {
+inline bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard) const {
     return IsKingSafe(tempOccuracyBoard, tempEnemyBoard, GetPiecePos(turn, PieceType::King));
 }
 
-inline bool Board::IsKingSafe(U64 tempOccuracyBoard) {
+inline bool Board::IsKingSafe(U64 tempOccuracyBoard) const {
     return IsKingSafe(tempOccuracyBoard, GetColorBB(oppColor));
 }
 
-inline bool Board::IsKingSafe() {
+inline bool Board::IsKingSafe() const {
     return IsKingSafe(GetOccupiedBB());
 }
 
@@ -133,6 +130,14 @@ inline bool Board::IsThreefoldRep() const {
     return zobrist.IsThreefoldRep();
 }
 
+U64 Board::GetColorBB(Color color) const {
+    return colorBB[(int) color];
+}
+
+Column Board::GetEnPassant() const {
+    return enPassant;
+}
+
 inline void Board::PlacePiece(Square square, PieceChar pieceChar) {
     PlacePiece(square, Utilities::GetPieceType(pieceChar), Utilities::GetPieceColor(pieceChar));
 }
@@ -157,21 +162,22 @@ inline void Board::RemovePiece(Square square, PieceType type, Color color) {
     zobrist.FlipSquare(square, type, color);
 }
 
-U64 Board::GetColorBB(Color color) const {
-    return colorBB[(int) color];
-}
-
-Column Board::GetEnPassant() const {
-    return enPassant;
-}
-
 bool Board::IsCastlingAllowed(Color color, Castling side) {
     return castlingAllowed[(int) color][(int) side];
+}
+
+void Board::SetTurn(Color color) {
+    turn = color;
+    oppColor = Utilities::GetOppositeColor(color);
 }
 
 void Board::SwitchTurn() {
     turn = Utilities::GetOppositeColor(turn);
     oppColor = Utilities::GetOppositeColor(turn);
+}
+
+void Board::EnableCastling(Color color, Castling castling) {
+    castlingAllowed[(int) color][(int) castling] = true;
 }
 
 #endif // BOARD

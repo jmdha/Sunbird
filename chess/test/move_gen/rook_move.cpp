@@ -5,12 +5,12 @@
 #include <chess/internal/constants.hpp>
 #include <chess/internal/rook_gen.hpp>
 #include <chess/board.hpp>
-#include <chess/board_importer.hpp>
+#include <chess/import.hpp>
 #include <chess/move_gen.hpp>
 
 int main(int, char* argv[]) {
     BitShifts::Init();
-    Board board = BoardImporter::ImportFEN((std::string) argv[2]);
+    Board board = Import::FEN((std::string) argv[2]);
     RookGen moveGens[2] = { RookGen(Color::White), RookGen(Color::Black) };
     
     std::array<Move, MAXMOVECOUNT> moves;

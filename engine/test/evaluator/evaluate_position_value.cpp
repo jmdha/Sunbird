@@ -4,11 +4,11 @@
 
 #include <chess/internal/constants.hpp>
 #include <chess/board.hpp>
-#include <chess/board_importer.hpp>
+#include <chess/import.hpp>
 #include "engine/evaluator.hpp"
 
 int main(int, char* argv[]) {
-    Board board = BoardImporter::ImportFEN((std::string) argv[2]);
+    Board board = Import::FEN((std::string) argv[2]);
     int expectedEval = std::atoi(argv[1]);
 
     int eval = Evaluator::EvaluatePositionValue(board);

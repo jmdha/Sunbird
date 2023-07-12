@@ -6,11 +6,11 @@
 
 #include <chess/internal/constants.hpp>
 #include <chess/board.hpp>
-#include <chess/board_importer.hpp>
+#include <chess/import.hpp>
 
 int main(int, char* argv[]) {
     std::string FEN = std::string(argv[1]);
-    Board board = BoardImporter::ImportFEN(FEN);
+    Board board = Import::FEN(FEN);
 
     Board priorBoard = board;
 

@@ -2,14 +2,14 @@
 #include <string>
 #include <cstdlib>
 
-#include <chess/board_importer.hpp>
+#include <chess/import.hpp>
 
 int main(int, char* argv[]) {
     std::string FEN = std::string(argv[1]);
     Board expectedBoard = Board();
     expectedBoard.Initialize();
 
-    Board boardFEN = BoardImporter::ImportFEN(FEN);
+    Board boardFEN = Import::FEN(FEN);
 
     for (int x = 0; x < WIDTH; x++) 
         for (int y = 0; y < HEIGHT; y++)
