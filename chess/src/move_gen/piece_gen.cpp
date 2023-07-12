@@ -51,7 +51,7 @@ U8 PieceGen::GetAttackMovesGeneric(std::array<Move, MAXMOVECOUNT> &moves, const 
             while (blockers) {
                 const U64 blocker = Utilities::LSB_Pop(&blockers);
                 if (board->IsKingSafe((board->GetOccupiedBB() ^ C64(piece)) | C64(blocker), board->GetColorBB(oppColor) ^ C64(blocker)))
-                AppendMove(moves, startIndex + moveCount, moveCount, Move(MoveType::Capture, (Square) piece, (Square) blocker, board->GetType((Square) blocker)));
+                    AppendMove(moves, startIndex + moveCount, moveCount, Move(MoveType::Capture, (Square) piece, (Square) blocker, board->GetType((Square) blocker)));
             }
         }
     }

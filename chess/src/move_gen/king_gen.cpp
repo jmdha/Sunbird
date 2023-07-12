@@ -43,3 +43,4 @@ U8 KingGen::GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::sha
 
     return moveCount;
 }
+

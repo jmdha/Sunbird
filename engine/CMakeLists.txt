@@ -24,6 +24,8 @@ add_executable(engine ${CMAKE_CURRENT_LIST_DIR}/bin/engine.cpp)
 target_link_libraries(engine PRIVATE ENGINE)
 add_executable(tune ${CMAKE_CURRENT_LIST_DIR}/bin/tune.cpp)
 target_link_libraries(tune PRIVATE ENGINE)
+add_executable(perft ${CMAKE_CURRENT_LIST_DIR}/bin/perft.cpp)
+target_link_libraries(perft PRIVATE ENGINE)
 
 include(${CMAKE_CURRENT_LIST_DIR}/test/CMakeLists.txt)
 

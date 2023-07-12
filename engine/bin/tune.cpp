@@ -18,7 +18,7 @@ constexpr double delta = 0.2;
 constexpr double applyFactor = 0.1;
 
 constexpr int iterationCount = 100;
-constexpr int posCount = 10;
+constexpr int posCount = 5;
 
 std::array<int, PIECECOUNT> staPieceValues {pieceValues};
 std::array<int, PIECECOUNT> posPieceValues {pieceValues};
@@ -58,7 +58,7 @@ int main() {
         for (int i = 0; i < 2; i++)
             for (int posI = 0; posI < positions.size(); posI++) {
                 double progress = (iteration * COLORCOUNT * posCount + i * posCount + posI) / totalGames * 100;
-                //printf("%f\n", progress);
+                printf("%f\n", progress);
                 auto position = positions.at(posI);
                 *board = BoardImporter::ImportFEN(position);
                 bool gameOver = false;
