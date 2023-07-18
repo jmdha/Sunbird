@@ -14,9 +14,7 @@ template <PieceType pType> void PieceIter(const Board &board, std::function<void
 }
 
 // HACK: This needs to be refactored
-template <GenType gType> MoveList GenerateKingMoves(const Board &board) {
-    MoveList moves;
-
+template <GenType gType> void GenerateKingMoves(const Board &board, MoveList &moves) {
     const auto color = board.GetColor();
     const auto attackedSquares = board.GenerateAttackSquares(board.GetOppColor());
     const CastlingBlockSquares castlingBlock[2] = {
@@ -62,36 +60,37 @@ template <GenType gType> MoveList GenerateKingMoves(const Board &board) {
                               board.GetType((Square)move));
         }
     }
-
-    return moves;
 }
 
 // HACK: This needs to be refactored
-template <GenType gType> MoveList GeneratePawnMoves(const Board &board) {
+template <GenType gType> void GeneratePawnMoves(const Board &board, MoveList &moves) {
     constexpr DirectionIndex dir[2] = {DirectionIndex::North, DirectionIndex::South};
-    MoveList moves;
     PieceIter<PieceType::Pawn>(board, [&](U8 piece) {
         if constexpr (gType == GenType::Quiet || gType == GenType::All) {
-            U64 to = BitShift::RAYS[(U8)piece][(U8)dir[(U8)board.GetColor()]] & BitShift::RINGS[(U8)piece][1];
+            U64 to = BitShift::RAYS[(U8)piece][(U8)dir[(U8)board.GetColor()]] &
+                     BitShift::RINGS[(U8)piece][1];
             if (!(to & board.GetOccupiedBB())) {
                 if (board.IsKingSafe(board.GetOccupiedBB() ^ C64(piece) | to)) {
                     if (C64(piece) & (U64)PawnRow[(U8)board.GetOppColor()])
                         for (const auto prom : PromotionMoves)
-                            moves << Move(prom, (Square)piece,
-                                          (Square)Utilities::LSB(
-                                              BitShift::Shift(C64(piece), DIRECTIONS[(U8)dir[(U8)board.GetColor()]])));
+                            moves << Move(
+                                prom, (Square)piece,
+                                (Square)Utilities::LSB(BitShift::Shift(
+                                    C64(piece), DIRECTIONS[(U8)dir[(U8)board.GetColor()]])));
                     else
                         moves << Move(MoveType::Quiet, (Square)piece,
-                                      (Square)Utilities::LSB(
-                                          BitShift::Shift(C64(piece), DIRECTIONS[(U8)dir[(U8)board.GetColor()]])));
+                                      (Square)Utilities::LSB(BitShift::Shift(
+                                          C64(piece), DIRECTIONS[(U8)dir[(U8)board.GetColor()]])));
                 }
-                to = BitShift::RAYS[(U8)piece][(U8)dir[(U8)board.GetColor()]] & BitShift::RINGS[(U8)piece][2];
+                to = BitShift::RAYS[(U8)piece][(U8)dir[(U8)board.GetColor()]] &
+                     BitShift::RINGS[(U8)piece][2];
                 if (C64(piece) & (U64)PawnRow[(U8)board.GetColor()] &&
                     !(to & board.GetOccupiedBB()))
                     if (board.IsKingSafe(board.GetOccupiedBB() ^ C64(piece) | to))
-                        moves << Move(MoveType::DoublePawnPush, (Square)piece,
-                                      (Square)Utilities::LSB(
-                                          BitShift::Shift(C64(piece), DIRECTIONS[(U8)dir[(U8)board.GetColor()]], 2)));
+                        moves << Move(
+                            MoveType::DoublePawnPush, (Square)piece,
+                            (Square)Utilities::LSB(BitShift::Shift(
+                                C64(piece), DIRECTIONS[(U8)dir[(U8)board.GetColor()]], 2)));
             }
         }
         if constexpr (gType == GenType::Attack || gType == GenType::All) {
@@ -116,20 +115,20 @@ template <GenType gType> MoveList GeneratePawnMoves(const Board &board) {
                          (U64)board.GetEP();
             if (attack) {
                 U8 sq = Utilities::LSB_Pop(&attack);
-                U8 captured = Utilities::LSB(BitShift::Shift(C64(sq), DIRECTIONS[(U8)dir[(U8)board.GetOppColor()]]));
-                if (board.IsKingSafe((board.GetOccupiedBB() ^ C64(piece) ^ C64(captured)) | C64(sq),  board.GetColorBB(board.GetOppColor()) ^ C64(captured) | C64(sq)))
-                    moves << Move(MoveType::EPCapture, (Square)piece, (Square)sq,
-                                  PieceType::Pawn);
+                U8 captured = Utilities::LSB(
+                    BitShift::Shift(C64(sq), DIRECTIONS[(U8)dir[(U8)board.GetOppColor()]]));
+                if (board.IsKingSafe((board.GetOccupiedBB() ^ C64(piece) ^ C64(captured)) | C64(sq),
+                                     board.GetColorBB(board.GetOppColor()) ^ C64(captured) |
+                                         C64(sq)))
+                    moves << Move(MoveType::EPCapture, (Square)piece, (Square)sq, PieceType::Pawn);
             }
         }
     });
-    return moves;
 }
 
 // Generates possible quiet moves for pieces of type pType
-template <PieceType pType> MoveList GenerateQuiet(const Board &board) {
+template <PieceType pType> void GenerateQuiet(const Board &board, MoveList &moves) {
     static_assert(pType != PieceType::King && pType != PieceType::Pawn);
-    MoveList moves;
 
     PieceIter<pType>(board, [&](U8 piece) {
         U64 unblocked = BitShift::MOVES[(int)pType][piece];
@@ -149,14 +148,11 @@ template <PieceType pType> MoveList GenerateQuiet(const Board &board) {
             }
         }
     });
-
-    return moves;
 };
 
 // Generates possible attack moves for pieces of type pType
-template <PieceType pType> MoveList GenerateAttack(const Board &board) {
+template <PieceType pType> void GenerateAttack(const Board &board, MoveList &moves) {
     static_assert(pType != PieceType::King && pType != PieceType::Pawn);
-    MoveList moves;
 
     PieceIter<pType>(board, [board, &moves](U8 piece) {
         U64 unblocked = BitShift::MOVES[(int)pType][piece];
@@ -177,52 +173,55 @@ template <PieceType pType> MoveList GenerateAttack(const Board &board) {
             }
         }
     });
-
-    return moves;
 };
 } // namespace
 
-template <GenType gType, PieceType pType> MoveList Generate(const Board &board) {
-    MoveList moves;
+template <GenType gType, PieceType pType> void Generate(const Board &board, MoveList &moves) {
+    if constexpr (gType == GenType::All) {
+        if constexpr (pType == PieceType::King)
+            GenerateKingMoves<GenType::All>(board, moves);
+        else if constexpr (pType == PieceType::Pawn)
+            GeneratePawnMoves<GenType::All>(board, moves);
+        else {
+            GenerateAttack<pType>(board, moves);
+            GenerateQuiet<pType>(board, moves);
+        }
 
-    if constexpr (gType == GenType::Attack || gType == GenType::All) {
-        if constexpr (pType == PieceType::King) {
-            moves << GenerateKingMoves<GenType::Attack>(board);
-        } else if constexpr (pType == PieceType::Pawn) {
-            moves << GeneratePawnMoves<GenType::Attack>(board);
-        } else
-            moves << GenerateAttack<pType>(board);
+    } else if constexpr (gType == GenType::Attack) {
+        if constexpr (pType == PieceType::King)
+            GenerateKingMoves<GenType::Attack>(board, moves);
+        else if constexpr (pType == PieceType::Pawn)
+            GeneratePawnMoves<GenType::Attack>(board, moves);
+        else
+            GenerateAttack<pType>(board, moves);
+    } else if constexpr (gType == GenType::Quiet) {
+        if constexpr (pType == PieceType::King)
+            GenerateKingMoves<GenType::Quiet>(board, moves);
+        else if constexpr (pType == PieceType::Pawn)
+            GeneratePawnMoves<GenType::Quiet>(board, moves);
+        else
+            GenerateQuiet<pType>(board, moves);
     }
 
-    if constexpr (gType == GenType::Quiet || gType == GenType::All) {
-        if constexpr (pType == PieceType::King) {
-            moves << GenerateKingMoves<GenType::Quiet>(board);
-        } else if constexpr (pType == PieceType::Pawn) {
-            moves << GeneratePawnMoves<GenType::Quiet>(board);
-        } else
-            moves << GenerateQuiet<pType>(board);
-    }
-
-    return moves;
 }
 // clang-format off
-template MoveList Generate<GenType::All, PieceType::Pawn>(const Board &);
-template MoveList Generate<GenType::All, PieceType::Knight>(const Board &);
-template MoveList Generate<GenType::All, PieceType::Bishop>(const Board &);
-template MoveList Generate<GenType::All, PieceType::Rook>(const Board &);
-template MoveList Generate<GenType::All, PieceType::Queen>(const Board &);
-template MoveList Generate<GenType::All, PieceType::King>(const Board &);
-template MoveList Generate<GenType::Quiet, PieceType::Pawn>(const Board &);
-template MoveList Generate<GenType::Quiet, PieceType::Knight>(const Board &);
-template MoveList Generate<GenType::Quiet, PieceType::Bishop>(const Board &);
-template MoveList Generate<GenType::Quiet, PieceType::Rook>(const Board &);
-template MoveList Generate<GenType::Quiet, PieceType::Queen>(const Board &);
-template MoveList Generate<GenType::Quiet, PieceType::King>(const Board &);
-template MoveList Generate<GenType::Attack, PieceType::Pawn>(const Board &);
-template MoveList Generate<GenType::Attack, PieceType::Knight>(const Board &);
-template MoveList Generate<GenType::Attack, PieceType::Bishop>(const Board &);
-template MoveList Generate<GenType::Attack, PieceType::Rook>(const Board &);
-template MoveList Generate<GenType::Attack, PieceType::Queen>(const Board &);
-template MoveList Generate<GenType::Attack, PieceType::King>(const Board &);
+template void Generate<GenType::All, PieceType::Pawn>(const Board &, MoveList &moves);
+template void Generate<GenType::All, PieceType::Knight>(const Board &, MoveList &moves);
+template void Generate<GenType::All, PieceType::Bishop>(const Board &, MoveList &moves);
+template void Generate<GenType::All, PieceType::Rook>(const Board &, MoveList &moves);
+template void Generate<GenType::All, PieceType::Queen>(const Board &, MoveList &moves);
+template void Generate<GenType::All, PieceType::King>(const Board &, MoveList &moves);
+template void Generate<GenType::Quiet, PieceType::Pawn>(const Board &, MoveList &moves);
+template void Generate<GenType::Quiet, PieceType::Knight>(const Board &, MoveList &moves);
+template void Generate<GenType::Quiet, PieceType::Bishop>(const Board &, MoveList &moves);
+template void Generate<GenType::Quiet, PieceType::Rook>(const Board &, MoveList &moves);
+template void Generate<GenType::Quiet, PieceType::Queen>(const Board &, MoveList &moves);
+template void Generate<GenType::Quiet, PieceType::King>(const Board &, MoveList &moves);
+template void Generate<GenType::Attack, PieceType::Pawn>(const Board &, MoveList &moves);
+template void Generate<GenType::Attack, PieceType::Knight>(const Board &, MoveList &moves);
+template void Generate<GenType::Attack, PieceType::Bishop>(const Board &, MoveList &moves);
+template void Generate<GenType::Attack, PieceType::Rook>(const Board &, MoveList &moves);
+template void Generate<GenType::Attack, PieceType::Queen>(const Board &, MoveList &moves);
+template void Generate<GenType::Attack, PieceType::King>(const Board &, MoveList &moves);
 // clang-format on
 }; // namespace MoveGen

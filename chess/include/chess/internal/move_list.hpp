@@ -9,11 +9,7 @@ struct MoveList {
     bool empty() const { return index == 0; }
     Move &operator[](U8 i) { return moves[i]; }
     const Move &operator[](U8 i) const { return moves[i]; }
-    void operator<<(Move move) { moves[index++] = std::move(move); }
-    void operator<<(MoveList moves) {
-        for (auto &move : moves)
-            *this<<move;
-    }
+    void operator<<(Move move) { moves[index++] = move; }
     std::array<Move, MAXMOVECOUNT>::iterator begin() { return &moves[0]; }
     std::array<Move, MAXMOVECOUNT>::const_iterator begin() const {
         return &moves[0];

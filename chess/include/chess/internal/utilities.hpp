@@ -173,7 +173,7 @@ namespace Utilities {
     }
 
     constexpr U8 GetColumnIndex(Square square) {
-        return (U8) square % 8;
+        return COLUMN_INDEX.at((U8)square);
     }
 
     constexpr U8 GetColumnIndex(Column col) {
@@ -202,7 +202,7 @@ namespace Utilities {
     }
 
     constexpr Column GetColumn(Square square) {
-        return GetColumn(GetColumnIndex(square));
+        return COLUMN_BY_SQUARE.at((U8)square);
     }
 
     constexpr Row GetRow(U8 rowIndex) {

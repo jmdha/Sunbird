@@ -16,17 +16,17 @@ enum class GenType { Quiet, Attack, All };
 
 // Generates moves for an individual piece type
 template <GenType, PieceType>
-MoveList Generate(const Board &board);
+void Generate(const Board &board, MoveList &moves);
 
 // Generates moves for all pieces
 template <GenType gType> MoveList GenerateMoves(const Board &board) {
     MoveList moves;
-    moves << Generate<gType, PieceType::Pawn>(board);
-    moves << Generate<gType, PieceType::Knight>(board);
-    moves << Generate<gType, PieceType::Bishop>(board);
-    moves << Generate<gType, PieceType::Rook>(board);
-    moves << Generate<gType, PieceType::Queen>(board);
-    moves << Generate<gType, PieceType::King>(board);
+    Generate<gType, PieceType::Pawn>(board, moves);
+    Generate<gType, PieceType::Knight>(board, moves);
+    Generate<gType, PieceType::Bishop>(board, moves);
+    Generate<gType, PieceType::Rook>(board, moves);
+    Generate<gType, PieceType::Queen>(board, moves);
+    Generate<gType, PieceType::King>(board, moves);
     return moves;
 }
 }; // namespace MoveGen
