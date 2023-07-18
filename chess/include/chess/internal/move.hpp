@@ -4,8 +4,8 @@
 #include <string>
 #include <cassert>
 
-#include "internal/constants.hpp"
-#include "internal/utilities.hpp"
+#include "constants.hpp"
+#include "utilities.hpp"
 
 class Move {
 public:
@@ -54,6 +54,7 @@ public:
 
 private:
     uint32_t move = 0;
+
     inline void SetType(MoveType type);
     inline void SetFrom(Square square);
     inline void SetTo(Square square);

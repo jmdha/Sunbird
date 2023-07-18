@@ -1,7 +1,7 @@
 #include <engine/evaluator.hpp>
 
 #include <chess/internal/constants.hpp>
-#include <chess/internal/bit_shifts.hpp>
+#include <chess/internal/bit_shift.hpp>
 #include <chess/board.hpp>
 
 int Evaluator::EvaluatePieceCount(const Board &board) const {

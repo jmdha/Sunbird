@@ -1,25 +1,34 @@
 #ifndef MOVE_GEN
 #define MOVE_GEN
 
-#include <vector>
-#include <strings.h>
 #include <memory>
+#include <strings.h>
+#include <vector>
 
-#include "internal/bit_shifts.hpp"
-#include "internal/constants.hpp"
-#include "internal/piece_gen.hpp"
 #include "board.hpp"
-#include "move.hpp"
+#include "internal/bit_shift.hpp"
+#include "internal/constants.hpp"
+#include "internal/move_list.hpp"
+#include "internal/move.hpp"
 
-class MoveGen {
-public:
-    explicit MoveGen(Color color);
-    U8 GetAllMoves   (std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board);
-    U8 GetAttackMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board);
-    U8 GetQuietMoves(std::array<Move, MAXMOVECOUNT> &moves, const std::shared_ptr<Board> &board);
+namespace MoveGen {
+enum class GenType { Quiet, Attack, All };
 
-private:
-    std::unique_ptr<PieceGen> pieceGen[PIECECOUNT];
-};
+// Generates moves for an individual piece type
+template <GenType, PieceType>
+MoveList Generate(const Board &board);
 
-#endif // MOVE_GEN
+// Generates moves for all pieces
+template <GenType gType> MoveList GenerateMoves(const Board &board) {
+    MoveList moves;
+    moves << Generate<gType, PieceType::Pawn>(board);
+    moves << Generate<gType, PieceType::Knight>(board);
+    moves << Generate<gType, PieceType::Bishop>(board);
+    moves << Generate<gType, PieceType::Rook>(board);
+    moves << Generate<gType, PieceType::Queen>(board);
+    moves << Generate<gType, PieceType::King>(board);
+    return moves;
+}
+}; // namespace MoveGen
+
+#endif

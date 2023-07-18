@@ -67,6 +67,9 @@ add_test(MoveGen_Pawn_Capture_B_BothMultiple GeneratePawnMoves      14  "8/ppppp
 add_test(MoveGen_Pawn_Capture_W_NoEdge GeneratePawnMoves      2   "8/8/8/8/8/8/P6p/8 w KQkq - 0 1" 1)
 add_test(MoveGen_Pawn_Capture_B_NoEdge GeneratePawnMoves      2   "8/p6P/8/8/8/8/8/8 b KQkq - 0 1" 1)
 
+add_test(MoveGen_Pawn_EP GeneratePawnMoves      2   "7k/8/8/1Pp4r/K7/8/8/8 w - c6 0 2")
+add_test(MoveGen_Pawn_EP_KingSafety GeneratePawnMoves      1   "7k/8/8/KPp4r/8/8/8/8 w - c6 0 2")
+
 add_test(MoveGen_Pawn_KingSafety_SingleMove GeneratePawnMoves   1   "8/8/8/8/4P3/r6K/6P1/8 w - - 0 1" 0)
 add_test(MoveGen_Pawn_KingSafety_DoubleMove GeneratePawnMoves   5   "8/2p1p1p1/3p1p2/1k5R/8/8/8/8 b - - 0 1" 0)
 add_test(MoveGen_Pawn_KingSafety_Capture GeneratePawnMoves   2   "8/8/6p1/1k5R/8/3p4/4R3/8 b - - 0 1" 0)

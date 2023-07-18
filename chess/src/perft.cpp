@@ -1,37 +1,34 @@
-#include "chess/perft.hpp"
+#include <chess/perft.hpp>
 
-int Perft::Run(int depth) {
+int Perft::Run(Board &board, int depth) {
     if (depth == 0)
         return 1;
-    std::array<Move, MAXMOVECOUNT> moves{};
-    int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(moves, board);
+    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board);
     int leafCount = 0;
 
-    for (int i = 0; i < moveCount; i++) {
-        board->DoMove(moves[i]);
-        moveTypeCount[(int) moves[i].GetType()]++;
-        leafCount += Run(depth - 1);
-        board->UndoMove(moves[i]);
+    for (auto move : moves) {
+        auto hash = board.GetHash();
+        board.DoMove(move);
+        leafCount += Run(board, depth - 1);
+        board.UndoMove(move);
+        assert(hash == board.GetHash());
     }
 
     return leafCount;
 }
 
-int Perft::RunFromPosition(int depth) {
-    return this->Run(depth);
-}
+int Perft::RunFromPosition(Board &board, int depth) { return this->Run(board, depth); }
 
-int Perft::PerftDivide(int depth) {
+int Perft::PerftDivide(Board &board, int depth) {
     int total = 0;
 
-    std::array<Move, MAXMOVECOUNT> moves{};
-    int moveCount = moveGens[(int) board->GetColor()].GetAllMoves(moves, board);
+    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board);
 
-    for (int i = 0; i < moveCount; i++) {
-        board->DoMove(moves[i]);
-        int count = Run(depth - 1);
-        board->UndoMove(moves[i]);
-        printf("%s: %d\n", moves.at(i).ToString().c_str(), count);
+    for (auto move : moves) {
+        board.DoMove(move);
+        int count = Run(board, depth - 1);
+        board.UndoMove(move);
+        printf("%s: %d\n", move.ToString().c_str(), count);
         total += count;
     }
 

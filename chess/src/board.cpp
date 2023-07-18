@@ -1,10 +1,12 @@
 #include "chess/board.hpp"
-#include "chess/internal/bit_shifts.hpp"
+#include "chess/internal/bit_shift.hpp"
 
 void Board::Initialize() {
     for (U8 x = 0; x < WIDTH; ++x) {
-        PlacePiece(Utilities::GetSquare(x, PAWNROWWHITE), PieceType::Pawn, Color::White);
-        PlacePiece(Utilities::GetSquare(x, PAWNROWBLACK), PieceType::Pawn, Color::Black);
+        PlacePiece(Utilities::GetSquare(x, PAWNROWWHITE), PieceType::Pawn,
+                   Color::White);
+        PlacePiece(Utilities::GetSquare(x, PAWNROWBLACK), PieceType::Pawn,
+                   Color::Black);
     }
 
     PlacePiece(Square::A1, PieceType::Rook, Color::White);
@@ -27,7 +29,7 @@ void Board::Initialize() {
 
     PlacePiece(Square::E1, PieceType::King, Color::White);
     PlacePiece(Square::E8, PieceType::King, Color::Black);
-    
+
     for (U8 i = 0; i < COLORCOUNT; ++i)
         for (U8 i2 = 0; i2 < 2; ++i2)
             castlingAllowed[i][i2] = true;
@@ -67,29 +69,37 @@ void Board::DoMove(Move &move) {
     } else {
         fromType = GetType(move.GetFrom());
         RemovePiece(move.GetFrom(), fromType, turn);
-        
+
         if (move.IsCapture()) {
             if (move.GetType() == MoveType::EPCapture) {
-                auto captureSquare = (Square) ((turn == Color::White) ? (int) move.GetTo() - 8 : (int) move.GetTo() + 8);
+                auto captureSquare =
+                    (Square)((turn == Color::White) ? (int)move.GetTo() - 8
+                                                    : (int)move.GetTo() + 8);
                 RemovePiece(captureSquare, PieceType::Pawn, oppColor);
             } else
                 RemovePiece(move.GetTo(), move.GetCapturedPiece(), oppColor);
 
-            if (move.GetCapturedPiece() == PieceType::Rook && move.GetTo() == initRookPos[(U8) oppColor][(U8) Castling::King])
-                if (castlingAllowed[(U8) oppColor][(U8) Castling::King])
+            if (move.GetCapturedPiece() == PieceType::Rook &&
+                move.GetTo() == initRookPos[(U8)oppColor][(U8)Castling::King])
+                if (castlingAllowed[(U8)oppColor][(U8)Castling::King])
                     DisableCastling(move, oppColor, Castling::King);
-            if (move.GetCapturedPiece() == PieceType::Rook && move.GetTo() == initRookPos[(U8) oppColor][(U8) Castling::Queen])
-                if (castlingAllowed[(U8) oppColor][(U8) Castling::Queen])
+            if (move.GetCapturedPiece() == PieceType::Rook &&
+                move.GetTo() == initRookPos[(U8)oppColor][(U8)Castling::Queen])
+                if (castlingAllowed[(U8)oppColor][(U8)Castling::Queen])
                     DisableCastling(move, oppColor, Castling::Queen);
         }
-        if (move.IsPromotion()){
-            if (move.GetType() == MoveType::RPromotion || move.GetType() == MoveType::RPromotionCapture)
+        if (move.IsPromotion()) {
+            if (move.GetType() == MoveType::RPromotion ||
+                move.GetType() == MoveType::RPromotionCapture)
                 PlacePiece(move.GetTo(), PieceType::Rook, turn);
-            else if (move.GetType() == MoveType::BPromotion || move.GetType() == MoveType::BPromotionCapture)
+            else if (move.GetType() == MoveType::BPromotion ||
+                     move.GetType() == MoveType::BPromotionCapture)
                 PlacePiece(move.GetTo(), PieceType::Bishop, turn);
-            else if (move.GetType() == MoveType::NPromotion || move.GetType() == MoveType::NPromotionCapture)
+            else if (move.GetType() == MoveType::NPromotion ||
+                     move.GetType() == MoveType::NPromotionCapture)
                 PlacePiece(move.GetTo(), PieceType::Knight, turn);
-            else if (move.GetType() == MoveType::QPromotion || move.GetType() == MoveType::QPromotionCapture)
+            else if (move.GetType() == MoveType::QPromotion ||
+                     move.GetType() == MoveType::QPromotionCapture)
                 PlacePiece(move.GetTo(), PieceType::Queen, turn);
         } else
             PlacePiece(move.GetTo(), fromType, turn);
@@ -105,17 +115,18 @@ void Board::DoMove(Move &move) {
     } else
         SetEnPassant(Column::None);
 
-    
     // Castling rights
     if (fromType == PieceType::King) {
-        if (castlingAllowed[(U8) turn][(U8) Castling::King])
+        if (castlingAllowed[(U8)turn][(U8)Castling::King])
             DisableCastling(move, turn, Castling::King);
-        if (castlingAllowed[(U8) turn][(U8) Castling::Queen])
+        if (castlingAllowed[(U8)turn][(U8)Castling::Queen])
             DisableCastling(move, turn, Castling::Queen);
     } else if (fromType == PieceType::Rook) {
-        if (castlingAllowed[(U8) turn][(U8) Castling::King] && Utilities::GetColumn(move.GetFrom()) == Column::H)
+        if (castlingAllowed[(U8)turn][(U8)Castling::King] &&
+            Utilities::GetColumn(move.GetFrom()) == Column::H)
             DisableCastling(move, turn, Castling::King);
-        else if (castlingAllowed[(U8) turn][(U8) Castling::Queen] && Utilities::GetColumn(move.GetFrom()) == Column::A)
+        else if (castlingAllowed[(U8)turn][(U8)Castling::Queen] &&
+                 Utilities::GetColumn(move.GetFrom()) == Column::A)
             DisableCastling(move, turn, Castling::Queen);
     }
 
@@ -171,14 +182,14 @@ void Board::UndoMove(Move move) {
                 if (!priorEP)
                     SetEnPassant(Column::None);
         }
-        
 
         if (move.IsCapture()) {
             if (move.GetType() == MoveType::EPCapture) {
-                auto captureSquare = (Square) ((turn == Color::Black) ? (int) move.GetTo() - 8 : (int) move.GetTo() + 8);
+                auto captureSquare =
+                    (Square)((turn == Color::Black) ? (int)move.GetTo() - 8
+                                                    : (int)move.GetTo() + 8);
                 PlacePiece(captureSquare, PieceType::Pawn, turn);
-            }
-            else 
+            } else
                 PlacePiece(move.GetTo(), move.GetCapturedPiece(), turn);
         }
     }
@@ -189,7 +200,7 @@ void Board::UndoMove(Move move) {
 
 void Board::EnableCastling(Move &move) {
     auto enableCastling = [&](Color color, Castling castling) {
-        castlingAllowed[(int) color][(int) castling] = true;
+        castlingAllowed[(int)color][(int)castling] = true;
         zobrist.FlipCastling(color, castling);
     };
     if (move.IsDC()) {
@@ -206,7 +217,7 @@ void Board::EnableCastling(Move &move) {
 
 void Board::DisableCastling(Move &move, Color color, Castling side) {
     zobrist.FlipCastling(color, side);
-    castlingAllowed[(U8) color][(U8) side] = false;
+    castlingAllowed[(U8)color][(U8)side] = false;
     move.SetDisableCastle(color, side);
 }
 
@@ -215,17 +226,21 @@ U64 Board::GenerateAttackSquares(Color color) const {
 
     U64 tempPieces[PIECECOUNT];
     for (U8 pIndex = 0; pIndex < PIECECOUNT; pIndex++)
-        tempPieces[pIndex] = GetPiecePos(color, (PieceType) pIndex);
+        tempPieces[pIndex] = GetPiecePos(color, (PieceType)pIndex);
 
-    while (tempPieces[(U8) PieceType::Pawn]) attacks |= PawnAttacks[(int) color][Utilities::LSB_Pop(&tempPieces[(U8) PieceType::Pawn])];
+    while (tempPieces[(U8)PieceType::Pawn])
+        attacks |=
+            PawnAttacks[(int)color]
+                       [Utilities::LSB_Pop(&tempPieces[(U8)PieceType::Pawn])];
 
     for (U8 pIndex = 1; pIndex < PIECECOUNT; ++pIndex)
         while (tempPieces[pIndex]) {
             unsigned short pos = Utilities::LSB_Pop(&tempPieces[pIndex]);
-            U64 attacks1 = BitShifts::GetAttacks(pos, (PieceType) pIndex);
+            U64 attacks1 = BitShift::MOVES[pIndex][pos];
 
-            for (U64 b = occupiedBB & BitShifts::GetBB(pos, (PieceType) pIndex); b != 0; b &= (b - 1))
-                attacks1 &= ~BitShifts::GetBehind(pos, Utilities::LSB(b));
+            for (U64 b = occupiedBB & BitShift::BB[pIndex][pos];
+                 b != 0; b &= (b - 1))
+                attacks1 &= ~BitShift::XRAYS[pos][Utilities::LSB(b)];
 
             attacks |= attacks1;
         }
@@ -233,46 +248,53 @@ U64 Board::GenerateAttackSquares(Color color) const {
     return attacks;
 }
 
-bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard) const {
+bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard,
+                       U64 tempKingBoard) const {
     if (tempKingBoard == 0)
         return true;
     U64 kingPosIndex = Utilities::LSB_Pop(&tempKingBoard);
 
-    U64 enemyRooks = (GetPiecePos(PieceType::Rook) | GetPiecePos(PieceType::Queen)) & tempEnemyBoard;
-    U64 enemyBishops = (GetPiecePos(PieceType::Bishop) | GetPiecePos(PieceType::Queen)) & tempEnemyBoard;
+    U64 enemyRooks =
+        (GetPiecePos(PieceType::Rook) | GetPiecePos(PieceType::Queen)) &
+        tempEnemyBoard;
+    U64 enemyBishops =
+        (GetPiecePos(PieceType::Bishop) | GetPiecePos(PieceType::Queen)) &
+        tempEnemyBoard;
     U64 enemyKnights = GetPiecePos(PieceType::Knight) & tempEnemyBoard;
     U64 enemyPawns = GetPiecePos(PieceType::Pawn) & tempEnemyBoard;
 
-    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::North) & enemyRooks)
-        if (Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::North) & enemyRooks) == Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::North) & tempOccuracyBoard))
+    // clang-format off
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::North] & enemyRooks)
+        if (Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::North] & enemyRooks) == Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::North] & tempOccuracyBoard))
             return false;
-    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::East) & enemyRooks)
-        if (Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::East) & enemyRooks) == Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::East) & tempOccuracyBoard))
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::East] & enemyRooks)
+        if (Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::East] & enemyRooks) == Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::East] & tempOccuracyBoard))
             return false;
-    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::South) & enemyRooks)
-        if (Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::South) & enemyRooks) == Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::South) & tempOccuracyBoard))
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::South] & enemyRooks)
+        if (Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::South] & enemyRooks) == Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::South] & tempOccuracyBoard))
             return false;
-    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::West) & enemyRooks)
-        if (Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::West) & enemyRooks) == Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::West) & tempOccuracyBoard))
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::West] & enemyRooks)
+        if (Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::West] & enemyRooks) == Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::West] & tempOccuracyBoard))
             return false;
 
-    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::NorthEast) & enemyBishops)
-        if (Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::NorthEast) & enemyBishops) == Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::NorthEast) & tempOccuracyBoard))
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthEast] & enemyBishops)
+        if (Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthEast] & enemyBishops) == Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthEast] & tempOccuracyBoard))
             return false;
-    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::NorthWest) & enemyBishops)
-        if (Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::NorthWest) & enemyBishops) == Utilities::LSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::NorthWest) & tempOccuracyBoard))
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthWest] & enemyBishops)
+        if (Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthWest] & enemyBishops) == Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthWest] & tempOccuracyBoard))
             return false;
-    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::SouthEast) & enemyBishops)
-        if (Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::SouthEast) & enemyBishops) == Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::SouthEast) & tempOccuracyBoard))
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthEast] & enemyBishops)
+        if (Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthEast] & enemyBishops) == Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthEast] & tempOccuracyBoard))
             return false;
-    if (BitShifts::GetRay(kingPosIndex, DirectionIndex::SouthWest) & enemyBishops)
-        if (Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::SouthWest) & enemyBishops) == Utilities::MSB(BitShifts::GetRay(kingPosIndex, DirectionIndex::SouthWest) & tempOccuracyBoard))
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthWest] & enemyBishops)
+        if (Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthWest] & enemyBishops) == Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthWest] & tempOccuracyBoard))
             return false;
+    // clang-format on
 
     if (KnightMoves[kingPosIndex] & enemyKnights)
         return false;
 
-    if (PawnAttacks[(int) turn][kingPosIndex] & enemyPawns)
+    if (PawnAttacks[(int)turn][kingPosIndex] & enemyPawns)
         return false;
 
     return true;
@@ -285,4 +307,3 @@ void Board::SetEnPassant(Column col) {
         zobrist.FlipEnPassant(col);
     EP = col;
 }
-

@@ -7,7 +7,7 @@
 #include "internal/constants.hpp"
 #include "internal/utilities.hpp"
 #include "internal/zobrist.hpp"
-#include "move.hpp"
+#include "internal/move.hpp"
 
 // Class representing the current state of a game of chess
 class Board {
@@ -151,6 +151,7 @@ inline void Board::PlacePiece(Square square, PieceType type, Color color) {
     occupiedBB |= bit;
     popCount[(U8) color][(U8) type]++;
     zobrist.FlipSquare(square, type, color);
+    assert(occupiedBB == (colorBB[0] | colorBB[1]));
 }
 
 inline void Board::RemovePiece(Square square, PieceType type, Color color) {
@@ -161,6 +162,7 @@ inline void Board::RemovePiece(Square square, PieceType type, Color color) {
     occupiedBB ^= bit;
     popCount[(U8) color][(U8) type]--;
     zobrist.FlipSquare(square, type, color);
+    assert(occupiedBB == (colorBB[0] | colorBB[1]));
 }
 
 bool Board::IsCastlingAllowed(Color color, Castling side) const {

@@ -4,9 +4,10 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <optional>
+#include <vector>
 
 #include <chess/internal/constants.hpp>
-#include <chess/move.hpp>
+#include <chess/internal/move.hpp>
 
 namespace OpeningBook {
     static inline std::unordered_map<U64, std::vector<Move>> moves{

@@ -8,11 +8,11 @@
 
 #include "constants.hpp"
 namespace Utilities {
-    static inline PieceChar GetPieceChar(char c) {
+    static PieceChar GetPieceChar(char c) {
         return (PieceChar) c;
     }
 
-    static inline PieceChar GetPieceChar(PieceType type, Color color) {
+    static PieceChar GetPieceChar(PieceType type, Color color) {
         switch(type) {
         case PieceType::Bishop:
             return (color == Color::White) ? PieceChar::BishopWhite : PieceChar::BishopBlack;
@@ -31,7 +31,7 @@ namespace Utilities {
         }
     }
 
-    static inline PieceType GetPieceType(PieceChar pieceChar) {
+    constexpr PieceType GetPieceType(PieceChar pieceChar) {
         switch (pieceChar)
         {
         case PieceChar::BishopBlack:
@@ -63,22 +63,26 @@ namespace Utilities {
         }
     }
 
-    static inline Color GetPieceColor(PieceChar pieceChar) {
+    constexpr Color GetPieceColor(PieceChar pieceChar) {
         if (std::isupper((char) pieceChar))
             return Color::White;
         else
             return Color::Black;
     }
 
-    static inline Square GetSquare(int x, int y) {
+    constexpr Square GetSquare(int x, int y) {
         return (Square) (x + 8 * y);
     }
 
-    static inline Square GetSquare(char row, char column) {
+    constexpr Square GetSquare(char row, char column) {
         return GetSquare((int) row - 97, (int) column - 49);
     }
 
-    static inline Color GetOppositeColor(Color color) {
+    constexpr Square GetSquare(Row row, Column col) {
+        return GetSquare((int) row, (int) col);
+    }
+
+    constexpr Color GetOppositeColor(Color color) {
         if (color == Color::White)
             return Color::Black;
         else
@@ -89,7 +93,7 @@ namespace Utilities {
     // e.g. 0110 => 2 and 1000 => 1
     // This implementation is from https://www.chessprogramming.org/Population_Count
     // Specifically the one titled "Brian Kerninghan"
-    static inline U8 PopCount(U64 x) {
+    constexpr U8 PopCount(U64 x) {
         U8 count = 0;
         while (x) {
             ++count;
@@ -98,19 +102,19 @@ namespace Utilities {
         return count;
     }
 
-    static inline U64 LSB(U64 x) {
+    constexpr U64 LSB(U64 x) {
         return ffsll(x) - 1;
     }
 
     // Returns the least significant set bit, and pops it
     // e.g. 0110 => 1 and 1000 => 3 and 1001 => 0
-    static inline U64 LSB_Pop(U64* x) {
+    constexpr U64 LSB_Pop(U64* x) {
         U64 lsb = LSB(*x);
         *x ^= (C64(0) << lsb);
         return lsb;
     }
 
-    static inline U64 MSB(U64 x) {
+    constexpr U64 MSB(U64 x) {
         U64 index = 0;
         while (1 < x) {
             x = x >> 1;
@@ -119,7 +123,7 @@ namespace Utilities {
         return index;
     }
 
-    static inline U64 NotEdge(Direction dir) {
+    constexpr U64 NotEdge(Direction dir) {
         switch (dir)
         {
         case Direction::North:
@@ -144,7 +148,7 @@ namespace Utilities {
         throw std::logic_error("Invalid flow");
     }
 
-    static inline Column GetColumn(int columnIndex) {
+    constexpr Column GetColumn(int columnIndex) {
         switch (columnIndex)
         {
         case 0:
@@ -168,11 +172,11 @@ namespace Utilities {
         }
     }
 
-    static inline U8 GetColumnIndex(Square square) {
+    constexpr U8 GetColumnIndex(Square square) {
         return (U8) square % 8;
     }
 
-    static inline U8 GetColumnIndex(Column col) {
+    constexpr U8 GetColumnIndex(Column col) {
         switch (col) {
 
             case Column::A:
@@ -197,11 +201,11 @@ namespace Utilities {
         throw std::logic_error("Invalid flow");
     }
 
-    static inline Column GetColumn(Square square) {
+    constexpr Column GetColumn(Square square) {
         return GetColumn(GetColumnIndex(square));
     }
 
-    static inline Row GetRow(U8 rowIndex) {
+    constexpr Row GetRow(U8 rowIndex) {
         switch (rowIndex)
         {
         case 0:
@@ -225,15 +229,15 @@ namespace Utilities {
         }
     }
 
-    static inline U8 GetRowIndex(Square square) {
-        return std::floor((U8) square / 8);
+    constexpr U8 GetRowIndex(Square square) {
+        return ((U8)square - ((U8)square % 8)) / 8;
     }
 
-    static inline Row GetRow(Square square) {
+    constexpr Row GetRow(Square square) {
         return GetRow(GetRowIndex(square));
     }
 
-    static inline std::string GetSquareString(Square sq) {
+    static std::string GetSquareString(Square sq) {
         std::string square;
         U8 col = GetColumnIndex(sq);
         U8 row = GetRowIndex(sq);
@@ -242,7 +246,7 @@ namespace Utilities {
         return square;
     }
 
-    static inline DirectionIndex GetDirectionIndex(Direction direction) {
+    constexpr DirectionIndex GetDirectionIndex(Direction direction) {
         switch (direction) {
             case Direction::North:
                 return DirectionIndex::North;
@@ -262,11 +266,13 @@ namespace Utilities {
                 return DirectionIndex::SouthEast;
             case Direction::None:
                 return DirectionIndex::None;
+            default:
+                throw std::invalid_argument("Unexpected direction in GetDirectionIndex: " + std::to_string((int)direction));
         }
         throw std::logic_error("Invalid flow");
     }
 
-    static inline DirectionIndex GetDirectionIndex(Square from, Square to) {
+    constexpr DirectionIndex GetDirectionIndex(Square from, Square to) {
         if (GetRowIndex(from) < GetRowIndex(to)) {
             if (GetColumnIndex(from) < GetColumnIndex(to))
                 return DirectionIndex::NorthEast;
@@ -288,6 +294,13 @@ namespace Utilities {
                 return DirectionIndex::West;
         }
         return DirectionIndex::None;
+    }
+
+    constexpr Color GetTurn(char turn) {
+        if (turn == 'w' || turn == 'W')
+            return Color::White;
+        else
+            return Color::Black;
     }
 }
 

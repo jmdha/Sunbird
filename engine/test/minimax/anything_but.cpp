@@ -7,13 +7,12 @@
 #include <engine/minimax.hpp>
 
 int main(int, char* argv[]) {
-    BitShifts::Init();
     std::string fen = std::string(argv[1]);
     Board board = Import::FEN(fen);
     std::string expectedMove = argv[3];    
 
-    MiniMax minimax = MiniMax(std::make_shared<Board>(board));
-    Move move = minimax.GetBestMove(std::atoi(argv[2]));
+    MiniMax minimax = MiniMax();
+    Move move = minimax.GetBestMove(board, std::atoi(argv[2]));
 
     if (expectedMove != move.ToString())
         exit(EXIT_SUCCESS);

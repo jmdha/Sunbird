@@ -8,6 +8,7 @@
 #include <map>
 
 #include "constants.hpp"
+#include "utilities.hpp"
 
 struct Zobrist {
 public:

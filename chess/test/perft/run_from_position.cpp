@@ -7,7 +7,6 @@
 #include <chess/perft.hpp>
 
 int main(int, char* argv[]) {
-    BitShifts::Init();
     int expectedLeafCount = std::atoi(argv[1]);
 
     std::string FEN = std::string(argv[2]);
@@ -15,8 +14,8 @@ int main(int, char* argv[]) {
 
     int depth = std::atoi(argv[3]);
 
-    Perft perft = Perft(std::make_shared<Board>(board));
-    int actualLeafCount = perft.RunFromPosition(depth);
+    Perft perft = Perft();
+    int actualLeafCount = perft.RunFromPosition(board, depth);
 
     if (expectedLeafCount == actualLeafCount)
         exit(EXIT_SUCCESS);

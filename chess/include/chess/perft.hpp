@@ -1,29 +1,21 @@
 #ifndef PERFT
 #define PERFT
 
-#include <string>
 #include <memory>
+#include <string>
 #include <utility>
 
-#include "internal/constants.hpp"
 #include "board.hpp"
-#include "move.hpp"
+#include "internal/constants.hpp"
+#include "internal/move.hpp"
 #include "move_gen.hpp"
 
 class Perft {
-public:
-    explicit Perft(std::shared_ptr<Board> board) : board(std::move(board)), moveGens{ MoveGen(Color::White), MoveGen(Color::Black) } {};
+  public:
+    int RunFromPosition(Board &board, int depth);
+    int PerftDivide(Board &board, int depth);
 
-    int RunFromPosition(int depth);
-    int PerftDivide(int depth);
-
-private:
-    std::shared_ptr<Board> board;
-    MoveGen moveGens[2];
-
-    unsigned int moveTypeCount[16] = { 0 };
-
-    int Run(int depth);
-
+  private:
+    int Run(Board &board, int depth);
 };
 #endif // PERFT
