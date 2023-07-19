@@ -10,7 +10,7 @@ add_executable(ImportAlgebraic ${CMAKE_CURRENT_LIST_DIR}/import_algebraic.cpp)
 target_link_libraries(ImportAlgebraic PRIVATE CHESS)
 
 add_test(Import_Algebraic_KingsPawn ImportAlgebraic "1. e4" "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq ")
-add_test(Import_Algebraic_QueensGambit ImportAlgebraic "1. d4 d5 2. Bf4" "rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq ")
+add_test(Import_Algebraic_QueensGambit ImportAlgebraic "1. d4 d5 2. c4" "rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq ")
 add_test(Import_Algebraic_FoolsMate ImportAlgebraic "1. e4 e5 2. Bc4 Bc5 3. Qf3 d6 4. Qxf7#" "rnbqk1nr/ppp2Qpp/3p4/2b1p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq ")
 add_test(Import_Algebraic_KingCastle ImportAlgebraic "1. g3 d5 2. Bg2 Bf5 3. Nf3 e6 4. O-O" "rn1qkbnr/ppp2ppp/4p3/3p1b2/8/5NP1/PPPPPPBP/RNBQ1RK1 b kq ")
 add_test(Import_Algebraic_QueenCastle ImportAlgebraic "1. d4 d5 2. Bf4 Bf5 3. Nc3 e6 4. e3 Nf6 5. Qd2 Bb4 6. O-O-O" "rn1qk2r/ppp2ppp/4pn2/3p1b2/1b1P1B2/2N1P3/PPPQ1PPP/2KR1BNR b kq ")

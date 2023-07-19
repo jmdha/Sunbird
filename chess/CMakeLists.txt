@@ -20,6 +20,9 @@ set(CHESS_SRC
     ${CHESS_SRC_DIR}/board.cpp
     ${CHESS_SRC_DIR}/move_gen.cpp
     ${CHESS_SRC_DIR}/perft.cpp
+    ${CHESS_SRC_DIR}/import_FEN.cpp
+    ${CHESS_SRC_DIR}/import_algebraic.cpp
+    ${CHESS_SRC_DIR}/import_sequence.cpp
     )
 
 add_library(CHESS ${CHESS_HEADERS} ${CHESS_SRC})

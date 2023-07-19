@@ -5,7 +5,6 @@
 
 namespace MoveGen {
 namespace {
-
 // Calls the callback on on all pieces of type pType of own colour
 template <PieceType pType> void PieceIter(const Board &board, std::function<void(U8)> callback) {
     U64 pieces = board.GetPiecePos(board.GetColor(), pType);

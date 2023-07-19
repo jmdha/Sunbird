@@ -3,10 +3,8 @@
 
 void Board::Initialize() {
     for (U8 x = 0; x < WIDTH; ++x) {
-        PlacePiece(Utilities::GetSquare(x, PAWNROWWHITE), PieceType::Pawn,
-                   Color::White);
-        PlacePiece(Utilities::GetSquare(x, PAWNROWBLACK), PieceType::Pawn,
-                   Color::Black);
+        PlacePiece(Utilities::GetSquare(x, PAWNROWWHITE), PieceType::Pawn, Color::White);
+        PlacePiece(Utilities::GetSquare(x, PAWNROWBLACK), PieceType::Pawn, Color::Black);
     }
 
     PlacePiece(Square::A1, PieceType::Rook, Color::White);
@@ -72,9 +70,8 @@ void Board::DoMove(Move &move) {
 
         if (move.IsCapture()) {
             if (move.GetType() == MoveType::EPCapture) {
-                auto captureSquare =
-                    (Square)((turn == Color::White) ? (int)move.GetTo() - 8
-                                                    : (int)move.GetTo() + 8);
+                auto captureSquare = (Square)((turn == Color::White) ? (int)move.GetTo() - 8
+                                                                     : (int)move.GetTo() + 8);
                 RemovePiece(captureSquare, PieceType::Pawn, oppColor);
             } else
                 RemovePiece(move.GetTo(), move.GetCapturedPiece(), oppColor);
@@ -123,10 +120,10 @@ void Board::DoMove(Move &move) {
             DisableCastling(move, turn, Castling::Queen);
     } else if (fromType == PieceType::Rook) {
         if (castlingAllowed[(U8)turn][(U8)Castling::King] &&
-            Utilities::GetColumn(move.GetFrom()) == Column::H)
+            move.GetFrom() == (turn == Color::White ? Square::H1 : Square::H8))
             DisableCastling(move, turn, Castling::King);
         else if (castlingAllowed[(U8)turn][(U8)Castling::Queen] &&
-                 Utilities::GetColumn(move.GetFrom()) == Column::A)
+                 move.GetFrom() == (turn == Color::White ? Square::A1 : Square::A8))
             DisableCastling(move, turn, Castling::Queen);
     }
 
@@ -185,9 +182,8 @@ void Board::UndoMove(Move move) {
 
         if (move.IsCapture()) {
             if (move.GetType() == MoveType::EPCapture) {
-                auto captureSquare =
-                    (Square)((turn == Color::Black) ? (int)move.GetTo() - 8
-                                                    : (int)move.GetTo() + 8);
+                auto captureSquare = (Square)((turn == Color::Black) ? (int)move.GetTo() - 8
+                                                                     : (int)move.GetTo() + 8);
                 PlacePiece(captureSquare, PieceType::Pawn, turn);
             } else
                 PlacePiece(move.GetTo(), move.GetCapturedPiece(), turn);
@@ -229,17 +225,14 @@ U64 Board::GenerateAttackSquares(Color color) const {
         tempPieces[pIndex] = GetPiecePos(color, (PieceType)pIndex);
 
     while (tempPieces[(U8)PieceType::Pawn])
-        attacks |=
-            PawnAttacks[(int)color]
-                       [Utilities::LSB_Pop(&tempPieces[(U8)PieceType::Pawn])];
+        attacks |= PawnAttacks[(int)color][Utilities::LSB_Pop(&tempPieces[(U8)PieceType::Pawn])];
 
     for (U8 pIndex = 1; pIndex < PIECECOUNT; ++pIndex)
         while (tempPieces[pIndex]) {
             unsigned short pos = Utilities::LSB_Pop(&tempPieces[pIndex]);
             U64 attacks1 = BitShift::MOVES[pIndex][pos];
 
-            for (U64 b = occupiedBB & BitShift::BB[pIndex][pos];
-                 b != 0; b &= (b - 1))
+            for (U64 b = occupiedBB & BitShift::BB[pIndex][pos]; b != 0; b &= (b - 1))
                 attacks1 &= ~BitShift::XRAYS[pos][Utilities::LSB(b)];
 
             attacks |= attacks1;
@@ -248,18 +241,15 @@ U64 Board::GenerateAttackSquares(Color color) const {
     return attacks;
 }
 
-bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard,
-                       U64 tempKingBoard) const {
+bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard) const {
     if (tempKingBoard == 0)
         return true;
     U64 kingPosIndex = Utilities::LSB_Pop(&tempKingBoard);
 
     U64 enemyRooks =
-        (GetPiecePos(PieceType::Rook) | GetPiecePos(PieceType::Queen)) &
-        tempEnemyBoard;
+        (GetPiecePos(PieceType::Rook) | GetPiecePos(PieceType::Queen)) & tempEnemyBoard;
     U64 enemyBishops =
-        (GetPiecePos(PieceType::Bishop) | GetPiecePos(PieceType::Queen)) &
-        tempEnemyBoard;
+        (GetPiecePos(PieceType::Bishop) | GetPiecePos(PieceType::Queen)) & tempEnemyBoard;
     U64 enemyKnights = GetPiecePos(PieceType::Knight) & tempEnemyBoard;
     U64 enemyPawns = GetPiecePos(PieceType::Pawn) & tempEnemyBoard;
 

@@ -172,6 +172,10 @@ namespace Utilities {
         }
     }
 
+    constexpr Column GetColumnByChar(char column) {
+        return GetColumn(column - 97);
+    }
+
     constexpr U8 GetColumnIndex(Square square) {
         return COLUMN_INDEX.at((U8)square);
     }
