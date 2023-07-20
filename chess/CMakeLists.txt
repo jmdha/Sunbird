@@ -30,7 +30,9 @@ set_target_properties(CHESS PROPERTIES LINKER_LANGUAGE CXX)
 
 include_directories(${CHESS_INCLUDE_DIR})
 
-include(${CMAKE_CURRENT_LIST_DIR}/test/CMakeLists.txt)
+if (BUILD_TEST)
+    include(${CMAKE_CURRENT_LIST_DIR}/test/CMakeLists.txt)
+endif ()
 
 if (BUILD_BIN)
     add_executable(Perft ${CMAKE_CURRENT_LIST_DIR}/bin/perft.cpp)
