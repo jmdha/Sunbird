@@ -29,7 +29,7 @@ Move MiniMax::GetBestMove(Board &board, int depth) {
     return bestMove;
 }
 std::pair<Move, int> MiniMax::NegaMax(Board &board, int depth, U64 timeLimit, U64 *timeUsed) {
-    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board);
+    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
 
     Move bestMove;
     std::optional<int> bestScore;
@@ -55,7 +55,7 @@ int MiniMax::NegaMax(Board &board, int depth, int alpha, int beta) {
     if (depth == 0)
         return Quiesce(board, alpha, beta);
 
-    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board);
+    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
 
     if (moves.size() == 0)
         return evaluator.EvaluateNoMoves(board.IsKingSafe());
@@ -78,10 +78,10 @@ int MiniMax::NegaMax(Board &board, int depth, int alpha, int beta) {
 }
 
 int MiniMax::Quiesce(Board &board, int alpha, int beta) {
-    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board);
+    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
 
     if (moves.empty() && !board.IsKingSafe()) {
-        moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board);
+        moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
         if (moves.empty())
             return evaluator.EvaluateNoMoves(false);
     }
