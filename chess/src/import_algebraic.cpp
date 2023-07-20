@@ -138,7 +138,6 @@ Board Algebraic(std::string game) {
     std::vector<std::string> tokens = Tokenize(game);
 
     // Parse
-    Color color = Color::Black;
     for (auto token : tokens) {
         std::optional<Move> move = ParseToken(board, token);
         if (!move.has_value())
@@ -147,5 +146,22 @@ Board Algebraic(std::string game) {
     }
 
     return board;
+}
+
+void Algebraic(std::string game, std::function<void(const Board&)> callback) {
+    Board board;
+    board.Initialize();
+
+    Clean(game);
+    std::vector<std::string> tokens = Tokenize(game);
+
+    // Parse
+    for (auto token : tokens) {
+        std::optional<Move> move = ParseToken(board, token);
+        if (!move.has_value())
+            throw std::logic_error("No matching move for \"" + token + "\" in game \"" + game + "\"");
+        board.DoMove(move.value());
+        callback(board);
+    }
 }
 } // namespace Import
