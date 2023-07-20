@@ -3,7 +3,7 @@
 int Perft::Run(Board &board, int depth) {
     if (depth == 0)
         return 1;
-    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board);
+    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
     int leafCount = 0;
 
     for (auto move : moves) {
@@ -22,7 +22,7 @@ int Perft::RunFromPosition(Board &board, int depth) { return this->Run(board, de
 int Perft::PerftDivide(Board &board, int depth) {
     int total = 0;
 
-    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board);
+    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
 
     for (auto move : moves) {
         board.DoMove(move);

@@ -11,7 +11,7 @@ int main(int, char *argv[]) {
     Board board = Import::FEN((std::string)argv[2]);
 
     MoveList moves;
-    MoveGen::Generate<MoveGen::GenType::All, PieceType::Queen>(board, moves);
+    MoveGen::Generate<MoveGen::GenType::All, PieceType::Queen>(board, board.GetColor(), moves);
 
     if (moves.size() == std::atoi(argv[1]))
         exit(EXIT_SUCCESS);

@@ -1,3 +1,4 @@
+#include "chess/export.hpp"
 #include "chess/import.hpp"
 #include "chess/internal/utilities.hpp"
 #include "chess/move_gen.hpp"
@@ -55,8 +56,8 @@ std::vector<std::string> Tokenize(const std::string &game) {
 
 // Parses a move from a token
 std::optional<Move> ParseToken(const Board &board, std::string token) {
+    printf("%s\n", Export::FEN(board).c_str());
     Color color = board.GetColor();
-    color = Utilities::GetOppositeColor(color);
 
     // Somtimes a move is preceded by a number
     // I don't what the number means, and lichess import seemingly removes it
@@ -108,7 +109,6 @@ std::optional<Move> ParseToken(const Board &board, std::string token) {
     }
     if (pType != PieceType::Pawn)
         token.erase(0, 1);
-    assert(token.size() < 4);
     std::optional<Square> fromSquare;
     std::optional<Square> toSquare;
     std::optional<Column> fromCol;
@@ -125,7 +125,7 @@ std::optional<Move> ParseToken(const Board &board, std::string token) {
     }
     if (token.size() == 2)
         toSquare = Utilities::GetSquare(token[0], token[1]);
-    MoveList tempMoves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, pType);
+    MoveList tempMoves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, color, pType);
     for (const auto tempMove : tempMoves) {
         if (fromSquare.has_value() && tempMove.GetFrom() != fromSquare)
             continue;
@@ -164,8 +164,9 @@ Board Algebraic(std::string game) {
     Board board;
     board.Initialize();
 
-    Clean(game);
-    std::vector<std::string> tokens = Tokenize(game);
+    std::string tempGame = game;
+    Clean(tempGame);
+    std::vector<std::string> tokens = Tokenize(tempGame);
 
     // Parse
     for (auto token : tokens) {
@@ -182,8 +183,9 @@ void Algebraic(std::string game, std::function<void(const Board&)> callback) {
     Board board;
     board.Initialize();
 
-    Clean(game);
-    std::vector<std::string> tokens = Tokenize(game);
+    std::string tempGame = game;
+    Clean(tempGame);
+    std::vector<std::string> tokens = Tokenize(tempGame);
 
     // Parse
     for (auto token : tokens) {
