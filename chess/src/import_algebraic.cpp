@@ -33,7 +33,7 @@ void Clean(std::string &game) {
     while ((pos = game.find("1-0")) != std::string::npos)
         game.erase(pos, 3);
     while ((pos = game.find("1/2-1/2")) != std::string::npos)
-        game.erase(pos, 3);
+        game.erase(pos, 7);
 }
 
 // Splits game string into individual moves
@@ -96,9 +96,13 @@ std::optional<Move> ParseToken(const Board &board, std::string token) {
     if (pType != PieceType::Pawn)
         token.erase(0, 1);
     assert(token.size() < 4);
+    std::optional<Square> fromSquare;
     std::optional<Square> toSquare;
     std::optional<Column> fromCol;
-    if (token.size() == 3) {
+    if (token.size() == 4) {
+        fromSquare = Utilities::GetSquare(token[0], token[1]);
+        token.erase(0, 2);
+    } else if (token.size() == 3) {
         fromCol = Utilities::GetColumnByChar(token[0]);
         token.erase(0, 1);
     }
@@ -106,6 +110,8 @@ std::optional<Move> ParseToken(const Board &board, std::string token) {
         toSquare = Utilities::GetSquare(token[0], token[1]);
     MoveList tempMoves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, pType);
     for (const auto tempMove : tempMoves) {
+        if (fromSquare.has_value() && tempMove.GetFrom() != fromSquare)
+            continue;
         if (fromCol.has_value() && (Utilities::GetColumn(tempMove.GetFrom()) != fromCol))
             continue;
         if (tempMove.IsCapture() == isCapture && tempMove.GetTo() == toSquare) {
