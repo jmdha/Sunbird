@@ -27,8 +27,7 @@ set(CHESS_SRC
 
 add_library(CHESS ${CHESS_HEADERS} ${CHESS_SRC})
 set_target_properties(CHESS PROPERTIES LINKER_LANGUAGE CXX)
-
-include_directories(${CHESS_INCLUDE_DIR})
+target_include_directories(CHESS PUBLIC ${CHESS_INCLUDE_DIR})
 
 if (BUILD_TEST)
     include(${CMAKE_CURRENT_LIST_DIR}/test/CMakeLists.txt)

@@ -16,9 +16,9 @@ set(ENGINE_SRC
     ${ENGINE_SRC_DIR}/minimax.cpp
     )
 
-include_directories(${CHESS_INCLUDE_DIR} ${ENGINE_INCLUDE_DIR})
 add_library(ENGINE ${ENGINE_HEADERS} ${ENGINE_SRC})
 target_link_libraries(ENGINE PUBLIC CHESS)
+target_include_directories(ENGINE PUBLIC ${ENGINE_INCLUDE_DIR})
 
 if (BUILD_TEST)
     include(${CMAKE_CURRENT_LIST_DIR}/test/CMakeLists.txt)
