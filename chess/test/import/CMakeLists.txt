@@ -33,4 +33,4 @@ add_test(Import_Algebraic_CapturePromotion_q ImportAlgebraic "1. Nc3 h5 2. Nb1 h
 add_test(Import_Algebraic_CapturePromotion_n ImportAlgebraic "1. Nc3 h5 2. Nb1 h4 3. Nc3 h3 4. Nb1 hxg2 5. Nc3 gxh1=N" "rnbqkbnr/ppppppp1/8/8/8/2N5/PPPPPP1P/R1BQKBNn w Qkq ")
 add_test(Import_Algebraic_CapturePromotion_r ImportAlgebraic "1. Nc3 h5 2. Nb1 h4 3. Nc3 h3 4. Nb1 hxg2 5. Nc3 gxh1=R" "rnbqkbnr/ppppppp1/8/8/8/2N5/PPPPPP1P/R1BQKBNr w Qkq ")
 add_test(Import_Algebraic_CapturePromotion_b ImportAlgebraic "1. Nc3 h5 2. Nb1 h4 3. Nc3 h3 4. Nb1 hxg2 5. Nc3 gxh1=B" "rnbqkbnr/ppppppp1/8/8/8/2N5/PPPPPP1P/R1BQKBNb w Qkq ")
-
+add_test(Import_Algebraic_FullGame ImportAlgebraic "1. e4 c6 2. d4 d5 3. e5 Bf5 4. g4 Bg6 5. h4 h6 6. h5 Be4 7. e6 Bxh1 8. exf7+ Kxf7 9. Qe2 Nf6 10. f3 Qd6 11. Nh3 Qg3+ 12. Qf2 Qxf2+ 13. Kxf2 Nxg4+ 14. fxg4 Be4 15. Nc3 Bxc2 16. Bf4 Nd7 17. Re1 e6 18. Bg2 Bb4 19. a3 Bxc3 20. bxc3 Rhe8 21. g5 e5 22. g6+ Kf6 23. dxe5+ Nxe5 24. Kg3 Nd3 25. Rf1 Nxf4 26. Rxf4+ Ke6 27. Nf2 Kd6 28. Ng4 Ref8 29. Rb4 b6 30. Bh3 Rae8 31. a4 Be4 32. Ne3 Rf3+ 33. Kh4 Rfxe3 34. a5 Bf5 35. axb6 Rxh3# 0-1" "4r3/p5p1/1Ppk2Pp/3p1b1P/1R5K/2P4r/8/8 w - ")

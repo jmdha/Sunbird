@@ -27,6 +27,13 @@ void Clean(std::string &game) {
         game.erase(pos, 1);
     while ((pos = game.find('+')) != std::string::npos)
         game.erase(pos, 1);
+    // Remove game result
+    while ((pos = game.find("0-1")) != std::string::npos)
+        game.erase(pos, 3);
+    while ((pos = game.find("1-0")) != std::string::npos)
+        game.erase(pos, 3);
+    while ((pos = game.find("1/2-1/2")) != std::string::npos)
+        game.erase(pos, 3);
 }
 
 // Splits game string into individual moves
