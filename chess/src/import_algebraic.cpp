@@ -112,11 +112,15 @@ std::optional<Move> ParseToken(const Board &board, std::string token) {
     std::optional<Square> fromSquare;
     std::optional<Square> toSquare;
     std::optional<Column> fromCol;
+    std::optional<Row> fromRow;
     if (token.size() == 4) {
         fromSquare = Utilities::GetSquare(token[0], token[1]);
         token.erase(0, 2);
     } else if (token.size() == 3) {
-        fromCol = Utilities::GetColumnByChar(token[0]);
+        if (isdigit(token[0]))
+            fromRow = (Row)(token[0] - '0');
+        else
+            fromCol = Utilities::GetColumnByChar(token[0]);
         token.erase(0, 1);
     }
     if (token.size() == 2)
