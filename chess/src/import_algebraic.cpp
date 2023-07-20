@@ -22,6 +22,12 @@ void Clean(std::string &game) {
     }
     game.erase(0, 1);
 
+    // Remove indicators for how good a move is
+    while ((pos = game.find('?')) != std::string::npos)
+        game.erase(pos, 1);
+    while ((pos = game.find('!')) != std::string::npos)
+        game.erase(pos, 1);
+
     // Remove check and checkmate markers
     while ((pos = game.find('#')) != std::string::npos)
         game.erase(pos, 1);
@@ -72,6 +78,8 @@ std::optional<Move> ParseToken(const Board &board, std::string token) {
         token.erase(pos, 2);
     }
 
+    if (isdigit(token[0]))
+        token.erase(0, 1);
     PieceType pType;
     switch (token[0]) {
     case 'K':
