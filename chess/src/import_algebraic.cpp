@@ -58,6 +58,13 @@ std::optional<Move> ParseToken(const Board &board, std::string token) {
     Color color = board.GetColor();
     color = Utilities::GetOppositeColor(color);
 
+    // Somtimes a move is preceded by a number
+    // I don't what the number means, and lichess import seemingly removes it
+    // Maybe it's how many times a given move has occurred?
+    // So it is removed
+    while (isdigit(token[0]))
+        token.erase(0, 1);
+
     if (token == "O-O")
         return Move(MoveType::KingCastle);
     else if (token == "O-O-O")
@@ -78,8 +85,6 @@ std::optional<Move> ParseToken(const Board &board, std::string token) {
         token.erase(pos, 2);
     }
 
-    if (isdigit(token[0]))
-        token.erase(0, 1);
     PieceType pType;
     switch (token[0]) {
     case 'K':
