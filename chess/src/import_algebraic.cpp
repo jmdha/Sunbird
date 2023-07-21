@@ -56,7 +56,6 @@ std::vector<std::string> Tokenize(const std::string &game) {
 
 // Parses a move from a token
 std::optional<Move> ParseToken(const Board &board, std::string token) {
-    printf("%s\n", Export::FEN(board).c_str());
     Color color = board.GetColor();
 
     // Somtimes a move is preceded by a number
@@ -118,7 +117,7 @@ std::optional<Move> ParseToken(const Board &board, std::string token) {
         token.erase(0, 2);
     } else if (token.size() == 3) {
         if (isdigit(token[0]))
-            fromRow = (Row)(token[0] - '0');
+            fromRow = Utilities::GetRowByChar(token[0]);
         else
             fromCol = Utilities::GetColumnByChar(token[0]);
         token.erase(0, 1);
@@ -130,6 +129,8 @@ std::optional<Move> ParseToken(const Board &board, std::string token) {
         if (fromSquare.has_value() && tempMove.GetFrom() != fromSquare)
             continue;
         if (fromCol.has_value() && (Utilities::GetColumn(tempMove.GetFrom()) != fromCol))
+            continue;
+        if (fromRow.has_value() && (Utilities::GetRow(tempMove.GetFrom()) != fromRow))
             continue;
         if (tempMove.IsCapture() == isCapture && tempMove.GetTo() == toSquare) {
             if (promotionType.has_value()) {

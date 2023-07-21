@@ -182,7 +182,6 @@ namespace Utilities {
 
     constexpr U8 GetColumnIndex(Column col) {
         switch (col) {
-
             case Column::A:
                 return 0;
             case Column::B:
@@ -239,6 +238,10 @@ namespace Utilities {
 
     constexpr Row GetRow(Square square) {
         return GetRow(GetRowIndex(square));
+    }
+
+    constexpr Row GetRowByChar(char row) {
+        return GetRow(row - '1');
     }
 
     static std::string GetSquareString(Square sq) {
