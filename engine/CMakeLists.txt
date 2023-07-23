@@ -5,15 +5,16 @@ set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/include)
 set(ENGINE_INCLUDE_BUILD_DIR ${ENGINE_INCLUDE_DIR}/engine)
 
 set(ENGINE_HEADERS
+    ${ENGINE_INCLUDE_BUILD_DIR}/internal/values.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/openings.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/positions.hpp
-    ${ENGINE_INCLUDE_BUILD_DIR}/evaluator.hpp
-    ${ENGINE_INCLUDE_BUILD_DIR}/minimax.hpp
+    ${ENGINE_INCLUDE_BUILD_DIR}/evaluation.hpp
+    ${ENGINE_INCLUDE_BUILD_DIR}/negamax.hpp
     )
 
 set(ENGINE_SRC
-    ${ENGINE_SRC_DIR}/evaluator.cpp
-    ${ENGINE_SRC_DIR}/minimax.cpp
+    ${ENGINE_SRC_DIR}/evaluation.cpp
+    ${ENGINE_SRC_DIR}/negamax.cpp
     )
 
 add_library(ENGINE ${ENGINE_HEADERS} ${ENGINE_SRC})

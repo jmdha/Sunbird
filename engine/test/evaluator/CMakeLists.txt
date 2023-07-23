@@ -12,5 +12,5 @@ add_executable(EvaluatePositionValue ${CMAKE_CURRENT_LIST_DIR}/evaluate_position
 target_link_libraries(EvaluatePositionValue PRIVATE ENGINE)
 
 add_test(Evaluator_Position_Value_Pawn_White EvaluatePositionValue 10 "8/8/8/8/8/8/P6P/8 w KQkq - 0 1")
-add_test(Evaluator_Position_Value_Pawn_Black EvaluatePositionValue -10 "8/p6p/8/8/8/8/8/8 w KQkq - 0 1")
+add_test(Evaluator_Position_Value_Pawn_Black EvaluatePositionValue 10 "8/p6p/8/8/8/8/8/8 b KQkq - 0 1")
 

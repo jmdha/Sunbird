@@ -1,21 +1,22 @@
 #include <stdexcept>
-#include <string>
 #include <stdlib.h>
+#include <string>
 
-#include <chess/internal/constants.hpp>
 #include <chess/board.hpp>
 #include <chess/import.hpp>
-#include "engine/evaluator.hpp"
+#include <chess/internal/constants.hpp>
+#include <engine/evaluation.hpp>
 
-int main(int, char* argv[]) {
-    Board board = Import::FEN((std::string) argv[2]);
+int main(int, char *argv[]) {
+    Board board = Import::FEN(std::string(argv[2]));
     int expectedEval = std::atoi(argv[1]);
 
-    int eval = Evaluator::EvaluatePositionValue(board);
+    int eval = Engine::Evaluation::EvalPosition(board);
 
     if (eval == expectedEval)
         exit(EXIT_SUCCESS);
-    else
-        throw std::logic_error("Incorrect Evaluation | Expected " + (std::string)argv[1] + " - Actual " + std::to_string(eval));
+    else {
+        printf("Incorrect Evaluation. Expected %s found %d.", argv[1], eval);
+        exit(EXIT_FAILURE);
+    }
 }
-

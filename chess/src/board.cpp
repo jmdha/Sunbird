@@ -281,7 +281,7 @@ bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBo
             return false;
     // clang-format on
 
-    if (KnightMoves[kingPosIndex] & enemyKnights)
+    if (BitShift::MOVES[(int)PieceType::Knight][kingPosIndex] & enemyKnights)
         return false;
 
     if (PawnAttacks[(int)turn][kingPosIndex] & enemyPawns)
