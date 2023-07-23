@@ -1,9 +1,6 @@
 #include <engine/evaluation.hpp>
 
 namespace Engine::Evaluation {
-namespace {
-int SideModifier(Color color, int value) { return (color == Color::White) ? value : -value; }
-} // namespace
 int EvalMaterial(const Board &board) {
     int value = 0;
     for (int i = 0; i < PIECECOUNT - 1; ++i) {
@@ -35,7 +32,7 @@ int EvalPosition(const Board &board, Color color) {
 
 int Eval(const Board &board) {
     const int value = EvalPosition(board) + EvalMaterial(board);
-    return SideModifier(board.GetColor(), value);
+    return (board.GetColor() == Color::White) ? value : -value;
 }
 
 int EvalNoMove(bool isKingSafe) {
