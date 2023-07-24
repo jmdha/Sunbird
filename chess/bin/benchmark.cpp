@@ -6,6 +6,8 @@
 #include <chess/perft.hpp>
 #include <map>
 
+using namespace Chess;
+
 std::vector<std::string> openings{
     "rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2",
     "rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PP2PPPP/R1BQKBNR w KQkq - 2 4",

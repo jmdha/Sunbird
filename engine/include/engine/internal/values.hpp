@@ -1,9 +1,9 @@
-#ifndef ENGINE_VALUES
-#define ENGINE_VALUES
+#ifndef CHESS_ENGINE_VALUES
+#define CHESS_ENGINE_VALUES
 
 #include <array>
 
-namespace Engine {
+namespace Chess::Engine {
 namespace MaterialValue {
 enum { Pawn = 111, Knight = 294, Bishop = 349, Rook = 692, Queen = 1201, Inf = 300000 };
 constexpr std::array<int, 5> ALL = {Pawn, Knight, Bishop, Rook, Queen};
@@ -95,5 +95,5 @@ constexpr std::array<std::array<short, 64>, 6> ALL_BLACK{
     InverseArray(PAWN_WHITE), InverseArray(KNIGHT_WHITE), InverseArray(BISHOP_WHITE),
     InverseArray(ROOK_WHITE), InverseArray(QUEEN_WHITE),  InverseArray(KING_WHITE)};
 } // namespace PositionValue
-} // namespace Engine
+} // namespace Chess::Engine
 #endif

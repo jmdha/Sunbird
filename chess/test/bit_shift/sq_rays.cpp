@@ -7,6 +7,8 @@
 #include <chess/internal/constants.hpp>
 #include <chess/internal/utilities.hpp>
 
+using namespace Chess;
+
 int main(int, char *argv[]) {
     Square from = Utilities::GetSquare(argv[1][0], argv[1][1]);
     Square to = Utilities::GetSquare(argv[2][0], argv[2][1]);

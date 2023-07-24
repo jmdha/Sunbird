@@ -1,10 +1,10 @@
-#include <engine/negamax.hpp>
-#include <engine/evaluation.hpp>
 #include <chess/internal/constants.hpp>
 #include <chess/move_gen.hpp>
+#include <engine/evaluation.hpp>
+#include <engine/negamax.hpp>
 #include <optional>
 
-namespace Engine::Negamax {
+namespace Chess::Engine::Negamax {
 namespace {
 int Quiesce(Board &board, int alpha, int beta) {
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::Attack>(board, board.GetColor());
@@ -88,4 +88,4 @@ Move GetBestMove(Board &board, int depth) {
 
     return bestMove.first;
 }
-} // namespace Engine::Negamax
+} // namespace Chess::Engine::Negamax

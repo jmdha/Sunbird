@@ -1,7 +1,9 @@
-#ifndef CONSTANTS
-#define CONSTANTS
+#ifndef CHESS_CONSTANTS
+#define CHESS_CONSTANTS
 
 #include <array>
+
+namespace Chess {
 
 #define U8 unsigned short
 #define U64 unsigned long long int
@@ -342,5 +344,7 @@ constexpr U64 PawnAttacks[2][64] = {{512LLU,
                                      22517998136852480LLU,
                                      45035996273704960LLU,
                                      18014398509481984LLU}};
+
+}
 
 #endif // CONSTANTS

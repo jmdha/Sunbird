@@ -5,6 +5,8 @@
 #include <chess/import.hpp>
 #include <chess/perft.hpp>
 
+using namespace Chess;
+
 int main(int, char *argv[]) {
     Board board = Import::FEN(argv[1]);
     auto depth = strtol(argv[2], nullptr, 10);

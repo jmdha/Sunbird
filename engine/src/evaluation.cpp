@@ -1,6 +1,6 @@
 #include <engine/evaluation.hpp>
 
-namespace Engine::Evaluation {
+namespace Chess::Engine::Evaluation {
 int EvalMaterial(const Board &board) {
     int value = 0;
     for (int i = 0; i < PIECECOUNT - 1; ++i) {
@@ -44,4 +44,4 @@ int EvalNoMove(bool isKingSafe) {
         return 0;
 }
 
-} // namespace Engine::Evaluation
+} // namespace Chess::Engine::Evaluation

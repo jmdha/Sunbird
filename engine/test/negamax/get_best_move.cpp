@@ -6,6 +6,8 @@
 #include <chess/import.hpp>
 #include <engine/negamax.hpp>
 
+using namespace Chess;
+
 int main(int, char *argv[]) {
     std::string fen = std::string(argv[1]);
     Board board = Import::FEN(fen);

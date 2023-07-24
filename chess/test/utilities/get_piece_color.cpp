@@ -5,6 +5,8 @@
 #include <chess/internal/constants.hpp>
 #include <chess/internal/utilities.hpp>
 
+using namespace Chess;
+
 int main(int, char* argv[]) {
     Color expectedColor = (Color) std::atoi(argv[1]);
     PieceChar piece = (PieceChar) argv[2][0];

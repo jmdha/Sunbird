@@ -7,6 +7,8 @@
 #include <chess/internal/constants.hpp>
 #include <chess/internal/utilities.hpp>
 
+using namespace Chess;
+
 int main(int, char *argv[]) {
     Square square = Utilities::GetSquare(argv[1][0], argv[1][1]);
     Direction dir = (Direction)std::stoi(argv[2]);

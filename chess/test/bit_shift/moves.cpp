@@ -7,6 +7,8 @@
 #include <chess/internal/constants.hpp>
 #include <chess/internal/utilities.hpp>
 
+using namespace Chess;
+
 int main(int, char *argv[]) {
     PieceType type = Utilities::GetPieceType((PieceChar)argv[1][0]);
     Square square = Utilities::GetSquare(argv[2][0], argv[2][1]);

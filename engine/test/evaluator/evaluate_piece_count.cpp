@@ -6,6 +6,8 @@
 #include <chess/import.hpp>
 #include <engine/evaluation.hpp>
 
+using namespace Chess;
+
 int main(int, char *argv[]) {
     Board board = Import::FEN((std::string)argv[2]);
     int expectedEval = std::atoi(argv[1]);

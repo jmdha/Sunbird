@@ -1,5 +1,5 @@
-#ifndef MOVE
-#define MOVE
+#ifndef CHESS_MOVE
+#define CHESS_MOVE
 
 #include <string>
 #include <cassert>
@@ -7,6 +7,7 @@
 #include "constants.hpp"
 #include "utilities.hpp"
 
+namespace Chess {
 class Move {
 public:
     Move() = default;
@@ -148,6 +149,7 @@ inline void Move::SetDisableCastle(Color color, Castling side) {
 
 inline void Move::SetDisableEnPassant(Column col) {
     move |= (Utilities::GetColumnIndex(col) + 1) << 28;
+}
 }
 
 #endif // MOVE

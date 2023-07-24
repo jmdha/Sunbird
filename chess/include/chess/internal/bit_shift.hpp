@@ -10,7 +10,7 @@
 #include "constants.hpp"
 #include "utilities.hpp"
 
-namespace BitShift {
+namespace Chess::BitShift {
 // Shifts given bitboard b once in direction dir
 constexpr U64 Shift(U64 b, Direction dir) {
     if ((int)dir > 0)
@@ -154,16 +154,14 @@ namespace {
 constexpr U64 GenerateAttacks(PieceType piece, Square sq) {
     switch (piece) {
     case PieceType::Knight:
-        return RINGS[(int)sq][2] & ~(
-                RAYS[(int)sq][(int)DirectionIndex::North] |
-                RAYS[(int)sq][(int)DirectionIndex::East] |
-                RAYS[(int)sq][(int)DirectionIndex::South] |
-                RAYS[(int)sq][(int)DirectionIndex::West] |
-                RAYS[(int)sq][(int)DirectionIndex::NorthWest] |
-                RAYS[(int)sq][(int)DirectionIndex::NorthEast] |
-                RAYS[(int)sq][(int)DirectionIndex::SouthWest] |
-                RAYS[(int)sq][(int)DirectionIndex::SouthEast]
-                );
+        return RINGS[(int)sq][2] & ~(RAYS[(int)sq][(int)DirectionIndex::North] |
+                                     RAYS[(int)sq][(int)DirectionIndex::East] |
+                                     RAYS[(int)sq][(int)DirectionIndex::South] |
+                                     RAYS[(int)sq][(int)DirectionIndex::West] |
+                                     RAYS[(int)sq][(int)DirectionIndex::NorthWest] |
+                                     RAYS[(int)sq][(int)DirectionIndex::NorthEast] |
+                                     RAYS[(int)sq][(int)DirectionIndex::SouthWest] |
+                                     RAYS[(int)sq][(int)DirectionIndex::SouthEast]);
     case PieceType::King:
         return RINGS[(int)sq][1];
     case PieceType::Rook:

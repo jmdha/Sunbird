@@ -5,6 +5,8 @@
 #include <chess/internal/constants.hpp>
 #include <chess/internal/utilities.hpp>
 
+using namespace Chess;
+
 int main(int, char* argv[]) {
     PieceType expectedPieceType = (PieceType) std::atoi(argv[1]);
     PieceChar pieceChar = (PieceChar) argv[2][0];

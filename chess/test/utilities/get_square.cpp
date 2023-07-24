@@ -5,6 +5,8 @@
 #include <chess/internal/constants.hpp>
 #include <chess/internal/utilities.hpp>
 
+using namespace Chess;
+
 int main(int, char* argv[]) {
     Square expectedSquare = (Square) std::atoi((argv[1]));
     int x = std::atoi(argv[2]);
