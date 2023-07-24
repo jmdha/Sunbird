@@ -1,7 +1,7 @@
-#include "chess/import.hpp"
-#include "chess/internal/utilities.hpp"
+#include <chess/import.hpp>
+#include <chess/internal/utilities.hpp>
 
-namespace Import {
+namespace Chess::Import {
 // HACK: Refactor this
 Board MoveSequence(std::string moves) {
     Board board;

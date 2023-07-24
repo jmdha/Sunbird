@@ -6,6 +6,8 @@
 #include <chess/import.hpp>
 #include <chess/export.hpp>
 
+using namespace Chess;
+
 int main(int, char* argv[]) {
     std::string expectedFEN = std::string(argv[1]);
     Board board = Import::FEN(expectedFEN);

@@ -4,6 +4,8 @@
 
 #include <chess/import.hpp>
 
+using namespace Chess;
+
 int main(int, char* argv[]) {
     std::string FEN = std::string(argv[1]);
     Board expectedBoard = Board();

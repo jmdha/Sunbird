@@ -1,8 +1,8 @@
-#ifndef MOVE_GEN
-#define MOVE_GEN
+#ifndef CHESS_MOVE_GEN
+#define CHESS_MOVE_GEN
 
 #include <memory>
-#include <strings.h>
+#include <string>
 #include <vector>
 
 #include "board.hpp"
@@ -11,7 +11,7 @@
 #include "internal/move.hpp"
 #include "internal/move_list.hpp"
 
-namespace MoveGen {
+namespace Chess::MoveGen {
 enum class GenType { Quiet, Attack, All };
 
 // Generates moves for an individual piece type

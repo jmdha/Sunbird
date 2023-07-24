@@ -1,5 +1,5 @@
-#ifndef PERFT
-#define PERFT
+#ifndef CHESS_PERFT
+#define CHESS_PERFT
 
 #include <memory>
 #include <string>
@@ -10,12 +10,14 @@
 #include "internal/move.hpp"
 #include "move_gen.hpp"
 
+namespace Chess {
 class Perft {
-  public:
+public:
     int RunFromPosition(Board &board, int depth);
     int PerftDivide(Board &board, int depth);
 
-  private:
+private:
     int Run(Board &board, int depth);
 };
+} // namespace Chess
 #endif // PERFT

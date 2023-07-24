@@ -3,10 +3,13 @@
 #include <cstdlib>
 
 #include <string>
+#include <sstream>
 
 #include <chess/internal/constants.hpp>
 #include <chess/board.hpp>
 #include <chess/import.hpp>
+
+using namespace Chess;
 
 int main(int, char* argv[]) {
     std::string FEN = std::string(argv[1]);

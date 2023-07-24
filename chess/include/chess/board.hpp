@@ -1,14 +1,15 @@
-#ifndef BOARD
-#define BOARD
+#ifndef CHESS_BOARD
+#define CHESS_BOARD
 
-#include <string>
 #include <cassert>
+#include <string>
 
 #include "internal/constants.hpp"
+#include "internal/move.hpp"
 #include "internal/utilities.hpp"
 #include "internal/zobrist.hpp"
-#include "internal/move.hpp"
 
+namespace Chess {
 // Class representing the current state of a game of chess
 class Board {
 public:
@@ -45,7 +46,7 @@ public:
     inline Color GetColor() const;
     inline Color GetOppColor() const;
     inline Color GetColor(Square sq) const;
-    inline U64 GetHash() const; 
+    inline U64 GetHash() const;
     inline bool IsThreefoldRep() const;
     U64 GenerateAttackSquares(Color color) const;
     inline void SetTurn(Color color);
@@ -54,12 +55,12 @@ public:
 private:
     Color turn = Color::None;
     Color oppColor = Color::None;
-    U64 pieceBB[PIECECOUNT] { 0 };
-    U64 colorBB[COLORCOUNT] { 0 };
+    U64 pieceBB[PIECECOUNT]{0};
+    U64 colorBB[COLORCOUNT]{0};
     U64 occupiedBB = 0;
     Column EP = Column::None;
-    U8 popCount[COLORCOUNT][PIECECOUNT] { 0 };
-    bool castlingAllowed[2][2] { false };
+    U8 popCount[COLORCOUNT][PIECECOUNT]{0};
+    bool castlingAllowed[2][2]{false};
     Zobrist zobrist = Zobrist();
     int ply = 0;
 };
@@ -67,28 +68,26 @@ private:
 inline PieceType Board::GetType(Square square) const {
     for (U8 i = 0; i < PIECECOUNT; ++i)
         if (pieceBB[i] & C64(square))
-            return (PieceType) i;
-    return PieceType::None;	
+            return (PieceType)i;
+    return PieceType::None;
 }
 
 inline int Board::GetPieceCount(const Color color, const PieceType type) const {
     assert(type != PieceType::None);
-    return popCount[(int) color][(int) type];
+    return popCount[(int)color][(int)type];
 }
 
 U64 Board::GetPiecePos(PieceType type) const {
     assert(type != PieceType::None);
-    return pieceBB[(int) type];
+    return pieceBB[(int)type];
 }
 
 inline U64 Board::GetPiecePos(const Color color, const PieceType type) const {
     assert(type != PieceType::None);
-    return pieceBB[(int) type] & colorBB[(int) color];
+    return pieceBB[(int)type] & colorBB[(int)color];
 }
 
-inline U64 Board::GetOccupiedBB() const {
-    return occupiedBB;
-}
+inline U64 Board::GetOccupiedBB() const { return occupiedBB; }
 
 inline bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard) const {
     return IsKingSafe(tempOccuracyBoard, tempEnemyBoard, GetPiecePos(turn, PieceType::King));
@@ -98,46 +97,30 @@ inline bool Board::IsKingSafe(U64 tempOccuracyBoard) const {
     return IsKingSafe(tempOccuracyBoard, GetColorBB(oppColor));
 }
 
-inline bool Board::IsKingSafe() const {
-    return IsKingSafe(GetOccupiedBB());
-}
+inline bool Board::IsKingSafe() const { return IsKingSafe(GetOccupiedBB()); }
 
-inline Color Board::GetColor() const {
-    return turn;
-}
+inline Color Board::GetColor() const { return turn; }
 
-inline Color Board::GetOppColor() const {
-    return oppColor;
-}
+inline Color Board::GetOppColor() const { return oppColor; }
 
 inline Color Board::GetColor(Square sq) const {
-    if (colorBB[(U8) Color::White] & C64(sq))
+    if (colorBB[(U8)Color::White] & C64(sq))
         return Color::White;
-    else if (colorBB[(U8) Color::Black] & C64(sq))
+    else if (colorBB[(U8)Color::Black] & C64(sq))
         return Color::Black;
     else
         return Color::None;
 }
 
-inline U64 Board::GetHash() const {
-    return zobrist.GetHash();
-}
+inline U64 Board::GetHash() const { return zobrist.GetHash(); }
 
-inline int Board::GetPly() const {
-    return ply;
-}
+inline int Board::GetPly() const { return ply; }
 
-inline bool Board::IsThreefoldRep() const {
-    return zobrist.IsThreefoldRep();
-}
+inline bool Board::IsThreefoldRep() const { return zobrist.IsThreefoldRep(); }
 
-U64 Board::GetColorBB(Color color) const {
-    return colorBB[(int) color];
-}
+U64 Board::GetColorBB(Color color) const { return colorBB[(int)color]; }
 
-inline Column Board::GetEP() const {
-    return EP;
-}
+inline Column Board::GetEP() const { return EP; }
 
 inline void Board::PlacePiece(Square square, PieceChar pieceChar) {
     PlacePiece(square, Utilities::GetPieceType(pieceChar), Utilities::GetPieceColor(pieceChar));
@@ -146,10 +129,10 @@ inline void Board::PlacePiece(Square square, PieceChar pieceChar) {
 inline void Board::PlacePiece(Square square, PieceType type, Color color) {
     assert(type != PieceType::None);
     U64 bit = C64(square);
-    pieceBB[(U8) type] |= bit;
-    colorBB[(U8) color] |= bit;
+    pieceBB[(U8)type] |= bit;
+    colorBB[(U8)color] |= bit;
     occupiedBB |= bit;
-    popCount[(U8) color][(U8) type]++;
+    popCount[(U8)color][(U8)type]++;
     zobrist.FlipSquare(square, type, color);
     assert(occupiedBB == (colorBB[0] | colorBB[1]));
 }
@@ -157,16 +140,16 @@ inline void Board::PlacePiece(Square square, PieceType type, Color color) {
 inline void Board::RemovePiece(Square square, PieceType type, Color color) {
     assert(type != PieceType::None);
     U64 bit = C64(square);
-    pieceBB[(U8) type] ^= bit;
-    colorBB[(U8) color] ^= bit;
+    pieceBB[(U8)type] ^= bit;
+    colorBB[(U8)color] ^= bit;
     occupiedBB ^= bit;
-    popCount[(U8) color][(U8) type]--;
+    popCount[(U8)color][(U8)type]--;
     zobrist.FlipSquare(square, type, color);
     assert(occupiedBB == (colorBB[0] | colorBB[1]));
 }
 
 bool Board::IsCastlingAllowed(Color color, Castling side) const {
-    return castlingAllowed[(int) color][(int) side];
+    return castlingAllowed[(int)color][(int)side];
 }
 
 void Board::SetTurn(Color color) {
@@ -180,7 +163,9 @@ void Board::SwitchTurn() {
 }
 
 void Board::EnableCastling(Color color, Castling castling) {
-    castlingAllowed[(int) color][(int) castling] = true;
+    castlingAllowed[(int)color][(int)castling] = true;
 }
 
-#endif // BOARD
+} // namespace Chess
+
+#endif // CHESS_BOARD

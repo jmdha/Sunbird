@@ -1,5 +1,7 @@
 #include <chess/perft.hpp>
 
+using namespace Chess;
+
 int Perft::Run(Board &board, int depth) {
     if (depth == 0)
         return 1;

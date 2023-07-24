@@ -1,7 +1,7 @@
-#include "chess/import.hpp"
-#include "chess/internal/utilities.hpp"
+#include <chess/import.hpp>
+#include <chess/internal/utilities.hpp>
 
-namespace Import {
+namespace Chess::Import {
 Board FEN(std::string FEN) {
     Board board;
 
@@ -51,4 +51,4 @@ Board FEN(std::string FEN) {
 
     return board;
 }
-} // namespace Import
+} // namespace Chess::Import

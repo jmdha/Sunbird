@@ -1,9 +1,9 @@
-#include "chess/internal/constants.hpp"
-#include "chess/internal/utilities.hpp"
+#include <chess/internal/constants.hpp>
+#include <chess/internal/utilities.hpp>
 #include <chess/move_gen.hpp>
 #include <functional>
 
-namespace MoveGen {
+namespace Chess::MoveGen {
 namespace {
 // Calls the callback on on all pieces of type pType of own colour
 template <PieceType pType> void PieceIter(const Board &board, Color color, std::function<void(U8)> callback) {

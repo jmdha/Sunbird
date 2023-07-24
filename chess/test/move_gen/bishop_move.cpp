@@ -7,6 +7,8 @@
 #include <chess/internal/constants.hpp>
 #include <chess/move_gen.hpp>
 
+using namespace Chess;
+
 int main(int, char *argv[]) {
     Board board = Import::FEN((std::string)argv[2]);
 

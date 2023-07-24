@@ -1,16 +1,12 @@
-#ifndef IMPORT
-#define IMPORT
+#ifndef CHESS_IMPORT
+#define CHESS_IMPORT
 
-#include <optional>
-#include <sstream>
-#include <string>
-#include <unordered_set>
-#include <vector>
 #include <functional>
+#include <string>
 
 #include "board.hpp"
 
-namespace Import {
+namespace Chess::Import {
 /**
  * Creates a board and sets the state to that of the given FEN string
  * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -33,7 +29,7 @@ Board Algebraic(std::string game);
 /**
  * Creates a board and call the callback with boardstate resulting from each algebraic move
  */
-void Algebraic(std::string game, std::function<void(const Board&)> callback);
-}; // namespace Import
+void Algebraic(std::string game, std::function<void(const Board &)> callback);
+}; // namespace Chess::Import
 
 #endif

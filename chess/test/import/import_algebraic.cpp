@@ -5,6 +5,8 @@
 #include <chess/import.hpp>
 #include <chess/export.hpp>
 
+using namespace Chess;
+
 int main(int, char* argv[]) {
     std::string moves = std::string(argv[1]);
     std::string expectedFEN = std::string(argv[2]);

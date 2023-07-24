@@ -6,6 +6,8 @@
 #include <chess/import.hpp>
 #include <chess/perft.hpp>
 
+using namespace Chess;
+
 int main(int, char* argv[]) {
     int expectedLeafCount = std::atoi(argv[1]);
 

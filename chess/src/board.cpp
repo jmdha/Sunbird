@@ -1,5 +1,7 @@
-#include "chess/board.hpp"
-#include "chess/internal/bit_shift.hpp"
+#include <chess/board.hpp>
+#include <chess/internal/bit_shift.hpp>
+
+using namespace Chess;
 
 void Board::Initialize() {
     for (U8 x = 0; x < WIDTH; ++x) {
@@ -128,12 +130,12 @@ void Board::DoMove(Move &move) {
     }
 
     SwitchTurn();
-    zobrist.IncrementHash();
+    zobrist.IncHash();
     ++ply;
 }
 
 void Board::UndoMove(Move move) {
-    zobrist.DecrementHash();
+    zobrist.DecHash();
     PieceType toType;
 
     // Check if old en passant

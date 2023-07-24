@@ -1,10 +1,13 @@
-#include "chess/export.hpp"
-#include "chess/import.hpp"
-#include "chess/internal/utilities.hpp"
-#include "chess/move_gen.hpp"
-#include <cctype>
+#include <chess/export.hpp>
+#include <chess/import.hpp>
+#include <chess/internal/utilities.hpp>
+#include <chess/move_gen.hpp>
 
-namespace Import {
+#include <cctype>
+#include <optional>
+#include <sstream>
+
+namespace Chess::Import {
 namespace {
 // Removes unnecessary information from the game string
 void Clean(std::string &game) {

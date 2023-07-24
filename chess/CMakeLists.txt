@@ -23,6 +23,8 @@ set(CHESS_SRC
     ${CHESS_SRC_DIR}/import_FEN.cpp
     ${CHESS_SRC_DIR}/import_algebraic.cpp
     ${CHESS_SRC_DIR}/import_sequence.cpp
+    ${CHESS_SRC_DIR}/export_FEN.cpp
+    ${CHESS_SRC_DIR}/zobrist.cpp
     )
 
 add_library(CHESS ${CHESS_HEADERS} ${CHESS_SRC})
