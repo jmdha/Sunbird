@@ -40,7 +40,7 @@ void Board::Initialize() {
 
 void Board::DoMove(Move &move) {
     PieceType fromType;
-    if (move.GetType() == MoveType::KingCastle) {
+    if (move.GetType() == MoveType::KingCastle) [[unlikely]] {
         if (turn == Color::White) {
             PlacePiece(Square::G1, PieceType::King, Color::White);
             PlacePiece(Square::F1, PieceType::Rook, Color::White);
@@ -53,7 +53,7 @@ void Board::DoMove(Move &move) {
             RemovePiece(Square::H8, PieceType::Rook, Color::Black);
         }
         fromType = PieceType::King;
-    } else if (move.GetType() == MoveType::QueenCastle) {
+    } else if (move.GetType() == MoveType::QueenCastle) [[unlikely]] {
         if (turn == Color::White) {
             PlacePiece(Square::C1, PieceType::King, Color::White);
             PlacePiece(Square::D1, PieceType::Rook, Color::White);
@@ -66,16 +66,16 @@ void Board::DoMove(Move &move) {
             RemovePiece(Square::A8, PieceType::Rook, Color::Black);
         }
         fromType = PieceType::King;
-    } else {
+    } else [[likely]] {
         fromType = GetType(move.GetFrom());
         RemovePiece(move.GetFrom(), fromType, turn);
 
         if (move.IsCapture()) {
-            if (move.GetType() == MoveType::EPCapture) {
+            if (move.GetType() == MoveType::EPCapture) [[unlikely]] {
                 auto captureSquare = (Square)((turn == Color::White) ? (int)move.GetTo() - 8
                                                                      : (int)move.GetTo() + 8);
                 RemovePiece(captureSquare, PieceType::Pawn, oppColor);
-            } else
+            } else [[likely]]
                 RemovePiece(move.GetTo(), move.GetCapturedPiece(), oppColor);
 
             if (move.GetCapturedPiece() == PieceType::Rook &&
@@ -87,7 +87,7 @@ void Board::DoMove(Move &move) {
                 if (castlingAllowed[(U8)oppColor][(U8)Castling::Queen])
                     DisableCastling(move, oppColor, Castling::Queen);
         }
-        if (move.IsPromotion()) {
+        if (move.IsPromotion()) [[unlikely]] {
             if (move.GetType() == MoveType::RPromotion ||
                 move.GetType() == MoveType::RPromotionCapture)
                 PlacePiece(move.GetTo(), PieceType::Rook, turn);
@@ -106,21 +106,21 @@ void Board::DoMove(Move &move) {
 
     // En passant
     //// Check if there is old
-    if (EP != Column::None)
+    if (EP != Column::None) [[unlikely]]
         move.SetDisableEnPassant(EP);
     //// Set new
-    if (move.GetType() == MoveType::DoublePawnPush) {
+    if (move.GetType() == MoveType::DoublePawnPush) [[unlikely]] {
         SetEnPassant(Utilities::GetColumn(move.GetFrom()));
     } else
         SetEnPassant(Column::None);
 
     // Castling rights
-    if (fromType == PieceType::King) {
+    if (fromType == PieceType::King) [[unlikely]] {
         if (castlingAllowed[(U8)turn][(U8)Castling::King])
             DisableCastling(move, turn, Castling::King);
         if (castlingAllowed[(U8)turn][(U8)Castling::Queen])
             DisableCastling(move, turn, Castling::Queen);
-    } else if (fromType == PieceType::Rook) {
+    } else if (fromType == PieceType::Rook) [[unlikely]] {
         if (castlingAllowed[(U8)turn][(U8)Castling::King] &&
             move.GetFrom() == (turn == Color::White ? Square::H1 : Square::H8))
             DisableCastling(move, turn, Castling::King);
@@ -145,7 +145,7 @@ void Board::UndoMove(Move move) {
         priorEP = true;
     }
 
-    if (move.GetType() == MoveType::KingCastle) {
+    if (move.GetType() == MoveType::KingCastle) [[unlikely]] {
         if (turn == Color::Black) {
             RemovePiece(Square::G1, PieceType::King, Color::White);
             RemovePiece(Square::F1, PieceType::Rook, Color::White);
@@ -157,7 +157,7 @@ void Board::UndoMove(Move move) {
             PlacePiece(Square::E8, PieceType::King, Color::Black);
             PlacePiece(Square::H8, PieceType::Rook, Color::Black);
         }
-    } else if (move.GetType() == MoveType::QueenCastle) {
+    } else if (move.GetType() == MoveType::QueenCastle) [[unlikely]] {
         if (turn == Color::Black) {
             RemovePiece(Square::C1, PieceType::King, Color::White);
             RemovePiece(Square::D1, PieceType::Rook, Color::White);
@@ -171,23 +171,23 @@ void Board::UndoMove(Move move) {
         }
     } else {
         toType = GetType(move.GetTo());
-        if (move.IsPromotion()) {
+        if (move.IsPromotion()) [[unlikely]] {
             RemovePiece(move.GetTo(), toType, oppColor);
             PlacePiece(move.GetFrom(), PieceType::Pawn, oppColor);
-        } else {
+        } else [[likely]] {
             RemovePiece(move.GetTo(), toType, oppColor);
             PlacePiece(move.GetFrom(), toType, oppColor);
-            if (move.GetType() == MoveType::DoublePawnPush)
+            if (move.GetType() == MoveType::DoublePawnPush) [[unlikely]]
                 if (!priorEP)
                     SetEnPassant(Column::None);
         }
 
         if (move.IsCapture()) {
-            if (move.GetType() == MoveType::EPCapture) {
+            if (move.GetType() == MoveType::EPCapture) [[unlikely]] {
                 auto captureSquare = (Square)((turn == Color::Black) ? (int)move.GetTo() - 8
                                                                      : (int)move.GetTo() + 8);
                 PlacePiece(captureSquare, PieceType::Pawn, turn);
-            } else
+            } else [[likely]]
                 PlacePiece(move.GetTo(), move.GetCapturedPiece(), turn);
         }
     }
@@ -201,7 +201,7 @@ void Board::EnableCastling(Move &move) {
         castlingAllowed[(int)color][(int)castling] = true;
         zobrist.FlipCastling(color, castling);
     };
-    if (move.IsDC()) {
+    if (move.IsDC()) [[unlikely]] {
         if (move.IsDC(Color::White, Castling::King))
             enableCastling(Color::White, Castling::King);
         if (move.IsDC(Color::White, Castling::Queen))
@@ -256,37 +256,37 @@ bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBo
     U64 enemyPawns = GetPiecePos(PieceType::Pawn) & tempEnemyBoard;
 
     // clang-format off
-    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::North] & enemyRooks)
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::North] & enemyRooks) [[unlikely]]
         if (Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::North] & enemyRooks) == Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::North] & tempOccuracyBoard))
             return false;
-    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::East] & enemyRooks)
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::East] & enemyRooks) [[unlikely]]
         if (Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::East] & enemyRooks) == Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::East] & tempOccuracyBoard))
             return false;
-    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::South] & enemyRooks)
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::South] & enemyRooks) [[unlikely]]
         if (Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::South] & enemyRooks) == Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::South] & tempOccuracyBoard))
             return false;
-    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::West] & enemyRooks)
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::West] & enemyRooks) [[unlikely]]
         if (Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::West] & enemyRooks) == Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::West] & tempOccuracyBoard))
             return false;
 
-    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthEast] & enemyBishops)
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthEast] & enemyBishops) [[unlikely]]
         if (Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthEast] & enemyBishops) == Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthEast] & tempOccuracyBoard))
             return false;
-    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthWest] & enemyBishops)
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthWest] & enemyBishops) [[unlikely]]
         if (Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthWest] & enemyBishops) == Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthWest] & tempOccuracyBoard))
             return false;
-    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthEast] & enemyBishops)
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthEast] & enemyBishops) [[unlikely]]
         if (Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthEast] & enemyBishops) == Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthEast] & tempOccuracyBoard))
             return false;
-    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthWest] & enemyBishops)
+    if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthWest] & enemyBishops) [[unlikely]]
         if (Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthWest] & enemyBishops) == Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthWest] & tempOccuracyBoard))
             return false;
     // clang-format on
 
-    if (BitShift::MOVES[(int)PieceType::Knight][kingPosIndex] & enemyKnights)
+    if (BitShift::MOVES[(int)PieceType::Knight][kingPosIndex] & enemyKnights) [[unlikely]]
         return false;
 
-    if (PawnAttacks[(int)turn][kingPosIndex] & enemyPawns)
+    if (PawnAttacks[(int)turn][kingPosIndex] & enemyPawns) [[unlikely]]
         return false;
 
     return true;
