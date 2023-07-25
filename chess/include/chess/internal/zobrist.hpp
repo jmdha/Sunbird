@@ -11,8 +11,12 @@ public:
     void FlipSquare(Square square, PieceType type, Color color);
     void FlipCastling(Color col, Castling side);
     void FlipEnPassant(Column col);
-    void IncHash();
-    void DecHash();
+    inline void IncHash() { hashOccurances[hash]++; }
+    inline void DecHash() {
+        if (hashOccurances.at(hash)-- == 1)
+            hashOccurances.erase(hash);
+    }
+
     bool IsThreefoldRep() const;
     U64 GetHash() const;
 
