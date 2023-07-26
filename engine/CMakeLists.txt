@@ -6,6 +6,7 @@ set(ENGINE_INCLUDE_BUILD_DIR ${ENGINE_INCLUDE_DIR}/engine)
 
 set(ENGINE_HEADERS
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/values.hpp
+    ${ENGINE_INCLUDE_BUILD_DIR}/internal/positions.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/evaluation.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/negamax.hpp
     )
@@ -26,4 +27,6 @@ endif ()
 if (BUILD_BIN)
     add_executable(engine ${CMAKE_CURRENT_LIST_DIR}/bin/engine.cpp)
     target_link_libraries(engine PRIVATE ENGINE)
+    add_executable(tune ${CMAKE_CURRENT_LIST_DIR}/bin/tune.cpp)
+    target_link_libraries(tune PRIVATE ENGINE)
 endif ()
