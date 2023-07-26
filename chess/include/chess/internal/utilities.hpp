@@ -115,12 +115,16 @@ namespace Chess::Utilities {
     }
 
     constexpr U64 MSB(U64 x) {
+    #if defined(__GNUC__)    
+        return __builtin_clzll(x);
+    #else
         U64 index = 0;
         while (1 < x) {
             x = x >> 1;
             ++index;
         }
         return index;
+    #endif
     }
 
     constexpr U64 NotEdge(Direction dir) {
