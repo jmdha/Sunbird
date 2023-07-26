@@ -5,27 +5,19 @@
 
 namespace Chess::MoveGen {
 namespace {
-// Calls the callback on on all pieces of type pType of own colour
-template <PieceType pType> void PieceIter(const Board &board, Color color, std::function<void(U8)> callback) {
-    U64 pieces = board.GetPiecePos(color, pType);
-    while (pieces)
-        callback(Utilities::LSB_Pop(&pieces));
-}
 
 // HACK: This needs to be refactored
 template <GenType gType> void GenerateKingMoves(const Board &board, Color color, MoveList &moves) {
-    Color oppColor = Utilities::GetOppositeColor(color);
+    constexpr static CastlingBlockSquares castlingBlock[2][2] = {
+        {CastlingBlockSquares::KSideWhite, CastlingBlockSquares::QSideWhite},
+        {CastlingBlockSquares::KSideBlack, CastlingBlockSquares::QSideBlack}
+    };
+    constexpr static CastlingAttackSquares castlingAttack[2][2] = {
+        {CastlingAttackSquares::KSideWhite, CastlingAttackSquares::QSideWhite},
+        {CastlingAttackSquares::KSideBlack, CastlingAttackSquares::QSideBlack}
+    };
+    const Color oppColor = Utilities::GetOppositeColor(color);
     const auto attackedSquares = board.GenerateAttackSquares(board.GetOppColor());
-    const CastlingBlockSquares castlingBlock[2] = {
-        (color == Color::White) ? CastlingBlockSquares::KSideWhite
-                                : CastlingBlockSquares::KSideBlack,
-        (color == Color::White) ? CastlingBlockSquares::QSideWhite
-                                : CastlingBlockSquares::QSideBlack};
-    const CastlingAttackSquares castlingAttack[2] = {
-        (color == Color::White) ? CastlingAttackSquares::KSideWhite
-                                : CastlingAttackSquares::KSideBlack,
-        (color == Color::White) ? CastlingAttackSquares::QSideWhite
-                                : CastlingAttackSquares::QSideBlack};
     const U8 kingPos = Utilities::LSB(board.GetPiecePos(color, PieceType::King));
     if constexpr (gType == GenType::Quiet || gType == GenType::All) {
         U64 qMoves = BitShift::RINGS[kingPos][1] & ~board.GetOccupiedBB() & ~attackedSquares;
@@ -36,14 +28,14 @@ template <GenType gType> void GenerateKingMoves(const Board &board, Color color,
                 moves << Move(MoveType::Quiet, (Square)kingPos, (Square)move);
         }
         if (board.IsCastlingAllowed(color, Castling::King) &&
-            !(board.GetOccupiedBB() & (U64)castlingBlock[(int)Castling::King]) &&
-            !(attackedSquares & (U64)castlingAttack[(int)Castling::King]))
+            !(board.GetOccupiedBB() & (U64)castlingBlock[(int)color][(int)Castling::King]) &&
+            !(attackedSquares & (U64)castlingAttack[(int)color][(int)Castling::King]))
             moves << Move(
                 MoveType::KingCastle, (Square)kingPos,
                 (Square)Utilities::LSB(BitShift::Shift(C64(kingPos), Direction::East, 2)));
         if (board.IsCastlingAllowed(color, Castling::Queen) &&
-            !(board.GetOccupiedBB() & (U64)castlingBlock[(int)Castling::Queen]) &&
-            !(attackedSquares & (U64)castlingAttack[(int)Castling::Queen]))
+            !(board.GetOccupiedBB() & (U64)castlingBlock[(int)color][(int)Castling::Queen]) &&
+            !(attackedSquares & (U64)castlingAttack[(int)color][(int)Castling::Queen]))
             moves << Move(
                 MoveType::QueenCastle, (Square)kingPos,
                 (Square)Utilities::LSB(BitShift::Shift(C64(kingPos), Direction::West, 2)));
@@ -63,9 +55,11 @@ template <GenType gType> void GenerateKingMoves(const Board &board, Color color,
 
 // HACK: This needs to be refactored
 template <GenType gType> void GeneratePawnMoves(const Board &board, Color color, MoveList &moves) {
-    Color oppColor = Utilities::GetOppositeColor(color);
     constexpr DirectionIndex dir[2] = {DirectionIndex::North, DirectionIndex::South};
-    PieceIter<PieceType::Pawn>(board, color, [&](U8 piece) {
+    const Color oppColor = Utilities::GetOppositeColor(color);
+    U64 pieces = board.GetPiecePos(color, PieceType::Pawn);
+    while (pieces) {
+        int piece = Utilities::LSB_Pop(&pieces);
         if constexpr (gType == GenType::Quiet || gType == GenType::All) {
             U64 to = BitShift::RAYS[(U8)piece][(U8)dir[(U8)color]] &
                      BitShift::RINGS[(U8)piece][1];
@@ -123,14 +117,16 @@ template <GenType gType> void GeneratePawnMoves(const Board &board, Color color,
                     moves << Move(MoveType::EPCapture, (Square)piece, (Square)sq, PieceType::Pawn);
             }
         }
-    });
+    }
 }
 
 // Generates possible quiet moves for pieces of type pType
 template <PieceType pType> void GenerateQuiet(const Board &board, Color color, MoveList &moves) {
     static_assert(pType != PieceType::King && pType != PieceType::Pawn);
 
-    PieceIter<pType>(board, color, [&](U8 piece) {
+    U64 pieces = board.GetPiecePos(color, pType);
+    while(pieces) {
+        int piece = Utilities::LSB_Pop(&pieces);
         U64 unblocked = BitShift::MOVES[(int)pType][piece];
         for (U8 offset = 1; offset < 8; ++offset) {
             U64 ring = BitShift::RINGS[piece][offset];
@@ -147,7 +143,7 @@ template <PieceType pType> void GenerateQuiet(const Board &board, Color color, M
                     moves << Move(MoveType::Quiet, (Square)piece, (Square)sq);
             }
         }
-    });
+    }
 };
 
 // Generates possible attack moves for pieces of type pType
@@ -155,7 +151,9 @@ template <PieceType pType> void GenerateAttack(const Board &board, Color color, 
     static_assert(pType != PieceType::King && pType != PieceType::Pawn);
     Color oppColor = Utilities::GetOppositeColor(color);
 
-    PieceIter<pType>(board, color, [&](U8 piece) {
+    U64 pieces = board.GetPiecePos(color, pType);
+    while (pieces) {
+        int piece = Utilities::LSB_Pop(&pieces);
         U64 unblocked = BitShift::MOVES[(int)pType][piece];
         for (U8 offset = 1; offset < 8; ++offset) {
             U64 ring = BitShift::RINGS[piece][offset];
@@ -173,7 +171,7 @@ template <PieceType pType> void GenerateAttack(const Board &board, Color color, 
                                   board.GetType((Square)blocker));
             }
         }
-    });
+    }
 };
 } // namespace
 
