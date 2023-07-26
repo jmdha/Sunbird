@@ -13,7 +13,7 @@ int main(int, char *argv[]) {
     Board board = Import::MoveSequence(fen);
     std::string expectedMove = argv[3];
 
-    Move move = Engine::Negamax::GetBestMove(board, std::atoi(argv[2]));
+    Move move = Engine::Negamax::GetBestMove(board, std::atoi(argv[2])).first.value();
 
     if (expectedMove == move.ToString())
         exit(EXIT_SUCCESS);

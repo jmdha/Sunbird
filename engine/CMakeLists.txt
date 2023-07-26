@@ -6,6 +6,7 @@ set(ENGINE_INCLUDE_BUILD_DIR ${ENGINE_INCLUDE_DIR}/engine)
 
 set(ENGINE_HEADERS
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/values.hpp
+    ${ENGINE_INCLUDE_BUILD_DIR}/internal/positions.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/evaluation.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/negamax.hpp
     )
