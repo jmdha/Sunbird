@@ -65,19 +65,19 @@ private:
         return array;
     }();
     Column EP = Column::None;
-    U8 popCount[COLORCOUNT][PIECECOUNT]{0};
     bool castlingAllowed[2][2]{false};
     Zobrist zobrist = Zobrist();
     int ply = 0;
 };
 
 inline PieceType Board::GetType(Square square) const {
+    assert(square != Square::None);
     return pieceBoard[(int)square];
 }
 
 inline int Board::GetPieceCount(const Color color, const PieceType type) const {
     assert(type != PieceType::None);
-    return popCount[(int)color][(int)type];
+    return Utilities::PopCount(GetPiecePos(color, type));
 }
 
 U64 Board::GetPiecePos(PieceType type) const {
@@ -135,7 +135,6 @@ inline void Board::PlacePiece(Square square, PieceType type, Color color) {
     pieceBB[(U8)type] |= bit;
     colorBB[(U8)color] |= bit;
     occupiedBB |= bit;
-    popCount[(U8)color][(U8)type]++;
     pieceBoard[(int)square] = type;
     zobrist.FlipSquare(square, type, color);
     assert(occupiedBB == (colorBB[0] | colorBB[1]));
@@ -147,7 +146,6 @@ inline void Board::RemovePiece(Square square, PieceType type, Color color) {
     pieceBB[(U8)type] ^= bit;
     colorBB[(U8)color] ^= bit;
     occupiedBB ^= bit;
-    popCount[(U8)color][(U8)type]--;
     pieceBoard[(int)square] = PieceType::None;
     zobrist.FlipSquare(square, type, color);
     assert(occupiedBB == (colorBB[0] | colorBB[1]));
