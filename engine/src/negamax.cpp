@@ -15,7 +15,7 @@ int Quiesce(Board &board, int alpha, int beta) {
             return Evaluation::EvalNoMove(false);
     }
 
-    int standPat = Evaluation::Eval(board);
+    int standPat = EVAL_FUNCTION(board);
     if (standPat >= beta)
         return beta;
     if (alpha < standPat)
@@ -61,7 +61,9 @@ int Negamax(Board &board, int depth, int alpha, int beta) {
     return alpha;
 }
 
-std::pair<Move, int> Negamax(Board &board, int depth) {
+std::pair<std::optional<Move>, int> Negamax(Board &board, int depth) {
+    if (board.GetPly() > 150)
+        return {{}, 0};
     std::optional<std::pair<Move, int>> bestMove;
 
     const MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
@@ -69,23 +71,24 @@ std::pair<Move, int> Negamax(Board &board, int depth) {
         board.DoMove(move);
         int score = -Negamax(board, depth - 1, -MaterialValue::Inf, MaterialValue::Inf);
         board.UndoMove(move);
-        if (!bestMove.has_value() || score > bestMove.value().second)
+        if (!bestMove.has_value() || score > bestMove.value().second) {
             bestMove = {move, score};
+        }
+    }
+
+
+    if (moves.empty()) {
+        if (!board.IsKingSafe())
+            return {{}, MaterialValue::Inf};
+        else
+            return {{}, 0};
     }
 
     return bestMove.value();
 }
 } // namespace
-Move GetBestMove(Board &board, int depth) {
-    std::pair<Move, int> bestMove;
-
-    int workingDepth = 1;
-    do {
-        bestMove = Negamax(board, depth);
-        if (bestMove.second == MaterialValue::Inf)
-            break;
-    } while (workingDepth++ < depth);
-
-    return bestMove.first;
+std::pair<std::optional<Move>, int> GetBestMove(Board &board, int depth) {
+    assert(depth > 1);
+    return Negamax(board, depth);
 }
 } // namespace Chess::Engine::Negamax

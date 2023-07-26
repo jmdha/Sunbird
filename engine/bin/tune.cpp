@@ -1,3 +1,5 @@
+#include "chess/internal/utilities.hpp"
+#include "engine/evaluation.hpp"
 #include <chess/import.hpp>
 #include <engine/internal/positions.hpp>
 #include <engine/internal/values.hpp>
@@ -13,7 +15,7 @@ constexpr double delta = 1.0;
 
 constexpr double applyFactor = 0.1;
 
-constexpr int posCount = 20;
+constexpr int posCount = 10;
 
 std::random_device dev;
 std::mt19937 rng(dev());
@@ -27,11 +29,11 @@ using namespace Chess;
 using namespace Chess::Engine;
 
 std::array<std::array<int, 5>, 2> ModMaterialValues() {
-    std::array<std::array<int, 5>, 2> values{MATERIAL_VALUE, MATERIAL_VALUE};
+    std::array<std::array<int, 5>, 2> values{MaterialValue::ALL, MaterialValue::ALL};
 
     for (int i = 0; i < 1; i++) {
         int pIndex = mat_dist(rng);
-        double change = (int)((double)MATERIAL_VALUE[pIndex] * delta);
+        double change = (int)((double)MaterialValue::ALL[pIndex] * delta);
         values[0][pIndex] += change;
         values[1][pIndex] -= change;
     }
@@ -54,46 +56,41 @@ int main() {
     size_t roundIndex = 1;
     while (true) {
         printf("Beginning round %zu\n", roundIndex);
-        const auto priorValues = MATERIAL_VALUE;
-        const auto materialValues =
-            std::array<std::array<int, 5>, 2>{0, 0, 0, 0, 0, 100, 300, 300, 500, 900};
         std::vector<std::string> positions = Positions::GetPositions(posCount);
-        int winCount[2]{0};
-        for (int i = 0; i < 2; i++) {
-            bool t = i;
-            for (const auto pos : positions) {
+        size_t winCount[2]{0};
+        for (const auto pos : positions) {
+            for (int i = 0; i < 2; i++) {
                 Board board = Import::FEN(pos);
-                bool draw = false;
                 do {
-                    MATERIAL_VALUE = materialValues[t = !t];
-                    Move move = Negamax::GetBestMove(board, 2);
-                    if (move.GetType() == MoveType::SPECIAL_DRAW) {
-                        draw = true;
+                    std::pair<std::optional<Move>, int> move;
+                    if (board.GetColor() == (Color)i) {
+                        Negamax::EVAL_FUNCTION = Evaluation::Eval;
+                        move = Negamax::GetBestMove(board, 3);
+                    } else {
+                        Negamax::EVAL_FUNCTION = [](const Board &board) { return 0; };
+                        move = Negamax::GetBestMove(board, 2);
+                    }
+                    if (move.first.has_value()) {
+                        board.DoMove(move.first.value());
+                    } else if (move.second == 0) {
                         break;
-                    } else if (move.GetValue() == 0)
-                        board.DoMove(move);
-                    else
+                    } else {
+                        if (board.GetColor() != (Color)i)
+                            winCount[0]++;
+                        else
+                            winCount[1]++;
                         break;
+                    }
                 } while (true);
-                if (!draw) {
-                    if ((int)board.GetOppColor() == i)
-                        winCount[0]++;
-                    else
-                        winCount[1]++;
-                }
             }
         }
-        MATERIAL_VALUE = priorValues;
-        printf("Finished round: %d - %d\n", winCount[0], winCount[1]);
+        printf("Finished round: %zu - %zu\n", winCount[0], winCount[1]);
         if (winCount[0] != winCount[1]) {
-            MATERIAL_VALUE = materialValues[winCount[1] > winCount[0]];
             const std::string roundPath = iterationDir + std::to_string(roundIndex);
             printf("Writing result to file %s\n", roundPath.c_str());
             std::ofstream roundFile(roundPath);
             roundFile << "-----Material-----\n";
             roundFile << "pawn,knight,bishop,rook,queen,\n";
-            for (const auto value : MATERIAL_VALUE)
-                roundFile << value << ',';
             roundFile << '\n';
             roundFile.close();
         }

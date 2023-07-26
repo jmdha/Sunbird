@@ -187,9 +187,7 @@ enum class MoveType : U8 {
     NPromotionCapture = 12,
     BPromotionCapture = 13,
     RPromotionCapture = 14,
-    QPromotionCapture = 15,
-    SPECIAL_DRAW = 16,
-    SPECIAL_CHECKMATE = 17
+    QPromotionCapture = 15
 };
 constexpr std::array<MoveType, 4> PromotionMoves{MoveType::NPromotion, MoveType::BPromotion,
                                                  MoveType::RPromotion, MoveType::QPromotion};

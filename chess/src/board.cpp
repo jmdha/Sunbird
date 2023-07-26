@@ -39,6 +39,7 @@ void Board::Initialize() {
 }
 
 void Board::DoMove(Move &move) {
+    assert(move.GetValue() != 0);
     PieceType fromType;
     if (move.GetType() == MoveType::KingCastle) [[unlikely]] {
         if (turn == Color::White) {
