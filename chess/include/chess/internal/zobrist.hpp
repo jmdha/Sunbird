@@ -2,6 +2,7 @@
 #define CHESS_ZOBRIST
 
 #include <unordered_map>
+#include <tsl/robin_map.h>
 
 #include "constants.hpp"
 
@@ -16,13 +17,12 @@ public:
         if (hashOccurances.at(hash)-- == 1)
             hashOccurances.erase(hash);
     }
-
-    bool IsThreefoldRep() const;
-    U64 GetHash() const;
+    inline bool IsThreefoldRep() const { return hashOccurances.at(hash) > 2; }
+    inline U64 GetHash() const { return hash; }
 
 private:
     U64 hash = 0;
-    std::unordered_map<U64, U8> hashOccurances;
+    tsl::robin_map<U64, U8> hashOccurances;
 };
 } // namespace Chess
 

@@ -38,6 +38,3 @@ void Zobrist::FlipEnPassant(Column col) {
     hash ^= hashes[SQUARE_HASH_COUNT + 4 + Utilities::GetColumnIndex(col)];
 }
 
-bool Zobrist::IsThreefoldRep() const { return hashOccurances.at(hash) > 2; }
-
-U64 Zobrist::GetHash() const { return hash; }
