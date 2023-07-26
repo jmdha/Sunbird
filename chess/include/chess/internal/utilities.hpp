@@ -91,19 +91,27 @@ namespace Chess::Utilities {
 
     // Returns the amount of bits set to 1
     // e.g. 0110 => 2 and 1000 => 1
-    // This implementation is from https://www.chessprogramming.org/Population_Count
-    // Specifically the one titled "Brian Kerninghan"
     constexpr U8 PopCount(U64 x) {
+    #if defined(__GNUC__)    
+        return __builtin_popcountll(x);
+    #else
+        // This implementation is from https://www.chessprogramming.org/Population_Count
+        // Specifically the one titled "Brian Kerninghan"
         U8 count = 0;
         while (x) {
             ++count;
             x &= x - 1;
         }
         return count;
+    #endif
     }
 
     constexpr U64 LSB(U64 x) {
+    #if defined(__GNUC__)    
+        return __builtin_ctzll(x);
+    #else
         return ffsll(x) - 1;
+    #endif
     }
 
     // Returns the least significant set bit, and pops it
