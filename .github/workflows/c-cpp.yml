@@ -21,5 +21,4 @@ jobs:
     - name: Build CMake
       run: cmake --build build
     - name: Test
-      working-directory: engine
-      run: ctest
+      run: ctest --test-dir build/engine
