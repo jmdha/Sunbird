@@ -17,12 +17,12 @@ jobs:
       with:
         cmakeVersion: 3.17.2
     - name: Create build directory
-      run: mkdir build/
+      run: mkdir build
     - name: Run CMake
-      working-directory: ./build
+      working-directory: build
       run: cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TEST=true -DBUILD_ENGINE=true
     - name: Build
       run: cmake --build .
     - name: Test
-      working-directory: ./engine
+      working-directory: engine
       run: ctest
