@@ -14,15 +14,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: lukka/get-cmake@latest
-      with:
-        cmakeVersion: 3.17.2
     - name: Create build directory
       run: mkdir build
-    - name: Run CMake
-      working-directory: build
-      run: cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TEST=true -DBUILD_ENGINE=true
-    - name: Build
-      run: cmake --build .
+    - name: Generate CMake
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_TEST=true -DBUILD_ENGINE=true
+    - name: Build CMake
+      run: cmake --build build
     - name: Test
       working-directory: engine
       run: ctest
