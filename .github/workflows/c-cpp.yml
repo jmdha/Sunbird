@@ -13,11 +13,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+    - uses: lukka/get-cmake@latest
+      with:
+        cmakeVersion: 3.17.2
+    - name: Create build directory
+      run: mkdir build/
+    - name: Run CMake
+      working-directory: ./build
+      run: cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TEST=true -DBUILD_ENGINE=true
+    - name: Build
+      run: cmake --build .
+    - name: Test
+      working-directory: ./engine
+      run: ctest
