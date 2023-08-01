@@ -1,5 +1,6 @@
 #include <chess/internal/constants.hpp>
 #include <chess/move_gen.hpp>
+#include <chrono>
 #include <engine/evaluation.hpp>
 #include <engine/negamax.hpp>
 #include <optional>
@@ -43,7 +44,7 @@ int Negamax(Board &board, int depth, int alpha, int beta) {
 
     if (moves.size() == 0)
         return Evaluation::EvalNoMove(board.IsKingSafe());
-    if (board.IsThreefoldRep())
+    if (board.IsThreefoldRep() || board.GetPly() > 150)
         return 0;
 
     for (auto move : moves) {
@@ -60,35 +61,60 @@ int Negamax(Board &board, int depth, int alpha, int beta) {
 
     return alpha;
 }
-
-std::pair<std::optional<Move>, int> Negamax(Board &board, int depth) {
-    if (board.GetPly() > 150)
-        return {{}, 0};
-    std::optional<std::pair<Move, int>> bestMove;
-
-    const MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
-    for (auto move : moves) {
-        board.DoMove(move);
-        int score = -Negamax(board, depth - 1, -MaterialValue::Inf, MaterialValue::Inf);
-        board.UndoMove(move);
-        if (!bestMove.has_value() || score > bestMove.value().second) {
-            bestMove = {move, score};
-        }
-    }
-
-
-    if (moves.empty()) {
-        if (!board.IsKingSafe())
-            return {{}, MaterialValue::Inf};
-        else
-            return {{}, 0};
-    }
-
-    return bestMove.value();
-}
 } // namespace
+
 std::pair<std::optional<Move>, int> GetBestMove(Board &board, int depth) {
-    assert(depth > 1);
-    return Negamax(board, depth);
+    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
+    if (moves.empty())
+        return {{}, Evaluation::EvalNoMove(board.IsKingSafe())};
+    std::array<int, MAXMOVECOUNT> scores{0};
+
+    int workingDepth = 1;
+    do {
+        for (int i = 0; i < moves.size(); i++) {
+            Move &move = moves[i];
+            board.DoMove(move);
+            const int score =
+                -Negamax(board, workingDepth, -MaterialValue::Inf, MaterialValue::Inf);
+            board.UndoMove(move);
+            scores[i] = score;
+        }
+        moves.sort(scores);
+    } while (workingDepth++ < depth);
+
+    return {moves[0], scores[0]};
+}
+
+std::pair<std::optional<Move>, int> GetBestMoveTime(Board &board, int timeLimit) {
+    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
+    if (moves.empty())
+        return {{}, Evaluation::EvalNoMove(board.IsKingSafe())};
+    std::array<int, MAXMOVECOUNT> scores{0};
+
+    U64 totalTime = 0;
+
+    int workingDepth = 1;
+    do {
+        for (int i = 0; i < moves.size(); i++) {
+            auto t0 = std::chrono::steady_clock::now();
+            Move &move = moves[i];
+            board.DoMove(move);
+            const int score =
+                -Negamax(board, workingDepth, -MaterialValue::Inf, MaterialValue::Inf);
+            board.UndoMove(move);
+            scores[i] = score;
+            auto t1 = std::chrono::steady_clock::now();
+            U64 time = (U64)std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+            totalTime += time;
+            if (totalTime + time > timeLimit ||
+                (i == moves.size() - 1 && totalTime + 20 * time > timeLimit)) {
+                totalTime = 999999;
+                break;
+            }
+        }
+        moves.sort(scores);
+    } while (workingDepth++ < 1000 && totalTime < timeLimit);
+
+    return {moves[0], scores[0]};
 }
 } // namespace Chess::Engine::Negamax

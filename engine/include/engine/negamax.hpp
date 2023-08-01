@@ -10,8 +10,8 @@
 
 namespace Chess::Engine::Negamax {
 static inline std::function<int(const Board &)> EVAL_FUNCTION = Evaluation::Eval;
-// TODO: Implement time limit
 std::pair<std::optional<Move>, int> GetBestMove(Board &board, int depth);
+std::pair<std::optional<Move>, int> GetBestMoveTime(Board &board, int timeLimit);
 } // namespace Chess::Engine::Negamax
 
 #endif // ENGINE_NEGAMAX
