@@ -9,7 +9,7 @@ using namespace Chess;
 int main(int, char* argv[]) {
     int timeLimit = std::stoi(argv[1]);
     Board board = Import::MoveSequence(argv[2]);
-    auto move = Engine::Negamax::GetBestMoveTime(board, timeLimit);
+    auto move = Engine::Negamax::GetBestMoveTime(board, 0.1 * timeLimit);
     if (move.first.has_value())
         printf("%s\n", move.first.value().ToString().c_str());
     else if (move.second == 0)

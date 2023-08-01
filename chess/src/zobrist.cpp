@@ -15,10 +15,15 @@ template <U64 l>
 constexpr std::array<U64, l> GenerateHashes() {
     std::array<U64, l> tempTable;
 
+    U64 startState = 0x181818ffff181818;
+    U64 lfsr = startState;
+    U64 bit;
+    U64 period = 0;
+
     for (int i = 0; i < l; i++) {
-        U64 hash = i;
-        hash ^= (i ^ 2) << 17;
-        tempTable.at(i) = hash;
+        bit = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5)) & 1u;
+        lfsr = (lfsr >> 1) | (bit << 63);
+        tempTable[i] = lfsr;
     }
 
     return tempTable;

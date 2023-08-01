@@ -1,8 +1,10 @@
+#include "engine/internal/values.hpp"
 #include <chess/internal/constants.hpp>
 #include <chess/move_gen.hpp>
 #include <chrono>
 #include <engine/evaluation.hpp>
 #include <engine/negamax.hpp>
+#include <engine/internal/opening_book.hpp>
 #include <optional>
 
 namespace Chess::Engine::Negamax {
@@ -86,6 +88,9 @@ std::pair<std::optional<Move>, int> GetBestMove(Board &board, int depth) {
 }
 
 std::pair<std::optional<Move>, int> GetBestMoveTime(Board &board, int timeLimit) {
+    std::optional<Move> bookMove = OpeningBook::GetMove(board.GetHash());
+    if (bookMove.has_value())
+        return {bookMove, MaterialValue::Inf};
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
     if (moves.empty())
         return {{}, Evaluation::EvalNoMove(board.IsKingSafe())};
@@ -116,5 +121,12 @@ std::pair<std::optional<Move>, int> GetBestMoveTime(Board &board, int timeLimit)
     } while (workingDepth++ < 1000 && totalTime < timeLimit);
 
     return {moves[0], scores[0]};
+}
+
+int EvaluateMove(Board &board, Move move, int timeLimit) {
+    board.DoMove(move);
+    auto bestMove = GetBestMoveTime(board, timeLimit);
+    board.UndoMove(move);
+    return -bestMove.second;
 }
 } // namespace Chess::Engine::Negamax

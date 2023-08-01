@@ -1,8 +1,8 @@
 #ifndef CHESS_MOVE
 #define CHESS_MOVE
 
-#include <string>
 #include <cassert>
+#include <string>
 
 #include "constants.hpp"
 #include "utilities.hpp"
@@ -11,9 +11,8 @@ namespace Chess {
 class Move {
 public:
     Move() = default;
-    explicit Move(MoveType type) : move(0) {
-        SetType(type);
-    };
+    explicit Move(uint32_t move) : move(move) {}
+    explicit Move(MoveType type) : move(0) { SetType(type); };
 
     Move(MoveType type, Square from, Square to) : move(0) {
         SetType(type);
@@ -49,9 +48,7 @@ public:
     inline void SetDisableCastle(Color color, Castling side);
     inline void SetDisableEnPassant(Column col);
 
-    friend bool operator == (Move const& lhs, Move const& rhs) {
-        return lhs.move == rhs.move;
-    }
+    friend bool operator==(Move const &lhs, Move const &rhs) { return lhs.move == rhs.move; }
 
 private:
     uint32_t move = 0;
@@ -79,77 +76,49 @@ inline std::string Move::ToString() const {
     return tempMove;
 }
 
-inline MoveType Move::GetType() const {
-    return (MoveType) (move & 0xf);
-}
+inline MoveType Move::GetType() const { return (MoveType)(move & 0xf); }
 
-inline Square Move::GetFrom() const {
-    return (Square) ((move >> 4) & 0x3f);
-}
+inline Square Move::GetFrom() const { return (Square)((move >> 4) & 0x3f); }
 
-inline Square Move::GetTo() const {
-    return (Square) ((move >> 12) & 0x3f);
-}
+inline Square Move::GetTo() const { return (Square)((move >> 12) & 0x3f); }
 
-inline PieceType Move::GetCapturedPiece() const {
-    return (PieceType) ((move >> 20) & 0xf);
-}
+inline PieceType Move::GetCapturedPiece() const { return (PieceType)((move >> 20) & 0xf); }
 
 inline Column Move::GetDEP() const {
-    return (Column) Utilities::GetColumn(((move >> 28) & 0xf) - 1);
+    return (Column)Utilities::GetColumn(((move >> 28) & 0xf) - 1);
 }
 
-inline bool Move::IsCapture() const {
-    return ((U8) GetType() & CaptureBit) != 0;
-}
+inline bool Move::IsCapture() const { return ((U8)GetType() & CaptureBit) != 0; }
 
-inline bool Move::IsPromotion() const {
-    return ((U8) GetType() & PromotionBit) != 0;
-}
+inline bool Move::IsPromotion() const { return ((U8)GetType() & PromotionBit) != 0; }
 
-inline bool Move::IsCastle() const {
-    return ((U8) GetType() & CastlingBit) != 0 && !IsPromotion();
-}
+inline bool Move::IsCastle() const { return ((U8)GetType() & CastlingBit) != 0 && !IsPromotion(); }
 
-inline bool Move::IsEP() const {
-    return GetType() == MoveType::EPCapture;
-}
+inline bool Move::IsEP() const { return GetType() == MoveType::EPCapture; }
 
-inline bool Move::IsDEP() const {
-    return ((move >> 28) & 0xf) != 0;
-}
+inline bool Move::IsDEP() const { return ((move >> 28) & 0xf) != 0; }
 
-inline bool Move::IsDC() const {
-    return ((move >> 24) & 0xf) != 0;
-}
+inline bool Move::IsDC() const { return ((move >> 24) & 0xf) != 0; }
 
 inline bool Move::IsDC(Color color, Castling side) const {
-    return ((move >> 24) & (U8) std::pow(2, (U8) (2 * (U8) color + (U8) side))) != 0;
+    return ((move >> 24) & (U8)std::pow(2, (U8)(2 * (U8)color + (U8)side))) != 0;
 }
 
-inline void Move::SetType(MoveType type) {
-    move |= ((U8)type & 0xf);
-}
+inline void Move::SetType(MoveType type) { move |= ((U8)type & 0xf); }
 
-inline void Move::SetFrom(Square square) {
-    move |= (((U8)square & 0x3f)) << 4;
-}
+inline void Move::SetFrom(Square square) { move |= (((U8)square & 0x3f)) << 4; }
 
-inline void Move::SetTo(Square square) {
-    move |= ((U8)square & 0x3f) << 12;
-}
+inline void Move::SetTo(Square square) { move |= ((U8)square & 0x3f) << 12; }
 
-inline void Move::SetCapture(PieceType capturedType) {
-    move |= (((U8)capturedType & 0xf)) << 20;
-}
+inline void Move::SetCapture(PieceType capturedType) { move |= (((U8)capturedType & 0xf)) << 20; }
 
 inline void Move::SetDisableCastle(Color color, Castling side) {
-    move |= (U8) std::pow(2, (U8) (2 * (U8) color + (U8) side)) << 24;
+    move |= (U8)std::pow(2, (U8)(2 * (U8)color + (U8)side)) << 24;
 }
 
 inline void Move::SetDisableEnPassant(Column col) {
     move |= (Utilities::GetColumnIndex(col) + 1) << 28;
 }
-}
+} // namespace Chess
 
 #endif // MOVE
