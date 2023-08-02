@@ -4,8 +4,8 @@ add_executable(EvaluatePieceCount ${CMAKE_CURRENT_LIST_DIR}/evaluate_piece_count
 target_link_libraries(EvaluatePieceCount PRIVATE ENGINE)
 
 add_test(Evaluator_Bit_Piece_Count_StartPos EvaluatePieceCount 0 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-add_test(Evaluator_Bit_Piece_Count_Rook EvaluatePieceCount 692 "8/8/8/8/8/8/8/R7 w KQkq - 0 1")
-add_test(Evaluator_Bit_Piece_Count_QueenPawn EvaluatePieceCount -1090 "8/6P1/8/8/8/8/7q/8 w KQkq - 0 1")
+add_test(Evaluator_Bit_Piece_Count_Rook EvaluatePieceCount 500 "8/8/8/8/8/8/8/R7 w KQkq - 0 1")
+add_test(Evaluator_Bit_Piece_Count_QueenPawn EvaluatePieceCount -800 "8/6P1/8/8/8/8/7q/8 w KQkq - 0 1")
 
 ## EvaluatePositionValue
 add_executable(EvaluatePositionValue ${CMAKE_CURRENT_LIST_DIR}/evaluate_position_value.cpp)

@@ -5,7 +5,7 @@
 
 namespace Chess::Engine {
 namespace MaterialValue {
-enum { Pawn = 111, Knight = 294, Bishop = 349, Rook = 692, Queen = 1201, Inf = 300000 };
+enum { Pawn = 100, Knight = 300, Bishop = 300, Rook = 500, Queen = 900, Inf = 300000 };
 constexpr std::array<int, 5> ALL = {Pawn, Knight, Bishop, Rook, Queen};
 } // namespace MaterialValue
 

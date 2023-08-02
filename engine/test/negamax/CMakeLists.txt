@@ -20,7 +20,7 @@ add_test(AnythingBut_MoveBlunder_1 GetAnythingBut "r2q1rk1/ppp2ppp/2n1bn2/3pB3/2
 add_test(AnythingBut_MoveBlunder_2 GetAnythingBut "r2q1rk1/ppp2ppp/2n1bn2/3pB3/2PP4/4PN2/P2N1PPP/R2QKB1R b KQ - 0 9" 2 "d8d6")
 add_test(AnythingBut_MoveBlunder_3 GetAnythingBut "r2q1rk1/ppp2ppp/2n1bn2/3pB3/2PP4/4PN2/P2N1PPP/R2QKB1R b KQ - 0 9" 3 "d8d6")
 add_test(AnythingBut_MoveBlunder_4 GetAnythingBut "6k1/5p2/pR3p1p/3p4/3P4/1P3NP1/5PPK/r7 b - - 3 26" 3 "a1h1")
-add_test(AnythingBut_MoveBlunder_5 GetAnythingBut "6k1/5p2/pR3p1p/3p4/3P4/1P3NP1/5PPK/r7 b - - 3 26" 3 "a1h1")
+add_test(AnythingBut_MoveBlunder_5 GetAnythingBut "2k2b1r/pp3ppp/3rp3/2p1n3/2B5/P1P1BP1P/1PP1KP2/R6R w - - 4 14" 3 "e3c5")
 
 ## Scenarios
 ### These are scenarios found during play
