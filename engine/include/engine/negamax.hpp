@@ -8,11 +8,16 @@
 #include <chess/internal/move.hpp>
 #include <functional>
 #include <optional>
+#include <variant>
 
 namespace Chess::Engine::Negamax {
-static inline std::function<int(const Board &)> EVAL_FUNCTION = Evaluation::Eval;
+enum AlternativeResult {
+    Draw,
+    Checkmate
+};
+void SetEvalFunc(std::function<int(const Board&)> func);
 std::pair<std::optional<Move>, int> GetBestMove(Board &board, int depth);
-Move GetBestMoveTime(Board &board, int timeLimit);
+std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit);
 MoveList GetOrderdMoves(Board &board, int timeLimit);
 } // namespace Chess::Engine::Negamax
 
