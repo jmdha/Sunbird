@@ -25,7 +25,7 @@ using namespace Chess;
 
 constexpr int SEARCH_DEPTH = 4;
 constexpr int SEARCH_TIME = 10000;
-constexpr int THREAD_LIMIT = 18;
+constexpr int THREAD_LIMIT = 12;
 ctpl::thread_pool pool(std::min(THREAD_LIMIT, (int)std::thread::hardware_concurrency()));
 
 U64 searchSpace = 0;
@@ -56,7 +56,7 @@ void UpdateProgress(Board &board, Move move) {
     while (!progressMutex.try_lock()) {
     }
     if (currentSearch++ > searchSpace)
-        searchSpace = currentSearch;
+        currentSearch--;
     bar->set_progress((double)currentSearch / (double)searchSpace * 100);
 
     // Recreate move to avoid weird shit

@@ -24,7 +24,7 @@ int EvalPosition(const Board &board, Color color) {
                 value += PositionValue::ALL_WHITE[i][Utilities::LSB_Pop(&pieces)];
         else
             while (pieces)
-                value += PositionValue::ALL_BLACK[i][Utilities::LSB_Pop(&pieces)];
+                value -= PositionValue::ALL_BLACK[i][Utilities::LSB_Pop(&pieces)];
     }
 
     return value;
