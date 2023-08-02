@@ -12,7 +12,8 @@ int EvalMaterial(const Board &board) {
     return value;
 }
 
-int EvalPosition(const Board &board) { return EvalPosition(board, board.GetColor()); }
+int EvalPosition(const Board &board) { 
+    return EvalPosition(board, Color::White) - EvalPosition(board, Color::Black); }
 
 int EvalPosition(const Board &board, Color color) {
     int value = 0;
@@ -24,7 +25,7 @@ int EvalPosition(const Board &board, Color color) {
                 value += PositionValue::ALL_WHITE[i][Utilities::LSB_Pop(&pieces)];
         else
             while (pieces)
-                value -= PositionValue::ALL_BLACK[i][Utilities::LSB_Pop(&pieces)];
+                value += PositionValue::ALL_BLACK[i][Utilities::LSB_Pop(&pieces)];
     }
 
     return value;

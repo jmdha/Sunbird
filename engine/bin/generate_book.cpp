@@ -25,7 +25,7 @@ using namespace Chess;
 
 constexpr int SEARCH_DEPTH = 4;
 constexpr int SEARCH_TIME = 10000;
-constexpr int THREAD_LIMIT = 12;
+constexpr int THREAD_LIMIT = 18;
 ctpl::thread_pool pool(std::min(THREAD_LIMIT, (int)std::thread::hardware_concurrency()));
 
 U64 searchSpace = 0;
@@ -92,6 +92,7 @@ int main(int, char *argv[]) {
     board.Initialize();
 
     std::cout << "Starting opening book generation\n";
+    std::cout << "Using " << THREAD_LIMIT << " threads\n";
     std::cout << "Estimating search space...\n";
     EstimateSearchSpace(board, SEARCH_DEPTH, 0);
     std::cout << "Estimated search space: " << searchSpace << '\n';

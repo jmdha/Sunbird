@@ -20,6 +20,7 @@ add_test(AnythingBut_MoveBlunder_1 GetAnythingBut "r2q1rk1/ppp2ppp/2n1bn2/3pB3/2
 add_test(AnythingBut_MoveBlunder_2 GetAnythingBut "r2q1rk1/ppp2ppp/2n1bn2/3pB3/2PP4/4PN2/P2N1PPP/R2QKB1R b KQ - 0 9" 2 "d8d6")
 add_test(AnythingBut_MoveBlunder_3 GetAnythingBut "r2q1rk1/ppp2ppp/2n1bn2/3pB3/2PP4/4PN2/P2N1PPP/R2QKB1R b KQ - 0 9" 3 "d8d6")
 add_test(AnythingBut_MoveBlunder_4 GetAnythingBut "6k1/5p2/pR3p1p/3p4/3P4/1P3NP1/5PPK/r7 b - - 3 26" 3 "a1h1")
+add_test(AnythingBut_MoveBlunder_5 GetAnythingBut "6k1/5p2/pR3p1p/3p4/3P4/1P3NP1/5PPK/r7 b - - 3 26" 3 "a1h1")
 
 ## Scenarios
 ### These are scenarios found during play
@@ -29,4 +30,5 @@ add_test(GetBestMove_1s GetBestMoveSeq "d2d4 d7d5 e2e3 g8f6 f1d3 c8f5 d3f5 e7e6"
 add_test(GetBestMove_2 GetBestMove "6k1/5p2/pR3p1p/3p4/3P4/1P3NP1/5PPK/7r w - - 4 27" 3 "h2h1")
 add_test(GetBestMove_3 GetBestMove "rnbqk1nr/ppp2ppp/3bp3/3p4/3P1B2/3Q3P/PPP1PPP1/RN2KBNR b KQkq - 0 4" 3 "d6f4")
 add_test(GetBestMove_3s GetBestMoveSeq "d2d4 d7d5 c1f4 e7e6 d1d3 f8d6 h2h3" 3 "d6f4")
+add_test(GetBestMove_4 GetBestMove "r2qk2r/p1pbbpp1/3p3p/3Q4/3N4/8/PPP2PPP/R1B1R1K1 b kq - 0 16" 3 "e8g8")
 
