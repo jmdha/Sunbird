@@ -1,3 +1,4 @@
+#include "chess/internal/constants.hpp"
 #include <iostream>
 
 #include <chess/board.hpp>
@@ -9,11 +10,11 @@ using namespace Chess;
 int main(int, char* argv[]) {
     int timeLimit = std::stoi(argv[1]);
     Board board = Import::MoveSequence(argv[2]);
-    auto move = Engine::Negamax::GetBestMoveTime(board, 0.01 * (double)timeLimit);
-    if (move.first.has_value())
-        printf("%s\n", move.first.value().ToString().c_str());
-    else if (move.second == 0)
+    auto move = Engine::Negamax::GetBestMoveTime(board, 0.1 * timeLimit);
+    if (move.GetType() == MoveType::SPECIAL_DRAW)
         printf("draw\n");
-    else
+    else if (move.GetType() == MoveType::SPECIAL_CHECKMATE)
         printf("in checkmate\n");
+    else
+        printf("%s\n", move.ToString().c_str());
 }

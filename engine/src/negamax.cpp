@@ -3,8 +3,8 @@
 #include <chess/move_gen.hpp>
 #include <chrono>
 #include <engine/evaluation.hpp>
-#include <engine/negamax.hpp>
 #include <engine/internal/opening_book.hpp>
+#include <engine/negamax.hpp>
 #include <optional>
 
 namespace Chess::Engine::Negamax {
@@ -87,13 +87,10 @@ std::pair<std::optional<Move>, int> GetBestMove(Board &board, int depth) {
     return {moves[0], scores[0]};
 }
 
-std::pair<std::optional<Move>, int> GetBestMoveTime(Board &board, int timeLimit) {
-    std::optional<Move> bookMove = OpeningBook::GetMove(board.GetHash());
-    if (bookMove.has_value())
-        return {bookMove, MaterialValue::Inf};
+MoveList GetOrderdMoves(Board &board, int timeLimit) {
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
     if (moves.empty())
-        return {{}, Evaluation::EvalNoMove(board.IsKingSafe())};
+        return moves;
     std::array<int, MAXMOVECOUNT> scores{0};
 
     U64 totalTime = 0;
@@ -120,13 +117,21 @@ std::pair<std::optional<Move>, int> GetBestMoveTime(Board &board, int timeLimit)
         moves.sort(scores);
     } while (workingDepth++ < 1000 && totalTime < timeLimit);
 
-    return {moves[0], scores[0]};
+    return moves;
 }
 
-int EvaluateMove(Board &board, Move move, int timeLimit) {
-    board.DoMove(move);
-    auto bestMove = GetBestMoveTime(board, timeLimit);
-    board.UndoMove(move);
-    return -bestMove.second;
+Move GetBestMoveTime(Board &board, int timeLimit) {
+    std::optional<Move> bookMove = OpeningBook::GetMove(board.GetHash());
+    if (bookMove.has_value())
+        return bookMove.value();
+
+    MoveList moves = GetOrderdMoves(board, timeLimit);
+    if (moves.empty())
+        return (Evaluation::EvalNoMove(board.IsKingSafe()) == 0)
+                   ? Move(MoveType::SPECIAL_DRAW)
+                   : Move(MoveType::SPECIAL_CHECKMATE);
+
+    return moves[0];
 }
+
 } // namespace Chess::Engine::Negamax
