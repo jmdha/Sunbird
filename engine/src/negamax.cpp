@@ -111,8 +111,9 @@ MoveList GetOrderdMoves(Board &board, int timeLimit) {
             auto t1 = std::chrono::steady_clock::now();
             U64 time = (U64)std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
             totalTime += time;
-            if (totalTime + time > timeLimit ||
-                (i == moves.size() - 1 && totalTime + 20 * time > timeLimit)) {
+            if (workingDepth > 1 &&
+                (totalTime + time > timeLimit ||
+                 (i == moves.size() - 1 && totalTime + 20 * time > timeLimit))) {
                 totalTime = 999999;
                 break;
             }
