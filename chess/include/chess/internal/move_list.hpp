@@ -1,6 +1,7 @@
 #ifndef CHESS_MOVE_LIST
 #define CHESS_MOVE_LIST
 
+#include "chess/board.hpp"
 #include "constants.hpp"
 #include "move.hpp"
 #include <algorithm>
@@ -19,9 +20,28 @@ struct MoveList {
                     std::swap(moves[i], moves[t]);
                 }
     }
+    // https://www.chessprogramming.org/MVV-LVA
+    void MVVLVA(const Board &board) {
+        std::sort(moves.begin(), &moves[quietIndex], [board](const Move& lhs, const Move& rhs) {
+            const int leftCapture = (int) lhs.GetCapturedPiece();
+            const int rightCapture = (int) rhs.GetCapturedPiece();
+            if (leftCapture > rightCapture)
+                return true;
+            const int leftPiece = (int) board.GetType(lhs.GetFrom());
+            const int rightPiece = (int) board.GetType(rhs.GetFrom());
+            if (leftCapture == rightCapture &&
+                leftPiece < rightPiece)
+                return true;
+            return false;
+        });
+    }
     Move &operator[](U8 i) { return moves[i]; }
     const Move &operator[](U8 i) const { return moves[i]; }
-    void operator<<(Move move) { moves[index++] = move; }
+    void operator<<(Move move) {
+        moves[index++] = move;
+        if (move.IsCapture())
+            quietIndex++;
+    }
     std::array<Move, MAXMOVECOUNT>::iterator begin() { return &moves[0]; }
     std::array<Move, MAXMOVECOUNT>::const_iterator begin() const { return &moves[0]; }
     std::array<Move, MAXMOVECOUNT>::iterator end() { return &moves[index]; }
@@ -29,7 +49,10 @@ struct MoveList {
 
 private:
     std::array<Move, MAXMOVECOUNT> moves;
-    U8 index = 0;
+    int index = 0;
+    // Index of first quiet move
+    // Attack moves are always stored first in moves
+    int quietIndex = 0;
 };
 } // namespace Chess
 
