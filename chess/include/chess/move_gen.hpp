@@ -20,12 +20,22 @@ template <GenType, PieceType> void Generate(const Board &board, Color color, Mov
 // Generates moves for all pieces
 template <GenType gType> MoveList GenerateMoves(const Board &board, Color color) {
     MoveList moves;
-    Generate<gType, PieceType::Pawn>(board, color, moves);
-    Generate<gType, PieceType::Knight>(board, color, moves);
-    Generate<gType, PieceType::Bishop>(board, color, moves);
-    Generate<gType, PieceType::Rook>(board, color, moves);
-    Generate<gType, PieceType::Queen>(board, color, moves);
-    Generate<gType, PieceType::King>(board, color, moves);
+    if constexpr (gType == GenType::All || gType == GenType::Attack) {
+        Generate<GenType::Attack, PieceType::Pawn>(board, color, moves);
+        Generate<GenType::Attack, PieceType::Knight>(board, color, moves);
+        Generate<GenType::Attack, PieceType::Bishop>(board, color, moves);
+        Generate<GenType::Attack, PieceType::Rook>(board, color, moves);
+        Generate<GenType::Attack, PieceType::Queen>(board, color, moves);
+        Generate<GenType::Attack, PieceType::King>(board, color, moves);
+    }
+    if constexpr (gType == GenType::All || gType == GenType::Quiet) {
+        Generate<GenType::Quiet, PieceType::Pawn>(board, color, moves);
+        Generate<GenType::Quiet, PieceType::Knight>(board, color, moves);
+        Generate<GenType::Quiet, PieceType::Bishop>(board, color, moves);
+        Generate<GenType::Quiet, PieceType::Rook>(board, color, moves);
+        Generate<GenType::Quiet, PieceType::Queen>(board, color, moves);
+        Generate<GenType::Quiet, PieceType::King>(board, color, moves);
+    }
     return moves;
 }
 
@@ -57,6 +67,6 @@ template <GenType gType> MoveList GenerateMoves(const Board &board, Color color,
     }
     return moves;
 }
-}; // namespace MoveGen
+}; // namespace Chess::MoveGen
 
 #endif
