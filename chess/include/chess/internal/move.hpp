@@ -11,37 +11,31 @@ namespace Chess {
 class Move {
 public:
     Move() = default;
-    explicit Move(uint32_t move) : move(move) {}
-    explicit Move(MoveType type) : move(0) { SetType(type); };
+    explicit Move(MoveType type) : _type((U8)type){};
 
-    Move(MoveType type, Square from, Square to) : move(0) {
-        SetType(type);
-        SetFrom(from);
-        SetTo(to);
-        assert(move != 0);
-    };
+    Move(MoveType type, Square from, Square to) : _type((U8)type), _from((U8)from), _to((U8)to){};
 
     inline std::string ToString() const;
     // Properties
-    inline uint32_t GetValue() const { return move; };
-    inline MoveType GetType() const;
-    inline Square GetFrom() const;
-    inline Square GetTo() const;
-    inline bool IsCapture() const;
-    inline bool IsPromotion() const;
-    inline bool IsCastle() const;
-    inline bool IsEP() const;
-    inline bool IsDefined() const { return move != 0; };
+    inline uint32_t GetValue() const {
+        return _type.to_ulong() + (_from.to_ulong() << 4) + (_to.to_ulong() << 12);
+    };
+    inline MoveType GetType() const { return (MoveType)_type.to_ulong(); }
+    inline Square GetFrom() const { return (Square)_from.to_ulong(); }
+    inline Square GetTo() const { return (Square)_to.to_ulong(); }
+    inline bool IsCapture() const { return (_type.to_ulong() & CaptureBit) != 0; }
+    inline bool IsPromotion() const { return (_type.to_ulong() & PromotionBit) != 0; }
+    inline bool IsCastle() const { return (_type.to_ulong() & CastlingBit) != 0; }
+    inline bool IsEP() const { return (MoveType)_type.to_ulong() == MoveType::EPCapture; }
 
-    friend bool operator==(Move const &lhs, Move const &rhs) { return lhs.move == rhs.move; }
+    friend bool operator==(Move const &lhs, Move const &rhs) {
+        return lhs._type == rhs._type && lhs._from == rhs._from && lhs._to == rhs._to;
+    }
 
 private:
-    uint32_t move = 0;
-
-    inline void SetType(MoveType type);
-    inline void SetFrom(Square square);
-    inline void SetTo(Square square);
-    inline void SetCapture(PieceType capturedType);
+    std::bitset<4> _type;
+    std::bitset<8> _from;
+    std::bitset<8> _to;
 };
 
 inline std::string Move::ToString() const {
@@ -58,28 +52,6 @@ inline std::string Move::ToString() const {
     }
     return tempMove;
 }
-
-inline MoveType Move::GetType() const { return (MoveType)(move & 0xf); }
-
-inline Square Move::GetFrom() const { return (Square)((move >> 4) & 0x3f); }
-
-inline Square Move::GetTo() const { return (Square)((move >> 12) & 0x3f); }
-
-inline bool Move::IsCapture() const { return ((U8)GetType() & CaptureBit) != 0; }
-
-inline bool Move::IsPromotion() const { return ((U8)GetType() & PromotionBit) != 0; }
-
-inline bool Move::IsCastle() const { return ((U8)GetType() & CastlingBit) != 0 && !IsPromotion(); }
-
-inline bool Move::IsEP() const { return GetType() == MoveType::EPCapture; }
-
-inline void Move::SetType(MoveType type) { move |= ((U8)type & 0xf); }
-
-inline void Move::SetFrom(Square square) { move |= (((U8)square & 0x3f)) << 4; }
-
-inline void Move::SetTo(Square square) { move |= ((U8)square & 0x3f) << 12; }
-
-inline void Move::SetCapture(PieceType capturedType) { move |= (((U8)capturedType & 0xf)) << 20; }
 } // namespace Chess
 
 #endif // MOVE

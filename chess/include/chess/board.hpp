@@ -44,35 +44,35 @@ public:
     inline bool IsCastlingAllowed(Color color, Castling side) const {
         return castling.top()[(int)color] & side;
     }
-    inline void PushCastling(std::array<Castling, 2> cast) {
+    void PushCastling(std::array<Castling, 2> cast) {
         for (int i = 0; i < 2; i++) {
-            if ((cast[i] & Castling::King) != (castling.top()[i] & Castling::King))
+            if ((cast[i] & Castling::King) != (castling.top()[i] & Castling::King)) [[unlikely]]
                 zobrist.FlipCastling((Color) i, Castling::King);
-            if ((cast[i] & Castling::Queen) != (castling.top()[i] & Castling::Queen))
+            if ((cast[i] & Castling::Queen) != (castling.top()[i] & Castling::Queen)) [[unlikely]]
                 zobrist.FlipCastling((Color) i, Castling::Queen);
         }
         castling.push(std::move(cast));
     }
-    inline void PopCastling() {
+    void PopCastling() {
         const std::array<Castling, 2> cast = castling.top();
         castling.pop();
         for (int i = 0; i < 2; i++) {
-            if ((cast[i] & Castling::King) != (castling.top()[i] & Castling::King))
+            if ((cast[i] & Castling::King) != (castling.top()[i] & Castling::King)) [[unlikely]]
                 zobrist.FlipCastling((Color) i, Castling::King);
-            if ((cast[i] & Castling::Queen) != (castling.top()[i] & Castling::Queen))
+            if ((cast[i] & Castling::Queen) != (castling.top()[i] & Castling::Queen)) [[unlikely]]
                 zobrist.FlipCastling((Color) i, Castling::Queen);
         }
     }
     // EnPassant
     inline Column GetEP() const;
-    inline void PushEP(Column col) {
+    void PushEP(Column col) {
         if (EP.top() != Column::None) [[unlikely]]
             zobrist.FlipEnPassant(EP.top());
         if (col != Column::None) [[unlikely]]
             zobrist.FlipEnPassant(col);
         EP.push(Column(col));
     }
-    inline void PopEP() {
+    void PopEP() {
         if (EP.top() != Column::None) [[unlikely]]
             zobrist.FlipEnPassant(EP.top());
         EP.pop();
