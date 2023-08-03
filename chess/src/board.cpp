@@ -38,7 +38,6 @@ void Board::Initialize() {
 }
 
 void Board::DoMove(Move &move) {
-    assert(move.GetValue() != 0);
     std::array<Castling, 2> nCastling = castling.top();
     PieceType fromType;
     if (move.GetType() == MoveType::KingCastle) [[unlikely]] {

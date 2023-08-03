@@ -16,10 +16,6 @@ public:
     Move(MoveType type, Square from, Square to) : _type((U8)type), _from((U8)from), _to((U8)to){};
 
     inline std::string ToString() const;
-    // Properties
-    inline uint32_t GetValue() const {
-        return _type.to_ulong() + (_from.to_ulong() << 4) + (_to.to_ulong() << 12);
-    };
     inline MoveType GetType() const { return (MoveType)_type.to_ulong(); }
     inline Square GetFrom() const { return (Square)_from.to_ulong(); }
     inline Square GetTo() const { return (Square)_to.to_ulong(); }
