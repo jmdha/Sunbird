@@ -89,6 +89,10 @@ std::pair<std::optional<Move>, int> GetBestMove(Board &board, int depth) {
             scores[i] = score;
         }
         moves.sort(scores);
+        if (std::any_of(scores.begin(), &scores[moves.size()], [](int val) {
+            return val == MaterialValue::Inf;
+        }))
+            break;
     } while (workingDepth++ < depth);
 
     return {moves[0], scores[0]};
@@ -124,6 +128,10 @@ MoveList GetOrderdMoves(Board &board, int timeLimit) {
             }
         }
         moves.sort(scores);
+        if (std::any_of(scores.begin(), &scores[moves.size()], [](int val) {
+            return val == MaterialValue::Inf;
+        }))
+            break;
     } while (workingDepth++ < 1000 && totalTime < timeLimit);
 
     return moves;
