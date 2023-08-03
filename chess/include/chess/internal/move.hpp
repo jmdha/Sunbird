@@ -34,8 +34,8 @@ public:
 
 private:
     std::bitset<4> _type;
-    std::bitset<8> _from;
-    std::bitset<8> _to;
+    std::bitset<6> _from;
+    std::bitset<6> _to;
 };
 
 inline std::string Move::ToString() const {
