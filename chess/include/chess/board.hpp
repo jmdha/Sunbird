@@ -15,6 +15,7 @@ namespace Chess {
 // Class representing the current state of a game of chess
 class Board {
 public:
+    Board() { EP.push(Column::None); }
     // Initialization
     void Initialize();
     // Pieces
@@ -43,7 +44,20 @@ public:
     void DisableCastling(Move &move, Color color, Castling side);
     // EnPassant
     inline Column GetEP() const;
-    void SetEnPassant(Column sq);
+    inline void PushEP(Column col) {
+        if (EP.top() != Column::None) [[unlikely]]
+            zobrist.FlipEnPassant(EP.top());
+        if (col != Column::None) [[unlikely]]
+            zobrist.FlipEnPassant(col);
+        EP.push(Column(col));
+    }
+    inline void PopEP() {
+        if (EP.top() != Column::None) [[unlikely]]
+            zobrist.FlipEnPassant(EP.top());
+        EP.pop();
+        if (EP.top() != Column::None) [[unlikely]]
+            zobrist.FlipEnPassant(EP.top());
+    }
     // Misc
     inline Color GetColor() const;
     inline Color GetOppColor() const;
@@ -72,7 +86,6 @@ private:
 
     jank::container::fixed_stack<PieceType, 32> captures;
     jank::container::fixed_stack<Column, MAX_PLY> EP;
-
 };
 
 inline PieceType Board::GetType(Square square) const {

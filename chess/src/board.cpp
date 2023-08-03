@@ -109,15 +109,10 @@ void Board::DoMove(Move &move) {
             PlacePiece(move.GetTo(), fromType, turn);
     }
 
-    // En passant
-    //// Check if there is old
-    if (EP != Column::None) [[unlikely]]
-        move.SetDisableEnPassant(EP);
-    //// Set new
-    if (move.GetType() == MoveType::DoublePawnPush) [[unlikely]] {
-        SetEnPassant(Utilities::GetColumn(move.GetFrom()));
-    } else
-        SetEnPassant(Column::None);
+    if (move.GetType() == MoveType::DoublePawnPush) [[unlikely]]
+        PushEP(Utilities::GetColumn(move.GetFrom()));
+    else
+        PushEP(Column::None);
 
     // Castling rights
     if (fromType == PieceType::King) [[unlikely]] {
@@ -142,13 +137,6 @@ void Board::DoMove(Move &move) {
 void Board::UndoMove(Move move) {
     zobrist.DecHash();
     PieceType toType;
-
-    // Check if old en passant
-    bool priorEP = false;
-    if (move.IsDEP()) {
-        SetEnPassant(move.GetDEP());
-        priorEP = true;
-    }
 
     if (move.GetType() == MoveType::KingCastle) [[unlikely]] {
         if (turn == Color::Black) {
@@ -182,9 +170,6 @@ void Board::UndoMove(Move move) {
         } else [[likely]] {
             RemovePiece(move.GetTo(), toType, oppColor);
             PlacePiece(move.GetFrom(), toType, oppColor);
-            if (move.GetType() == MoveType::DoublePawnPush) [[unlikely]]
-                if (!priorEP)
-                    SetEnPassant(Column::None);
         }
 
         if (move.IsCapture()) {
@@ -197,6 +182,8 @@ void Board::UndoMove(Move move) {
             captures.pop();
         }
     }
+
+    PopEP();
     EnableCastling(move);
     SwitchTurn();
     --ply;
@@ -296,12 +283,4 @@ bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBo
         return false;
 
     return true;
-}
-
-void Board::SetEnPassant(Column col) {
-    if (EP != Column::None)
-        zobrist.FlipEnPassant(EP);
-    if (col != Column::None)
-        zobrist.FlipEnPassant(col);
-    EP = col;
 }

@@ -46,7 +46,7 @@ Board FEN(std::string FEN) {
     // import en-passant
     if (FEN.size() > 0 && FEN[0] != '-' && FEN[0] != ' ') {
         auto sq = Utilities::GetSquare(FEN[0], FEN[1]);
-        board.SetEnPassant(Utilities::GetColumn(sq));
+        board.PushEP(Utilities::GetColumn(sq));
     }
 
     return board;

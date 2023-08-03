@@ -32,7 +32,6 @@ public:
     inline bool IsPromotion() const;
     inline bool IsCastle() const;
     inline bool IsEP() const;
-    inline bool IsDEP() const;
     inline bool IsDC() const;
     inline bool IsDC(Color color, Castling side) const;
     inline bool IsDefined() const { return move != 0; };
@@ -81,8 +80,6 @@ inline bool Move::IsPromotion() const { return ((U8)GetType() & PromotionBit) !=
 inline bool Move::IsCastle() const { return ((U8)GetType() & CastlingBit) != 0 && !IsPromotion(); }
 
 inline bool Move::IsEP() const { return GetType() == MoveType::EPCapture; }
-
-inline bool Move::IsDEP() const { return ((move >> 28) & 0xf) != 0; }
 
 inline bool Move::IsDC() const { return ((move >> 24) & 0xf) != 0; }
 
