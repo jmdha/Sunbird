@@ -32,14 +32,7 @@ using namespace Chess::Engine;
 int OldEval(const Board &board) { return Evaluation::Eval(board); }
 
 int NewEval(const Board &board) {
-    int value;
-    if (Utilities::PopCount(board.GetPiecePos(PieceType::Pawn)) < 10 ||
-        Utilities::PopCount(board.GetPiecePos(PieceType::Knight) |
-                            board.GetPiecePos(PieceType::Bishop)) < 3 ||
-        Utilities::PopCount(board.GetPiecePos(PieceType::Queen) == 0))
-        value = Evaluation::EvalMaterial(board);
-    else
-        value = Evaluation::Eval(board);
+    int value = 0;
     return (board.GetColor() == Color::White) ? value : -value;
 }
 

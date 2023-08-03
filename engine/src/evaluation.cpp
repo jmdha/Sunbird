@@ -1,3 +1,4 @@
+#include "jank/bit/bit.hpp"
 #include <engine/evaluation.hpp>
 
 namespace Chess::Engine::Evaluation {
@@ -22,10 +23,10 @@ int EvalPosition(const Board &board, Color color) {
         U64 pieces = board.GetPiecePos(color, (PieceType)i);
         if (color == Color::White)
             while (pieces)
-                value += PositionValue::ALL_WHITE[i][Utilities::LSB_Pop(&pieces)];
+                value += PositionValue::ALL_WHITE[i][jank::bit::lsb_pop(pieces)];
         else
             while (pieces)
-                value += PositionValue::ALL_BLACK[i][Utilities::LSB_Pop(&pieces)];
+                value += PositionValue::ALL_BLACK[i][jank::bit::lsb_pop(pieces)];
     }
 
     return value;

@@ -15,11 +15,12 @@
 #include <engine/negamax.hpp>
 #include <mutex>
 #include <queue>
+#include <stdexcept>
 #include <thread>
 #include <unordered_set>
 
-#include <indicators/indicators.hpp>
 #include <CTPL/ctpl_stl.h>
+#include <indicators/indicators.hpp>
 
 using namespace Chess;
 
@@ -59,13 +60,10 @@ void UpdateProgress(Board &board, Move move) {
         currentSearch--;
     bar->set_progress((double)currentSearch / (double)searchSpace * 100);
 
-    // Recreate move to avoid weird shit
-    if (!move.IsCapture())
-        move = Move(move.GetType(), move.GetFrom(), move.GetTo());
-    else
-        move = Move(move.GetType(), move.GetFrom(), move.GetTo(), move.GetCapturedPiece());
-    stream << '{' << board.GetHash() << "LLU," << move.GetValue() << "},//" << move.ToString()
-           << ',' << Export::FEN(board) << '\n';
+    move = Move(move.GetType(), move.GetFrom(), move.GetTo());
+    throw std::logic_error("Currently not implemented");
+    //stream << '{' << board.GetHash() << "LLU," << move.GetValue() << "},//" << move.ToString()
+    //       << ',' << Export::FEN(board) << '\n';
     progressMutex.unlock();
 }
 
@@ -81,7 +79,7 @@ void Search(int id, Board &board, int depth, double placement) {
         if (!checkedStates.contains(board.GetHash())) {
             Board tempBoard = board;
 
-            pool.push(Search, tempBoard, depth - 1, (double)i/(double)moves.size());
+            pool.push(Search, tempBoard, depth - 1, (double)i / (double)moves.size());
         }
         board.UndoMove(moves[i]);
     }

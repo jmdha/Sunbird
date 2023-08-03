@@ -2,7 +2,6 @@
 #include <chess/internal/constants.hpp>
 #include <chess/move_gen.hpp>
 #include <chrono>
-#include <engine/internal/opening_book.hpp>
 #include <engine/negamax.hpp>
 #include <optional>
 
@@ -135,10 +134,6 @@ MoveList GetOrderdMoves(Board &board, int timeLimit) {
 }
 
 std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit) {
-    std::optional<Move> bookMove = OpeningBook::GetMove(board.GetHash());
-    if (bookMove.has_value())
-        return bookMove.value();
-
     MoveList moves = GetOrderdMoves(board, timeLimit);
     if (moves.empty())
         return (Evaluation::EvalNoMove(board.IsKingSafe()) == 0)
