@@ -30,20 +30,20 @@ int main(int, char* argv[]) {
         PieceType fromPiece = board.GetType(fromSquare);
         PieceType toPiece = board.GetType(toSquare);
         if (fromPiece == PieceType::Pawn && Utilities::GetColumn(fromSquare) != Utilities::GetColumn(toSquare) && toPiece == PieceType::None)
-            move = Move(MoveType::EPCapture, fromSquare, toSquare, PieceType::None);
+            move = Move(MoveType::EPCapture, fromSquare, toSquare);
         else if (fromPiece == PieceType::Pawn && sMove.size() == 5) {
             if (sMove[4] == 'q')
-                move = Move((toPiece == PieceType::None) ? MoveType::QPromotion : MoveType::QPromotionCapture, fromSquare, toSquare, toPiece);
+                move = Move((toPiece == PieceType::None) ? MoveType::QPromotion : MoveType::QPromotionCapture, fromSquare, toSquare);
             else if (sMove[4] == 'r')
-                move = Move((toPiece == PieceType::None) ? MoveType::RPromotion : MoveType::RPromotionCapture, fromSquare, toSquare, toPiece);
+                move = Move((toPiece == PieceType::None) ? MoveType::RPromotion : MoveType::RPromotionCapture, fromSquare, toSquare);
             else if (sMove[4] == 'b')
-                move = Move((toPiece == PieceType::None) ? MoveType::BPromotion : MoveType::BPromotionCapture, fromSquare, toSquare, toPiece);
+                move = Move((toPiece == PieceType::None) ? MoveType::BPromotion : MoveType::BPromotionCapture, fromSquare, toSquare);
             else if (sMove[4] == 'n')
-                move = Move((toPiece == PieceType::None) ? MoveType::NPromotion : MoveType::NPromotionCapture, fromSquare, toSquare, toPiece);
+                move = Move((toPiece == PieceType::None) ? MoveType::NPromotion : MoveType::NPromotionCapture, fromSquare, toSquare);
         } else {
             MoveType moveType = (toPiece == PieceType::None) ? MoveType::Quiet : MoveType::Capture;
 
-            move = Move(moveType, fromSquare, toSquare, toPiece);
+            move = Move(moveType, fromSquare, toSquare);
         }
     }
 

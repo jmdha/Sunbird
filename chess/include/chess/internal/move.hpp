@@ -21,21 +21,12 @@ public:
         assert(move != 0);
     };
 
-    Move(MoveType type, Square from, Square to, PieceType capturedPiece) : move(0) {
-        SetType(type);
-        SetFrom(from);
-        SetTo(to);
-        SetCapture(capturedPiece);
-        assert(move != 0);
-    };
-
     inline std::string ToString() const;
     // Properties
     inline uint32_t GetValue() const { return move; };
     inline MoveType GetType() const;
     inline Square GetFrom() const;
     inline Square GetTo() const;
-    inline PieceType GetCapturedPiece() const;
     inline Column GetDEP() const;
     inline bool IsCapture() const;
     inline bool IsPromotion() const;
@@ -46,7 +37,6 @@ public:
     inline bool IsDC(Color color, Castling side) const;
     inline bool IsDefined() const { return move != 0; };
     inline void SetDisableCastle(Color color, Castling side);
-    inline void SetDisableEnPassant(Column col);
 
     friend bool operator==(Move const &lhs, Move const &rhs) { return lhs.move == rhs.move; }
 
@@ -80,8 +70,6 @@ inline Square Move::GetFrom() const { return (Square)((move >> 4) & 0x3f); }
 
 inline Square Move::GetTo() const { return (Square)((move >> 12) & 0x3f); }
 
-inline PieceType Move::GetCapturedPiece() const { return (PieceType)((move >> 20) & 0xf); }
-
 inline Column Move::GetDEP() const {
     return (Column)Utilities::GetColumn(((move >> 28) & 0xf) - 1);
 }
@@ -112,10 +100,6 @@ inline void Move::SetCapture(PieceType capturedType) { move |= (((U8)capturedTyp
 
 inline void Move::SetDisableCastle(Color color, Castling side) {
     move |= (U8)std::pow(2, (U8)(2 * (U8)color + (U8)side)) << 24;
-}
-
-inline void Move::SetDisableEnPassant(Column col) {
-    move |= (Utilities::GetColumnIndex(col) + 1) << 28;
 }
 } // namespace Chess
 

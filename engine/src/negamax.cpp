@@ -44,7 +44,6 @@ int Negamax(Board &board, int depth, int alpha, int beta) {
         return Quiesce(board, alpha, beta);
 
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
-    moves.MVVLVA(board);
 
     if (moves.size() == 0)
         return Evaluation::EvalNoMove(board.IsKingSafe());
@@ -75,7 +74,6 @@ std::pair<std::optional<Move>, int> GetBestMove(Board &board, int depth) {
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
     if (moves.empty())
         return {{}, Evaluation::EvalNoMove(board.IsKingSafe())};
-    moves.MVVLVA(board);
     std::array<int, MAXMOVECOUNT> scores{0};
 
     int workingDepth = 1;
@@ -102,7 +100,6 @@ MoveList GetOrderdMoves(Board &board, int timeLimit) {
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
     if (moves.empty())
         return moves;
-    moves.MVVLVA(board);
     std::array<int, MAXMOVECOUNT> scores{0};
 
     U64 totalTime = 0;

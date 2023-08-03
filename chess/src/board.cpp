@@ -1,3 +1,4 @@
+#include "chess/internal/constants.hpp"
 #include "jank/bit/bit.hpp"
 #include <chess/board.hpp>
 #include <chess/internal/bit_shift.hpp>
@@ -74,17 +75,19 @@ void Board::DoMove(Move &move) {
 
         if (move.IsCapture()) {
             if (move.GetType() == MoveType::EPCapture) [[unlikely]] {
+                captures.push(PieceType::Pawn);
                 auto captureSquare = (Square)((turn == Color::White) ? (int)move.GetTo() - 8
                                                                      : (int)move.GetTo() + 8);
                 RemovePiece(captureSquare, PieceType::Pawn, oppColor);
-            } else [[likely]]
-                RemovePiece(move.GetTo(), move.GetCapturedPiece(), oppColor);
-
-            if (move.GetCapturedPiece() == PieceType::Rook &&
+            } else [[likely]] {
+                captures.push(GetType(move.GetTo()));
+                RemovePiece(move.GetTo(), captures.top(), oppColor);
+            }
+            if (captures.top() == PieceType::Rook &&
                 move.GetTo() == initRookPos[(U8)oppColor][(U8)Castling::King])
                 if (castlingAllowed[(U8)oppColor][(U8)Castling::King])
                     DisableCastling(move, oppColor, Castling::King);
-            if (move.GetCapturedPiece() == PieceType::Rook &&
+            if (captures.top() == PieceType::Rook &&
                 move.GetTo() == initRookPos[(U8)oppColor][(U8)Castling::Queen])
                 if (castlingAllowed[(U8)oppColor][(U8)Castling::Queen])
                     DisableCastling(move, oppColor, Castling::Queen);
@@ -190,7 +193,8 @@ void Board::UndoMove(Move move) {
                                                                      : (int)move.GetTo() + 8);
                 PlacePiece(captureSquare, PieceType::Pawn, turn);
             } else [[likely]]
-                PlacePiece(move.GetTo(), move.GetCapturedPiece(), turn);
+                PlacePiece(move.GetTo(), captures.top(), turn);
+            captures.pop();
         }
     }
     EnableCastling(move);

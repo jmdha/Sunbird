@@ -9,6 +9,7 @@
 #include "internal/utilities.hpp"
 #include "internal/zobrist.hpp"
 #include "jank/bit/bit.hpp"
+#include "jank/container/fixed_stack.hpp"
 
 namespace Chess {
 // Class representing the current state of a game of chess
@@ -65,10 +66,13 @@ private:
             array[(int)square] = PieceType::None;
         return array;
     }();
-    Column EP = Column::None;
     bool castlingAllowed[2][2]{false};
     Zobrist zobrist = Zobrist();
     int ply = 0;
+
+    jank::container::fixed_stack<PieceType, 32> captures;
+    jank::container::fixed_stack<Column, MAX_PLY> EP;
+
 };
 
 inline PieceType Board::GetType(Square square) const {
@@ -124,7 +128,7 @@ inline bool Board::IsThreefoldRep() const { return zobrist.IsThreefoldRep(); }
 
 U64 Board::GetColorBB(Color color) const { return colorBB[(int)color]; }
 
-inline Column Board::GetEP() const { return EP; }
+inline Column Board::GetEP() const { return EP.top(); }
 
 inline void Board::PlacePiece(Square square, PieceChar pieceChar) {
     PlacePiece(square, Utilities::GetPieceType(pieceChar), Utilities::GetPieceColor(pieceChar));

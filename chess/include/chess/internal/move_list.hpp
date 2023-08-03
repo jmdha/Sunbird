@@ -20,21 +20,6 @@ struct MoveList {
                     std::swap(moves[i], moves[t]);
                 }
     }
-    // https://www.chessprogramming.org/MVV-LVA
-    void MVVLVA(const Board &board) {
-        std::sort(moves.begin(), &moves[quietIndex], [board](const Move& lhs, const Move& rhs) {
-            const int leftCapture = (int) lhs.GetCapturedPiece();
-            const int rightCapture = (int) rhs.GetCapturedPiece();
-            if (leftCapture > rightCapture)
-                return true;
-            const int leftPiece = (int) board.GetType(lhs.GetFrom());
-            const int rightPiece = (int) board.GetType(rhs.GetFrom());
-            if (leftCapture == rightCapture &&
-                leftPiece < rightPiece)
-                return true;
-            return false;
-        });
-    }
     Move &operator[](U8 i) { return moves[i]; }
     const Move &operator[](U8 i) const { return moves[i]; }
     void operator<<(Move move) {

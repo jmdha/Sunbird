@@ -48,8 +48,7 @@ template <GenType gType> void GenerateKingMoves(const Board &board, Color color,
             U8 move = jank::bit::lsb_pop(aMoves);
             if (board.IsKingSafe(board.GetOccupiedBB() ^ C64(kingPos),
                                  board.GetColorBB(oppColor) ^ C64(move), C64(move)))
-                moves << Move(MoveType::Capture, (Square)kingPos, (Square)move,
-                              board.GetType((Square)move));
+                moves << Move(MoveType::Capture, (Square)kingPos, (Square)move);
         }
     }
 }
@@ -98,11 +97,9 @@ template <GenType gType> void GeneratePawnMoves(const Board &board, Color color,
                                      board.GetColorBB(oppColor) ^ C64(attack))) {
                     if (C64(piece) & (U64)PawnRow[(U8)oppColor])
                         for (const auto prom : PromotionCapturesMoves)
-                            moves << Move(prom, (Square)piece, (Square)attack,
-                                          board.GetType((Square)attack));
+                            moves << Move(prom, (Square)piece, (Square)attack);
                     else
-                        moves << Move(MoveType::Capture, (Square)piece, (Square)attack,
-                                      board.GetType((Square)attack));
+                        moves << Move(MoveType::Capture, (Square)piece, (Square)attack);
                 }
             }
             U64 attack = (U64)PawnAttacks[(U8)color][piece] &
@@ -115,7 +112,7 @@ template <GenType gType> void GeneratePawnMoves(const Board &board, Color color,
                 if (board.IsKingSafe((board.GetOccupiedBB() ^ C64(piece) ^ C64(captured)) | C64(sq),
                                      board.GetColorBB(oppColor) ^ C64(captured) |
                                          C64(sq)))
-                    moves << Move(MoveType::EPCapture, (Square)piece, (Square)sq, PieceType::Pawn);
+                    moves << Move(MoveType::EPCapture, (Square)piece, (Square)sq);
             }
         }
     }
@@ -168,8 +165,7 @@ template <PieceType pType> void GenerateAttack(const Board &board, Color color, 
                 const U64 blocker = jank::bit::lsb_pop(blockers);
                 if (board.IsKingSafe((board.GetOccupiedBB() ^ C64(piece)) | C64(blocker),
                                      board.GetColorBB(oppColor) ^ C64(blocker)))
-                    moves << Move(MoveType::Capture, (Square)piece, (Square)blocker,
-                                  board.GetType((Square)blocker));
+                    moves << Move(MoveType::Capture, (Square)piece, (Square)blocker);
             }
         }
     }
