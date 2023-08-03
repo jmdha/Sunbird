@@ -7,6 +7,7 @@
 #include <bitset>
 
 #include "constants.hpp"
+#include "jank/bit/bit.hpp"
 namespace Chess::Utilities {
     static PieceChar GetPieceChar(char c) {
         return (PieceChar) c;
@@ -87,52 +88,6 @@ namespace Chess::Utilities {
             return Color::Black;
         else
             return Color::White;
-    }
-
-    // Returns the amount of bits set to 1
-    // e.g. 0110 => 2 and 1000 => 1
-    constexpr U8 PopCount(U64 x) {
-    #if defined(__GNUC__)    
-        return __builtin_popcountll(x);
-    #else
-        // This implementation is from https://www.chessprogramming.org/Population_Count
-        // Specifically the one titled "Brian Kerninghan"
-        U8 count = 0;
-        while (x) {
-            ++count;
-            x &= x - 1;
-        }
-        return count;
-    #endif
-    }
-
-    constexpr U64 LSB(U64 x) {
-    #if defined(__GNUC__)    
-        return __builtin_ctzll(x);
-    #else
-        return ffsll(x) - 1;
-    #endif
-    }
-
-    // Returns the least significant set bit, and pops it
-    // e.g. 0110 => 1 and 1000 => 3 and 1001 => 0
-    constexpr U64 LSB_Pop(U64* x) {
-        U64 lsb = LSB(*x);
-        *x ^= (C64(0) << lsb);
-        return lsb;
-    }
-
-    constexpr U64 MSB(U64 x) {
-    #if defined(__GNUC__)    
-        return __builtin_clzll(x);
-    #else
-        U64 index = 0;
-        while (1 < x) {
-            x = x >> 1;
-            ++index;
-        }
-        return index;
-    #endif
     }
 
     constexpr U64 NotEdge(Direction dir) {

@@ -2,11 +2,12 @@
 #define CHESS_CONSTANTS
 
 #include <array>
+#include <cstdint>
 
 namespace Chess {
 
-#define U8 unsigned short
-#define U64 unsigned long long int
+#define U8 uint8_t
+#define U64 uint64_t
 #define C8(x) (U8)1 << ((U8)x)
 #define C64(x) (U64)1 << ((U64)x)
 

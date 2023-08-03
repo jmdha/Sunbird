@@ -305,7 +305,7 @@ int main(int, char *argv[]) {
     BenchmarkResult midgame = Run("Mid Game", testPositions, 3);
     BenchmarkResult endgame = Run("End Game", endgamePositions, 4);
     printf("----- Report -----\n");
-    printf("Opening: %llu ms (%llu nodes/ms)\n", opening.time, opening.nodes / opening.time);
-    printf("Mid Game: %llu ms (%llu nodes/ms)\n", midgame.time, midgame.nodes / midgame.time);
-    printf("End Game: %llu ms (%llu nodes/ms)\n", endgame.time, endgame.nodes / endgame.time);
+    printf("Opening: %lu ms (%lu nodes/ms)\n", opening.time, opening.nodes / opening.time);
+    printf("Mid Game: %lu ms (%lu nodes/ms)\n", midgame.time, midgame.nodes / midgame.time);
+    printf("End Game: %lu ms (%lu nodes/ms)\n", endgame.time, endgame.nodes / endgame.time);
 }

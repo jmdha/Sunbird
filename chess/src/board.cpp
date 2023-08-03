@@ -1,3 +1,4 @@
+#include "jank/bit/bit.hpp"
 #include <chess/board.hpp>
 #include <chess/internal/bit_shift.hpp>
 
@@ -228,15 +229,15 @@ U64 Board::GenerateAttackSquares(Color color) const {
         tempPieces[pIndex] = GetPiecePos(color, (PieceType)pIndex);
 
     while (tempPieces[(U8)PieceType::Pawn])
-        attacks |= PawnAttacks[(int)color][Utilities::LSB_Pop(&tempPieces[(U8)PieceType::Pawn])];
+        attacks |= PawnAttacks[(int)color][jank::bit::lsb_pop(tempPieces[(U8)PieceType::Pawn])];
 
     for (U8 pIndex = 1; pIndex < PIECECOUNT; ++pIndex)
         while (tempPieces[pIndex]) {
-            unsigned short pos = Utilities::LSB_Pop(&tempPieces[pIndex]);
+            unsigned short pos = jank::bit::lsb_pop(tempPieces[pIndex]);
             U64 attacks1 = BitShift::MOVES[pIndex][pos];
 
             for (U64 b = occupiedBB & BitShift::BB[pIndex][pos]; b != 0; b &= (b - 1))
-                attacks1 &= ~BitShift::XRAYS[pos][Utilities::LSB(b)];
+                attacks1 &= ~BitShift::XRAYS[pos][jank::bit::lsb(b)];
 
             attacks |= attacks1;
         }
@@ -247,7 +248,7 @@ U64 Board::GenerateAttackSquares(Color color) const {
 bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard) const {
     if (tempKingBoard == 0)
         return true;
-    U64 kingPosIndex = Utilities::LSB_Pop(&tempKingBoard);
+    U64 kingPosIndex = jank::bit::lsb_pop(tempKingBoard);
 
     U64 enemyRooks =
         (GetPiecePos(PieceType::Rook) | GetPiecePos(PieceType::Queen)) & tempEnemyBoard;
@@ -258,29 +259,29 @@ bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBo
 
     // clang-format off
     if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::North] & enemyRooks) [[unlikely]]
-        if (Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::North] & enemyRooks) == Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::North] & tempOccuracyBoard))
+        if (jank::bit::lsb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::North] & enemyRooks) == jank::bit::lsb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::North] & tempOccuracyBoard))
             return false;
     if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::East] & enemyRooks) [[unlikely]]
-        if (Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::East] & enemyRooks) == Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::East] & tempOccuracyBoard))
+        if (jank::bit::lsb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::East] & enemyRooks) == jank::bit::lsb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::East] & tempOccuracyBoard))
             return false;
     if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::South] & enemyRooks) [[unlikely]]
-        if (Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::South] & enemyRooks) == Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::South] & tempOccuracyBoard))
+        if (jank::bit::msb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::South] & enemyRooks) == jank::bit::msb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::South] & tempOccuracyBoard))
             return false;
     if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::West] & enemyRooks) [[unlikely]]
-        if (Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::West] & enemyRooks) == Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::West] & tempOccuracyBoard))
+        if (jank::bit::msb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::West] & enemyRooks) == jank::bit::msb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::West] & tempOccuracyBoard))
             return false;
 
     if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthEast] & enemyBishops) [[unlikely]]
-        if (Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthEast] & enemyBishops) == Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthEast] & tempOccuracyBoard))
+        if (jank::bit::lsb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthEast] & enemyBishops) == jank::bit::lsb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthEast] & tempOccuracyBoard))
             return false;
     if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthWest] & enemyBishops) [[unlikely]]
-        if (Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthWest] & enemyBishops) == Utilities::LSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthWest] & tempOccuracyBoard))
+        if (jank::bit::lsb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthWest] & enemyBishops) == jank::bit::lsb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::NorthWest] & tempOccuracyBoard))
             return false;
     if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthEast] & enemyBishops) [[unlikely]]
-        if (Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthEast] & enemyBishops) == Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthEast] & tempOccuracyBoard))
+        if (jank::bit::msb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthEast] & enemyBishops) == jank::bit::msb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthEast] & tempOccuracyBoard))
             return false;
     if (BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthWest] & enemyBishops) [[unlikely]]
-        if (Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthWest] & enemyBishops) == Utilities::MSB(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthWest] & tempOccuracyBoard))
+        if (jank::bit::msb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthWest] & enemyBishops) == jank::bit::msb(BitShift::RAYS[kingPosIndex][(int)DirectionIndex::SouthWest] & tempOccuracyBoard))
             return false;
     // clang-format on
 

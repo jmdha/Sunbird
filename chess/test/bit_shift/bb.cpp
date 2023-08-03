@@ -20,7 +20,7 @@ int main(int, char *argv[]) {
     if (expected == actual)
         exit(EXIT_SUCCESS);
     else {
-        printf("Expected: \"%llu\" Found: \"%llu\"\n", expected, actual);
+        printf("Expected: \"%lu\" Found: \"%lu\"\n", expected, actual);
         exit(EXIT_FAILURE);
     }
 }

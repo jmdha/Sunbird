@@ -22,7 +22,7 @@ int main(int, char* argv[]) {
     if (expected == actual)
         exit(EXIT_SUCCESS);
     else {
-        printf("Expected %llu actual %llu\n", expected, actual);
+        printf("Expected %lu actual %lu\n", expected, actual);
         exit(EXIT_FAILURE);
     }
 }

@@ -8,6 +8,7 @@
 #include "internal/move.hpp"
 #include "internal/utilities.hpp"
 #include "internal/zobrist.hpp"
+#include "jank/bit/bit.hpp"
 
 namespace Chess {
 // Class representing the current state of a game of chess
@@ -77,7 +78,7 @@ inline PieceType Board::GetType(Square square) const {
 
 inline int Board::GetPieceCount(const Color color, const PieceType type) const {
     assert(type != PieceType::None);
-    return Utilities::PopCount(GetPiecePos(color, type));
+    return jank::bit::popcount(GetPiecePos(color, type));
 }
 
 U64 Board::GetPiecePos(PieceType type) const {
