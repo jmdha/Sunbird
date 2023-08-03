@@ -1,3 +1,4 @@
+#include "engine/evaluation.hpp"
 #include "engine/internal/values.hpp"
 #include <chess/internal/constants.hpp>
 #include <chess/move_gen.hpp>
@@ -7,8 +8,6 @@
 
 namespace Chess::Engine::Negamax {
 namespace {
-std::function<int(const Board &)> EVAL_FUNCTION = Evaluation::Eval;
-
 int Quiesce(Board &board, int alpha, int beta) {
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::Attack>(board, board.GetColor());
 
@@ -18,7 +17,7 @@ int Quiesce(Board &board, int alpha, int beta) {
             return Evaluation::EvalNoMove(false);
     }
 
-    int standPat = EVAL_FUNCTION(board);
+    int standPat = Evaluation::Eval(board);
     if (standPat >= beta)
         return beta;
     if (alpha < standPat)
@@ -64,10 +63,6 @@ int Negamax(Board &board, int depth, int alpha, int beta) {
     return alpha;
 }
 } // namespace
-
-void SetEvalFunc(std::function<int (const Board &)> func) {
-    EVAL_FUNCTION = func;
-}
 
 std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth) {
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
