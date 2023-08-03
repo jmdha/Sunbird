@@ -64,9 +64,7 @@ inline std::string Move::ToString() const {
     tempMove += Utilities::GetSquareString(GetFrom());
     tempMove += Utilities::GetSquareString(GetTo());
     if (IsPromotion()) {
-        if (GetType() == MoveType::QPromotion)
-            tempMove += "q";
-        else if (GetType() == MoveType::RPromotion)
+        if (GetType() == MoveType::RPromotion)
             tempMove += "r";
         else if (GetType() == MoveType::BPromotion)
             tempMove += "b";
