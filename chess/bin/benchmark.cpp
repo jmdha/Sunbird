@@ -290,7 +290,8 @@ BenchmarkResult Run(std::string title, const std::vector<std::string> &positions
         Board board = Import::FEN(positions.at(i));
         Perft perft = Perft();
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-        result.nodes += perft.RunFromPosition(board, depth);
+        perft.RunFromPosition(board, depth);
+        result.nodes += board.MoveCount;        
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
         result.time += std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
         ++i;
@@ -302,7 +303,7 @@ BenchmarkResult Run(std::string title, const std::vector<std::string> &positions
 
 int main(int, char *argv[]) {
     BenchmarkResult opening = Run("Opening", openings, 4);
-    BenchmarkResult midgame = Run("Mid Game", testPositions, 3);
+    BenchmarkResult midgame = Run("Mid Game", testPositions, 4);
     BenchmarkResult endgame = Run("End Game", endgamePositions, 4);
     printf("----- Report -----\n");
     printf("Opening: %lu ms (%lu nodes/ms)\n", opening.time, opening.nodes / opening.time);

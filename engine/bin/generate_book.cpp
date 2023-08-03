@@ -24,7 +24,7 @@
 
 using namespace Chess;
 
-constexpr int SEARCH_DEPTH = 4;
+constexpr int SEARCH_DEPTH = 5;
 constexpr int SEARCH_TIME = 10000;
 constexpr int THREAD_LIMIT = 18;
 ctpl::thread_pool pool(std::min(THREAD_LIMIT, (int)std::thread::hardware_concurrency()));
@@ -62,8 +62,8 @@ void UpdateProgress(Board &board, Move move) {
 
     move = Move(move.GetType(), move.GetFrom(), move.GetTo());
     throw std::logic_error("Currently not implemented");
-    //stream << '{' << board.GetHash() << "LLU," << move.GetValue() << "},//" << move.ToString()
-    //       << ',' << Export::FEN(board) << '\n';
+    stream << '{' << board.GetHash() << "LLU," << move.GetValue() << "},//" << move.ToString()
+           << ',' << Export::FEN(board) << '\n';
     progressMutex.unlock();
 }
 

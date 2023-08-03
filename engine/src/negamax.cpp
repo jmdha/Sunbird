@@ -69,10 +69,8 @@ void SetEvalFunc(std::function<int (const Board &)> func) {
     EVAL_FUNCTION = func;
 }
 
-std::pair<std::optional<Move>, int> GetBestMove(Board &board, int depth) {
+std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth) {
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
-    if (moves.empty())
-        return {{}, Evaluation::EvalNoMove(board.IsKingSafe())};
     std::array<int, MAXMOVECOUNT> scores{0};
 
     int workingDepth = 1;
@@ -92,7 +90,7 @@ std::pair<std::optional<Move>, int> GetBestMove(Board &board, int depth) {
             break;
     } while (workingDepth++ < depth);
 
-    return {moves[0], scores[0]};
+    return moves[0];
 }
 
 MoveList GetOrderdMoves(Board &board, int timeLimit) {

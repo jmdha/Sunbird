@@ -16,7 +16,7 @@ enum AlternativeResult {
     Checkmate
 };
 void SetEvalFunc(std::function<int(const Board&)> func);
-std::pair<std::optional<Move>, int> GetBestMove(Board &board, int depth);
+std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth);
 std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit);
 MoveList GetOrderdMoves(Board &board, int timeLimit);
 } // namespace Chess::Engine::Negamax
