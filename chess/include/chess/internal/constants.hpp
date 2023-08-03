@@ -202,7 +202,20 @@ constexpr std::array<MoveType, 4> PromotionCapturesMoves{
 #define CaptureBit 0x4
 #define CastlingBit 0x2
 
-enum class Castling : U8 { King, Queen };
+enum class Castling : U8 { 
+    None, King, Queen, All 
+};
+
+inline bool operator&(Castling lhs, Castling rhs) {
+    return ((U8) lhs & (U8) rhs) != 0;
+}
+
+inline Castling operator^(Castling lhs, Castling rhs) {
+    return (Castling)((U8) lhs ^ (U8) rhs);
+}
+
+#define CASTLING_KING_BIT 0x0
+#define CASTLING_QUEEN_BIT 0x1
 
 enum class CastlingBlockSquares : U64 {
     KSideWhite = 0x60,

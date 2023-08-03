@@ -32,16 +32,14 @@ void Board::Initialize() {
     PlacePiece(Square::E1, PieceType::King, Color::White);
     PlacePiece(Square::E8, PieceType::King, Color::Black);
 
-    for (U8 i = 0; i < COLORCOUNT; ++i)
-        for (U8 i2 = 0; i2 < 2; ++i2)
-            castlingAllowed[i][i2] = true;
-
+    castling.push({Castling::All, Castling::All});
     turn = Color::White;
     oppColor = Color::Black;
 }
 
 void Board::DoMove(Move &move) {
     assert(move.GetValue() != 0);
+    std::array<Castling, 2> nCastling = castling.top();
     PieceType fromType;
     if (move.GetType() == MoveType::KingCastle) [[unlikely]] {
         if (turn == Color::White) {
@@ -84,13 +82,13 @@ void Board::DoMove(Move &move) {
                 RemovePiece(move.GetTo(), captures.top(), oppColor);
             }
             if (captures.top() == PieceType::Rook &&
-                move.GetTo() == initRookPos[(U8)oppColor][(U8)Castling::King])
-                if (castlingAllowed[(U8)oppColor][(U8)Castling::King])
-                    DisableCastling(move, oppColor, Castling::King);
+                move.GetTo() == initRookPos[(U8)oppColor][(U8)Castling::King - 1])
+                if (IsCastlingAllowed(oppColor, Castling::King))
+                    nCastling[(int)oppColor] = nCastling[(int)oppColor] ^ Castling::King;
             if (captures.top() == PieceType::Rook &&
-                move.GetTo() == initRookPos[(U8)oppColor][(U8)Castling::Queen])
-                if (castlingAllowed[(U8)oppColor][(U8)Castling::Queen])
-                    DisableCastling(move, oppColor, Castling::Queen);
+                move.GetTo() == initRookPos[(U8)oppColor][(U8)Castling::Queen - 1])
+                if (IsCastlingAllowed(oppColor, Castling::Queen))
+                    nCastling[(int)oppColor] = nCastling[(int)oppColor] ^ Castling::Queen;
         }
         if (move.IsPromotion()) [[unlikely]] {
             if (move.GetType() == MoveType::RPromotion ||
@@ -116,19 +114,17 @@ void Board::DoMove(Move &move) {
 
     // Castling rights
     if (fromType == PieceType::King) [[unlikely]] {
-        if (castlingAllowed[(U8)turn][(U8)Castling::King])
-            DisableCastling(move, turn, Castling::King);
-        if (castlingAllowed[(U8)turn][(U8)Castling::Queen])
-            DisableCastling(move, turn, Castling::Queen);
+        nCastling[(int)turn] = Castling::None;
     } else if (fromType == PieceType::Rook) [[unlikely]] {
-        if (castlingAllowed[(U8)turn][(U8)Castling::King] &&
+        if (IsCastlingAllowed(turn, Castling::King) &&
             move.GetFrom() == (turn == Color::White ? Square::H1 : Square::H8))
-            DisableCastling(move, turn, Castling::King);
-        else if (castlingAllowed[(U8)turn][(U8)Castling::Queen] &&
+                    nCastling[(int)turn] = nCastling[(int)turn] ^ Castling::King;
+        else if (IsCastlingAllowed(turn, Castling::Queen) &&
                  move.GetFrom() == (turn == Color::White ? Square::A1 : Square::A8))
-            DisableCastling(move, turn, Castling::Queen);
+                    nCastling[(int)turn] = nCastling[(int)turn] ^ Castling::Queen;
     }
 
+    PushCastling(nCastling);
     SwitchTurn();
     zobrist.IncHash();
     ++ply;
@@ -184,32 +180,9 @@ void Board::UndoMove(Move move) {
     }
 
     PopEP();
-    EnableCastling(move);
+    PopCastling();
     SwitchTurn();
     --ply;
-}
-
-void Board::EnableCastling(Move &move) {
-    auto enableCastling = [&](Color color, Castling castling) {
-        castlingAllowed[(int)color][(int)castling] = true;
-        zobrist.FlipCastling(color, castling);
-    };
-    if (move.IsDC()) [[unlikely]] {
-        if (move.IsDC(Color::White, Castling::King))
-            enableCastling(Color::White, Castling::King);
-        if (move.IsDC(Color::White, Castling::Queen))
-            enableCastling(Color::White, Castling::Queen);
-        if (move.IsDC(Color::Black, Castling::King))
-            enableCastling(Color::Black, Castling::King);
-        if (move.IsDC(Color::Black, Castling::Queen))
-            enableCastling(Color::Black, Castling::Queen);
-    }
-}
-
-void Board::DisableCastling(Move &move, Color color, Castling side) {
-    zobrist.FlipCastling(color, side);
-    castlingAllowed[(U8)color][(U8)side] = false;
-    move.SetDisableCastle(color, side);
 }
 
 U64 Board::GenerateAttackSquares(Color color) const {

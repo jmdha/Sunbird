@@ -24,24 +24,26 @@ Board FEN(std::string FEN) {
     board.SetTurn(Utilities::GetTurn(FEN[0]));
     FEN.erase(0, 2);
 
+    std::array<Castling, 2> castling{Castling::None, Castling::None};
     while (FEN[0] != ' ') {
         switch (FEN[0]) {
         case 'K':
-            board.EnableCastling(Color::White, Castling::King);
+            castling[(int)Color::White] = castling[(int)Color::White] ^ Castling::King;
             break;
         case 'k':
-            board.EnableCastling(Color::Black, Castling::King);
+            castling[(int)Color::Black] = castling[(int)Color::Black] ^ Castling::King;
             break;
         case 'Q':
-            board.EnableCastling(Color::White, Castling::Queen);
+            castling[(int)Color::White] = castling[(int)Color::White] ^ Castling::Queen;
             break;
         case 'q':
-            board.EnableCastling(Color::Black, Castling::Queen);
+            castling[(int)Color::Black] = castling[(int)Color::Black] ^ Castling::Queen;
             break;
         }
         FEN.erase(0, 1);
     }
     FEN.erase(0, 1);
+    board.PushCastling(castling);
 
     // import en-passant
     if (FEN.size() > 0 && FEN[0] != '-' && FEN[0] != ' ') {

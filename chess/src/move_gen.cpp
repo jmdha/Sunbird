@@ -29,14 +29,14 @@ template <GenType gType> void GenerateKingMoves(const Board &board, Color color,
                 moves << Move(MoveType::Quiet, (Square)kingPos, (Square)move);
         }
         if (board.IsCastlingAllowed(color, Castling::King) &&
-            !(board.GetOccupiedBB() & (U64)castlingBlock[(int)color][(int)Castling::King]) &&
-            !(attackedSquares & (U64)castlingAttack[(int)color][(int)Castling::King]))
+            !(board.GetOccupiedBB() & (U64)castlingBlock[(int)color][(int)Castling::King - 1]) &&
+            !(attackedSquares & (U64)castlingAttack[(int)color][(int)Castling::King - 1]))
             moves << Move(
                 MoveType::KingCastle, (Square)kingPos,
                 (Square)jank::bit::lsb(BitShift::Shift(C64(kingPos), Direction::East, 2)));
         if (board.IsCastlingAllowed(color, Castling::Queen) &&
-            !(board.GetOccupiedBB() & (U64)castlingBlock[(int)color][(int)Castling::Queen]) &&
-            !(attackedSquares & (U64)castlingAttack[(int)color][(int)Castling::Queen]))
+            !(board.GetOccupiedBB() & (U64)castlingBlock[(int)color][(int)Castling::Queen - 1]) &&
+            !(attackedSquares & (U64)castlingAttack[(int)color][(int)Castling::Queen - 1]))
             moves << Move(
                 MoveType::QueenCastle, (Square)kingPos,
                 (Square)jank::bit::lsb(BitShift::Shift(C64(kingPos), Direction::West, 2)));

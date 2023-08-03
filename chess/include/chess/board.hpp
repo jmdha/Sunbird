@@ -15,7 +15,10 @@ namespace Chess {
 // Class representing the current state of a game of chess
 class Board {
 public:
-    Board() { EP.push(Column::None); }
+    Board() {
+        EP.push(Column::None);
+        castling.push({Castling::None, Castling::None});
+    }
     // Initialization
     void Initialize();
     // Pieces
@@ -38,10 +41,28 @@ public:
     inline bool IsKingSafe(U64 tempOccuracyBoard) const;
     inline bool IsKingSafe() const;
     // Castling
-    inline bool IsCastlingAllowed(Color color, Castling side) const;
-    inline void EnableCastling(Color color, Castling castling);
-    void EnableCastling(Move &move);
-    void DisableCastling(Move &move, Color color, Castling side);
+    inline bool IsCastlingAllowed(Color color, Castling side) const {
+        return castling.top()[(int)color] & side;
+    }
+    inline void PushCastling(std::array<Castling, 2> cast) {
+        for (int i = 0; i < 2; i++) {
+            if ((cast[i] & Castling::King) != (castling.top()[i] & Castling::King))
+                zobrist.FlipCastling((Color) i, Castling::King);
+            if ((cast[i] & Castling::Queen) != (castling.top()[i] & Castling::Queen))
+                zobrist.FlipCastling((Color) i, Castling::Queen);
+        }
+        castling.push(std::move(cast));
+    }
+    inline void PopCastling() {
+        const std::array<Castling, 2> cast = castling.top();
+        castling.pop();
+        for (int i = 0; i < 2; i++) {
+            if ((cast[i] & Castling::King) != (castling.top()[i] & Castling::King))
+                zobrist.FlipCastling((Color) i, Castling::King);
+            if ((cast[i] & Castling::Queen) != (castling.top()[i] & Castling::Queen))
+                zobrist.FlipCastling((Color) i, Castling::Queen);
+        }
+    }
     // EnPassant
     inline Column GetEP() const;
     inline void PushEP(Column col) {
@@ -80,12 +101,12 @@ private:
             array[(int)square] = PieceType::None;
         return array;
     }();
-    bool castlingAllowed[2][2]{false};
     Zobrist zobrist = Zobrist();
     int ply = 0;
 
     jank::container::fixed_stack<PieceType, 32> captures;
     jank::container::fixed_stack<Column, MAX_PLY> EP;
+    jank::container::fixed_stack<std::array<Castling, 2>, MAX_PLY> castling;
 };
 
 inline PieceType Board::GetType(Square square) const {
@@ -169,10 +190,6 @@ inline void Board::RemovePiece(Square square, PieceType type, Color color) {
     assert(occupiedBB == (colorBB[0] | colorBB[1]));
 }
 
-bool Board::IsCastlingAllowed(Color color, Castling side) const {
-    return castlingAllowed[(int)color][(int)side];
-}
-
 void Board::SetTurn(Color color) {
     turn = color;
     oppColor = Utilities::GetOppositeColor(color);
@@ -182,11 +199,6 @@ void Board::SwitchTurn() {
     turn = Utilities::GetOppositeColor(turn);
     oppColor = Utilities::GetOppositeColor(turn);
 }
-
-void Board::EnableCastling(Color color, Castling castling) {
-    castlingAllowed[(int)color][(int)castling] = true;
-}
-
 } // namespace Chess
 
 #endif // CHESS_BOARD
