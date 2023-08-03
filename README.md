@@ -11,7 +11,7 @@ Play against it [here](https://lichess.org/@/sun_bird).
 ## Benchmark (03e5a51)
 These are run on a i5-13600k with a single thread.
 
-For the purposes here, a "node" is a move done and undone.
+For the purposes here, a "node" is a move done.
 
 ### Perft
 **35m nodes/s**
