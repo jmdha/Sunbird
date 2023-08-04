@@ -22,10 +22,6 @@ int Quiesce(Board &board, int alpha, int beta) {
         return beta;
 
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::Attack>(board, board.GetColor());
-    if (board.GetPly() > 150)
-        return Evaluation::EvalNoMove(board.IsKingSafe());
-
-
     for (auto move : moves) {
         board.DoMove(move);
         int score = -Quiesce(board, -beta, -alpha);
@@ -42,7 +38,7 @@ int Negamax(Board &board, int depth, int alpha, int beta) {
         return Quiesce(board, alpha, beta);
 
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
-    if (moves.empty() || board.IsThreefoldRep() || board.GetPly() > 150)
+    if (moves.empty() || board.IsThreefoldRep())
         return Evaluation::EvalNoMove(board.IsKingSafe());
 
     for (auto move : moves) {
