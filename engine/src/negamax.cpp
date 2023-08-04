@@ -8,30 +8,30 @@
 
 namespace Chess::Engine::Negamax {
 namespace {
+inline bool AB(int score, int &alpha, int beta) {
+    if (score >= beta)
+        return true; //  fail hard beta-cutoff
+    if (score > alpha)
+        alpha = score; // alpha acts like max in MiniMax
+    return false;
+}
+
 int Quiesce(Board &board, int alpha, int beta) {
-    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::Attack>(board, board.GetColor());
-
-    if (moves.empty() && !board.IsKingSafe()) {
-        moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
-        if (moves.empty())
-            return Evaluation::EvalNoMove(false);
-    }
-
     int standPat = Evaluation::Eval(board);
-    if (standPat >= beta)
+    if (AB(standPat, alpha, beta))
         return beta;
-    if (alpha < standPat)
-        alpha = standPat;
+
+    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::Attack>(board, board.GetColor());
+    if (board.GetPly() > 150)
+        return Evaluation::EvalNoMove(board.IsKingSafe());
+
 
     for (auto move : moves) {
         board.DoMove(move);
         int score = -Quiesce(board, -beta, -alpha);
         board.UndoMove(move);
-
-        if (score >= beta)
-            return beta; //  fail hard beta-cutoff
-        if (score > alpha)
-            alpha = score; // alpha acts like max in MiniMax
+        if (AB(score, alpha, beta))
+            return beta;
     }
 
     return alpha;
@@ -42,22 +42,15 @@ int Negamax(Board &board, int depth, int alpha, int beta) {
         return Quiesce(board, alpha, beta);
 
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
-
-    if (moves.size() == 0)
+    if (moves.empty() || board.IsThreefoldRep() || board.GetPly() > 150)
         return Evaluation::EvalNoMove(board.IsKingSafe());
-    if (board.IsThreefoldRep() || board.GetPly() > 150)
-        return 0;
 
     for (auto move : moves) {
         board.DoMove(move);
         int score = -Negamax(board, depth - 1, -beta, -alpha);
         board.UndoMove(move);
-
-        if (score >= beta)
-            return beta; //  fail hard beta-cutoff
-        if (score > alpha) {
-            alpha = score; // alpha acts like max in MiniMax
-        }
+        if (AB(score, alpha, beta))
+            return beta;
     }
 
     return alpha;
@@ -79,9 +72,8 @@ std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth) {
             scores[i] = score;
         }
         moves.sort(scores);
-        if (std::any_of(scores.begin(), &scores[moves.size()], [](int val) {
-            return val == MaterialValue::Inf;
-        }))
+        if (std::any_of(scores.begin(), &scores[moves.size()],
+                        [](int val) { return val == MaterialValue::Inf; }))
             break;
     } while (workingDepth++ < depth);
 
@@ -117,9 +109,8 @@ MoveList GetOrderdMoves(Board &board, int timeLimit) {
             }
         }
         moves.sort(scores);
-        if (std::any_of(scores.begin(), &scores[moves.size()], [](int val) {
-            return val == MaterialValue::Inf;
-        }))
+        if (std::any_of(scores.begin(), &scores[moves.size()],
+                        [](int val) { return val == MaterialValue::Inf; }))
             break;
     } while (workingDepth++ < 1000 && totalTime < timeLimit);
 
@@ -129,9 +120,8 @@ MoveList GetOrderdMoves(Board &board, int timeLimit) {
 std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit) {
     MoveList moves = GetOrderdMoves(board, timeLimit);
     if (moves.empty())
-        return (Evaluation::EvalNoMove(board.IsKingSafe()) == 0)
-                   ? AlternativeResult::Draw
-                   : AlternativeResult::Checkmate;
+        return (Evaluation::EvalNoMove(board.IsKingSafe()) == 0) ? AlternativeResult::Draw
+                                                                 : AlternativeResult::Checkmate;
 
     return moves[0];
 }
