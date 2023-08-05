@@ -39,11 +39,13 @@ inline std::string Move::ToString() const {
     tempMove += Utilities::GetSquareString(GetFrom());
     tempMove += Utilities::GetSquareString(GetTo());
     if (IsPromotion()) {
-        if (GetType() == MoveType::RPromotion)
+        if (GetType() == MoveType::QPromotion || GetType() == MoveType::QPromotionCapture)
+            tempMove += "q";
+        else if (GetType() == MoveType::RPromotion || GetType() == MoveType::RPromotionCapture)
             tempMove += "r";
-        else if (GetType() == MoveType::BPromotion)
+        else if (GetType() == MoveType::BPromotion || GetType() == MoveType::BPromotionCapture)
             tempMove += "b";
-        else if (GetType() == MoveType::NPromotion)
+        else if (GetType() == MoveType::NPromotion || GetType() == MoveType::NPromotionCapture)
             tempMove += "n";
     }
     return tempMove;

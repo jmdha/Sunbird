@@ -3,9 +3,7 @@
 
 namespace Chess::Import {
 // HACK: Refactor this
-Board MoveSequence(std::string moves) {
-    Board board;
-    board.Initialize();
+void MoveSequence(Board &board, std::string moves) {
     std::string move;
     for (int i = 0; i < moves.length(); i++) {
         if (moves[i] != ' ')
@@ -74,6 +72,13 @@ Board MoveSequence(std::string moves) {
             move = "";
         }
     }
+}
+
+Board MoveSequence(std::string moves) {
+    Board board;
+    board.Initialize();
+    MoveSequence(board, moves);
     return board;
 }
+
 } // namespace Import

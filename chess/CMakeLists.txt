@@ -2,7 +2,7 @@ include(FetchContent)
 FetchContent_Declare(
     jank
     GIT_REPOSITORY https://github.com/jamadaha/jank.git
-    GIT_TAG 473ce5c
+    GIT_TAG 8615163
 )
 FetchContent_MakeAvailable(jank)
 

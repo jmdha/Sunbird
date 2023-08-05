@@ -19,6 +19,7 @@ Board FEN(std::string FEN);
  * The string is then of the format "e2e4 d7d5 ..."
  */
 Board MoveSequence(std::string moves);
+void MoveSequence(Board& board, std::string moves);
 
 /**
  * Creates a board and sets it's state to that resulting from the algebraic sequence of moves
