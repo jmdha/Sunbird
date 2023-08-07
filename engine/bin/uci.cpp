@@ -12,7 +12,7 @@ using namespace Chess;
 
 #define NAME "sunbird"
 #define AUTHOR "jamadaha"
-#define VERSION "00000000"
+#define VERSION "v1.0.0"
 
 enum class Command { uci, isready, setoption, quit, position, ucinewgame, go, stop };
 
