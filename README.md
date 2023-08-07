@@ -1,14 +1,14 @@
-# chess_engine
-A simple chess engine in C++.
+# Sunbird
+A UCI chess engine written in CPP.
 
 Play against it [here](https://lichess.org/@/sun_bird).
 
 ## Table of Contents
-1. [Benchmark](#features)
-2. [Features](#features)
-3. [Compiling](#features)
+1. [Benchmark](#Benchmark)
+2. [Features](#Features)
+3. [How to Build](#How-To-Build)
 
-## Benchmark (03e5a51)
+## Benchmark
 These are run on a i5-13600k with a single thread.
 
 For the purposes here, a "node" is a move done.
@@ -55,7 +55,7 @@ Distribution found with `perf record --call-graph=dwarf ./engine 7 "rnbqkbnr/ppp
 * Material Point Value [[wiki](https://www.chessprogramming.org/Material)]
 * Piece-Square Tables [[wiki](https://www.chessprogramming.org/Piece-Square_Tables)]
 
-## Compiling
+## How to Build
 Navigate to root folder of project, then run the following to build engine.
 ```
 mkdir build &&\
