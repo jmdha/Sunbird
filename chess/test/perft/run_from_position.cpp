@@ -16,8 +16,7 @@ int main(int, char* argv[]) {
 
     int depth = std::atoi(argv[3]);
 
-    Perft perft = Perft();
-    int actualLeafCount = perft.RunFromPosition(board, depth);
+    int actualLeafCount = Perft::RunFromPosition(board, depth);
 
     if (expectedLeafCount == actualLeafCount)
         exit(EXIT_SUCCESS);

@@ -1,8 +1,8 @@
 #include <chess/perft.hpp>
 
-using namespace Chess;
-
-int Perft::Run(Board &board, int depth) {
+namespace Chess::Perft {
+namespace {
+int Run(Board &board, int depth) {
     if (depth == 0)
         return 1;
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
@@ -18,10 +18,11 @@ int Perft::Run(Board &board, int depth) {
 
     return leafCount;
 }
+} // namespace
 
-int Perft::RunFromPosition(Board &board, int depth) { return this->Run(board, depth); }
+int RunFromPosition(Board &board, int depth) { return Run(board, depth); }
 
-int Perft::PerftDivide(Board &board, int depth) {
+int PerftDivide(Board &board, int depth) {
     int total = 0;
 
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
@@ -35,4 +36,5 @@ int Perft::PerftDivide(Board &board, int depth) {
     }
 
     return total;
+}
 }

@@ -10,14 +10,8 @@
 #include "internal/move.hpp"
 #include "move_gen.hpp"
 
-namespace Chess {
-class Perft {
-public:
+namespace Chess::Perft {
     int RunFromPosition(Board &board, int depth);
     int PerftDivide(Board &board, int depth);
-
-private:
-    int Run(Board &board, int depth);
-};
 } // namespace Chess
 #endif // PERFT
