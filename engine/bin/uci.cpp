@@ -10,10 +10,6 @@
 
 using namespace Chess;
 
-#define NAME "sunbird"
-#define AUTHOR "jamadaha"
-#define VERSION "v1.0.0"
-
 enum class Command { uci, isready, setoption, quit, position, ucinewgame, go, stop };
 
 const std::unordered_map<std::string, Command> Commands{
@@ -51,8 +47,8 @@ int main() {
 
         switch (Commands.at(tokens[0])) {
         case Command::uci:
-            std::cout << "id name " << NAME << ' ' << VERSION << '\n';
-            std::cout << "id author " << AUTHOR << '\n';
+            std::cout << "id name " << _PROJECT_NAME << " v" << _PROJECT_VERSION << '\n';
+            std::cout << "id author " << _PROJECT_AUTHOR << '\n';
             std::cout << "uciok" << '\n';
             break;
         case Command::setoption:

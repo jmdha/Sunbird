@@ -25,6 +25,6 @@ if (BUILD_TEST)
 endif ()
 
 if (BUILD_BIN)
-    add_executable(sunbird ${CMAKE_CURRENT_LIST_DIR}/bin/uci.cpp)
-    target_link_libraries(sunbird PRIVATE ENGINE)
+    add_executable(Sunbird ${CMAKE_CURRENT_LIST_DIR}/bin/uci.cpp)
+    target_link_libraries(Sunbird PRIVATE ENGINE)
 endif ()
