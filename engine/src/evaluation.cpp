@@ -1,4 +1,4 @@
-#include "jank/bit/bit.hpp"
+#include <jank/bit/bit.hpp>
 #include <engine/evaluation.hpp>
 
 namespace Chess::Engine::Evaluation {
@@ -13,8 +13,9 @@ int EvalMaterial(const Board &board) {
     return value;
 }
 
-int EvalPosition(const Board &board) { 
-    return EvalPosition(board, Color::White) - EvalPosition(board, Color::Black); }
+int EvalPosition(const Board &board) {
+    return EvalPosition(board, Color::White) - EvalPosition(board, Color::Black);
+}
 
 int EvalPosition(const Board &board, Color color) {
     int value = 0;
@@ -45,5 +46,4 @@ int EvalNoMove(bool isKingSafe) {
     else
         return 0;
 }
-
 } // namespace Chess::Engine::Evaluation

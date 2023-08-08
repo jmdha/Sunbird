@@ -1,9 +1,11 @@
-#include "engine/evaluation.hpp"
-#include "engine/internal/values.hpp"
 #include <chess/internal/constants.hpp>
 #include <chess/move_gen.hpp>
 #include <chrono>
+#include <cstring>
+#include <engine/evaluation.hpp>
+#include <engine/internal/values.hpp>
 #include <engine/negamax.hpp>
+#include <iostream>
 #include <optional>
 
 namespace Chess::Engine::Negamax {
@@ -54,6 +56,7 @@ int Negamax(Board &board, int depth, int alpha, int beta) {
 } // namespace
 
 std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth) {
+    board.ResetMoveCount();
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
     std::array<int, MAXMOVECOUNT> scores{0};
 
@@ -81,21 +84,24 @@ MoveList GetOrderdMoves(Board &board, int timeLimit) {
     if (moves.empty())
         return moves;
     std::array<int, MAXMOVECOUNT> scores{0};
+    std::vector<U64> times;
 
     U64 totalTime = 0;
 
     int workingDepth = 1;
     do {
+        board.ResetMoveCount();
         for (int i = 0; i < moves.size(); i++) {
             auto t0 = std::chrono::steady_clock::now();
             Move &move = moves[i];
             board.DoMove(move);
             const int score =
-                -Negamax(board, workingDepth, -MaterialValue::Inf, MaterialValue::Inf);
+                -Negamax(board, workingDepth - 1, -MaterialValue::Inf, MaterialValue::Inf);
             board.UndoMove(move);
             scores[i] = score;
             auto t1 = std::chrono::steady_clock::now();
             U64 time = (U64)std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+            times.push_back(time);
             totalTime += time;
             if (workingDepth > 1 &&
                 (totalTime + time > timeLimit ||
@@ -108,6 +114,13 @@ MoveList GetOrderdMoves(Board &board, int timeLimit) {
         if (std::any_of(scores.begin(), &scores[moves.size()],
                         [](int val) { return val == MaterialValue::Inf; }))
             break;
+        std::cout << "info";
+        std::cout << " score cp " << scores[0];
+        std::cout << " depth " << workingDepth;
+        std::cout << " nodes " << board.GetMoveCount();
+        std::cout << " npms " << board.GetMoveCount() / ((times.back() == 0) ? 1 : times.back());
+        std::cout << " time " << times.back();
+        std::cout << '\n';
     } while (workingDepth++ < 1000 && totalTime < timeLimit);
 
     return moves;

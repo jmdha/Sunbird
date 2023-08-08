@@ -32,6 +32,7 @@ void Board::Initialize() {
     PlacePiece(Square::E1, PieceType::King, Color::White);
     PlacePiece(Square::E8, PieceType::King, Color::Black);
 
+        EP.push(Column::None);
     castling.push({Castling::All, Castling::All});
     turn = Color::White;
     oppColor = Color::Black;
@@ -127,6 +128,7 @@ void Board::DoMove(Move &move) {
     SwitchTurn();
     zobrist.IncHash();
     ++ply;
+    moveCount++;
 }
 
 void Board::UndoMove(Move move) {

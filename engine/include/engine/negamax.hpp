@@ -11,10 +11,7 @@
 #include <variant>
 
 namespace Chess::Engine::Negamax {
-enum AlternativeResult {
-    Draw,
-    Checkmate
-};
+enum class AlternativeResult { Draw, Checkmate };
 std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth);
 std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit);
 MoveList GetOrderdMoves(Board &board, int timeLimit);

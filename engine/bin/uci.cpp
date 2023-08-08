@@ -25,10 +25,10 @@ NEXT_TOKEN:
     if (auto p = s.find_first_of((inApro) ? '"' : ' ', (inApro) ? 1 : 0); p != std::string::npos) {
         tokens.push_back(s.substr((inApro) ? 1 : 0, inApro ? p - 1 : p));
         s = s.substr(p + 1, s.size() - p);
-        if (s.size())
+        if (!s.empty())
             goto NEXT_TOKEN;
     }
-    if (s.size())
+    if (!s.empty())
         tokens.push_back(s);
     return tokens;
 }

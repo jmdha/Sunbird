@@ -88,6 +88,8 @@ public:
     U64 GenerateAttackSquares(Color color) const;
     inline void SetTurn(Color color);
     inline void SwitchTurn();
+    inline U64 GetMoveCount() const noexcept { return moveCount; }
+    inline void ResetMoveCount() noexcept { moveCount = 0; }
 
 private:
     Color turn = Color::None;
@@ -103,6 +105,7 @@ private:
     }();
     Zobrist zobrist = Zobrist();
     int ply = 0;
+    U64 moveCount = 0;
 
     jank::container::fixed_stack<PieceType, 32> captures;
     jank::container::fixed_stack<Column, MAX_PLY> EP;
