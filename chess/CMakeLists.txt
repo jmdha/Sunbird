@@ -11,7 +11,7 @@ set(CHESS_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/include)
 set(CHESS_INCLUDE_BUILD_DIR ${CHESS_INCLUDE_DIR}/chess)
 
 set(CHESS_HEADERS
-    ${CHESS_INCLUDE_BUILD_DIR}/internal/bit_shift.hpp
+    ${CHESS_INCLUDE_BUILD_DIR}/internal/bitboard.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/internal/constants.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/internal/move.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/internal/move_list.hpp
@@ -26,6 +26,7 @@ set(CHESS_HEADERS
 
 set(CHESS_SRC
     ${CHESS_SRC_DIR}/board.cpp
+    ${CHESS_SRC_DIR}/bitboard.cpp
     ${CHESS_SRC_DIR}/move_gen.cpp
     ${CHESS_SRC_DIR}/perft.cpp
     ${CHESS_SRC_DIR}/import_FEN.cpp

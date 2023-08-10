@@ -279,11 +279,11 @@ std::vector<std::string> endgamePositions{
     "8/5k2/4p2p/4P3/B1np1KP1/3b4/8/2B5 b - - 0 1"};
 
 struct BenchmarkResult {
-    U64 nodes = 0;
-    U64 time = 0;
+    uint64_t nodes = 0;
+    uint64_t time = 0;
 };
 
-BenchmarkResult Run(std::string title, const std::vector<std::string> &positions, U8 depth) {
+BenchmarkResult Run(std::string title, const std::vector<std::string> &positions, int depth) {
     BenchmarkResult result;
     printf("-----%s-----\n", title.c_str());
     for (size_t i = 0; i < positions.size();) {

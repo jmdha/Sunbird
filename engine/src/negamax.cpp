@@ -84,9 +84,9 @@ MoveList GetOrderdMoves(Board &board, int timeLimit) {
     if (moves.empty())
         return moves;
     std::array<int, MAXMOVECOUNT> scores{0};
-    std::vector<U64> times;
+    std::vector<uint64_t> times;
 
-    U64 totalTime = 0;
+    uint64_t totalTime = 0;
 
     int workingDepth = 1;
     do {
@@ -100,7 +100,7 @@ MoveList GetOrderdMoves(Board &board, int timeLimit) {
             board.UndoMove(move);
             scores[i] = score;
             auto t1 = std::chrono::steady_clock::now();
-            U64 time = (U64)std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+            uint64_t time = (uint64_t)std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
             times.push_back(time);
             totalTime += time;
             if (workingDepth > 1 &&

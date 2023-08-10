@@ -18,11 +18,11 @@ public:
             hashOccurances.erase(hash);
     }
     inline bool IsThreefoldRep() const { return hashOccurances.at(hash) > 2; }
-    inline U64 GetHash() const { return hash; }
+    inline uint64_t GetHash() const { return hash; }
 
 private:
-    U64 hash = 0;
-    tsl::robin_map<U64, U8> hashOccurances;
+    uint64_t hash = 0;
+    tsl::robin_map<uint64_t, int> hashOccurances;
 };
 } // namespace Chess
 

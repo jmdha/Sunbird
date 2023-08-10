@@ -4,6 +4,7 @@
 #include <cassert>
 #include <string>
 
+#include "internal/bitboard.hpp"
 #include "internal/constants.hpp"
 #include "internal/move.hpp"
 #include "internal/utilities.hpp"
@@ -24,10 +25,10 @@ public:
     // Pieces
     inline PieceType GetType(Square square) const;
     inline int GetPieceCount(Color color, PieceType type) const;
-    inline U64 GetPiecePos(PieceType type) const;
-    inline U64 GetPiecePos(Color color, PieceType type) const;
-    inline U64 GetOccupiedBB() const;
-    inline U64 GetColorBB(Color color) const;
+    inline BB GetPiecePos(PieceType type) const;
+    inline BB GetPiecePos(Color color, PieceType type) const;
+    inline BB GetOccupiedBB() const;
+    inline BB GetColorBB(Color color) const;
     inline int GetPly() const;
     inline void PlacePiece(Square square, PieceChar pieceChar);
     inline void PlacePiece(Square square, PieceType type, Color color);
@@ -36,9 +37,9 @@ public:
     void DoMove(Move &move);
     void UndoMove(Move move);
     // King Safety
-    bool IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard, U64 tempKingBoard) const;
-    inline bool IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard) const;
-    inline bool IsKingSafe(U64 tempOccuracyBoard) const;
+    bool IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard, BB tempKingBoard) const;
+    inline bool IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard) const;
+    inline bool IsKingSafe(BB tempOccuracyBoard) const;
     inline bool IsKingSafe() const;
     // Castling
     inline bool IsCastlingAllowed(Color color, Castling side) const {
@@ -83,20 +84,20 @@ public:
     inline Color GetColor() const;
     inline Color GetOppColor() const;
     inline Color GetColor(Square sq) const;
-    inline U64 GetHash() const;
+    inline uint64_t GetHash() const;
     inline bool IsThreefoldRep() const;
-    U64 GenerateAttackSquares(Color color) const;
+    BB GenerateAttackSquares(Color color) const;
     inline void SetTurn(Color color);
     inline void SwitchTurn();
-    inline U64 GetMoveCount() const noexcept { return moveCount; }
+    inline BB GetMoveCount() const noexcept { return moveCount; }
     inline void ResetMoveCount() noexcept { moveCount = 0; }
 
 private:
     Color turn = Color::None;
     Color oppColor = Color::None;
-    U64 pieceBB[PIECECOUNT]{0};
-    U64 colorBB[COLORCOUNT]{0};
-    U64 occupiedBB = 0;
+    BB pieceBB[PIECECOUNT]{0};
+    BB colorBB[COLORCOUNT]{0};
+    BB occupiedBB = 0;
     std::array<PieceType, SQUARECOUNT> pieceBoard = [] {
         std::array<PieceType, SQUARECOUNT> array;
         for (auto square : SQUARES)
@@ -105,7 +106,7 @@ private:
     }();
     Zobrist zobrist = Zobrist();
     int ply = 0;
-    U64 moveCount = 0;
+    uint64_t moveCount = 0;
 
     jank::container::fixed_stack<PieceType, 32> captures;
     jank::container::fixed_stack<Column, MAX_PLY> EP;
@@ -122,23 +123,23 @@ inline int Board::GetPieceCount(const Color color, const PieceType type) const {
     return jank::bit::popcount(GetPiecePos(color, type));
 }
 
-U64 Board::GetPiecePos(PieceType type) const {
+BB Board::GetPiecePos(PieceType type) const {
     assert(type != PieceType::None);
     return pieceBB[(int)type];
 }
 
-inline U64 Board::GetPiecePos(const Color color, const PieceType type) const {
+inline BB Board::GetPiecePos(const Color color, const PieceType type) const {
     assert(type != PieceType::None);
     return pieceBB[(int)type] & colorBB[(int)color];
 }
 
-inline U64 Board::GetOccupiedBB() const { return occupiedBB; }
+inline BB Board::GetOccupiedBB() const { return occupiedBB; }
 
-inline bool Board::IsKingSafe(U64 tempOccuracyBoard, U64 tempEnemyBoard) const {
+inline bool Board::IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard) const {
     return IsKingSafe(tempOccuracyBoard, tempEnemyBoard, GetPiecePos(turn, PieceType::King));
 }
 
-inline bool Board::IsKingSafe(U64 tempOccuracyBoard) const {
+inline bool Board::IsKingSafe(BB tempOccuracyBoard) const {
     return IsKingSafe(tempOccuracyBoard, GetColorBB(oppColor));
 }
 
@@ -149,21 +150,21 @@ inline Color Board::GetColor() const { return turn; }
 inline Color Board::GetOppColor() const { return oppColor; }
 
 inline Color Board::GetColor(Square sq) const {
-    if (colorBB[(U8)Color::White] & C64(sq))
+    if (colorBB[(int)Color::White] & sq)
         return Color::White;
-    else if (colorBB[(U8)Color::Black] & C64(sq))
+    else if (colorBB[(int)Color::Black] & sq)
         return Color::Black;
     else
         return Color::None;
 }
 
-inline U64 Board::GetHash() const { return zobrist.GetHash(); }
+inline uint64_t Board::GetHash() const { return zobrist.GetHash(); }
 
 inline int Board::GetPly() const { return ply; }
 
 inline bool Board::IsThreefoldRep() const { return zobrist.IsThreefoldRep(); }
 
-U64 Board::GetColorBB(Color color) const { return colorBB[(int)color]; }
+BB Board::GetColorBB(Color color) const { return colorBB[(int)color]; }
 
 inline Column Board::GetEP() const { return EP.top(); }
 
@@ -173,10 +174,9 @@ inline void Board::PlacePiece(Square square, PieceChar pieceChar) {
 
 inline void Board::PlacePiece(Square square, PieceType type, Color color) {
     assert(type != PieceType::None);
-    U64 bit = C64(square);
-    pieceBB[(U8)type] |= bit;
-    colorBB[(U8)color] |= bit;
-    occupiedBB |= bit;
+    pieceBB[(int)type] |= square;
+    colorBB[(int)color] |= square;
+    occupiedBB |= square;
     pieceBoard[(int)square] = type;
     zobrist.FlipSquare(square, type, color);
     assert(occupiedBB == (colorBB[0] | colorBB[1]));
@@ -184,10 +184,9 @@ inline void Board::PlacePiece(Square square, PieceType type, Color color) {
 
 inline void Board::RemovePiece(Square square, PieceType type, Color color) {
     assert(type != PieceType::None);
-    U64 bit = C64(square);
-    pieceBB[(U8)type] ^= bit;
-    colorBB[(U8)color] ^= bit;
-    occupiedBB ^= bit;
+    pieceBB[(int)type] ^= square;
+    colorBB[(int)color] ^= square;
+    occupiedBB ^= square;
     pieceBoard[(int)square] = PieceType::None;
     zobrist.FlipSquare(square, type, color);
     assert(occupiedBB == (colorBB[0] | colorBB[1]));

@@ -11,14 +11,14 @@ using namespace Chess;
 namespace {
 constexpr int SQUARE_HASH_COUNT = 2 * 6 * 64;
 constexpr int HASH_COUNT = SQUARE_HASH_COUNT + 4 * 8;
-template <U64 l>
-constexpr std::array<U64, l> GenerateHashes() {
-    std::array<U64, l> tempTable;
+template <uint64_t l>
+constexpr std::array<uint64_t, l> GenerateHashes() {
+    std::array<uint64_t, l> tempTable;
 
-    U64 startState = 0x181818ffff181818;
-    U64 lfsr = startState;
-    U64 bit;
-    U64 period = 0;
+    uint64_t startState = 0x181818ffff181818;
+    uint64_t lfsr = startState;
+    uint64_t bit;
+    uint64_t period = 0;
 
     for (int i = 0; i < l; i++) {
         bit = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5)) & 1u;
@@ -28,7 +28,7 @@ constexpr std::array<U64, l> GenerateHashes() {
 
     return tempTable;
 }
-constexpr std::array<U64, SQUARE_HASH_COUNT> hashes = GenerateHashes<SQUARE_HASH_COUNT>();
+constexpr std::array<uint64_t, SQUARE_HASH_COUNT> hashes = GenerateHashes<SQUARE_HASH_COUNT>();
 } // namespace
 
 void Zobrist::FlipSquare(Square square, PieceType type, Color color) {

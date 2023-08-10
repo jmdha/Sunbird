@@ -21,7 +21,7 @@ int EvalPosition(const Board &board, Color color) {
     int value = 0;
 
     for (int i = 0; i < PIECECOUNT; i++) {
-        U64 pieces = board.GetPiecePos(color, (PieceType)i);
+        BB pieces = board.GetPiecePos(color, (PieceType)i);
         if (color == Color::White)
             while (pieces)
                 value += PositionValue::ALL_WHITE[i][jank::bit::lsb_pop(pieces)];

@@ -1,5 +1,5 @@
-#ifndef UTILITIES
-#define UTILITIES
+#ifndef CHESS_UTILITIES
+#define CHESS_UTILITIES
 
 #include <strings.h>
 #include <stdexcept>
@@ -90,25 +90,25 @@ namespace Chess::Utilities {
             return Color::White;
     }
 
-    constexpr U64 NotEdge(Direction dir) {
+    constexpr BB NotEdge(Direction dir) {
         switch (dir)
         {
         case Direction::North:
-            return (U64) NotEdge::North;
+            return (BB) NotEdge::North;
         case Direction::East:
-            return (U64) NotEdge::East;
+            return (BB) NotEdge::East;
         case Direction::South:
-            return (U64) NotEdge::South;
+            return (BB) NotEdge::South;
         case Direction::West:
-            return (U64) NotEdge::West;
+            return (BB) NotEdge::West;
         case Direction::NorthEast:
-            return (U64) NotEdge::North & (U64) NotEdge::East;
+            return (BB) NotEdge::North & (BB) NotEdge::East;
         case Direction::NorthWest:
-            return (U64) NotEdge::North & (U64) NotEdge::West;
+            return (BB) NotEdge::North & (BB) NotEdge::West;
         case Direction::SouthEast:
-            return (U64) NotEdge::South & (U64) NotEdge::East;
+            return (BB) NotEdge::South & (BB) NotEdge::East;
         case Direction::SouthWest:
-            return (U64) NotEdge::South & (U64) NotEdge::West;
+            return (BB) NotEdge::South & (BB) NotEdge::West;
         case Direction::None:
             throw std::invalid_argument("No direction given");
         }
@@ -143,11 +143,11 @@ namespace Chess::Utilities {
         return GetColumn(column - 97);
     }
 
-    constexpr U8 GetColumnIndex(Square square) {
-        return COLUMN_INDEX.at((U8)square);
+    constexpr int GetColumnIndex(Square square) {
+        return COLUMN_INDEX.at((int)square);
     }
 
-    constexpr U8 GetColumnIndex(Column col) {
+    constexpr int GetColumnIndex(Column col) {
         switch (col) {
             case Column::A:
                 return 0;
@@ -172,10 +172,10 @@ namespace Chess::Utilities {
     }
 
     constexpr Column GetColumn(Square square) {
-        return COLUMN_BY_SQUARE.at((U8)square);
+        return COLUMN_BY_SQUARE.at((int)square);
     }
 
-    constexpr Row GetRow(U8 rowIndex) {
+    constexpr Row GetRow(int rowIndex) {
         switch (rowIndex)
         {
         case 0:
@@ -199,8 +199,8 @@ namespace Chess::Utilities {
         }
     }
 
-    constexpr U8 GetRowIndex(Square square) {
-        return ((U8)square - ((U8)square % 8)) / 8;
+    constexpr int GetRowIndex(Square square) {
+        return ((int)square - ((int)square % 8)) / 8;
     }
 
     constexpr Row GetRow(Square square) {
@@ -213,61 +213,35 @@ namespace Chess::Utilities {
 
     static std::string GetSquareString(Square sq) {
         std::string square;
-        U8 col = GetColumnIndex(sq);
-        U8 row = GetRowIndex(sq);
+        int col = GetColumnIndex(sq);
+        int row = GetRowIndex(sq);
         square += 'a' + col;
         square += '1' + row;
         return square;
     }
 
-    constexpr DirectionIndex GetDirectionIndex(Direction direction) {
-        switch (direction) {
-            case Direction::North:
-                return DirectionIndex::North;
-            case Direction::East:
-                return DirectionIndex::East;
-            case Direction::South:
-                return DirectionIndex::South;
-            case Direction::West:
-                return DirectionIndex::West;
-            case Direction::NorthWest:
-                return DirectionIndex::NorthWest;
-            case Direction::NorthEast:
-                return DirectionIndex::NorthEast;
-            case Direction::SouthWest:
-                return DirectionIndex::SouthWest;
-            case Direction::SouthEast:
-                return DirectionIndex::SouthEast;
-            case Direction::None:
-                return DirectionIndex::None;
-            default:
-                throw std::invalid_argument("Unexpected direction in GetDirectionIndex: " + std::to_string((int)direction));
-        }
-        throw std::logic_error("Invalid flow");
-    }
-
-    constexpr DirectionIndex GetDirectionIndex(Square from, Square to) {
+    constexpr Direction GetDirection(Square from, Square to) {
         if (GetRowIndex(from) < GetRowIndex(to)) {
             if (GetColumnIndex(from) < GetColumnIndex(to))
-                return DirectionIndex::NorthEast;
+                return Direction::NorthEast;
             else if (GetColumnIndex(from) > GetColumnIndex(to))
-                return DirectionIndex::NorthWest;
+                return Direction::NorthWest;
             else
-                return DirectionIndex::North;
+                return Direction::North;
         } else if (GetRowIndex(from) > GetRowIndex(to)) {
             if (GetColumnIndex(from) < GetColumnIndex(to))
-                return DirectionIndex::SouthEast;
+                return Direction::SouthEast;
             else if (GetColumnIndex(from) > GetColumnIndex(to))
-                return DirectionIndex::SouthWest;
+                return Direction::SouthWest;
             else
-                return DirectionIndex::South;
+                return Direction::South;
         } else {
             if (GetColumnIndex(from) < GetColumnIndex(to))
-                return DirectionIndex::East;
+                return Direction::East;
             else if (GetColumnIndex(from) > GetColumnIndex(to))
-                return DirectionIndex::West;
+                return Direction::West;
         }
-        return DirectionIndex::None;
+        throw std::invalid_argument("GetDirection called with same from and to");
     }
 
     constexpr Color GetTurn(char turn) {

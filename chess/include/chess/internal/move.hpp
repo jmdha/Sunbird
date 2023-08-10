@@ -12,10 +12,10 @@ class Move {
 public:
     Move() = default;
     explicit Move(uint16_t move) : move(move) {}
-    explicit Move(MoveType type) : move((U8)type & 0xf){};
+    explicit Move(MoveType type) : move((int)type & 0xf){};
 
     Move(MoveType type, Square from, Square to)
-        : move(((U8)type & 0xf) + (((U8)from & 0x3f) << 4) + (((U8)to & 0x3f) << 10)){};
+        : move(((int)type & 0xf) + (((int)from & 0x3f) << 4) + (((int)to & 0x3f) << 10)){};
 
     inline std::string ToString() const;
 

@@ -20,8 +20,8 @@ struct MoveList {
                     std::swap(moves[i], moves[t]);
                 }
     }
-    Move &operator[](U8 i) { return moves[i]; }
-    const Move &operator[](U8 i) const { return moves[i]; }
+    Move &operator[](int i) { return moves[i]; }
+    const Move &operator[](int i) const { return moves[i]; }
     void operator<<(Move move) {
         moves[index++] = move;
         if (move.IsCapture())

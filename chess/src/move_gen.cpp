@@ -1,3 +1,4 @@
+#include "chess/internal/bitboard.hpp"
 #include "jank/bit/bit.hpp"
 #include <chess/internal/constants.hpp>
 #include <chess/internal/utilities.hpp>
@@ -11,108 +12,93 @@ namespace {
 template <GenType gType> void GenerateKingMoves(const Board &board, Color color, MoveList &moves) {
     constexpr static CastlingBlockSquares castlingBlock[2][2] = {
         {CastlingBlockSquares::KSideWhite, CastlingBlockSquares::QSideWhite},
-        {CastlingBlockSquares::KSideBlack, CastlingBlockSquares::QSideBlack}
-    };
+        {CastlingBlockSquares::KSideBlack, CastlingBlockSquares::QSideBlack}};
     constexpr static CastlingAttackSquares castlingAttack[2][2] = {
         {CastlingAttackSquares::KSideWhite, CastlingAttackSquares::QSideWhite},
-        {CastlingAttackSquares::KSideBlack, CastlingAttackSquares::QSideBlack}
-    };
+        {CastlingAttackSquares::KSideBlack, CastlingAttackSquares::QSideBlack}};
     const Color oppColor = Utilities::GetOppositeColor(color);
     const auto attackedSquares = board.GenerateAttackSquares(board.GetOppColor());
-    const U8 kingPos = jank::bit::lsb(board.GetPiecePos(color, PieceType::King));
+    const Square kingPos = (Square)jank::bit::lsb(board.GetPiecePos(color, PieceType::King));
     if constexpr (gType == GenType::Quiet || gType == GenType::All) {
-        U64 qMoves = BitShift::RINGS[kingPos][1] & ~board.GetOccupiedBB() & ~attackedSquares;
+        BB qMoves = Ring(kingPos, 1) & ~board.GetOccupiedBB() & ~attackedSquares;
         while (qMoves) {
-            U8 move = jank::bit::lsb_pop(qMoves);
-            if (board.IsKingSafe((board.GetOccupiedBB() ^ C64(kingPos) | C64(move)),
-                                 board.GetColorBB(oppColor), C64(move)))
-                moves << Move(MoveType::Quiet, (Square)kingPos, (Square)move);
+            Square move = (Square)jank::bit::lsb_pop(qMoves);
+            if (board.IsKingSafe((board.GetOccupiedBB() ^ kingPos | move),
+                                 board.GetColorBB(oppColor), ToBB(move)))
+                moves << Move(MoveType::Quiet, kingPos, move);
         }
         if (board.IsCastlingAllowed(color, Castling::King) &&
-            !(board.GetOccupiedBB() & (U64)castlingBlock[(int)color][(int)Castling::King - 1]) &&
-            !(attackedSquares & (U64)castlingAttack[(int)color][(int)Castling::King - 1]))
-            moves << Move(
-                MoveType::KingCastle, (Square)kingPos,
-                (Square)jank::bit::lsb(BitShift::Shift(C64(kingPos), Direction::East, 2)));
+            !(board.GetOccupiedBB() & (BB)castlingBlock[(int)color][(int)Castling::King - 1]) &&
+            !(attackedSquares & (BB)castlingAttack[(int)color][(int)Castling::King - 1]))
+            moves << Move(MoveType::KingCastle, kingPos,
+                          (Square)jank::bit::lsb(
+                              Shift<Direction::East>(Shift<Direction::East>(ToBB(kingPos)))));
         if (board.IsCastlingAllowed(color, Castling::Queen) &&
-            !(board.GetOccupiedBB() & (U64)castlingBlock[(int)color][(int)Castling::Queen - 1]) &&
-            !(attackedSquares & (U64)castlingAttack[(int)color][(int)Castling::Queen - 1]))
-            moves << Move(
-                MoveType::QueenCastle, (Square)kingPos,
-                (Square)jank::bit::lsb(BitShift::Shift(C64(kingPos), Direction::West, 2)));
+            !(board.GetOccupiedBB() & (BB)castlingBlock[(int)color][(int)Castling::Queen - 1]) &&
+            !(attackedSquares & (BB)castlingAttack[(int)color][(int)Castling::Queen - 1]))
+            moves << Move(MoveType::QueenCastle, kingPos,
+                          (Square)jank::bit::lsb(
+                              Shift<Direction::West>(Shift<Direction::West>(ToBB(kingPos)))));
     }
     if constexpr (gType == GenType::Attack || gType == GenType::All) {
-        U64 aMoves =
-            BitShift::RINGS[kingPos][1] & board.GetColorBB(oppColor) & ~attackedSquares;
+        BB aMoves = Ring(kingPos, 1) & board.GetColorBB(oppColor) & ~attackedSquares;
         while (aMoves) {
-            U8 move = jank::bit::lsb_pop(aMoves);
-            if (board.IsKingSafe(board.GetOccupiedBB() ^ C64(kingPos),
-                                 board.GetColorBB(oppColor) ^ C64(move), C64(move)))
-                moves << Move(MoveType::Capture, (Square)kingPos, (Square)move);
+            Square move = (Square)jank::bit::lsb_pop(aMoves);
+            if (board.IsKingSafe(board.GetOccupiedBB() ^ kingPos,
+                                 board.GetColorBB(oppColor) ^ move, ToBB(move)))
+                moves << Move(MoveType::Capture, kingPos, move);
         }
     }
 }
 
 // HACK: This needs to be refactored
 template <GenType gType> void GeneratePawnMoves(const Board &board, Color color, MoveList &moves) {
-    constexpr DirectionIndex dir[2] = {DirectionIndex::North, DirectionIndex::South};
+    constexpr Direction dirs[2] = {Direction::North, Direction::South};
+    Direction dir = dirs[(int)color];
     const Color oppColor = Utilities::GetOppositeColor(color);
-    U64 pieces = board.GetPiecePos(color, PieceType::Pawn);
+    BB pieces = board.GetPiecePos(color, PieceType::Pawn);
     while (pieces) {
-        int piece = jank::bit::lsb_pop(pieces);
+        Square piece = (Square)jank::bit::lsb_pop(pieces);
         if constexpr (gType == GenType::Quiet || gType == GenType::All) {
-            U64 to = BitShift::RAYS[(U8)piece][(U8)dir[(U8)color]] &
-                     BitShift::RINGS[(U8)piece][1];
+            BB to = Ray(piece, dir) & Ring(piece, 1);
             if (!(to & board.GetOccupiedBB())) {
-                if (board.IsKingSafe(board.GetOccupiedBB() ^ C64(piece) | to)) {
-                    if (C64(piece) & (U64)PawnRow[(U8)oppColor])
+                if (board.IsKingSafe(board.GetOccupiedBB() ^ piece | to)) {
+                    if (ToBB(piece) & (BB)PawnRow[(int)oppColor])
                         for (const auto prom : PromotionMoves)
-                            moves << Move(
-                                prom, (Square)piece,
-                                (Square)jank::bit::lsb(BitShift::Shift(
-                                    C64(piece), DIRECTIONS[(U8)dir[(U8)color]])));
+                            moves << Move(prom, piece, (Square)jank::bit::lsb(to));
                     else
-                        moves << Move(MoveType::Quiet, (Square)piece,
-                                      (Square)jank::bit::lsb(BitShift::Shift(
-                                          C64(piece), DIRECTIONS[(U8)dir[(U8)color]])));
+                        moves << Move(MoveType::Quiet, piece, (Square)jank::bit::lsb(to));
                 }
-                to = BitShift::RAYS[(U8)piece][(U8)dir[(U8)color]] &
-                     BitShift::RINGS[(U8)piece][2];
-                if (C64(piece) & (U64)PawnRow[(U8)color] &&
-                    !(to & board.GetOccupiedBB()))
-                    if (board.IsKingSafe(board.GetOccupiedBB() ^ C64(piece) | to))
-                        moves << Move(
-                            MoveType::DoublePawnPush, (Square)piece,
-                            (Square)jank::bit::lsb(BitShift::Shift(
-                                C64(piece), DIRECTIONS[(U8)dir[(U8)color]], 2)));
+                to = Ray(piece, dir) & Ring(piece, 2);
+                if (piece & (BB)PawnRow[(int)color] && !(to & board.GetOccupiedBB()))
+                    if (board.IsKingSafe(board.GetOccupiedBB() ^ piece | to))
+                        moves << Move(MoveType::DoublePawnPush, piece,
+                                      (Square)jank::bit::lsb(to));
             }
         }
         if constexpr (gType == GenType::Attack || gType == GenType::All) {
-            U64 attacks =
-                PawnAttacks[(U8)board.GetColor()][piece] & board.GetColorBB(oppColor);
+            BB attacks = PawnAttacks(piece, color) & board.GetColorBB(oppColor);
             while (attacks) {
-                U8 attack = jank::bit::lsb_pop(attacks);
+                Square attack = (Square)jank::bit::lsb_pop(attacks);
                 assert(board.GetType((Square)attack) != PieceType::None);
-                if (board.IsKingSafe((board.GetOccupiedBB() ^ C64(piece)) | C64(attack),
-                                     board.GetColorBB(oppColor) ^ C64(attack))) {
-                    if (C64(piece) & (U64)PawnRow[(U8)oppColor])
+                if (board.IsKingSafe((board.GetOccupiedBB() ^ piece) | attack,
+                                     board.GetColorBB(oppColor) ^ attack)) {
+                    if (piece & (BB)PawnRow[(int)oppColor])
                         for (const auto prom : PromotionCapturesMoves)
-                            moves << Move(prom, (Square)piece, (Square)attack);
+                            moves << Move(prom, piece, attack);
                     else
-                        moves << Move(MoveType::Capture, (Square)piece, (Square)attack);
+                        moves << Move(MoveType::Capture, piece, attack);
                 }
             }
-            U64 attack = (U64)PawnAttacks[(U8)color][piece] &
-                         (U64)((color == Color::White) ? Row::Row6 : Row::Row3) &
-                         (U64)board.GetEP();
+            BB attack = (BB)PawnAttacks(piece, color) &
+                        (BB)((color == Color::White) ? Row::Row6 : Row::Row3) & (BB)board.GetEP();
             if (attack) {
-                U8 sq = jank::bit::lsb_pop(attack);
-                U8 captured = jank::bit::lsb(
-                    BitShift::Shift(C64(sq), DIRECTIONS[(U8)dir[(U8)oppColor]]));
-                if (board.IsKingSafe((board.GetOccupiedBB() ^ C64(piece) ^ C64(captured)) | C64(sq),
-                                     board.GetColorBB(oppColor) ^ C64(captured) |
-                                         C64(sq)))
-                    moves << Move(MoveType::EPCapture, (Square)piece, (Square)sq);
+                Square sq = (Square)jank::bit::lsb_pop(attack);
+                Square captured = (Square)jank::bit::lsb(Shift(ToBB(sq), dirs[(int)oppColor]));
+                if (board.IsKingSafe((board.GetOccupiedBB() ^ piece ^ captured) |
+                                         sq,
+                                     board.GetColorBB(oppColor) ^ captured | sq))
+                    moves << Move(MoveType::EPCapture, piece, sq);
             }
         }
     }
@@ -122,23 +108,23 @@ template <GenType gType> void GeneratePawnMoves(const Board &board, Color color,
 template <PieceType pType> void GenerateQuiet(const Board &board, Color color, MoveList &moves) {
     static_assert(pType != PieceType::King && pType != PieceType::Pawn);
 
-    U64 pieces = board.GetPiecePos(color, pType);
-    while(pieces) {
-        int piece = jank::bit::lsb_pop(pieces);
-        U64 unblocked = BitShift::MOVES[(int)pType][piece];
-        for (U8 offset = 1; offset < 8; ++offset) {
-            U64 ring = BitShift::RINGS[piece][offset];
-            U64 potMoves = ring & unblocked;
-            U64 blockers = potMoves & board.GetOccupiedBB();
+    BB pieces = board.GetPiecePos(color, pType);
+    while (pieces) {
+        Square piece = (Square)jank::bit::lsb_pop(pieces);
+        BB unblocked = Attacks(piece, pType);
+        for (int offset = 1; offset < 8; ++offset) {
+            BB ring = Ring(piece, offset);
+            BB potMoves = ring & unblocked;
+            BB blockers = potMoves & board.GetOccupiedBB();
             potMoves ^= blockers;
 
             while (blockers)
-                unblocked = unblocked & ~BitShift::SQ_RAYS[piece][jank::bit::lsb_pop(blockers)];
+                unblocked = unblocked & ~Ray(piece, (Square)jank::bit::lsb_pop(blockers));
 
             while (potMoves) {
-                const U8 sq = jank::bit::lsb_pop(potMoves);
-                if (board.IsKingSafe((board.GetOccupiedBB() ^ C64(piece) | C64(sq))))
-                    moves << Move(MoveType::Quiet, (Square)piece, (Square)sq);
+                const Square sq = (Square)jank::bit::lsb_pop(potMoves);
+                if (board.IsKingSafe((board.GetOccupiedBB() ^ piece | sq)))
+                    moves << Move(MoveType::Quiet, piece, sq);
             }
         }
     }
@@ -149,22 +135,21 @@ template <PieceType pType> void GenerateAttack(const Board &board, Color color, 
     static_assert(pType != PieceType::King && pType != PieceType::Pawn);
     Color oppColor = Utilities::GetOppositeColor(color);
 
-    U64 pieces = board.GetPiecePos(color, pType);
+    BB pieces = board.GetPiecePos(color, pType);
     while (pieces) {
-        int piece = jank::bit::lsb_pop(pieces);
-        U64 unblocked = BitShift::MOVES[(int)pType][piece];
-        for (U8 offset = 1; offset < 8; ++offset) {
-            U64 ring = BitShift::RINGS[piece][offset];
-            U64 blockers = ring & unblocked & board.GetOccupiedBB();
-            U64 tempBlockers = blockers;
+        Square piece = (Square)jank::bit::lsb_pop(pieces);
+        BB unblocked = Attacks(piece, pType);
+        for (int offset = 1; offset < 8; ++offset) {
+            BB ring = Ring(piece, offset);
+            BB blockers = ring & unblocked & board.GetOccupiedBB();
+            BB tempBlockers = blockers;
             while (tempBlockers)
-                unblocked =
-                    unblocked & ~BitShift::SQ_RAYS[piece][jank::bit::lsb_pop(tempBlockers)];
+                unblocked = unblocked & ~Ray(piece, (Square)jank::bit::lsb_pop(tempBlockers));
             blockers &= board.GetColorBB(oppColor);
             while (blockers) {
-                const U64 blocker = jank::bit::lsb_pop(blockers);
-                if (board.IsKingSafe((board.GetOccupiedBB() ^ C64(piece)) | C64(blocker),
-                                     board.GetColorBB(oppColor) ^ C64(blocker)))
+                const Square blocker = (Square)jank::bit::lsb_pop(blockers);
+                if (board.IsKingSafe((board.GetOccupiedBB() ^ piece) | blocker,
+                                     board.GetColorBB(oppColor) ^ blocker))
                     moves << Move(MoveType::Capture, (Square)piece, (Square)blocker);
             }
         }
@@ -172,7 +157,8 @@ template <PieceType pType> void GenerateAttack(const Board &board, Color color, 
 };
 } // namespace
 
-template <GenType gType, PieceType pType> void Generate(const Board &board, Color color, MoveList &moves) {
+template <GenType gType, PieceType pType>
+void Generate(const Board &board, Color color, MoveList &moves) {
     if constexpr (gType == GenType::All) {
         if constexpr (pType == PieceType::King)
             GenerateKingMoves<GenType::All>(board, color, moves);
@@ -198,7 +184,6 @@ template <GenType gType, PieceType pType> void Generate(const Board &board, Colo
         else
             GenerateQuiet<pType>(board, color, moves);
     }
-
 }
 // clang-format off
 template void Generate<GenType::All, PieceType::Pawn>(const Board &, Color, MoveList &moves);
@@ -220,4 +205,4 @@ template void Generate<GenType::Attack, PieceType::Rook>(const Board &, Color, M
 template void Generate<GenType::Attack, PieceType::Queen>(const Board &, Color, MoveList &moves);
 template void Generate<GenType::Attack, PieceType::King>(const Board &, Color, MoveList &moves);
 // clang-format on
-}; // namespace MoveGen
+}; // namespace Chess::MoveGen

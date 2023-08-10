@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "board.hpp"
-#include "internal/bit_shift.hpp"
 #include "internal/constants.hpp"
 #include "internal/move.hpp"
 #include "internal/move_list.hpp"
