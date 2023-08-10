@@ -14,32 +14,10 @@ These are run on a i5-13600k with a single thread.
 For the purposes here, a "node" is a move done.
 
 ### Perft
-**35m nodes/s**
-
-```
-32% Chess::Board::UndoMove
-32% Chess::Board::DoMove
-27% Chess::MoveGen::GenerateMoves
-```
-As seen, most of the time is spent updating state with each move.
-
-Distribution found with `perf record --call-graph=dwarf ./Benchmark`
+**52m nodes/s**
 
 ### Search
-**6m nodes/s**
-
-```
-41% Chess::MoveGen::GenerateMoves (Quiesce)
-12% Chess::MoveGen::GenerateMoves (Negamax)
-21% Chess::Engine::Evaluation::Eval
-  12% Chess::Engine::Evaluation::EvalPosition
-  9% Chess::Engine::Evaluation::EvalMaterial
-8% Chess::Board::DoMove
-7% Chess::Board::UndoMove
-```
-A noticible thing here is the increase in time spent generating moves $27 \rightarrow 53$. This is caused by alpha-beta pruning, as not all generated moves are done, i.e. some are skipped as the branch is pruned. This is the same reason as to why DoMove and UndoMove has a decrease in time.
-
-Distribution found with `perf record --call-graph=dwarf ./engine 7 "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"`
+**10m nodes/s**
 
 ## Features
 ### State
