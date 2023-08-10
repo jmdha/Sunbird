@@ -112,7 +112,7 @@ MoveList GetOrderdMoves(Board &board, int timeLimit) {
         }
         moves.sort(scores);
         if (std::any_of(scores.begin(), &scores[moves.size()],
-                        [](int val) { return val == MaterialValue::Inf; }))
+                        [](int val) { return std::abs(val) == MaterialValue::Inf; }))
             break;
         std::cout << "info";
         std::cout << " score cp " << scores[0];
