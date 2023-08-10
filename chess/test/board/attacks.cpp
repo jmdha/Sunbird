@@ -17,7 +17,7 @@ int main(int, char* argv[]) {
     std::stringstream(std::string(argv[2])) >> expected;
     Board board = Import::FEN(FEN);
 
-    BB actual = board.GenerateAttackSquares(board.GetColor());
+    BB actual = board.Pos().GenerateAttackSquares(board.Pos().GetTurn());
 
     if (expected == actual)
         exit(EXIT_SUCCESS);

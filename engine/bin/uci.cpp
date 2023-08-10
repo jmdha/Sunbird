@@ -34,7 +34,7 @@ NEXT_TOKEN:
 }
 
 int main() {
-    Board board{};
+    Board board = Import::MoveSequence("");
     while (true) {
         std::string input;
         std::getline(std::cin, input);
@@ -60,7 +60,7 @@ int main() {
             break;
         case Command::position:
             if (tokens[1] == "startpos") {
-                board.Initialize();
+                board = Import::MoveSequence("");
             } else if (tokens[1] == "fen") {
                 auto fenIndex = input.find("fen") + 4;
                 auto movesIndex = input.find("moves");
@@ -88,7 +88,7 @@ int main() {
             }
 
             int searchTime =
-                (board.GetColor() == Color::White) ? whiteTime.value() : blackTime.value();
+                (board.Pos().GetTurn() == Color::White) ? whiteTime.value() : blackTime.value();
             searchTime *= 0.05;
             Move move = Engine::Negamax::GetOrderdMoves(board, searchTime)[0];
             std::cout << "bestmove " << move.ToString() << '\n';

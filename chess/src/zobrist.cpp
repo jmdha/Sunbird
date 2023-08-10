@@ -31,15 +31,14 @@ constexpr std::array<uint64_t, l> GenerateHashes() {
 constexpr std::array<uint64_t, SQUARE_HASH_COUNT> hashes = GenerateHashes<SQUARE_HASH_COUNT>();
 } // namespace
 
-void Zobrist::FlipSquare(Square square, PieceType type, Color color) {
-    hash ^= hashes[(64 * 6) * (int)color + 64 * (int)type + (int)square];
+uint64_t Zobrist::FlipSquare(uint64_t hash, Square square, PieceType type, Color color) {
+    return hash ^ hashes[(64 * 6) * (int)color + 64 * (int)type + (int)square];
 }
 
-void Zobrist::FlipCastling(Color col, Castling side) {
-    hash ^= hashes[SQUARE_HASH_COUNT + 2 * (int)col + (int)side];
+uint64_t Zobrist::FlipCastling(uint64_t hash, Color col, Castling side) {
+    return hash ^ hashes[SQUARE_HASH_COUNT + 2 * (int)col + (int)side];
 }
 
-void Zobrist::FlipEnPassant(Column col) {
-    hash ^= hashes[SQUARE_HASH_COUNT + 4 + Utilities::GetColumnIndex(col)];
+uint64_t Zobrist::FlipEnPassant(uint64_t hash, Column col) {
+    return hash ^ hashes[SQUARE_HASH_COUNT + 4 + Utilities::GetColumnIndex(col)];
 }
-

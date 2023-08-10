@@ -59,7 +59,7 @@ std::vector<std::string> Tokenize(const std::string &game) {
 
 // Parses a move from a token
 std::optional<Move> ParseToken(const Board &board, std::string token) {
-    Color color = board.GetColor();
+    Color color = board.Pos().GetTurn();
 
     // Somtimes a move is preceded by a number
     // I don't what the number means, and lichess import seemingly removes it
@@ -127,7 +127,7 @@ std::optional<Move> ParseToken(const Board &board, std::string token) {
     }
     if (token.size() == 2)
         toSquare = Utilities::GetSquare(token[0], token[1]);
-    MoveList tempMoves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, color, pType);
+    MoveList tempMoves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board.Pos(), color, pType);
     for (const auto tempMove : tempMoves) {
         if (fromSquare.has_value() && tempMove.GetFrom() != fromSquare)
             continue;
@@ -165,8 +165,7 @@ std::optional<Move> ParseToken(const Board &board, std::string token) {
 }
 } // namespace
 Board Algebraic(std::string game) {
-    Board board;
-    board.Initialize();
+    Board board = Import::FEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
     std::string tempGame = game;
     Clean(tempGame);
@@ -177,15 +176,14 @@ Board Algebraic(std::string game) {
         std::optional<Move> move = ParseToken(board, token);
         if (!move.has_value())
             throw std::logic_error("No matching move for \"" + token + "\" in game \"" + game + "\"");
-        board.DoMove(move.value());
+        board.MakeMove(move.value());
     }
 
     return board;
 }
 
 void Algebraic(std::string game, std::function<void(const Board&)> callback) {
-    Board board;
-    board.Initialize();
+    Board board = Import::FEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
     std::string tempGame = game;
     Clean(tempGame);
@@ -196,7 +194,7 @@ void Algebraic(std::string game, std::function<void(const Board&)> callback) {
         std::optional<Move> move = ParseToken(board, token);
         if (!move.has_value())
             throw std::logic_error("No matching move for \"" + token + "\" in game \"" + game + "\"");
-        board.DoMove(move.value());
+        board.MakeMove(move.value());
         callback(board);
     }
 }

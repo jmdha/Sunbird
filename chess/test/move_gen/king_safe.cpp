@@ -11,7 +11,7 @@ int main(int, char *argv[]) {
     Board board = Import::FEN((std::string)argv[1]);
     int expectedBool = std::atoi(argv[2]);
 
-    int kingSafe = board.IsKingSafe();
+    int kingSafe = board.Pos().IsKingSafe();
 
     if (expectedBool == kingSafe)
         exit(EXIT_SUCCESS);

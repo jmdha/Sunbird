@@ -2,28 +2,13 @@
 #define CHESS_ZOBRIST
 
 #include <unordered_map>
-#include <tsl/robin_map.h>
 
 #include "constants.hpp"
 
-namespace Chess {
-class Zobrist {
-public:
-    void FlipSquare(Square square, PieceType type, Color color);
-    void FlipCastling(Color col, Castling side);
-    void FlipEnPassant(Column col);
-    inline void IncHash() { hashOccurances[hash]++; }
-    inline void DecHash() {
-        if (hashOccurances.at(hash)-- == 1)
-            hashOccurances.erase(hash);
-    }
-    inline bool IsThreefoldRep() const { return hashOccurances.at(hash) > 2; }
-    inline uint64_t GetHash() const { return hash; }
-
-private:
-    uint64_t hash = 0;
-    tsl::robin_map<uint64_t, int> hashOccurances;
-};
+namespace Chess::Zobrist {
+    uint64_t FlipSquare(uint64_t hash, Square square, PieceType type, Color color);
+    uint64_t FlipCastling(uint64_t hash, Color col, Castling side);
+    uint64_t FlipEnPassant(uint64_t hash, Column col);
 } // namespace Chess
 
 #endif // CHESS_ZOBRIST

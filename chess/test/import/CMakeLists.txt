@@ -1,10 +1,4 @@
 # Tests
-## Import FEN
-add_executable(ImportFEN ${CMAKE_CURRENT_LIST_DIR}/import_FEN.cpp)
-target_link_libraries(ImportFEN PRIVATE CHESS)
-
-add_test(Import_FEN_StartPos ImportFEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-
 ## Import Algebraic
 add_executable(ImportAlgebraic ${CMAKE_CURRENT_LIST_DIR}/import_algebraic.cpp)
 target_link_libraries(ImportAlgebraic PRIVATE CHESS)

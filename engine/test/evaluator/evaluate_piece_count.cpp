@@ -12,7 +12,7 @@ int main(int, char *argv[]) {
     Board board = Import::FEN((std::string)argv[2]);
     int expectedEval = std::atoi(argv[1]);
 
-    int eval = Engine::Evaluation::EvalMaterial(board);
+    int eval = Engine::Evaluation::EvalMaterial(board.Pos());
 
     if (eval == expectedEval)
         exit(EXIT_SUCCESS);

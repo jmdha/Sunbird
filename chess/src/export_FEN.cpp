@@ -1,14 +1,14 @@
 #include <chess/export.hpp>
 
 namespace Chess::Export {
-std::string FEN(const Board &board) {
+std::string FEN(const Position &pos) {
     std::string fen = "";
 
     for (int y = HEIGHT - 1; y >= 0; --y) {
         int count = 0;
         for (int x = 0; x < WIDTH; ++x) {
             const Square sq = Utilities::GetSquare(x, y);
-            const PieceType piece = board.GetType(sq);
+            const PieceType piece = pos.GetType(sq);
             if (piece == PieceType::None)
                 ++count;
             else {
@@ -16,7 +16,7 @@ std::string FEN(const Board &board) {
                     fen += std::to_string(count);
                     count = 0;
                 }
-                const Color color = board.GetColor(sq);
+                const Color color = pos.GetColor(sq);
                 fen += (char)Utilities::GetPieceChar(piece, color);
             }
         }
@@ -26,7 +26,7 @@ std::string FEN(const Board &board) {
             fen += "/";
     }
 
-    if (board.GetColor() == Color::White)
+    if (pos.GetTurn() == Color::White)
         fen += " w ";
     else
         fen += " b ";
@@ -36,13 +36,13 @@ std::string FEN(const Board &board) {
         fen += c;
         anyCastling = true;
     };
-    if (board.IsCastlingAllowed(Color::White, Castling::King))
+    if (pos.AllowsCastling(Castling::King, Color::White))
         addCastlingToFen('K');
-    if (board.IsCastlingAllowed(Color::White, Castling::Queen))
+    if (pos.AllowsCastling(Castling::Queen, Color::White))
         addCastlingToFen('Q');
-    if (board.IsCastlingAllowed(Color::Black, Castling::King))
+    if (pos.AllowsCastling(Castling::King, Color::Black))
         addCastlingToFen('k');
-    if (board.IsCastlingAllowed(Color::Black, Castling::Queen))
+    if (pos.AllowsCastling(Castling::Queen, Color::Black))
         addCastlingToFen('q');
     if (!anyCastling)
         fen += '-';

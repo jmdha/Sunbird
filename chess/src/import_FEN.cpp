@@ -1,9 +1,10 @@
+#include "chess/internal/position.hpp"
 #include <chess/import.hpp>
 #include <chess/internal/utilities.hpp>
 
 namespace Chess::Import {
 Board FEN(std::string FEN) {
-    Board board;
+    Position pos;
 
     // import position
     for (int y = HEIGHT - 1; y >= 0; y--) {
@@ -11,9 +12,11 @@ Board FEN(std::string FEN) {
         while (remainingSquares > 0) {
             if (isdigit(FEN[0]))
                 remainingSquares -= (int)FEN[0] - 48;
-            else
-                board.PlacePiece(Utilities::GetSquare(WIDTH - (remainingSquares--), y),
-                                 (PieceChar)FEN[0]);
+            else {
+                const PieceType pType = Utilities::GetPieceType((PieceChar)FEN[0]);
+                const Color pColor = Utilities::GetPieceColor((PieceChar)FEN[0]);
+                pos.PlacePiece(Utilities::GetSquare(WIDTH - (remainingSquares--), y), pType, pColor);
+            }
 
             FEN.erase(0, 1);
         }
@@ -21,7 +24,7 @@ Board FEN(std::string FEN) {
     }
 
     // import turn
-    board.SetTurn(Utilities::GetTurn(FEN[0]));
+    pos.SetTurn(Utilities::GetTurn(FEN[0]));
     FEN.erase(0, 2);
 
     std::array<Castling, 2> castling{Castling::None, Castling::None};
@@ -43,14 +46,15 @@ Board FEN(std::string FEN) {
         FEN.erase(0, 1);
     }
     FEN.erase(0, 1);
-    board.PushCastling(castling);
+    pos.SetCastling(castling[(int)Color::White], Color::White);
+    pos.SetCastling(castling[(int)Color::Black], Color::Black);
 
     // import en-passant
     if (FEN.size() > 0 && FEN[0] != '-' && FEN[0] != ' ') {
         auto sq = Utilities::GetSquare(FEN[0], FEN[1]);
-        board.PushEP(Utilities::GetColumn(sq));
+        pos.SetEP(Utilities::GetColumn(sq));
     }
 
-    return board;
+    return Board(pos);
 }
 } // namespace Chess::Import

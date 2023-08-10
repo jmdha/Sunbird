@@ -16,6 +16,7 @@ set(CHESS_HEADERS
     ${CHESS_INCLUDE_BUILD_DIR}/internal/move.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/internal/move_list.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/internal/utilities.hpp
+    ${CHESS_INCLUDE_BUILD_DIR}/internal/position.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/internal/zobrist.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/board.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/import.hpp
@@ -33,6 +34,7 @@ set(CHESS_SRC
     ${CHESS_SRC_DIR}/import_algebraic.cpp
     ${CHESS_SRC_DIR}/import_sequence.cpp
     ${CHESS_SRC_DIR}/export_FEN.cpp
+    ${CHESS_SRC_DIR}/position.cpp
     ${CHESS_SRC_DIR}/zobrist.cpp
     )
 
