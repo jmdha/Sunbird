@@ -42,7 +42,7 @@ int Negamax(Board &board, int depth, int alpha, int beta) {
 
     MoveList moves =
         MoveGen::GenerateMoves<MoveGen::GenType::All>(board.Pos(), board.Pos().GetTurn());
-    if (moves.empty() /* || board.IsThreefoldRep()*/)
+    if (moves.empty() || board.IsThreefoldRepetition())
         return Evaluation::EvalNoMove(board.Pos().IsKingSafe());
 
     for (auto move : moves) {

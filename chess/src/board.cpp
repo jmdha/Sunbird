@@ -8,7 +8,14 @@ using jank::bit::lsb;
 using namespace Chess;
 Board::Board(Position position) { _positions.push(std::move(position)); }
 
-const Position &Board::Pos() const noexcept { return _positions.top(); }
+bool Board::IsThreefoldRepetition() const noexcept {
+    uint64_t hash = Pos().GetHash();
+    int count = 1;
+    for (int i = 0; i < _positions.size(); i++)
+        if (hash == _positions.at(i).GetHash())
+            count++;
+    return (count >= 3);
+}
 
 void Board::MakeMove(const Move &move) noexcept {
     Position pos = Pos();

@@ -21,7 +21,8 @@ public:
 
     // access
     
-    const Position& Pos() const noexcept;
+    inline const Position& Pos() const noexcept;
+    bool IsThreefoldRepetition() const noexcept;
 
     // modifiers
     
@@ -31,6 +32,11 @@ public:
 private:
     jank::container::fixed_stack<Position, MAX_PLY> _positions;
 };
+
+inline const Position& Board::Pos() const noexcept {
+    return _positions.top();
+}
+
 } // namespace Chess
 
 #endif // CHESS_BOARD
