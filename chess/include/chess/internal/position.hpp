@@ -47,15 +47,8 @@ private:
     Column _EP = Column::None;
     uint64_t _hash = 0;
     Castling _castling[COLORCOUNT]{Castling::None, Castling::None};
-    std::array<PieceType, SQUARECOUNT> _pieceBoard = [] {
-        auto a = decltype(_pieceBoard){};
-        for (auto square : SQUARES)
-            a[(int)square] = PieceType::None;
-        return a;
-    }();
     BB _pieceBB[PIECECOUNT]{0};
     BB _colorBB[COLORCOUNT]{0};
-    BB _occupied{0};
 };
 
 inline Color Position::GetTurn() const noexcept { return _turn; }
@@ -67,7 +60,10 @@ inline bool Position::AllowsCastling(Castling castling, Color color) const noexc
 }
 inline PieceType Position::GetType(Square square) const noexcept {
     assert(square != Square::None);
-    return _pieceBoard[(int)square];
+    for (const auto pType : PIECES)
+        if (GetPieces(pType) & square)
+            return pType;
+    return PieceType::None;
 }
 inline Color Position::GetColor(Square square) const noexcept {
     assert(square != Square::None);
@@ -83,7 +79,7 @@ inline int Position::GetPieceCount(Color color, PieceType pType) const noexcept 
     assert(pType != PieceType::None);
     return jank::bit::popcount(GetPieces(color, pType));
 }
-inline BB Position::GetPieces() const noexcept { return _occupied; }
+inline BB Position::GetPieces() const noexcept { return _colorBB[0] | _colorBB[1]; }
 inline BB Position::GetPieces(PieceType pType) const noexcept {
     assert(pType != PieceType::None);
     return _pieceBB[(int)pType];
@@ -119,10 +115,7 @@ inline void Position::PlacePiece(Square square, PieceType pType, Color color) no
     assert(color != Color::None);
     _pieceBB[(int)pType] |= square;
     _colorBB[(int)color] |= square;
-    _occupied |= square;
-    _pieceBoard[(int)square] = pType;
     _hash = Zobrist::FlipSquare(_hash, square, pType, color);
-    assert(_occupied == (_colorBB[0] | _colorBB[1]));
 }
 inline void Position::RemovePiece(Square square, PieceType pType, Color color) noexcept {
     assert(square != Square::None);
@@ -130,10 +123,7 @@ inline void Position::RemovePiece(Square square, PieceType pType, Color color) n
     assert(color != Color::None);
     _pieceBB[(int)pType] ^= square;
     _colorBB[(int)color] ^= square;
-    _occupied ^= square;
-    _pieceBoard[(int)square] = PieceType::None;
     _hash = Zobrist::FlipSquare(_hash, square, pType, color);
-    assert(_occupied == (_colorBB[0] | _colorBB[1]));
 }
 } // namespace Chess
 
