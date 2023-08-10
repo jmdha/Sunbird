@@ -13,7 +13,7 @@ int main(int, char* argv[]) {
 
     Board board = Import::Algebraic(moves);
 
-    std::string actualFEN = Export::FEN(board);
+    std::string actualFEN = Export::FEN(board.Pos());
 
     if (expectedFEN == actualFEN)
         exit(EXIT_SUCCESS);  

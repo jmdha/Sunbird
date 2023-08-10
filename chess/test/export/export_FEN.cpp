@@ -12,7 +12,7 @@ int main(int, char* argv[]) {
     std::string expectedFEN = std::string(argv[1]);
     Board board = Import::FEN(expectedFEN);
 
-    std::string actualFEN = Export::FEN(board);
+    std::string actualFEN = Export::FEN(board.Pos());
     
     if (expectedFEN == actualFEN)
         exit(EXIT_SUCCESS);  

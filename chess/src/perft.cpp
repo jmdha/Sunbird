@@ -5,15 +5,13 @@ namespace {
 int Run(Board &board, int depth) {
     if (depth == 0)
         return 1;
-    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
+    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board.Pos(), board.Pos().GetTurn());
     int leafCount = 0;
 
     for (auto move : moves) {
-        auto hash = board.GetHash();
-        board.DoMove(move);
+        board.MakeMove(move);
         leafCount += Run(board, depth - 1);
-        board.UndoMove(move);
-        assert(hash == board.GetHash());
+        board.UndoMove();
     }
 
     return leafCount;
@@ -25,12 +23,12 @@ int RunFromPosition(Board &board, int depth) { return Run(board, depth); }
 int PerftDivide(Board &board, int depth) {
     int total = 0;
 
-    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board, board.GetColor());
+    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board.Pos(), board.Pos().GetTurn());
 
     for (auto move : moves) {
-        board.DoMove(move);
+        board.MakeMove(move);
         int count = Run(board, depth - 1);
-        board.UndoMove(move);
+        board.UndoMove();
         printf("%s: %d\n", move.ToString().c_str(), count);
         total += count;
     }

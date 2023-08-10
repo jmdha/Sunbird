@@ -12,9 +12,9 @@ void MoveSequence(Board &board, std::string moves) {
         if (moves[i] == ' ' || i == (int)moves.length() - 1) {
             Square fromSquare = Utilities::GetSquare(move[0], move[1]);
             Square toSquare = Utilities::GetSquare(move[2], move[3]);
-            PieceType fromType = board.GetType(fromSquare);
-            PieceType toType = board.GetType(toSquare);
-            Color fromColor = board.GetColor(fromSquare);
+            PieceType fromType = board.Pos().GetType(fromSquare);
+            PieceType toType = board.Pos().GetType(toSquare);
+            Color fromColor = board.Pos().GetColor(fromSquare);
             MoveType type;
             // Is castling?
             //// Is kingside castle
@@ -68,15 +68,14 @@ void MoveSequence(Board &board, std::string moves) {
             else
                 type = MoveType::Quiet;
             Move tempMove = Move(type, fromSquare, toSquare);
-            board.DoMove(tempMove);
+            board.MakeMove(tempMove);
             move = "";
         }
     }
 }
 
 Board MoveSequence(std::string moves) {
-    Board board;
-    board.Initialize();
+    Board board = Import::FEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     MoveSequence(board, moves);
     return board;
 }

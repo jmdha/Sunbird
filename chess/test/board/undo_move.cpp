@@ -27,8 +27,8 @@ int main(int, char* argv[]) {
         Square fromSquare = Utilities::GetSquare(sMove[0], sMove[1]);
         Square toSquare = Utilities::GetSquare(sMove[2], sMove[3]);
 
-        PieceType fromPiece = board.GetType(fromSquare);
-        PieceType toPiece = board.GetType(toSquare);
+        PieceType fromPiece = board.Pos().GetType(fromSquare);
+        PieceType toPiece = board.Pos().GetType(toSquare);
         if (fromPiece == PieceType::Pawn && Utilities::GetColumn(fromSquare) != Utilities::GetColumn(toSquare) && toPiece == PieceType::None)
             move = Move(MoveType::EPCapture, fromSquare, toSquare);
         else if (fromPiece == PieceType::Pawn && sMove.size() == 5) {
@@ -47,10 +47,10 @@ int main(int, char* argv[]) {
         }
     }
 
-    board.DoMove(move);
-    board.UndoMove(move);
+    board.MakeMove(move);
+    board.UndoMove();
 
-    if (priorBoard.GetHash() == board.GetHash())
+    if (priorBoard.Pos().GetHash() == board.Pos().GetHash())
         exit(EXIT_SUCCESS);
     else
         throw std::logic_error("Unexpected changes from do-undo move");

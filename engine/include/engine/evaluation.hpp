@@ -6,10 +6,10 @@
 #include <chess/internal/constants.hpp>
 
 namespace Chess::Engine::Evaluation {
-int EvalMaterial(const Board &board);
-int EvalPosition(const Board &board);
-int EvalPosition(const Board &board, Color color);
-int Eval(const Board &board);
+int EvalMaterial(const Position &pos);
+int EvalPosition(const Position &pos);
+int EvalPosition(const Position &pos, Color color);
+int Eval(const Position &pos);
 int EvalNoMove(bool isKingSafe);
 } // namespace Chess::Engine::Evaluation
 

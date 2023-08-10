@@ -9,7 +9,7 @@ namespace Chess::MoveGen {
 namespace {
 
 // HACK: This needs to be refactored
-template <GenType gType> void GenerateKingMoves(const Board &board, Color color, MoveList &moves) {
+template <GenType gType> void GenerateKingMoves(const Position &pos, Color color, MoveList &moves) {
     constexpr static CastlingBlockSquares castlingBlock[2][2] = {
         {CastlingBlockSquares::KSideWhite, CastlingBlockSquares::QSideWhite},
         {CastlingBlockSquares::KSideBlack, CastlingBlockSquares::QSideBlack}};
@@ -17,52 +17,52 @@ template <GenType gType> void GenerateKingMoves(const Board &board, Color color,
         {CastlingAttackSquares::KSideWhite, CastlingAttackSquares::QSideWhite},
         {CastlingAttackSquares::KSideBlack, CastlingAttackSquares::QSideBlack}};
     const Color oppColor = Utilities::GetOppositeColor(color);
-    const auto attackedSquares = board.GenerateAttackSquares(board.GetOppColor());
-    const Square kingPos = (Square)jank::bit::lsb(board.GetPiecePos(color, PieceType::King));
+    const auto attackedSquares = pos.GenerateAttackSquares(oppColor);
+    const Square kingPos = (Square)jank::bit::lsb(pos.GetPieces(color, PieceType::King));
     if constexpr (gType == GenType::Quiet || gType == GenType::All) {
-        BB qMoves = Ring(kingPos, 1) & ~board.GetOccupiedBB() & ~attackedSquares;
+        BB qMoves = Ring(kingPos, 1) & ~pos.GetPieces() & ~attackedSquares;
         while (qMoves) {
             Square move = (Square)jank::bit::lsb_pop(qMoves);
-            if (board.IsKingSafe((board.GetOccupiedBB() ^ kingPos | move),
-                                 board.GetColorBB(oppColor), ToBB(move)))
+            if (pos.IsKingSafe((pos.GetPieces() ^ kingPos | move),
+                                 pos.GetPieces(oppColor), ToBB(move)))
                 moves << Move(MoveType::Quiet, kingPos, move);
         }
-        if (board.IsCastlingAllowed(color, Castling::King) &&
-            !(board.GetOccupiedBB() & (BB)castlingBlock[(int)color][(int)Castling::King - 1]) &&
+        if (pos.AllowsCastling(Castling::King, color) &&
+            !(pos.GetPieces() & (BB)castlingBlock[(int)color][(int)Castling::King - 1]) &&
             !(attackedSquares & (BB)castlingAttack[(int)color][(int)Castling::King - 1]))
             moves << Move(MoveType::KingCastle, kingPos,
                           (Square)jank::bit::lsb(
                               Shift<Direction::East>(Shift<Direction::East>(ToBB(kingPos)))));
-        if (board.IsCastlingAllowed(color, Castling::Queen) &&
-            !(board.GetOccupiedBB() & (BB)castlingBlock[(int)color][(int)Castling::Queen - 1]) &&
+        if (pos.AllowsCastling(Castling::Queen, color) &&
+            !(pos.GetPieces() & (BB)castlingBlock[(int)color][(int)Castling::Queen - 1]) &&
             !(attackedSquares & (BB)castlingAttack[(int)color][(int)Castling::Queen - 1]))
             moves << Move(MoveType::QueenCastle, kingPos,
                           (Square)jank::bit::lsb(
                               Shift<Direction::West>(Shift<Direction::West>(ToBB(kingPos)))));
     }
     if constexpr (gType == GenType::Attack || gType == GenType::All) {
-        BB aMoves = Ring(kingPos, 1) & board.GetColorBB(oppColor) & ~attackedSquares;
+        BB aMoves = Ring(kingPos, 1) & pos.GetPieces(oppColor) & ~attackedSquares;
         while (aMoves) {
             Square move = (Square)jank::bit::lsb_pop(aMoves);
-            if (board.IsKingSafe(board.GetOccupiedBB() ^ kingPos,
-                                 board.GetColorBB(oppColor) ^ move, ToBB(move)))
+            if (pos.IsKingSafe(pos.GetPieces() ^ kingPos,
+                                 pos.GetPieces(oppColor) ^ move, ToBB(move)))
                 moves << Move(MoveType::Capture, kingPos, move);
         }
     }
 }
 
 // HACK: This needs to be refactored
-template <GenType gType> void GeneratePawnMoves(const Board &board, Color color, MoveList &moves) {
+template <GenType gType> void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
     constexpr Direction dirs[2] = {Direction::North, Direction::South};
     Direction dir = dirs[(int)color];
     const Color oppColor = Utilities::GetOppositeColor(color);
-    BB pieces = board.GetPiecePos(color, PieceType::Pawn);
+    BB pieces = pos.GetPieces(color, PieceType::Pawn);
     while (pieces) {
         Square piece = (Square)jank::bit::lsb_pop(pieces);
         if constexpr (gType == GenType::Quiet || gType == GenType::All) {
             BB to = Ray(piece, dir) & Ring(piece, 1);
-            if (!(to & board.GetOccupiedBB())) {
-                if (board.IsKingSafe(board.GetOccupiedBB() ^ piece | to)) {
+            if (!(to & pos.GetPieces())) {
+                if (pos.IsKingSafe(pos.GetPieces() ^ piece | to)) {
                     if (ToBB(piece) & (BB)PawnRow[(int)oppColor])
                         for (const auto prom : PromotionMoves)
                             moves << Move(prom, piece, (Square)jank::bit::lsb(to));
@@ -70,19 +70,19 @@ template <GenType gType> void GeneratePawnMoves(const Board &board, Color color,
                         moves << Move(MoveType::Quiet, piece, (Square)jank::bit::lsb(to));
                 }
                 to = Ray(piece, dir) & Ring(piece, 2);
-                if (piece & (BB)PawnRow[(int)color] && !(to & board.GetOccupiedBB()))
-                    if (board.IsKingSafe(board.GetOccupiedBB() ^ piece | to))
+                if (piece & (BB)PawnRow[(int)color] && !(to & pos.GetPieces()))
+                    if (pos.IsKingSafe(pos.GetPieces() ^ piece | to))
                         moves << Move(MoveType::DoublePawnPush, piece,
                                       (Square)jank::bit::lsb(to));
             }
         }
         if constexpr (gType == GenType::Attack || gType == GenType::All) {
-            BB attacks = PawnAttacks(piece, color) & board.GetColorBB(oppColor);
+            BB attacks = PawnAttacks(piece, color) & pos.GetPieces(oppColor);
             while (attacks) {
                 Square attack = (Square)jank::bit::lsb_pop(attacks);
-                assert(board.GetType((Square)attack) != PieceType::None);
-                if (board.IsKingSafe((board.GetOccupiedBB() ^ piece) | attack,
-                                     board.GetColorBB(oppColor) ^ attack)) {
+                assert(pos.GetType((Square)attack) != PieceType::None);
+                if (pos.IsKingSafe((pos.GetPieces() ^ piece) | attack,
+                                     pos.GetPieces(oppColor) ^ attack)) {
                     if (piece & (BB)PawnRow[(int)oppColor])
                         for (const auto prom : PromotionCapturesMoves)
                             moves << Move(prom, piece, attack);
@@ -91,13 +91,13 @@ template <GenType gType> void GeneratePawnMoves(const Board &board, Color color,
                 }
             }
             BB attack = (BB)PawnAttacks(piece, color) &
-                        (BB)((color == Color::White) ? Row::Row6 : Row::Row3) & (BB)board.GetEP();
+                        (BB)((color == Color::White) ? Row::Row6 : Row::Row3) & (BB)pos.GetEP();
             if (attack) {
                 Square sq = (Square)jank::bit::lsb_pop(attack);
                 Square captured = (Square)jank::bit::lsb(Shift(ToBB(sq), dirs[(int)oppColor]));
-                if (board.IsKingSafe((board.GetOccupiedBB() ^ piece ^ captured) |
+                if (pos.IsKingSafe((pos.GetPieces() ^ piece ^ captured) |
                                          sq,
-                                     board.GetColorBB(oppColor) ^ captured | sq))
+                                     pos.GetPieces(oppColor) ^ captured | sq))
                     moves << Move(MoveType::EPCapture, piece, sq);
             }
         }
@@ -105,17 +105,17 @@ template <GenType gType> void GeneratePawnMoves(const Board &board, Color color,
 }
 
 // Generates possible quiet moves for pieces of type pType
-template <PieceType pType> void GenerateQuiet(const Board &board, Color color, MoveList &moves) {
+template <PieceType pType> void GenerateQuiet(const Position &pos, Color color, MoveList &moves) {
     static_assert(pType != PieceType::King && pType != PieceType::Pawn);
 
-    BB pieces = board.GetPiecePos(color, pType);
+    BB pieces = pos.GetPieces(color, pType);
     while (pieces) {
         Square piece = (Square)jank::bit::lsb_pop(pieces);
         BB unblocked = Attacks(piece, pType);
         for (int offset = 1; offset < 8; ++offset) {
             BB ring = Ring(piece, offset);
             BB potMoves = ring & unblocked;
-            BB blockers = potMoves & board.GetOccupiedBB();
+            BB blockers = potMoves & pos.GetPieces();
             potMoves ^= blockers;
 
             while (blockers)
@@ -123,7 +123,7 @@ template <PieceType pType> void GenerateQuiet(const Board &board, Color color, M
 
             while (potMoves) {
                 const Square sq = (Square)jank::bit::lsb_pop(potMoves);
-                if (board.IsKingSafe((board.GetOccupiedBB() ^ piece | sq)))
+                if (pos.IsKingSafe((pos.GetPieces() ^ piece | sq)))
                     moves << Move(MoveType::Quiet, piece, sq);
             }
         }
@@ -131,25 +131,25 @@ template <PieceType pType> void GenerateQuiet(const Board &board, Color color, M
 };
 
 // Generates possible attack moves for pieces of type pType
-template <PieceType pType> void GenerateAttack(const Board &board, Color color, MoveList &moves) {
+template <PieceType pType> void GenerateAttack(const Position &pos, Color color, MoveList &moves) {
     static_assert(pType != PieceType::King && pType != PieceType::Pawn);
     Color oppColor = Utilities::GetOppositeColor(color);
 
-    BB pieces = board.GetPiecePos(color, pType);
+    BB pieces = pos.GetPieces(color, pType);
     while (pieces) {
         Square piece = (Square)jank::bit::lsb_pop(pieces);
         BB unblocked = Attacks(piece, pType);
         for (int offset = 1; offset < 8; ++offset) {
             BB ring = Ring(piece, offset);
-            BB blockers = ring & unblocked & board.GetOccupiedBB();
+            BB blockers = ring & unblocked & pos.GetPieces();
             BB tempBlockers = blockers;
             while (tempBlockers)
                 unblocked = unblocked & ~Ray(piece, (Square)jank::bit::lsb_pop(tempBlockers));
-            blockers &= board.GetColorBB(oppColor);
+            blockers &= pos.GetPieces(oppColor);
             while (blockers) {
                 const Square blocker = (Square)jank::bit::lsb_pop(blockers);
-                if (board.IsKingSafe((board.GetOccupiedBB() ^ piece) | blocker,
-                                     board.GetColorBB(oppColor) ^ blocker))
+                if (pos.IsKingSafe((pos.GetPieces() ^ piece) | blocker,
+                                     pos.GetPieces(oppColor) ^ blocker))
                     moves << Move(MoveType::Capture, (Square)piece, (Square)blocker);
             }
         }
@@ -158,51 +158,51 @@ template <PieceType pType> void GenerateAttack(const Board &board, Color color, 
 } // namespace
 
 template <GenType gType, PieceType pType>
-void Generate(const Board &board, Color color, MoveList &moves) {
+void Generate(const Position &pos, Color color, MoveList &moves) {
     if constexpr (gType == GenType::All) {
         if constexpr (pType == PieceType::King)
-            GenerateKingMoves<GenType::All>(board, color, moves);
+            GenerateKingMoves<GenType::All>(pos, color, moves);
         else if constexpr (pType == PieceType::Pawn)
-            GeneratePawnMoves<GenType::All>(board, color, moves);
+            GeneratePawnMoves<GenType::All>(pos, color, moves);
         else {
-            GenerateAttack<pType>(board, color, moves);
-            GenerateQuiet<pType>(board, color, moves);
+            GenerateAttack<pType>(pos, color, moves);
+            GenerateQuiet<pType>(pos, color, moves);
         }
 
     } else if constexpr (gType == GenType::Attack) {
         if constexpr (pType == PieceType::King)
-            GenerateKingMoves<GenType::Attack>(board, color, moves);
+            GenerateKingMoves<GenType::Attack>(pos, color, moves);
         else if constexpr (pType == PieceType::Pawn)
-            GeneratePawnMoves<GenType::Attack>(board, color, moves);
+            GeneratePawnMoves<GenType::Attack>(pos, color, moves);
         else
-            GenerateAttack<pType>(board, color, moves);
+            GenerateAttack<pType>(pos, color, moves);
     } else if constexpr (gType == GenType::Quiet) {
         if constexpr (pType == PieceType::King)
-            GenerateKingMoves<GenType::Quiet>(board, color, moves);
+            GenerateKingMoves<GenType::Quiet>(pos, color, moves);
         else if constexpr (pType == PieceType::Pawn)
-            GeneratePawnMoves<GenType::Quiet>(board, color, moves);
+            GeneratePawnMoves<GenType::Quiet>(pos, color, moves);
         else
-            GenerateQuiet<pType>(board, color, moves);
+            GenerateQuiet<pType>(pos, color, moves);
     }
 }
 // clang-format off
-template void Generate<GenType::All, PieceType::Pawn>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::All, PieceType::Knight>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::All, PieceType::Bishop>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::All, PieceType::Rook>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::All, PieceType::Queen>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::All, PieceType::King>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::Quiet, PieceType::Pawn>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::Quiet, PieceType::Knight>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::Quiet, PieceType::Bishop>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::Quiet, PieceType::Rook>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::Quiet, PieceType::Queen>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::Quiet, PieceType::King>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::Attack, PieceType::Pawn>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::Attack, PieceType::Knight>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::Attack, PieceType::Bishop>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::Attack, PieceType::Rook>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::Attack, PieceType::Queen>(const Board &, Color, MoveList &moves);
-template void Generate<GenType::Attack, PieceType::King>(const Board &, Color, MoveList &moves);
+template void Generate<GenType::All, PieceType::Pawn>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::All, PieceType::Knight>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::All, PieceType::Bishop>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::All, PieceType::Rook>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::All, PieceType::Queen>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::All, PieceType::King>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::Quiet, PieceType::Pawn>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::Quiet, PieceType::Knight>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::Quiet, PieceType::Bishop>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::Quiet, PieceType::Rook>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::Quiet, PieceType::Queen>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::Quiet, PieceType::King>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::Attack, PieceType::Pawn>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::Attack, PieceType::Knight>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::Attack, PieceType::Bishop>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::Attack, PieceType::Rook>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::Attack, PieceType::Queen>(const Position &, Color, MoveList &moves);
+template void Generate<GenType::Attack, PieceType::King>(const Position &, Color, MoveList &moves);
 // clang-format on
 }; // namespace Chess::MoveGen
