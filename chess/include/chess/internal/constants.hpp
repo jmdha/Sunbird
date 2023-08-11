@@ -71,7 +71,10 @@ constexpr std::array<Square, SQUARECOUNT> SQUARES = [] {
     return s;
 }();
 
-constexpr Square initRookPos[2][2] = {{Square::H1, Square::A1}, {Square::H8, Square::A8}};
+constexpr Square INIT_ROOKPOS[2][2] = {{Square::H1, Square::A1}, {Square::H8, Square::A8}};
+constexpr Square INIT_KINGPOS[2] = {Square::E1, Square::E8};
+constexpr Square CASTLEPOS_KING[2][2] {{Square::G1, Square::C1}, {Square::G8, Square::C8}};
+constexpr Square CASTLEPOS_ROOK[2][2] {{Square::F1, Square::D1}, {Square::F8, Square::D8}};
 
 enum class Row : BB {
     Row1 = 0xff,
@@ -154,6 +157,7 @@ constexpr NotEdge notEdges[8] = {NotEdge::North,     NotEdge::East,      NotEdge
                                  NotEdge::West,      NotEdge::NorthEast, NotEdge::NorthWest,
                                  NotEdge::SouthEast, NotEdge::SouthWest};
 
+// NOTE: The values of MoveType are used, and should not be changed
 enum class MoveType {
     Quiet = 0,
     DoublePawnPush = 1,

@@ -30,33 +30,15 @@ void Board::MakeMove(const Move &move) noexcept {
     Square captureTo = to;
     switch (move.GetType()) {
     case MoveType::KingCastle:
-        if (turn == Color::White) {
-            pos.PlacePiece(Square::G1, PieceType::King, Color::White);
-            pos.PlacePiece(Square::F1, PieceType::Rook, Color::White);
-            pos.RemovePiece(Square::E1, PieceType::King, Color::White);
-            pos.RemovePiece(Square::H1, PieceType::Rook, Color::White);
-        } else {
-            pos.PlacePiece(Square::G8, PieceType::King, Color::Black);
-            pos.PlacePiece(Square::F8, PieceType::Rook, Color::Black);
-            pos.RemovePiece(Square::E8, PieceType::King, Color::Black);
-            pos.RemovePiece(Square::H8, PieceType::Rook, Color::Black);
-        }
+    case MoveType::QueenCastle: {
+        const int castleIndex = (int)move.GetType() - 2;
+        pos.PlacePiece(CASTLEPOS_KING[(int)turn][castleIndex], PieceType::King, turn);
+        pos.PlacePiece(CASTLEPOS_ROOK[(int)turn][castleIndex], PieceType::Rook, turn);
+        pos.RemovePiece(INIT_KINGPOS[(int)turn], PieceType::King, turn);
+        pos.RemovePiece(INIT_ROOKPOS[(int)turn][castleIndex], PieceType::Rook, turn);
         pos.DisallowCastling(Castling::All, turn);
         break;
-    case MoveType::QueenCastle:
-        if (turn == Color::White) {
-            pos.PlacePiece(Square::C1, PieceType::King, Color::White);
-            pos.PlacePiece(Square::D1, PieceType::Rook, Color::White);
-            pos.RemovePiece(Square::E1, PieceType::King, Color::White);
-            pos.RemovePiece(Square::A1, PieceType::Rook, Color::White);
-        } else {
-            pos.PlacePiece(Square::C8, PieceType::King, Color::Black);
-            pos.PlacePiece(Square::D8, PieceType::Rook, Color::Black);
-            pos.RemovePiece(Square::E8, PieceType::King, Color::Black);
-            pos.RemovePiece(Square::A8, PieceType::Rook, Color::Black);
         }
-        pos.DisallowCastling(Castling::All, turn);
-        break;
     case MoveType::NPromotion:
         newPType = PieceType::Knight;
         goto QUIET_PROMOTION;
@@ -98,14 +80,14 @@ void Board::MakeMove(const Move &move) noexcept {
         pos.RemovePiece(from, pType, turn);
         pos.RemovePiece(captureTo, capturedPiece, Utilities::GetOppositeColor(turn));
         pos.PlacePiece(to, newPType, turn);
-            if (capturedPiece == PieceType::Rook &&
-                to == initRookPos[(int)oppColor][(int)Castling::King - 1])
-                if (pos.AllowsCastling(Castling::King, oppColor))
-                    pos.DisallowCastling(Castling::King, oppColor);
-            if (capturedPiece == PieceType::Rook &&
-                to == initRookPos[(int)oppColor][(int)Castling::Queen - 1])
-                if (pos.AllowsCastling(Castling::Queen, oppColor))
-                    pos.DisallowCastling(Castling::Queen, oppColor);
+        if (capturedPiece == PieceType::Rook &&
+            to == INIT_ROOKPOS[(int)oppColor][(int)Castling::King - 1])
+            if (pos.AllowsCastling(Castling::King, oppColor))
+                pos.DisallowCastling(Castling::King, oppColor);
+        if (capturedPiece == PieceType::Rook &&
+            to == INIT_ROOKPOS[(int)oppColor][(int)Castling::Queen - 1])
+            if (pos.AllowsCastling(Castling::Queen, oppColor))
+                pos.DisallowCastling(Castling::Queen, oppColor);
         break;
     default:
         std::invalid_argument("Unexpected move type: " + std::to_string((int)move.GetType()));
@@ -119,9 +101,9 @@ void Board::MakeMove(const Move &move) noexcept {
     if (pType == PieceType::King) [[unlikely]]
         pos.DisallowCastling(Castling::All, turn);
     else if (pType == PieceType::Rook) [[unlikely]] {
-        if (move.GetFrom() == (turn == Color::White ? Square::H1 : Square::H8)) [[unlikely]]
+        if (move.GetFrom() == INIT_ROOKPOS[(int)turn][(int)Castling::King - 1]) [[unlikely]]
             pos.DisallowCastling(Castling::King, turn);
-        else if (move.GetFrom() == (turn == Color::White ? Square::A1 : Square::A8)) [[unlikely]]
+        else if (move.GetFrom() == INIT_ROOKPOS[(int)turn][(int)Castling::Queen - 1]) [[unlikely]]
             pos.DisallowCastling(Castling::Queen, turn);
     }
 
