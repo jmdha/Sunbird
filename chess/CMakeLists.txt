@@ -38,13 +38,7 @@ set(CHESS_SRC
     ${CHESS_SRC_DIR}/zobrist.cpp
     )
 
-set(ROBIN_INCLUDE
-    "${CMAKE_CURRENT_LIST_DIR}/third_party/tsl/robin_growth_policy.h"
-    "${CMAKE_CURRENT_LIST_DIR}/third_party/tsl/robin_hash.h"
-    "${CMAKE_CURRENT_LIST_DIR}/third_party/tsl/robin_map.h"
-    "${CMAKE_CURRENT_LIST_DIR}/third_party/tsl/robin_set.h")
-
-add_library(CHESS ${CHESS_HEADERS} ${CHESS_SRC} ${ROBIN_INCLUDE})
+add_library(CHESS ${CHESS_HEADERS} ${CHESS_SRC})
 set_target_properties(CHESS PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(CHESS PUBLIC ${CHESS_INCLUDE_DIR} ${CMAKE_CURRENT_LIST_DIR}/third_party)
 target_link_libraries(CHESS PUBLIC jank)
