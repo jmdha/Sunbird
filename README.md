@@ -13,7 +13,7 @@ Play against it [here](https://lichess.org/@/sun_bird).
 ## Features
 ### State
 * 16 bit move [[wiki](https://www.chessprogramming.org/Encoding_Moves)]
-* 96 byte state (I.e. pieces on board, castling rights, EP rights, and hash)
+* 80 byte state (I.e. pieces on board, castling rights, EP rights, and hash)
   * Bitboards for pieces [[wiki](https://www.chessprogramming.org/Bitboard_Board-Definition)]
   * Zobrist hash [[wiki](https://www.chessprogramming.org/Zobrist_Hashing)]
 * Make/unmake move through stack [[wiki](https://www.chessprogramming.org/Board_Representation)]
