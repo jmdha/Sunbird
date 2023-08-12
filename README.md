@@ -1,12 +1,36 @@
 # Sunbird
+<img src="https://github.com/jamadaha/Sunbird/actions/workflows/ctest.yml/badge.svg">
+
 A UCI chess engine written in CPP.
 
 Play against it [here](https://lichess.org/@/sun_bird).
 
 ## Table of Contents
-1. [Benchmark](#Benchmark)
-2. [Features](#Features)
+1. [Features](#Features)
+2. [Benchmark](#Benchmark)
 3. [How to Build](#How-To-Build)
+
+## Features
+### State
+* 16 bit move [[wiki](https://www.chessprogramming.org/Encoding_Moves)]
+* 96 byte state (I.e. pieces on board, castling rights, EP rights, and hash)
+  * Bitboards for pieces [[wiki](https://www.chessprogramming.org/Bitboard_Board-Definition)]
+  * Zobrist hash [[wiki](https://www.chessprogramming.org/Zobrist_Hashing)]
+* Make/unmake move through stack [[wiki](https://www.chessprogramming.org/Board_Representation)]
+  * Make move clones state, then pushes modified state to stack
+  * Unmake simply pops from stack
+* Custom move generation
+  * Moves for sliding pieces are generated in a piecewise manner from a series of expanding rings.
+
+### Search
+* Negamax [[wiki](https://www.chessprogramming.org/Negamax)]
+* Alpha-Beta Pruning [[wiki](https://www.chessprogramming.org/Alpha-Beta)]
+* Iterative Deepening [[wiki](https://www.chessprogramming.org/Iterative_Deepening)]
+* Quiescence Search [[wiki](https://www.chessprogramming.org/Quiescence_Search)]
+
+### Evaluation
+* Material Point Value [[wiki](https://www.chessprogramming.org/Material)]
+* Piece-Square Tables [[wiki](https://www.chessprogramming.org/Piece-Square_Tables)]
 
 ## Benchmark
 These are run on a i5-13600k with a single thread.
@@ -18,21 +42,6 @@ For the purposes here, a "node" is a move done.
 
 ### Search
 **10m nodes/s**
-
-## Features
-### State
-* 16 bit move [[wiki](https://www.chessprogramming.org/Encoding_Moves)]
-* Board Representation through Bitboards [[wiki](https://www.chessprogramming.org/Bitboard_Board-Definition)]
-### Search
-* Negamax [[wiki](https://www.chessprogramming.org/Negamax)]
-* Alpha-Beta Pruning [[wiki](https://www.chessprogramming.org/Alpha-Beta)]
-* Iterative Deepening [[wiki](https://www.chessprogramming.org/Iterative_Deepening)]
-* Quiescence Search [[wiki](https://www.chessprogramming.org/Quiescence_Search)]
-
-### Evaluation
-* Material Point Value [[wiki](https://www.chessprogramming.org/Material)]
-* Piece-Square Tables [[wiki](https://www.chessprogramming.org/Piece-Square_Tables)]
-
 ## How to Build
 Navigate to root folder of project, then run the following to build engine.
 ```
