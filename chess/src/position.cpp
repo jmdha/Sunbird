@@ -44,7 +44,7 @@ bool Position::IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard,
     if (Attacks((Square)kingPosIndex, PieceType::Knight) & enemyKnights) [[unlikely]]
         return false;
 
-    if (PawnAttacks((Square)kingPosIndex, _turn) & enemyPawns) [[unlikely]]
+    if (PawnAttacks((Square)kingPosIndex, GetTurn()) & enemyPawns) [[unlikely]]
         return false;
 
     return true;

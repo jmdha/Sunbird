@@ -73,8 +73,8 @@ constexpr std::array<Square, SQUARECOUNT> SQUARES = [] {
 
 constexpr Square INIT_ROOKPOS[2][2] = {{Square::H1, Square::A1}, {Square::H8, Square::A8}};
 constexpr Square INIT_KINGPOS[2] = {Square::E1, Square::E8};
-constexpr Square CASTLEPOS_KING[2][2] {{Square::G1, Square::C1}, {Square::G8, Square::C8}};
-constexpr Square CASTLEPOS_ROOK[2][2] {{Square::F1, Square::D1}, {Square::F8, Square::D8}};
+constexpr Square CASTLEPOS_KING[2][2]{{Square::G1, Square::C1}, {Square::G8, Square::C8}};
+constexpr Square CASTLEPOS_ROOK[2][2]{{Square::F1, Square::D1}, {Square::F8, Square::D8}};
 
 enum class Row : BB {
     Row1 = 0xff,
@@ -103,6 +103,9 @@ enum class Column : BB {
     None = 0x0
 };
 
+constexpr std::array<Column, 8> COLUMNS{Column::A, Column::B, Column::C, Column::D,
+                                        Column::E, Column::F, Column::G, Column::H};
+
 constexpr std::array<Column, 64> COLUMN_BY_SQUARE = {
     Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H,
     Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H,
@@ -111,19 +114,11 @@ constexpr std::array<Column, 64> COLUMN_BY_SQUARE = {
     Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H,
     Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H,
     Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H,
-    Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H
-};
+    Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H};
 
 constexpr std::array<int, SQUARECOUNT> COLUMN_INDEX = {
-    0, 1, 2, 3, 4, 5, 6, 7,
-    0, 1, 2, 3, 4, 5, 6, 7,
-    0, 1, 2, 3, 4, 5, 6, 7,
-    0, 1, 2, 3, 4, 5, 6, 7,
-    0, 1, 2, 3, 4, 5, 6, 7,
-    0, 1, 2, 3, 4, 5, 6, 7,
-    0, 1, 2, 3, 4, 5, 6, 7,
-    0, 1, 2, 3, 4, 5, 6, 7
-};
+    0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7,
+    0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7};
 
 enum class Direction : int {
     North,
@@ -184,17 +179,11 @@ constexpr std::array<MoveType, 4> PromotionCapturesMoves{
 #define CaptureBit 0x4
 #define CastlingBit 0x2
 
-enum class Castling { 
-    None, King, Queen, All 
-};
+enum class Castling { None, King, Queen, All };
 
-inline bool operator&(Castling lhs, Castling rhs) {
-    return ((int) lhs & (int) rhs) != 0;
-}
+inline bool operator&(Castling lhs, Castling rhs) { return ((int)lhs & (int)rhs) != 0; }
 
-inline Castling operator^(Castling lhs, Castling rhs) {
-    return (Castling)((int) lhs ^ (int) rhs);
-}
+inline Castling operator^(Castling lhs, Castling rhs) { return (Castling)((int)lhs ^ (int)rhs); }
 
 #define CASTLING_KING_BIT 0x0
 #define CASTLING_QUEEN_BIT 0x1
@@ -212,6 +201,6 @@ enum class CastlingAttackSquares : BB {
     KSideBlack = 0x7000000000000000,
     QSideBlack = 0x1c00000000000000
 };
-}
+} // namespace Chess
 
 #endif // CONSTANTS

@@ -2,6 +2,7 @@
 #define CHESS_POSITION
 
 #include "bitboard.hpp"
+#include "chess/internal/utilities.hpp"
 #include "constants.hpp"
 #include "move.hpp"
 #include "zobrist.hpp"
@@ -12,9 +13,9 @@ struct Position {
 public:
     // access
 
+    inline uint64_t GetHash() const noexcept;
     inline Color GetTurn() const noexcept;
     inline Column GetEP() const noexcept;
-    inline uint64_t GetHash() const noexcept;
     inline Castling GetCastling(Color color) const noexcept;
     inline bool AllowsCastling(Castling castling, Color color) const noexcept;
 
@@ -43,20 +44,26 @@ public:
     inline void RemovePiece(Square square, PieceType pType, Color color) noexcept;
 
 private:
-    Color _turn = Color::None;
-    Column _EP = Column::None;
     uint64_t _hash = 0;
-    Castling _castling[COLORCOUNT]{Castling::None, Castling::None};
     BB _pieceBB[PIECECOUNT]{0};
     BB _colorBB[COLORCOUNT]{0};
+    /*
+     * 1 bit - [1]:   Turn
+     * 4 bit - [2-5]: Castling rights
+     * 4 bit - [6,9]: EP
+     * column)
+     */
+    uint16_t _misc = 0;
 };
 
-inline Color Position::GetTurn() const noexcept { return _turn; }
-inline Column Position::GetEP() const noexcept { return _EP; }
 inline uint64_t Position::GetHash() const noexcept { return _hash; }
-inline Castling Position::GetCastling(Color color) const noexcept { return _castling[(int)color]; }
+inline Color Position::GetTurn() const noexcept { return (Color)(_misc & 0x1); }
+inline Column Position::GetEP() const noexcept { return COLUMNS[(_misc >> 5) & 0xf]; }
+inline Castling Position::GetCastling(Color color) const noexcept {
+    return (Castling) (((_misc >> 1) & (0x3 << (2 * (int)color))) >> (2 * (int)color));
+}
 inline bool Position::AllowsCastling(Castling castling, Color color) const noexcept {
-    return _castling[(int)color] & castling;
+    return (int)GetCastling(color) & (int)castling;
 }
 inline PieceType Position::GetType(Square square) const noexcept {
     assert(square != Square::None);
@@ -93,14 +100,23 @@ inline BB Position::GetPieces(Color color, PieceType pType) const noexcept {
     assert(pType != PieceType::None);
     return _colorBB[(int)color] & _pieceBB[(int)pType];
 }
-inline void Position::SetTurn(Color color) noexcept { _turn = color; }
+inline void Position::SetTurn(Color color) noexcept {
+    _misc &= ~0x1;
+    _misc |= (int)color & 0x1;
+}
 inline void Position::SetCastling(Castling castling, Color color) noexcept {
-    _castling[(int)color] = castling;
+    _misc &= ~((0x3 << (2 * (int)color)) << 1);
+    _misc |= ((int)castling << (2 * (int)color)) << 1;
 }
 inline void Position::DisallowCastling(Castling castling, Color color) noexcept {
-    _castling[(int)color] = (Castling)((int)_castling[(int)color] & (~(int)castling));
+    const Castling priorCastling = GetCastling(color);
+    SetCastling((Castling)((int)priorCastling & ~((int)castling)), color);
 }
-inline void Position::SetEP(Column column) noexcept { _EP = column; }
+inline void Position::SetEP(Column column) noexcept {
+    const int index = Utilities::GetColumnIndex(column);
+    _misc &= ~0x1e0;
+    _misc |= (index & 0xf) << 5;
+}
 
 inline bool Position::IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard) const noexcept {
     return IsKingSafe(tempOccuracyBoard, tempEnemyBoard, GetPieces(GetTurn(), PieceType::King));
@@ -121,6 +137,7 @@ inline void Position::RemovePiece(Square square, PieceType pType, Color color) n
     assert(square != Square::None);
     assert(pType != PieceType::None);
     assert(color != Color::None);
+    ;
     _pieceBB[(int)pType] ^= square;
     _colorBB[(int)color] ^= square;
     _hash = Zobrist::FlipSquare(_hash, square, pType, color);

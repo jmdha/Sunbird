@@ -166,7 +166,7 @@ namespace Chess::Utilities {
             case Column::H:
                 return 7;
             case Column::None:
-                throw std::logic_error("Invalid argument");
+                return 8;
         }
         throw std::logic_error("Invalid flow");
     }
