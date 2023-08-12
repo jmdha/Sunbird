@@ -3,9 +3,9 @@
 namespace Chess::Perft {
 namespace {
 int Run(Board &board, int depth) {
-    if (depth == 0)
-        return 1;
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board.Pos(), board.Pos().GetTurn());
+    if (depth == 1)
+        return moves.size();
     int leafCount = 0;
 
     for (auto move : moves) {
