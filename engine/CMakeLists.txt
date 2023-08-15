@@ -1,4 +1,4 @@
-include(../chess/CMakeLists.txt)
+include(chess/CMakeLists.txt)
 
 set(ENGINE_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/src)
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/include)
@@ -20,11 +20,11 @@ add_library(ENGINE ${ENGINE_HEADERS} ${ENGINE_SRC})
 target_link_libraries(ENGINE PUBLIC CHESS)
 target_include_directories(ENGINE PUBLIC ${ENGINE_INCLUDE_DIR})
 
-if (BUILD_TEST)
+if (NOT IGNORE_TEST)
     include(${CMAKE_CURRENT_LIST_DIR}/test/CMakeLists.txt)
 endif ()
 
-if (BUILD_BIN)
+if (NOT IGNORE_BIN)
     add_executable(Sunbird ${CMAKE_CURRENT_LIST_DIR}/bin/uci.cpp)
     target_link_libraries(Sunbird PRIVATE ENGINE)
 endif ()

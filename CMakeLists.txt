@@ -8,9 +8,9 @@ project(${_PROJECT_NAME} VERSION ${_PROJECT_VERSION})
 
 set(CMAKE_CXX_STANDARD 20)
 
-if (BUILD_ENGINE)
-    add_subdirectory(engine)
+if (IGNORE_ENGINE)
+    include(chess/CMakeLists.txt)
 else ()
-    add_subdirectory(chess)
+    include(engine/CMakeLists.txt)
 endif ()
 

@@ -46,7 +46,7 @@ For the purposes here, a "node" is a move done.
 Navigate to root folder of project, then run the following to build engine.
 ```
 mkdir build &&\
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_BIN=true -DBUILD_ENGINE=true &&\
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DIGNORE_TEST=true &&\
 cmake --build build
 ```
 The executable can then be found in `chess_engine/build/engine/`.

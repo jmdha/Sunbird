@@ -2,7 +2,7 @@ include(FetchContent)
 FetchContent_Declare(
     jank
     GIT_REPOSITORY https://github.com/jamadaha/jank.git
-    GIT_TAG 49b04d0
+    GIT_TAG 22c2c3d
 )
 FetchContent_MakeAvailable(jank)
 
@@ -43,13 +43,6 @@ set_target_properties(CHESS PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(CHESS PUBLIC ${CHESS_INCLUDE_DIR} ${CMAKE_CURRENT_LIST_DIR}/third_party)
 target_link_libraries(CHESS PUBLIC jank)
 
-if (BUILD_TEST)
+if (NOT IGNORE_TEST)
     include(${CMAKE_CURRENT_LIST_DIR}/test/CMakeLists.txt)
-endif ()
-
-if (BUILD_BIN)
-    add_executable(Perft ${CMAKE_CURRENT_LIST_DIR}/bin/perft.cpp)
-    target_link_libraries(Perft CHESS)
-    add_executable(Benchmark ${CMAKE_CURRENT_LIST_DIR}/bin/benchmark.cpp)
-    target_link_libraries(Benchmark CHESS)
 endif ()
