@@ -137,7 +137,6 @@ inline void Position::RemovePiece(Square square, PieceType pType, Color color) n
     assert(square != Square::None);
     assert(pType != PieceType::None);
     assert(color != Color::None);
-    ;
     _pieceBB[(int)pType] ^= square;
     _colorBB[(int)color] ^= square;
     _hash = Zobrist::FlipSquare(_hash, square, pType, color);

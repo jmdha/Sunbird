@@ -13,8 +13,7 @@
 namespace Chess::Engine::Negamax {
 enum class AlternativeResult { Draw, Checkmate };
 std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth);
-std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit);
-MoveList GetOrderdMoves(Board &board, int timeLimit);
+std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optional<int> timeLimit);
 } // namespace Chess::Engine::Negamax
 
 #endif // ENGINE_NEGAMAX

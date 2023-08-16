@@ -87,10 +87,13 @@ int main() {
                     blackTime = std::stoi(tokens[i + 1]);
             }
 
-            int searchTime =
-                (board.Pos().GetTurn() == Color::White) ? whiteTime.value() : blackTime.value();
-            searchTime *= 0.05;
-            Move move = Engine::Negamax::GetOrderdMoves(board, searchTime)[0];
+            std::optional<int> searchTime;
+            if (board.Pos().GetTurn() == Color::White && whiteTime.has_value())
+                searchTime = whiteTime.value() * 0.05;
+            else if (blackTime.has_value())
+                searchTime = blackTime.value() * 0.05;
+
+            Move move = std::get<Move>(Engine::Negamax::GetBestMoveTime(board, searchTime));
             std::cout << "bestmove " << move.ToString() << '\n';
 
             break;
