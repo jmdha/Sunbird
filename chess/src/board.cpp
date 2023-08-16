@@ -108,6 +108,7 @@ void Board::MakeMove(const Move &move) noexcept {
     }
 
     _positions.push(std::move(pos));
+    _moves++;
 }
 
 void Board::UndoMove() noexcept { _positions.pop(); }

@@ -39,9 +39,9 @@ std::optional<AlternativeResult> IsTerminal(const Position &pos) {
 
 bool AB(int score, int &alpha, int beta) {
     if (score >= beta)
-        return true; //  fail hard beta-cutoff
+        return true;
     if (score > alpha)
-        alpha = score; // alpha acts like max in MiniMax
+        alpha = score;
     return false;
 }
 
@@ -84,13 +84,13 @@ int Negamax(Board &board, int depth, int alpha, int beta, PV &pv, Limiter *limit
         int score = -Negamax(board, depth - 1, -beta, -alpha, tempPV, limitter);
         board.UndoMove();
         if (score > alpha) {
-            alpha = score; // alpha acts like max in MiniMax
+            alpha = score;
             pv._moves[0] = move;
             std::memmove(&pv._moves[1], &tempPV._moves[0], tempPV._count * sizeof(Move));
             pv._count = tempPV._count + 1;
         }
         if (alpha >= beta)
-            break; //  fail hard beta-cutoff
+            break;
     }
 
     return alpha;
@@ -112,7 +112,6 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
 
     std::cout << "info fen " << Export::FEN(board.Pos()) << '\n';
 
-    Board tempBoard = board;
     PV pv;
 
     std::jmp_buf exitBuffer;
@@ -126,13 +125,22 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
     }
 
     for (int depth = 1; depth < 1000; depth++) {
+        Board tempBoard = board;
+        auto t0 = std::chrono::steady_clock::now();
         PV tempPV;
         int score =
             -Negamax(tempBoard, depth, -MaterialValue::Inf, MaterialValue::Inf, tempPV, limitter);
         pv = tempPV;
+        auto t1 = std::chrono::steady_clock::now();
+        size_t t = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
         std::cout << "info";
-        std::cout << " score cp " << score;
-        std::cout << " depth " << depth;
+        printf(" depth %2d", depth);
+        printf(" score %4d", score);
+        printf(" time %5zu ms", t);
+        auto nodes = tempBoard.MoveCount() - board.MoveCount();
+        printf(" nodes %9zu", nodes);
+        auto nps = nodes / std::max((size_t)1, t) * 1000;
+        printf(" nps %8zu", nps);
         std::cout << " pv ";
         for (int i = 0; i < std::min(pv._count, 8); i++)
             std::cout << pv._moves[i].ToString() << " ";

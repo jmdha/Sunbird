@@ -20,7 +20,8 @@ public:
     Board(Position position);
 
     // access
-    
+   
+    inline size_t MoveCount() const noexcept;
     inline const Position& Pos() const noexcept;
     bool IsThreefoldRepetition() const noexcept;
 
@@ -31,7 +32,12 @@ public:
 
 private:
     jank::container::fixed_stack<Position, MAX_PLY> _positions;
+    size_t _moves;
 };
+
+inline size_t Board::MoveCount() const noexcept {
+    return _moves;
+}
 
 inline const Position& Board::Pos() const noexcept {
     return _positions.top();
