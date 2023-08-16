@@ -10,7 +10,7 @@ int EvalMaterial(const Position &pos);
 int EvalPosition(const Position &pos);
 int EvalPosition(const Position &pos, Color color);
 int Eval(const Position &pos);
-int EvalNoMove(bool isKingSafe);
+int EvalNoMove(const Position &pos);
 } // namespace Chess::Engine::Evaluation
 
 #endif // ENGINE_EVALUATION

@@ -38,10 +38,11 @@ int Eval(const Position &pos) {
     return (pos.GetTurn() == Color::White) ? value : -value;
 }
 
-int EvalNoMove(bool isKingSafe) {
+int EvalNoMove(const Position &pos) {
+    bool isKingSafe = pos.IsKingSafe();
     // Checkmate
     if (!isKingSafe)
-        return -(int)MaterialValue::Inf;
+        return -MaterialValue::Inf;
     // Stalemate
     else
         return 0;
