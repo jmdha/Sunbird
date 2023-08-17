@@ -110,6 +110,8 @@ std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth) {
 std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optional<int> timeLimit) {
     if (auto terminal = IsTerminal(board.Pos()); terminal.has_value())
         return terminal.value();
+    if (auto moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board.Pos(), board.Pos().GetTurn()); moves.size() == 1)
+        return moves[0];
 
     std::cout << "info fen " << Export::FEN(board.Pos()) << '\n';
 
