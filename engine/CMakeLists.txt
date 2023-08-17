@@ -8,6 +8,8 @@ set(ENGINE_HEADERS
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/values.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/positions.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/move_ordering.hpp
+    ${ENGINE_INCLUDE_BUILD_DIR}/internal/pv.hpp
+    ${ENGINE_INCLUDE_BUILD_DIR}/internal/search_limit.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/evaluation.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/search.hpp
     )
@@ -16,6 +18,7 @@ set(ENGINE_SRC
     ${ENGINE_SRC_DIR}/move_ordering.cpp
     ${ENGINE_SRC_DIR}/evaluation.cpp
     ${ENGINE_SRC_DIR}/search.cpp
+    ${ENGINE_SRC_DIR}/search_internal.cpp
     )
 
 add_library(ENGINE ${ENGINE_HEADERS} ${ENGINE_SRC})

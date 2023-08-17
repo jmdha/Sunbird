@@ -1,4 +1,3 @@
-#include "engine/internal/move_ordering.hpp"
 #include <chess/export.hpp>
 #include <chess/internal/constants.hpp>
 #include <chess/move_gen.hpp>
@@ -7,6 +6,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <engine/evaluation.hpp>
+#include <engine/internal/move_ordering.hpp>
+#include <engine/internal/pv.hpp>
 #include <engine/internal/values.hpp>
 #include <engine/search.hpp>
 #include <iostream>
@@ -14,89 +15,12 @@
 
 namespace Chess::Engine::Search {
 namespace {
-struct PV {
-    std::array<Move, MAX_PLY> _moves;
-    int _count = 0;
-};
-struct Limiter {
-public:
-    Limiter(std::jmp_buf &jmpBuf, size_t time)
-        : _jmpBuf(jmpBuf),
-          _endTime(std::chrono::steady_clock::now() + std::chrono::milliseconds(time)) {}
-    bool Reached() { return _endTime < std::chrono::steady_clock::now(); }
-    void Exit() { longjmp(_jmpBuf, 1); }
-
-private:
-    std::jmp_buf &_jmpBuf;
-    std::chrono::steady_clock::time_point _endTime;
-};
-
 std::optional<AlternativeResult> IsTerminal(const Position &pos) {
     MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(pos, pos.GetTurn());
     if (moves.empty())
         return Evaluation::Eval(pos) == 0 ? AlternativeResult::Draw : AlternativeResult::Checkmate;
     else
         return {};
-}
-
-bool AB(int score, int &alpha, int beta) {
-    if (score >= beta)
-        return true;
-    if (score > alpha)
-        alpha = score;
-    return false;
-}
-
-int Quiesce(Board &board, int alpha, int beta) {
-    int standPat = Evaluation::Eval(board.Pos());
-    if (AB(standPat, alpha, beta))
-        return beta;
-
-    MoveList moves =
-        MoveGen::GenerateMoves<MoveGen::GenType::Attack>(board.Pos(), board.Pos().GetTurn());
-    for (auto move : moves) {
-        board.MakeMove(move);
-        int score = -Quiesce(board, -beta, -alpha);
-        board.UndoMove();
-        if (AB(score, alpha, beta))
-            return beta;
-    }
-
-    return alpha;
-}
-
-int Negamax(Board &board, int depth, int alpha, int beta, PV &pv, Limiter *limitter = nullptr) {
-    if (limitter != nullptr && limitter->Reached())
-        limitter->Exit();
-
-    if (board.IsThreefoldRepetition())
-        return 0;
-
-    if (depth == 0)
-        return Quiesce(board, alpha, beta);
-
-    MoveList moves =
-        MoveGen::GenerateMoves<MoveGen::GenType::All>(board.Pos(), board.Pos().GetTurn());
-    if (moves.empty())
-        return Evaluation::EvalNoMove(board.Pos());
-
-    MoveOrdering::All(board.Pos(), moves);
-    for (auto move : moves) {
-        PV tempPV;
-        board.MakeMove(move);
-        int score = -Negamax(board, depth - 1, -beta, -alpha, tempPV, limitter);
-        board.UndoMove();
-        if (alpha >= beta)
-            return beta;
-        if (score > alpha) {
-            alpha = score;
-            pv._moves[0] = move;
-            std::memmove(&pv._moves[1], &tempPV._moves[0], tempPV._count * sizeof(Move));
-            pv._count = tempPV._count + 1;
-        }
-    }
-
-    return alpha;
 }
 } // namespace
 
@@ -105,14 +29,16 @@ std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth) {
         return terminal.value();
 
     PV pv;
-    Negamax(board, depth, -MaterialValue::Inf, MaterialValue::Inf, pv);
+    Internal::Negamax(board, -MaterialValue::Inf, MaterialValue::Inf, depth, pv);
     return pv._moves[0];
 }
 
 std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optional<int> timeLimit) {
     if (auto terminal = IsTerminal(board.Pos()); terminal.has_value())
         return terminal.value();
-    if (auto moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board.Pos(), board.Pos().GetTurn()); moves.size() == 1)
+    if (auto moves =
+            MoveGen::GenerateMoves<MoveGen::GenType::All>(board.Pos(), board.Pos().GetTurn());
+        moves.size() == 1)
         return moves[0];
 
     std::cout << "info fen " << Export::FEN(board.Pos()) << '\n';
@@ -120,12 +46,12 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
     PV pv;
 
     std::jmp_buf exitBuffer;
-    Limiter *limitter = nullptr;
+    SearchLimit *limit = nullptr;
     if (timeLimit.has_value())
-        limitter = new Limiter(exitBuffer, timeLimit.value());
+        limit = new SearchLimit(exitBuffer, timeLimit.value());
 
     if (setjmp(exitBuffer)) {
-        free(limitter);
+        free(limit);
         return pv._moves[0];
     }
 
@@ -133,9 +59,10 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
         Board tempBoard = board;
         auto t0 = std::chrono::steady_clock::now();
         PV tempPV;
-        int score =
-            -Negamax(tempBoard, depth, -MaterialValue::Inf, MaterialValue::Inf, tempPV, limitter);
-        // HACK: This fixes a bug where sometimes checkmates in high depths would return no pv. It should not be needed, but I cannot find why this occurs
+        int score = -Internal::Negamax(tempBoard, -MaterialValue::Inf, MaterialValue::Inf, depth,
+                                       tempPV, limit);
+        // HACK: This fixes a bug where sometimes checkmates in high depths would return no pv. It
+        // should not be needed, but I cannot find why this occurs
         if (tempPV._count == 0)
             break;
         pv = tempPV;
@@ -158,4 +85,4 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
     }
     longjmp(exitBuffer, 1);
 }
-} // namespace Chess::Engine::Negamax
+} // namespace Chess::Engine::Search
