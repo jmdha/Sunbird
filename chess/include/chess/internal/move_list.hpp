@@ -10,6 +10,7 @@
 namespace Chess {
 struct MoveList {
     size_t size() const { return index; }
+    size_t attacks() const { return quietIndex; }
     bool empty() const { return index == 0; }
     // Selection sort
     void sort(std::array<int, MAXMOVECOUNT> &scores) {

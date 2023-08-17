@@ -1,3 +1,4 @@
+#include "engine/internal/move_ordering.hpp"
 #include <chess/export.hpp>
 #include <chess/internal/constants.hpp>
 #include <chess/move_gen.hpp>
@@ -79,6 +80,7 @@ int Negamax(Board &board, int depth, int alpha, int beta, PV &pv, Limiter *limit
     if (moves.empty())
         return Evaluation::EvalNoMove(board.Pos());
 
+    MoveOrdering::All(board.Pos(), moves);
     for (auto move : moves) {
         PV tempPV;
         board.MakeMove(move);
