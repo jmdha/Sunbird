@@ -4,7 +4,7 @@
 
 #include <chess/board.hpp>
 #include <chess/import.hpp>
-#include <engine/negamax.hpp>
+#include <engine/search.hpp>
 
 using namespace Chess;
 
@@ -13,7 +13,7 @@ int main(int, char *argv[]) {
     Board board = Import::MoveSequence(fen);
     std::string expectedMove = argv[3];
 
-    auto move = Engine::Negamax::GetBestMove(board, std::atoi(argv[2]));
+    auto move = Engine::Search::GetBestMove(board, std::atoi(argv[2]));
 
     if (expectedMove == std::get<Move>(move).ToString())
         exit(EXIT_SUCCESS);

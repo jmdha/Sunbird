@@ -10,7 +10,7 @@
 #include <optional>
 #include <variant>
 
-namespace Chess::Engine::Negamax {
+namespace Chess::Engine::Search {
 enum class AlternativeResult { Draw, Checkmate };
 std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth);
 std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optional<int> timeLimit);

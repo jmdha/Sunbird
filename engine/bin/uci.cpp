@@ -4,7 +4,7 @@
 
 #include <chess/board.hpp>
 #include <chess/import.hpp>
-#include <engine/negamax.hpp>
+#include <engine/search.hpp>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -93,7 +93,7 @@ int main() {
             else if (blackTime.has_value())
                 searchTime = blackTime.value() * 0.05;
 
-            Move move = std::get<Move>(Engine::Negamax::GetBestMoveTime(board, searchTime));
+            Move move = std::get<Move>(Engine::Search::GetBestMoveTime(board, searchTime));
             std::cout << "bestmove " << move.ToString() << '\n';
 
             break;

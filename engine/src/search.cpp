@@ -8,11 +8,11 @@
 #include <cstring>
 #include <engine/evaluation.hpp>
 #include <engine/internal/values.hpp>
-#include <engine/negamax.hpp>
+#include <engine/search.hpp>
 #include <iostream>
 #include <optional>
 
-namespace Chess::Engine::Negamax {
+namespace Chess::Engine::Search {
 namespace {
 struct PV {
     std::array<Move, MAX_PLY> _moves;
