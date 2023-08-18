@@ -27,7 +27,9 @@ Play against it [here](https://lichess.org/@/sun_bird).
 * Alpha-Beta Pruning [[wiki](https://www.chessprogramming.org/Alpha-Beta)]
 * Iterative Deepening [[wiki](https://www.chessprogramming.org/Iterative_Deepening)]
 * Quiescence Search [[wiki](https://www.chessprogramming.org/Quiescence_Search)]
-
+* Move Ordering
+  * MVV-LVA [[wiki](https://www.chessprogramming.org/MVV-LVA)]
+    
 ### Evaluation
 * Material Point Value [[wiki](https://www.chessprogramming.org/Material)]
 * Piece-Square Tables [[wiki](https://www.chessprogramming.org/Piece-Square_Tables)]
