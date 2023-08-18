@@ -23,6 +23,7 @@ int Quiesce(Board &board, int alpha, int beta) {
         return beta;
 
     MoveList moves = GenerateMoves<GenType::Attack>(board.Pos(), board.Pos().GetTurn());
+    MoveOrdering::All(board.Pos(), moves);
     for (auto move : moves) {
         board.MakeMove(move);
         int score = -Quiesce(board, -beta, -alpha);
