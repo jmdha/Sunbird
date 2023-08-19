@@ -8,24 +8,24 @@ constexpr int PHASE_INC[6] = {0, 1, 1, 2, 4, 0};
 constexpr int INF = 99999;
 namespace Material {
 namespace Pawn {
-constexpr int MG = 82;
-constexpr int EG = 94;
+constexpr int MG = 100;
+constexpr int EG = 100;
 } // namespace Pawn
 namespace Knight {
-constexpr int MG = 337;
-constexpr int EG = 281;
+constexpr int MG = 350;
+constexpr int EG = 250;
 } // namespace Knight
 namespace Bishop {
-constexpr int MG = 365;
-constexpr int EG = 297;
+constexpr int MG = 350;
+constexpr int EG = 350;
 } // namespace Bishop
 namespace Rook {
-constexpr int MG = 477;
-constexpr int EG = 512;
+constexpr int MG = 525;
+constexpr int EG = 525;
 } // namespace Rook
 namespace Queen {
-constexpr int MG = 1025;
-constexpr int EG = 936;
+constexpr int MG = 1000;
+constexpr int EG = 1000;
 } // namespace Queen
 constexpr std::array<int, 6> MG = {Pawn::MG, Knight::MG, Bishop::MG, Rook::MG, Queen::MG, 0};
 constexpr std::array<int, 6> EG = {Pawn::EG, Knight::EG, Bishop::EG, Rook::EG, Queen::EG, 0};
@@ -165,14 +165,14 @@ constexpr std::array<int, 64> MG = {
 };
 
 constexpr std::array<int, 64> EG = {
-     20, 30, 10,  0,  0, 10, 30, 20,
-     20, 20,  0,  0,  0,  0, 20, 20,
-    -10,-20,-20,-20,-20,-20,-20,-10,
-    -20,-30,-30,-40,-40,-30,-30,-20,
-    -30,-40,-40,-50,-50,-40,-40,-30,
-    -30,-40,-40,-50,-50,-40,-40,-30,
-    -30,-40,-40,-50,-50,-40,-40,-30,
-    -30,-40,-40,-50,-50,-40,-40,-30
+    -50,-30,-30,-30,-30,-30,-30,-50,
+    -30,-30,  0,  0,  0,  0,-30,-30,
+    -30,-10, 20, 30, 30, 20,-10,-30,
+    -30,-10, 30, 40, 40, 30,-10,-30,
+    -30,-10, 30, 40, 40, 30,-10,-30,
+    -30,-10, 20, 30, 30, 20,-10,-30,
+    -30,-20,-10,  0,  0,-10,-20,-30,
+    -50,-40,-30,-20,-20,-30,-40,-50,
 };
 } // namespace King
 // clang-format on
