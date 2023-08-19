@@ -76,22 +76,21 @@ int main() {
 
             break;
         case Command::go: {
-            std::optional<int> whiteTime;
-            std::optional<int> blackTime;
+            std::optional<int> moveTime;
 
             for (int i = 0; i < tokens.size(); i++) {
                 auto token = tokens[i];
-                if (token == "wtime")
-                    whiteTime = std::stoi(tokens[i + 1]);
-                if (token == "btime")
-                    blackTime = std::stoi(tokens[i + 1]);
+                if (board.Pos().GetTurn() == Color::White && token == "wtime")
+                    moveTime = std::stoi(tokens[i + 1]);
+                if (board.Pos().GetTurn() == Color::Black && token == "btime")
+                    moveTime = std::stoi(tokens[i + 1]);
+                if (token == "movetime")
+                    moveTime = std::stoi(tokens[i + 1]);
             }
 
             std::optional<int> searchTime;
-            if (board.Pos().GetTurn() == Color::White && whiteTime.has_value())
-                searchTime = whiteTime.value() * 0.05;
-            else if (blackTime.has_value())
-                searchTime = blackTime.value() * 0.05;
+            if (moveTime.has_value())
+                searchTime = moveTime.value() * 0.05;
 
             Move move = std::get<Move>(Engine::Search::GetBestMoveTime(board, searchTime));
             std::cout << "bestmove " << move.ToString() << '\n';

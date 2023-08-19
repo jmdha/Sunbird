@@ -70,13 +70,13 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
         auto t1 = std::chrono::steady_clock::now();
         size_t t = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
         std::cout << "info";
-        printf(" depth %2d", depth);
-        printf(" score cp %6d", score);
-        printf(" time %5zu ms", t);
+        printf(" depth %d", depth);
+        printf(" score cp %d", score);
+        printf(" time %zu ms", t);
         auto nodes = tempBoard.MoveCount() - board.MoveCount();
-        printf(" nodes %9zu", nodes);
+        printf(" nodes %zu", nodes);
         auto nps = nodes / std::max((size_t)1, (t / 1000));
-        printf(" nps %8zu", nps);
+        printf(" nps %zu", nps);
         std::cout << " pv ";
         for (int i = 0; i < std::min(pv._count, 8); i++)
             std::cout << pv._moves[i].ToString() << " ";
