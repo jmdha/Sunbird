@@ -29,7 +29,7 @@ std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth) {
         return terminal.value();
 
     PV pv = PV(board.Ply());
-    Internal::Negamax(board, -MaterialValue::Inf, MaterialValue::Inf, depth, pv, pv);
+    Internal::Negamax(board, -Values::INF, Values::INF, depth, pv, pv);
     return pv._moves[0];
 }
 
@@ -59,7 +59,7 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
         Board tempBoard = board;
         auto t0 = std::chrono::steady_clock::now();
         PV tempPV;
-        int score = -Internal::Negamax(tempBoard, -MaterialValue::Inf, MaterialValue::Inf, depth,
+        int score = -Internal::Negamax(tempBoard, -Values::INF, Values::INF, depth,
                                        tempPV, pv, limit);
         // HACK: This fixes a bug where sometimes checkmates in high depths would return no pv. It
         // should not be needed, but I cannot find why this occurs
@@ -71,7 +71,7 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
         size_t t = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
         std::cout << "info";
         printf(" depth %2d", depth);
-        printf(" score cp %4d", score);
+        printf(" score cp %6d", score);
         printf(" time %5zu ms", t);
         auto nodes = tempBoard.MoveCount() - board.MoveCount();
         printf(" nodes %9zu", nodes);
@@ -81,7 +81,7 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
         for (int i = 0; i < std::min(pv._count, 8); i++)
             std::cout << pv._moves[i].ToString() << " ";
         std::cout << '\n';
-        if (std::abs(score) == MaterialValue::Inf)
+        if (std::abs(score) == Values::INF)
             break;
     }
     longjmp(exitBuffer, 1);

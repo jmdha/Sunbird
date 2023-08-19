@@ -4,77 +4,28 @@
 #include <jank/bit/bit.hpp>
 
 namespace Chess::Engine::Evaluation {
-int EvalMaterial(const Position &pos) {
-    int value = 0;
-    for (int i = 0; i < PIECECOUNT - 1; ++i) {
-        const int whiteCount = pos.GetPieceCount(Color::White, (PieceType)i);
-        const int blackCount = pos.GetPieceCount(Color::Black, (PieceType)i);
-        const int pieceValue = MaterialValue::ALL.at(i);
-        value += (whiteCount - blackCount) * pieceValue;
-    }
-    return value;
-}
+int Eval(const Position &pos) {
+    std::array<int, 2> mg{0};
+    std::array<int, 2> eg{0};
+    int gamePhase = 0;
 
-int EvalPosition(const Position &pos) {
-    return EvalPosition(pos, Color::White) - EvalPosition(pos, Color::Black);
-}
-
-int EvalPosition(const Position &pos, Color color) {
-    int value = 0;
-
-    for (int i = 0; i < PIECECOUNT; i++) {
-        BB pieces = pos.GetPieces(color, (PieceType)i);
-        if (color == Color::White)
-            while (pieces)
-                value += PositionValue::ALL_WHITE[i][jank::bit::lsb_pop(pieces)];
-        else
-            while (pieces)
-                value += PositionValue::ALL_BLACK[i][jank::bit::lsb_pop(pieces)];
-    }
-
-    return value;
-}
-
-int EvalPawnStructure(const Position &pos, Color color) {
-    int score = 0;
-
-    const BB pawns = pos.GetPieces(color, PieceType::Pawn);
-    const Color oppColor = Utilities::GetOppositeColor(color);
-    const BB oppPawns = pos.GetPieces(oppColor, PieceType::Pawn);
-
-    // Doubled pawns
-    for (auto col : COLUMNS) {
-        BB pawns = pawns & (BB)col;
-        int pawnCount = jank::bit::popcount(pawns);
-
-        if (pawnCount > 1)
-            score += 0.25 * (double)MaterialValue::Pawn;
-    }
-
-    // Backward pawns
-    {
-        BB tPawns = pawns;
-        while (tPawns) {
-            Square pawn = (Square)jank::bit::lsb_pop(tPawns);
-            if ((PawnAttacks(pawn, oppColor) & pawns) != 0)
-                continue;
-            Direction moveDir = (color == Color::White) ? Direction::North : Direction::South;
-            Square destSquare = (Square)jank::bit::lsb(Ray(pawn, moveDir) & Ring(pawn, 1));
-            if ((PawnAttacks(destSquare, color) & oppPawns) == 0)
-                continue;
-            score += 0.25 * (double)MaterialValue::Pawn;
+    for (auto pType : PIECES) {
+        for (BB pieces = pos.GetPieces(pType); pieces;) {
+            Square piece = (Square)jank::bit::lsb_pop(pieces);
+            Color color = pos.GetColor(piece);
+            mg[(int)color] += Values::MG[(int)color][(int)pType][(int)piece];
+            eg[(int)color] += Values::EG[(int)color][(int)pType][(int)piece];
+            gamePhase += Values::PHASE_INC[(int)pType];
         }
     }
 
-    return score;
-}
-
-int EvalPawnStructure(const Position &pos) {
-    return EvalPawnStructure(pos, Color::White) - EvalPawnStructure(pos, Color::Black);
-}
-
-int Eval(const Position &pos) {
-    const int value = EvalPosition(pos) + EvalMaterial(pos);
+    int mgScore = mg[(int)Color::White] - mg[(int)Color::Black];
+    int egScore = eg[(int)Color::White] - eg[(int)Color::Black];
+    int mgPhase = gamePhase;
+    if (mgPhase > 24)
+        mgPhase = 24;
+    int egPhase = 24 - mgPhase;
+    int value = (mgScore * mgPhase + egScore * egPhase) / 24;
     return (pos.GetTurn() == Color::White) ? value : -value;
 }
 
@@ -82,7 +33,7 @@ int EvalNoMove(const Position &pos) {
     bool isKingSafe = pos.IsKingSafe();
     // Checkmate
     if (!isKingSafe)
-        return -MaterialValue::Inf;
+        return -Values::INF;
     // Stalemate
     else
         return 0;
