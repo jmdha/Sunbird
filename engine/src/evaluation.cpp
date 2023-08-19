@@ -5,27 +5,32 @@
 
 namespace Chess::Engine::Evaluation {
 int Eval(const Position &pos) {
-    std::array<int, 2> mg{0};
-    std::array<int, 2> eg{0};
+    int mg_white = 0;
+    int mg_black = 0;
+    int eg_white = 0;
+    int eg_black = 0;
     int gamePhase = 0;
 
     for (auto pType : PIECES) {
-        for (BB pieces = pos.GetPieces(pType); pieces;) {
-            Square piece = (Square)jank::bit::lsb_pop(pieces);
-            Color color = pos.GetColor(piece);
-            mg[(int)color] += Values::MG[(int)color][(int)pType][(int)piece];
-            eg[(int)color] += Values::EG[(int)color][(int)pType][(int)piece];
+        for (BB pieces = pos.GetPieces(Color::White, pType); pieces;) {
+            const Square piece = (Square)jank::bit::lsb_pop(pieces);
+            mg_white += Values::MG[(int)Color::White][(int)pType][(int)piece];
+            eg_white += Values::EG[(int)Color::White][(int)pType][(int)piece];
+            gamePhase += Values::PHASE_INC[(int)pType];
+        }
+        for (BB pieces = pos.GetPieces(Color::Black, pType); pieces;) {
+            const Square piece = (Square)jank::bit::lsb_pop(pieces);
+            mg_black += Values::MG[(int)Color::Black][(int)pType][(int)piece];
+            eg_black += Values::EG[(int)Color::Black][(int)pType][(int)piece];
             gamePhase += Values::PHASE_INC[(int)pType];
         }
     }
 
-    int mgScore = mg[(int)Color::White] - mg[(int)Color::Black];
-    int egScore = eg[(int)Color::White] - eg[(int)Color::Black];
-    int mgPhase = gamePhase;
-    if (mgPhase > 24)
-        mgPhase = 24;
-    int egPhase = 24 - mgPhase;
-    int value = (mgScore * mgPhase + egScore * egPhase) / 24;
+    const int mgScore = mg_white - mg_black;
+    const int egScore = eg_white - eg_black;
+    const int mgPhase = std::min(24, gamePhase);
+    const int egPhase = 24 - mgPhase;
+    const int value = (mgScore * mgPhase + egScore * egPhase) / 24;
     return (pos.GetTurn() == Color::White) ? value : -value;
 }
 
