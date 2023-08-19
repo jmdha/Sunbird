@@ -9,6 +9,8 @@ namespace Chess::Engine::Evaluation {
 int EvalMaterial(const Position &pos);
 int EvalPosition(const Position &pos);
 int EvalPosition(const Position &pos, Color color);
+int EvalPawnStructure(const Position &pos, Color color);
+int EvalPawnStructure(const Position &pos);
 int Eval(const Position &pos);
 int EvalNoMove(const Position &pos);
 } // namespace Chess::Engine::Evaluation

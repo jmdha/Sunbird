@@ -58,3 +58,4 @@ build/*
 /cmake-build-relwithdebinfo-coverage/
 /cmake-build-debug-coverage/
 DartConfiguration.tcl
+perf.data
