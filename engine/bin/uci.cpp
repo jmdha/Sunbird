@@ -37,7 +37,7 @@ int main() {
     Board board = Import::MoveSequence("");
     while (true) {
         std::string input;
-        input = "go";//std::getline(std::cin, input);
+        std::getline(std::cin, input);
 
         auto tokens = Tokenize(input);
         if (!Commands.contains(tokens[0])) {
