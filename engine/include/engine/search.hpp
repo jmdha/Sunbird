@@ -18,7 +18,8 @@ int Quiesce(Board &board, int alpha, int beta);
 /*
  * Finds optimal move for a given position, or until the limit is reached
  */
-int Negamax(Board &board, int alpha, int beta, int depth, PV &pv, SearchLimit *limit = nullptr);
+int Negamax(Board &board, int alpha, int beta, int depth, PV &pv, PV &ppv,
+            SearchLimit *limit = nullptr);
 }; // namespace Internal
 std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth);
 std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optional<int> timeLimit);

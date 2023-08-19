@@ -22,6 +22,7 @@ public:
     // access
    
     inline size_t MoveCount() const noexcept;
+    inline size_t Ply() const noexcept;
     inline const Position& Pos() const noexcept;
     bool IsThreefoldRepetition() const noexcept;
 
@@ -37,6 +38,10 @@ private:
 
 inline size_t Board::MoveCount() const noexcept {
     return _moves;
+}
+
+inline size_t Board::Ply() const noexcept {
+    return _positions.size();
 }
 
 inline const Position& Board::Pos() const noexcept {

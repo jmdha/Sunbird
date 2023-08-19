@@ -3,11 +3,14 @@
 
 #include <chess/internal/move_list.hpp>
 #include <chess/internal/position.hpp>
+#include <engine/internal/pv.hpp>
 
 namespace Chess::Engine::MoveOrdering {
-void MVVLVA(const Position& pos, MoveList &moves);
+void MVVLVA(const Board& board, MoveList &moves);
 
-void All(const Position& pos, MoveList &moves);
+void PVPrioity(const Board& board, const PV &pv, MoveList &moves);
+
+void All(const Board& board, const PV &pv, MoveList &moves);
 }
 
 #endif

@@ -28,8 +28,8 @@ std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth) {
     if (auto terminal = IsTerminal(board.Pos()); terminal.has_value())
         return terminal.value();
 
-    PV pv;
-    Internal::Negamax(board, -MaterialValue::Inf, MaterialValue::Inf, depth, pv);
+    PV pv = PV(board.Ply());
+    Internal::Negamax(board, -MaterialValue::Inf, MaterialValue::Inf, depth, pv, pv);
     return pv._moves[0];
 }
 
@@ -43,7 +43,7 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
 
     std::cout << "info fen " << Export::FEN(board.Pos()) << '\n';
 
-    PV pv;
+    PV pv = PV(board.Ply());
 
     std::jmp_buf exitBuffer;
     SearchLimit *limit = nullptr;
@@ -60,12 +60,13 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
         auto t0 = std::chrono::steady_clock::now();
         PV tempPV;
         int score = -Internal::Negamax(tempBoard, -MaterialValue::Inf, MaterialValue::Inf, depth,
-                                       tempPV, limit);
+                                       tempPV, pv, limit);
         // HACK: This fixes a bug where sometimes checkmates in high depths would return no pv. It
         // should not be needed, but I cannot find why this occurs
         if (tempPV._count == 0)
             break;
-        pv = tempPV;
+        pv._count = tempPV._count;
+        pv._moves = tempPV._moves;
         auto t1 = std::chrono::steady_clock::now();
         size_t t = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
         std::cout << "info";
