@@ -41,7 +41,7 @@ MoveList GenerateMoves(const Position &pos, Color color) {
 }
 template <GenType gType = GenType::All>
 inline MoveList GenerateMoves(const Position &pos) {
-    return GenerateMoves<GenType::All>(pos, pos.GetTurn());
+    return GenerateMoves<gType>(pos, pos.GetTurn());
 }
 
 // Generates moves for all pieces of type
