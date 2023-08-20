@@ -5,19 +5,21 @@
 #include <string>
 #include <vector>
 
-#include "internal/position.hpp"
 #include "internal/constants.hpp"
 #include "internal/move.hpp"
 #include "internal/move_list.hpp"
+#include "internal/position.hpp"
 
 namespace Chess::MoveGen {
 enum class GenType { Quiet, Attack, All };
 
 // Generates moves for an individual piece type
-template <GenType, PieceType> void Generate(const Position &pos, Color color, MoveList &moves);
+template <GenType, PieceType>
+void Generate(const Position &pos, Color color, MoveList &moves);
 
 // Generates moves for all pieces
-template <GenType gType> MoveList GenerateMoves(const Position &pos, Color color) {
+template <GenType gType>
+MoveList GenerateMoves(const Position &pos, Color color) {
     MoveList moves;
     if constexpr (gType == GenType::All || gType == GenType::Attack) {
         Generate<GenType::Attack, PieceType::Pawn>(pos, color, moves);
@@ -37,9 +39,14 @@ template <GenType gType> MoveList GenerateMoves(const Position &pos, Color color
     }
     return moves;
 }
+template <GenType gType = GenType::All>
+inline MoveList GenerateMoves(const Position &pos) {
+    return GenerateMoves<GenType::All>(pos, pos.GetTurn());
+}
 
 // Generates moves for all pieces of type
-template <GenType gType> MoveList GenerateMoves(const Position &pos, Color color, PieceType pType) {
+template <GenType gType>
+MoveList GenerateMoves(const Position &pos, Color color, PieceType pType) {
     assert(pType != PieceType::None);
     MoveList moves;
     switch (pType) {

@@ -25,6 +25,7 @@ public:
     inline Square GetTo() const noexcept { return (Square)((move >> 10) & 0x3f); }
     inline bool IsCapture() const noexcept { return move & CaptureBit; }
     inline bool IsPromotion() const noexcept { return move & PromotionBit; }
+    inline bool IsTactical() const noexcept { return IsCapture() || IsPromotion(); }
     inline bool IsCastle() const noexcept { return move & CastlingBit; }
     inline bool IsEP() const noexcept { return GetType() == MoveType::EPCapture; }
 
