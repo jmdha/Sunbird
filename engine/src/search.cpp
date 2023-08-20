@@ -55,6 +55,10 @@ GetBestMoveTime(Board &board, std::optional<int> timeLimit) {
         auto result =
             Instance(depth, timeLimit, prior).Begin(tempBoard, &exitBuffer);
         auto t1 = std::chrono::steady_clock::now();
+        // HACK: This fixes a bug where sometimes checkmates in high depths would return no pv. It
+        // should not be needed, but I cannot find why this occurs
+        if (result._pv._count == 0)
+            break;
         size_t t =
             std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0)
                 .count();
