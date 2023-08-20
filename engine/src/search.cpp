@@ -59,6 +59,7 @@ GetBestMoveTime(Board &board, std::optional<int> timeLimit) {
         // should not be needed, but I cannot find why this occurs
         if (result._pv._count == 0)
             break;
+        prior = result;
         size_t t =
             std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0)
                 .count();

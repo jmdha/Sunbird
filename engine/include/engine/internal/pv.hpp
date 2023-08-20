@@ -10,7 +10,7 @@ struct PV {
     PV(const PV &pv) : _moves(pv._moves), _count(pv._count), _ply(pv._ply) {}
     std::array<Move, MAX_PLY> _moves;
     int _count = 0;
-    const size_t _ply;
+    size_t _ply;
 };
 }
 

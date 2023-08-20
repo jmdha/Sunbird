@@ -42,8 +42,7 @@ int Instance::Quiesce(Board &board, int alpha, int beta) {
     if (AB(standPat, alpha, beta))
         return beta;
 
-    MoveList moves =
-        GenerateMoves<GenType::Attack>(board.Pos(), board.Pos().GetTurn());
+    MoveList moves = GenerateMoves<GenType::Attack>(board.Pos());
     MoveOrdering::All(board, _priorPV, moves);
     for (auto move : moves) {
         board.MakeMove(move);
@@ -64,8 +63,7 @@ int Instance::Negamax(Board &board, int alpha, int beta, int depth, PV &pv,
     if (depth == 0)
         return Quiesce(board, alpha, beta);
 
-    MoveList moves =
-        GenerateMoves<GenType::All>(board.Pos(), board.Pos().GetTurn());
+    MoveList moves = GenerateMoves(board.Pos());
     if (moves.empty())
         return Evaluation::EvalNoMove(board.Pos());
 

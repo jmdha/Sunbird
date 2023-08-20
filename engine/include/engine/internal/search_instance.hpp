@@ -1,11 +1,13 @@
 #ifndef CHESS_ENGINE_SEARCH_INSTANCE
 #define CHESS_ENGINE_SEARCH_INSTANCE
 
+#include <chess/internal/move_list.hpp>
 #include <chess/board.hpp>
 #include <chrono>
 #include <csetjmp>
 #include <engine/internal/pv.hpp>
 #include <optional>
+#include <unordered_map>
 
 namespace Chess::Engine::Search {
 class Instance {
@@ -23,7 +25,6 @@ private:
     const int _rootDepth;
     const std::optional<std::chrono::steady_clock::time_point> _time;
     const PV _priorPV;
-    bool _hasSearched = false;
 
     bool IsTime();
 
