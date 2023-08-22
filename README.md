@@ -29,10 +29,12 @@ Play against it [here](https://lichess.org/@/sun_bird).
 * Quiescence Search [[wiki](https://www.chessprogramming.org/Quiescence_Search)]
 * Move Ordering
   * MVV-LVA [[wiki](https://www.chessprogramming.org/MVV-LVA)]
+  * PV [[wiki](https://www.chessprogramming.org/PV-Move)]
     
 ### Evaluation
 * Material Point Value [[wiki](https://www.chessprogramming.org/Material)]
 * Piece-Square Tables [[wiki](https://www.chessprogramming.org/Piece-Square_Tables)]
+* Tapered by game phase [[wiki](https://www.chessprogramming.org/Tapered_Eval)]
 
 ## Benchmark
 These are run on a i5-13600k with a single thread.
