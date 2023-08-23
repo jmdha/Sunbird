@@ -46,13 +46,7 @@ GetBestMoveTime(Board &board, std::optional<int> timeLimit) {
     std::jmp_buf exitBuffer;
     std::optional<Instance::Result> prior;
 
-    for (int depth = 1; depth < 1000; depth++) {
-        if (setjmp(exitBuffer)) {
-            if (prior.has_value())
-                return prior.value()._move;
-            else
-                return std::get<Move>(GetBestMove(board, 1));
-        }
+    for (int depth = 1; depth < 1000 && !setjmp(exitBuffer); depth++) {
         Board tempBoard = board;
         auto t0 = std::chrono::steady_clock::now();
         auto result =
@@ -82,6 +76,9 @@ GetBestMoveTime(Board &board, std::optional<int> timeLimit) {
         if (std::abs(result._score) == Values::INF)
             break;
     }
-    longjmp(exitBuffer, 1);
+    if (prior.has_value())
+        return prior.value()._move;
+    else
+        return std::get<Move>(GetBestMove(board, 1));
 }
 } // namespace Chess::Engine::Search
