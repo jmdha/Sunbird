@@ -46,19 +46,26 @@ GetBestMoveTime(Board &board, std::optional<int> timeLimit) {
     std::jmp_buf exitBuffer;
     std::optional<Instance::Result> prior;
 
-    if (setjmp(exitBuffer))
-        return prior.value()._move;
-
     for (int depth = 1; depth < 1000; depth++) {
+        if (setjmp(exitBuffer)) {
+            if (prior.has_value())
+                return prior.value()._move;
+            else
+                return std::get<Move>(GetBestMove(board, 1));
+        }
         Board tempBoard = board;
         auto t0 = std::chrono::steady_clock::now();
         auto result =
             Instance(depth, timeLimit, prior).Begin(tempBoard, &exitBuffer);
         auto t1 = std::chrono::steady_clock::now();
-        // HACK: This fixes a bug where sometimes checkmates in high depths would return no pv. It
-        // should not be needed, but I cannot find why this occurs
-        if (result._pv._count == 0)
+        // HACK: This fixes a bug where sometimes checkmates in high depths
+        // would return no pv. It should not be needed, but I cannot find why
+        // this occurs
+        if (result._pv._count == 0) {
+            printf("ABC\n");
             break;
+        }
+        printf("Setting prior\n");
         prior = result;
         size_t t =
             std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0)
