@@ -61,6 +61,8 @@ GetBestMoveTime(Board &board, std::optional<int> timeLimit) {
         size_t t =
             std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0)
                 .count();
+        if (timeLimit.has_value())
+            timeLimit.value() -= t;
         std::cout << "info";
         printf(" depth %d", depth);
         printf(" score cp %d", result._score);
