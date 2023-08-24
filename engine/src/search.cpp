@@ -76,6 +76,9 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board,
         std::cout << '\n';
         if (std::abs(result._score) == Values::INF)
             break;
+        // Tries to avoid spending unusable search time
+        if (timeLimit < 4 * t)
+            break;
     }
     return std::get<Move>(GetBestMove(board, 1));
 }
