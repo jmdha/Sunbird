@@ -34,8 +34,8 @@ std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth) {
     return result._move;
 }
 
-std::variant<Move, AlternativeResult>
-GetBestMoveTime(Board &board, int timeLimit) {
+std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board,
+                                                      int timeLimit) {
     if (auto terminal = IsTerminal(board.Pos()); terminal.has_value())
         return terminal.value();
     if (auto moves = MoveGen::GenerateMoves(board.Pos()); moves.size() == 1)
@@ -77,9 +77,6 @@ GetBestMoveTime(Board &board, int timeLimit) {
         if (std::abs(result._score) == Values::INF)
             break;
     }
-    if (prior.has_value())
-        return prior.value()._move;
-    else
-        return std::get<Move>(GetBestMove(board, 1));
+    return std::get<Move>(GetBestMove(board, 1));
 }
 } // namespace Chess::Engine::Search
