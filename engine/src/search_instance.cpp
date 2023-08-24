@@ -50,7 +50,8 @@ int Instance::Quiesce(Board &board, int alpha, int beta) {
 }
 int Instance::Negamax(Board &board, int alpha, int beta, int depth, PV &pv,
                       std::jmp_buf *jmpBuf) {
-    if (jmpBuf != nullptr && IsTime())
+    // Checks only at depth > 1 to avoid checking time too often
+    if (jmpBuf != nullptr && depth > 1 && IsTime())
         longjmp(*jmpBuf, 1);
     if (board.IsThreefoldRepetition())
         return 0;
