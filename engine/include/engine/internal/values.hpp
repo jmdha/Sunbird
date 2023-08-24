@@ -141,7 +141,7 @@ constexpr std::array<int, 64> MG {
 };
 
 constexpr std::array<int, 64> EG = {
-20,-10,-10, -5, -5,-10,-10,-20
+     20,-10,-10, -5, -5,-10,-10,-20
     -10,  0,  5,  0,  0,  0,  0,-10,
     -10,  5,  5,  5,  5,  5,  0,-10,
       0,  0,  5,  5,  5,  5,  0, -5,
@@ -179,10 +179,9 @@ constexpr std::array<int, 64> EG = {
 } // namespace Position
 namespace {
 constexpr std::array<int, 64> C(std::array<int, 64> a, int b) {
-    std::array<int, 64> array;
-    for (int i = 0; i < array.size(); i++)
-        array[i] = a[i] + b;
-    return array;
+    for (int i = 0; i < a.size(); i++)
+        a[i] += b;
+    return a;
 }
 constexpr std::array<int, 64> I(std::array<int, 64> array) {
     std::array<int, 64> newArray;

@@ -63,26 +63,32 @@ int Instance::Negamax(Board &board, int alpha, int beta, int depth, PV &pv,
     if (depth == 0)
         return Quiesce(board, alpha, beta);
 
-    MoveList moves = GenerateMoves(board.Pos());
-    if (moves.empty())
-        return Evaluation::EvalNoMove(board.Pos());
+    bool anyMove = false;
 
-    MoveOrdering::All(board, _priorPV, moves);
-    for (auto move : moves) {
-        PV moveLine;
-        board.MakeMove(move);
-        int score = -Negamax(board, -beta, -alpha, depth - 1, moveLine, jmpBuf);
-        board.UndoMove();
-        if (alpha >= beta)
-            return beta;
-        if (score > alpha) {
-            alpha = score;
-            pv._moves[0] = move;
-            std::memmove(&pv._moves[1], &moveLine._moves[0],
-                         moveLine._count * sizeof(Move));
-            pv._count = moveLine._count + 1;
+    for (auto moves : {GenerateMoves<GenType::Attack>(board.Pos()),
+                       GenerateMoves<GenType::Quiet>(board.Pos())}) {
+        MoveOrdering::All(board, _priorPV, moves);
+        for (auto move : moves) {
+            anyMove = true;
+            PV moveLine;
+            board.MakeMove(move);
+            int score =
+                -Negamax(board, -beta, -alpha, depth - 1, moveLine, jmpBuf);
+            board.UndoMove();
+            if (alpha >= beta)
+                return beta;
+            if (score > alpha) {
+                alpha = score;
+                pv._moves[0] = move;
+                std::memmove(&pv._moves[1], &moveLine._moves[0],
+                             moveLine._count * sizeof(Move));
+                pv._count = moveLine._count + 1;
+            }
         }
     }
+
+    if (!anyMove)
+        return Evaluation::EvalNoMove(board.Pos());
 
     return alpha;
 }
