@@ -18,12 +18,12 @@ public:
         int _score;
     };
     Instance(int depth);
-    Instance(int depth, std::optional<int> time, std::optional<Result> prior);
+    Instance(int depth, int time, std::optional<Result> prior);
     Result Begin(Board &board, std::jmp_buf *jmpBuf = nullptr);
 
 private:
     const int _rootDepth;
-    const std::optional<std::chrono::steady_clock::time_point> _time;
+    const std::chrono::steady_clock::time_point _time;
     const PV _priorPV;
 
     bool IsTime();

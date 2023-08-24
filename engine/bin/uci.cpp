@@ -1,3 +1,4 @@
+#include <climits>
 #include <iostream>
 #include <optional>
 #include <string>
@@ -95,14 +96,14 @@ int main() {
 
             break;
         case Command::go: {
-            std::optional<int> searchTime;
+            int searchTime = INT_MAX;
 
             for (int i = 0; i < tokens.size(); i++) {
                 auto token = tokens[i];
                 if (board.Pos().GetTurn() == Color::White && token == "wtime" ||
                     board.Pos().GetTurn() == Color::Black && token == "btime") {
                     searchTime = std::stoi(tokens[i + 1]);
-                    searchTime.value() *= 0.05;
+                    searchTime *= 0.05;
                 } else if (token == "movetime")
                     searchTime = std::stoi(tokens[i + 1]);
             }

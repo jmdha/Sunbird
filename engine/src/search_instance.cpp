@@ -12,13 +12,9 @@
 namespace Chess::Engine::Search {
 using namespace MoveGen;
 Instance::Instance(int depth) : _rootDepth(depth), _priorPV({}){};
-Instance::Instance(int depth, std::optional<int> time,
-                   std::optional<Result> prior)
+Instance::Instance(int depth, int time, std::optional<Result> prior)
     : _rootDepth(depth),
-      _time((!time.has_value())
-                ? std::optional<std::chrono::steady_clock::time_point>()
-                : std::chrono::steady_clock::now() +
-                      std::chrono::milliseconds(time.value())),
+      _time(std::chrono::steady_clock::now() + std::chrono::milliseconds(time)),
       _priorPV(prior.has_value() ? prior->_pv : PV(0)) {}
 
 namespace {
@@ -32,8 +28,6 @@ bool AB(int score, int &alpha, int beta) {
 } // namespace
 
 bool Instance::IsTime() {
-    if (!_time.has_value())
-        return false;
     return _time < std::chrono::steady_clock::now();
 }
 
