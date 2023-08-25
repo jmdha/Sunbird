@@ -40,7 +40,7 @@ set(CHESS_SRC
 
 add_library(CHESS ${CHESS_HEADERS} ${CHESS_SRC})
 set_target_properties(CHESS PROPERTIES LINKER_LANGUAGE CXX)
-target_include_directories(CHESS PUBLIC ${CHESS_INCLUDE_DIR} ${CMAKE_CURRENT_LIST_DIR}/third_party)
+target_include_directories(CHESS PUBLIC ${CHESS_INCLUDE_DIR})
 target_link_libraries(CHESS PUBLIC jank)
 
 if (NOT IGNORE_TEST)

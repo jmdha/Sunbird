@@ -58,7 +58,13 @@ private:
 
 inline uint64_t Position::GetHash() const noexcept { return _hash; }
 inline Color Position::GetTurn() const noexcept { return (Color)(_misc & 0x1); }
-inline Column Position::GetEP() const noexcept { return COLUMNS[(_misc >> 5) & 0xf]; }
+inline Column Position::GetEP() const noexcept { 
+    const int index = (_misc >> 5) & 0xf;
+    if (index == 0)
+        return Column::None;
+    else
+        return COLUMNS[index - 1];
+}
 inline Castling Position::GetCastling(Color color) const noexcept {
     return (Castling) (((_misc >> 1) & (0x3 << (2 * (int)color))) >> (2 * (int)color));
 }
@@ -113,8 +119,10 @@ inline void Position::DisallowCastling(Castling castling, Color color) noexcept 
     SetCastling((Castling)((int)priorCastling & ~((int)castling)), color);
 }
 inline void Position::SetEP(Column column) noexcept {
-    const int index = Utilities::GetColumnIndex(column);
     _misc &= ~0x1e0;
+    if (column == Column::None) [[likely]]
+        return;
+    const BB index = jank::bit::lsb((BB)column) + 1;
     _misc |= (index & 0xf) << 5;
 }
 
