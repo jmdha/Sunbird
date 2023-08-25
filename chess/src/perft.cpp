@@ -3,7 +3,7 @@
 namespace Chess::Perft {
 namespace {
 int Run(Board &board, int depth) {
-    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board.Pos(), board.Pos().GetTurn());
+    MoveList moves = MoveGen::GenerateMoves(board.Pos());
     if (depth == 1)
         return moves.size();
     int leafCount = 0;
@@ -23,7 +23,7 @@ int RunFromPosition(Board &board, int depth) { return Run(board, depth); }
 int PerftDivide(Board &board, int depth) {
     int total = 0;
 
-    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(board.Pos(), board.Pos().GetTurn());
+    MoveList moves = MoveGen::GenerateMoves(board.Pos());
 
     for (auto move : moves) {
         board.MakeMove(move);

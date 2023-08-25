@@ -18,7 +18,7 @@ set(ENGINE_SRC
     ${ENGINE_SRC_DIR}/move_ordering.cpp
     ${ENGINE_SRC_DIR}/evaluation.cpp
     ${ENGINE_SRC_DIR}/search.cpp
-    ${ENGINE_SRC_DIR}/search_instance.cpp
+    ${ENGINE_SRC_DIR}/search_internal.cpp
     )
 
 add_library(ENGINE ${ENGINE_HEADERS} ${ENGINE_SRC})

@@ -1,4 +1,3 @@
-#include "engine/internal/search_instance.hpp"
 #include <chess/export.hpp>
 #include <chess/internal/constants.hpp>
 #include <chess/move_gen.hpp>
@@ -17,10 +16,9 @@
 namespace Chess::Engine::Search {
 namespace {
 std::optional<AlternativeResult> IsTerminal(const Position &pos) {
-    MoveList moves = MoveGen::GenerateMoves(pos);
+    MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(pos, pos.GetTurn());
     if (moves.empty())
-        return Evaluation::Eval(pos) == 0 ? AlternativeResult::Draw
-                                          : AlternativeResult::Checkmate;
+        return Evaluation::Eval(pos) == 0 ? AlternativeResult::Draw : AlternativeResult::Checkmate;
     else
         return {};
 }
@@ -30,12 +28,12 @@ std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth) {
     if (auto terminal = IsTerminal(board.Pos()); terminal.has_value())
         return terminal.value();
 
-    auto result = Instance(depth).Begin(board);
-    return result._move;
+    PV pv = PV(board.Ply());
+    Internal::Negamax(board, -Values::INF, Values::INF, depth, pv, pv);
+    return pv._moves[0];
 }
 
-std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board,
-                                                      int timeLimit) {
+std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit) {
     if (auto terminal = IsTerminal(board.Pos()); terminal.has_value())
         return terminal.value();
     if (auto moves = MoveGen::GenerateMoves(board.Pos()); moves.size() == 1)
@@ -43,43 +41,43 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board,
 
     std::cout << "info fen " << Export::FEN(board.Pos()) << '\n';
 
+    PV pv = PV(board.Ply());
+
     std::jmp_buf exitBuffer;
-    std::optional<Instance::Result> prior;
+    SearchLimit *limit = nullptr;
+    limit = new SearchLimit(exitBuffer, timeLimit);
 
     for (int depth = 1; depth < 1000 && !setjmp(exitBuffer); depth++) {
         Board tempBoard = board;
         auto t0 = std::chrono::steady_clock::now();
-        auto result =
-            Instance(depth, timeLimit, prior).Begin(tempBoard, &exitBuffer);
-        auto t1 = std::chrono::steady_clock::now();
-        // HACK: This fixes a bug where sometimes checkmates in high depths
-        // would return no pv. It should not be needed, but I cannot find why
-        // this occurs
-        if (result._pv._count == 0)
+        PV tempPV;
+        int score =
+            -Internal::Negamax(tempBoard, -Values::INF, Values::INF, depth, tempPV, pv, limit);
+        // HACK: This fixes a bug where sometimes checkmates in high depths would return no pv. It
+        // should not be needed, but I cannot find why this occurs
+        if (tempPV._count == 0)
             break;
-        prior = result;
-        size_t t =
-            std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0)
-                .count();
+        pv._count = tempPV._count;
+        pv._moves = tempPV._moves;
+        auto t1 = std::chrono::steady_clock::now();
+        size_t t = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
         timeLimit -= t;
         std::cout << "info";
-        printf(" depth %d", depth);
-        printf(" score cp %d", result._score);
-        printf(" time %zu ms", t);
+        printf(" depth %2d", depth);
+        printf(" score cp %6d", score);
+        printf(" time %5zu ms", t);
         auto nodes = tempBoard.MoveCount() - board.MoveCount();
-        printf(" nodes %zu", nodes);
-        auto nps = nodes / std::max((size_t)1, t) * 1000;
-        printf(" nps %zu", nps);
+        printf(" nodes %9zu", nodes);
+        auto nps = nodes / std::max((size_t)1, (t / 1000));
+        printf(" nps %8zu", nps);
         std::cout << " pv ";
-        for (int i = 0; i < std::min(result._pv._count, 8); i++)
-            std::cout << result._pv._moves[i].ToString() << " ";
+        for (int i = 0; i < std::min(pv._count, 8); i++)
+            std::cout << pv._moves[i].ToString() << " ";
         std::cout << '\n';
-        if (std::abs(result._score) == Values::INF)
-            break;
-        // Tries to avoid spending unusable search time
-        if (timeLimit < 4 * t)
+        if (std::abs(score) == Values::INF)
             break;
     }
-    return std::get<Move>(GetBestMove(board, 1));
+    free(limit);
+    return pv._moves[0];
 }
 } // namespace Chess::Engine::Search
