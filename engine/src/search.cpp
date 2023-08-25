@@ -33,12 +33,10 @@ std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth) {
     return pv._moves[0];
 }
 
-std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optional<int> timeLimit) {
+std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit) {
     if (auto terminal = IsTerminal(board.Pos()); terminal.has_value())
         return terminal.value();
-    if (auto moves =
-            MoveGen::GenerateMoves<MoveGen::GenType::All>(board.Pos(), board.Pos().GetTurn());
-        moves.size() == 1)
+    if (auto moves = MoveGen::GenerateMoves(board.Pos()); moves.size() == 1)
         return moves[0];
 
     std::cout << "info fen " << Export::FEN(board.Pos()) << '\n';
@@ -47,20 +45,14 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
 
     std::jmp_buf exitBuffer;
     SearchLimit *limit = nullptr;
-    if (timeLimit.has_value())
-        limit = new SearchLimit(exitBuffer, timeLimit.value());
+    limit = new SearchLimit(exitBuffer, timeLimit);
 
-    if (setjmp(exitBuffer)) {
-        free(limit);
-        return pv._moves[0];
-    }
-
-    for (int depth = 1; depth < 1000; depth++) {
+    for (int depth = 1; depth < 1000 && !setjmp(exitBuffer); depth++) {
         Board tempBoard = board;
         auto t0 = std::chrono::steady_clock::now();
         PV tempPV;
-        int score = -Internal::Negamax(tempBoard, -Values::INF, Values::INF, depth,
-                                       tempPV, pv, limit);
+        int score =
+            -Internal::Negamax(tempBoard, -Values::INF, Values::INF, depth, tempPV, pv, limit);
         // HACK: This fixes a bug where sometimes checkmates in high depths would return no pv. It
         // should not be needed, but I cannot find why this occurs
         if (tempPV._count == 0)
@@ -69,6 +61,7 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
         pv._moves = tempPV._moves;
         auto t1 = std::chrono::steady_clock::now();
         size_t t = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+        timeLimit -= t;
         std::cout << "info";
         printf(" depth %2d", depth);
         printf(" score cp %6d", score);
@@ -84,6 +77,7 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optiona
         if (std::abs(score) == Values::INF)
             break;
     }
-    longjmp(exitBuffer, 1);
+    free(limit);
+    return pv._moves[0];
 }
 } // namespace Chess::Engine::Search

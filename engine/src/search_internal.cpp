@@ -22,7 +22,7 @@ int Quiesce(Board &board, int alpha, int beta, PV &ppv) {
     if (AB(standPat, alpha, beta))
         return beta;
 
-    MoveList moves = GenerateMoves<GenType::Attack>(board.Pos(), board.Pos().GetTurn());
+    MoveList moves = GenerateMoves<GenType::Attack>(board.Pos());
     MoveOrdering::All(board, ppv, moves);
     for (auto move : moves) {
         board.MakeMove(move);
@@ -36,14 +36,14 @@ int Quiesce(Board &board, int alpha, int beta, PV &ppv) {
 }
 
 int Negamax(Board &board, int alpha, int beta, int depth, PV &pv, PV &ppv, SearchLimit *limit) {
-    if (limit != nullptr && limit->Reached())
+    if (limit != nullptr && depth > 1 && limit->Reached())
         limit->Exit();
     if (board.IsThreefoldRepetition())
         return 0;
     if (depth == 0)
         return Quiesce(board, alpha, beta, ppv);
 
-    MoveList moves = GenerateMoves<GenType::All>(board.Pos(), board.Pos().GetTurn());
+    MoveList moves = GenerateMoves(board.Pos());
     if (moves.empty())
         return Evaluation::EvalNoMove(board.Pos());
 

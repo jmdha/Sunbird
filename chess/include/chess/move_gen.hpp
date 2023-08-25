@@ -38,6 +38,11 @@ template <GenType gType> MoveList GenerateMoves(const Position &pos, Color color
     return moves;
 }
 
+template <GenType gType = GenType::All> 
+MoveList GenerateMoves(const Position &pos) {
+    return GenerateMoves<gType>(pos, pos.GetTurn());
+}
+
 // Generates moves for all pieces of type
 template <GenType gType> MoveList GenerateMoves(const Position &pos, Color color, PieceType pType) {
     assert(pType != PieceType::None);

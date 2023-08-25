@@ -22,7 +22,7 @@ int Negamax(Board &board, int alpha, int beta, int depth, PV &pv, PV &ppv,
             SearchLimit *limit = nullptr);
 }; // namespace Internal
 std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth);
-std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, std::optional<int> timeLimit);
+std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit);
 } // namespace Chess::Engine::Search
 
 #endif // ENGINE_NEGAMAX
