@@ -42,3 +42,6 @@ uint64_t Zobrist::FlipCastling(uint64_t hash, Color col, Castling side) {
 uint64_t Zobrist::FlipEnPassant(uint64_t hash, Column col) {
     return hash ^ hashes[SQUARE_HASH_COUNT + 4 + Utilities::GetColumnIndex(col)];
 }
+uint64_t Zobrist::FlipColor(uint64_t hash) {
+    return hash ^ 0xaa55aa55aa55aa55;
+}

@@ -35,8 +35,22 @@ void PVPrioity(const Board &board, const PV &pv, MoveList &moves) {
     }
 }
 
-void All(const Board &board, const PV &pv, MoveList &moves) { 
+void TTPrioity(Move move, MoveList &moves) {
+    if (move.GetValue() == 0)
+        return;
+    for (int i = 0; i < moves.size(); i++) {
+        if (moves[i] == move) {
+            std::memmove(&moves[i], &moves[i + 1], (moves.size() - i) * sizeof(Move));
+            std::memmove(&moves[1], &moves[0], (moves.size() - 1) * sizeof(Move));
+            moves[0] = move;
+            break;
+        }
+    }
+}
+
+void All(const Board &board, Move ttMove, const PV &pv, MoveList &moves) { 
     MVVLVA(board, moves);
+    TTPrioity(ttMove, moves);
     PVPrioity(board, pv, moves);
 }
 } // namespace Chess::Engine::MoveOrdering

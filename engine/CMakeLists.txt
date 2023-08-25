@@ -10,6 +10,7 @@ set(ENGINE_HEADERS
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/move_ordering.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/pv.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/search_instance.hpp
+    ${ENGINE_INCLUDE_BUILD_DIR}/internal/tt.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/evaluation.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/search.hpp
     )
@@ -19,6 +20,7 @@ set(ENGINE_SRC
     ${ENGINE_SRC_DIR}/evaluation.cpp
     ${ENGINE_SRC_DIR}/search.cpp
     ${ENGINE_SRC_DIR}/search_internal.cpp
+    ${ENGINE_SRC_DIR}/tt.cpp
     )
 
 add_library(ENGINE ${ENGINE_HEADERS} ${ENGINE_SRC})

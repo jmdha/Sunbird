@@ -46,8 +46,12 @@ Board FEN(std::string FEN) {
         FEN.erase(0, 1);
     }
     FEN.erase(0, 1);
-    pos.SetCastling(castling[(int)Color::White], Color::White);
-    pos.SetCastling(castling[(int)Color::Black], Color::Black);
+    for (auto color : {Color::White, Color::Black}) {
+        if (!((int)castling[(int)color] & (int)Castling::King))
+            pos.DisallowCastling(Castling::King, color);
+        if (!((int)castling[(int)color] & (int)Castling::Queen))
+            pos.DisallowCastling(Castling::Queen, color);
+    }
 
     // import en-passant
     if (FEN.size() > 0 && FEN[0] != '-' && FEN[0] != ' ') {

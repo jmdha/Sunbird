@@ -1,4 +1,5 @@
 #include "engine/internal/move_ordering.hpp"
+#include "engine/internal/tt.hpp"
 #include <chess/internal/move_list.hpp>
 #include <chess/move_gen.hpp>
 #include <cstring>
@@ -23,7 +24,8 @@ int Quiesce(Board &board, int alpha, int beta, PV &ppv) {
         return beta;
 
     MoveList moves = GenerateMoves<GenType::Attack>(board.Pos());
-    MoveOrdering::All(board, ppv, moves);
+    MoveOrdering::MVVLVA(board, moves);
+    MoveOrdering::PVPrioity(board, ppv, moves);
     for (auto move : moves) {
         board.MakeMove(move);
         int score = -Quiesce(board, -beta, -alpha, ppv);
@@ -35,7 +37,8 @@ int Quiesce(Board &board, int alpha, int beta, PV &ppv) {
     return alpha;
 }
 
-int Negamax(Board &board, int alpha, int beta, int depth, PV &pv, PV &ppv, SearchLimit *limit) {
+int Negamax(Board &board, int alpha, int beta, int depth, PV &pv, PV &ppv,
+            SearchLimit *limit) {
     if (limit != nullptr && depth > 1 && limit->Reached())
         limit->Exit();
     if (board.IsThreefoldRepetition())
@@ -43,26 +46,37 @@ int Negamax(Board &board, int alpha, int beta, int depth, PV &pv, PV &ppv, Searc
     if (depth == 0)
         return Quiesce(board, alpha, beta, ppv);
 
+    TT::Flag flag = TT::Flag::Upper;
+    auto ttResult = TT::Probe(board.Pos().GetHash(), depth, alpha, beta);
+    if (ttResult.found)
+        return ttResult.score;
+
     MoveList moves = GenerateMoves(board.Pos());
     if (moves.empty())
         return Evaluation::EvalNoMove(board.Pos());
 
-    MoveOrdering::All(board, ppv, moves);
+    MoveOrdering::All(board, ttResult.move, ppv, moves);
     for (auto move : moves) {
         PV moveLine;
         board.MakeMove(move);
-        int score = -Negamax(board, -beta, -alpha, depth - 1, moveLine, ppv, limit);
+        int value =
+            -Negamax(board, -beta, -alpha, depth - 1, moveLine, ppv, limit);
         board.UndoMove();
-        if (alpha >= beta)
+        if (value >= beta) {
+            TT::Save(board.Pos().GetHash(), depth, TT::Flag::Lower, beta, move);
             return beta;
-        if (score > alpha) {
-            alpha = score;
+        }
+        if (value > alpha) {
+            flag = TT::Flag::Exact;
+            alpha = value;
             pv._moves[0] = move;
-            std::memmove(&pv._moves[1], &moveLine._moves[0], moveLine._count * sizeof(Move));
+            std::memmove(&pv._moves[1], &moveLine._moves[0],
+                         moveLine._count * sizeof(Move));
             pv._count = moveLine._count + 1;
         }
     }
 
+    TT::Save(board.Pos().GetHash(), depth, flag, alpha, pv._moves[0]);
     return alpha;
 }
 } // namespace Chess::Engine::Search::Internal

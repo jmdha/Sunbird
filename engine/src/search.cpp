@@ -47,7 +47,7 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimi
     SearchLimit *limit = nullptr;
     limit = new SearchLimit(exitBuffer, timeLimit);
 
-    for (int depth = 1; depth < 1000 && !setjmp(exitBuffer); depth++) {
+    for (int depth = 1; depth < 256 && !setjmp(exitBuffer); depth++) {
         Board tempBoard = board;
         auto t0 = std::chrono::steady_clock::now();
         PV tempPV;

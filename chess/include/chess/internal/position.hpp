@@ -37,7 +37,6 @@ public:
     // modifiers
 
     inline void SetTurn(Color color) noexcept;
-    inline void SetCastling(Castling castling, Color color) noexcept;
     inline void DisallowCastling(Castling castling, Color color) noexcept;
     inline void SetEP(Column column) noexcept;
     inline void PlacePiece(Square square, PieceType pType, Color color) noexcept;
@@ -53,7 +52,8 @@ private:
      * 4 bit - [6,9]: EP
      * column)
      */
-    uint16_t _misc = 0;
+    uint16_t _misc = 30;
+    inline void SetCastling(Castling castling, Color color) noexcept;
 };
 
 inline uint64_t Position::GetHash() const noexcept { return _hash; }
@@ -107,23 +107,31 @@ inline BB Position::GetPieces(Color color, PieceType pType) const noexcept {
     return _colorBB[(int)color] & _pieceBB[(int)pType];
 }
 inline void Position::SetTurn(Color color) noexcept {
+    if (color != GetTurn())
+        _hash = Zobrist::FlipColor(_hash);
     _misc &= ~0x1;
     _misc |= (int)color & 0x1;
 }
 inline void Position::SetCastling(Castling castling, Color color) noexcept {
+    _hash = Zobrist::FlipCastling(_hash, color, castling);
     _misc &= ~((0x3 << (2 * (int)color)) << 1);
     _misc |= ((int)castling << (2 * (int)color)) << 1;
 }
 inline void Position::DisallowCastling(Castling castling, Color color) noexcept {
     const Castling priorCastling = GetCastling(color);
     SetCastling((Castling)((int)priorCastling & ~((int)castling)), color);
+    if (priorCastling != GetCastling(color))
+        _hash = Zobrist::FlipCastling(_hash, color, castling);
 }
 inline void Position::SetEP(Column column) noexcept {
+    if (auto EP = GetEP(); column != EP)
+        _hash = Zobrist::FlipEnPassant(_hash, EP);
     _misc &= ~0x1e0;
     if (column == Column::None) [[likely]]
         return;
     const BB index = jank::bit::lsb((BB)column) + 1;
     _misc |= (index & 0xf) << 5;
+    _hash = Zobrist::FlipEnPassant(_hash, column);
 }
 
 inline bool Position::IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard) const noexcept {

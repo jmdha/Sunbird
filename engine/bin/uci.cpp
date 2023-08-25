@@ -6,6 +6,7 @@
 #include <chess/board.hpp>
 #include <chess/import.hpp>
 #include <engine/search.hpp>
+#include <engine/internal/tt.hpp>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -97,6 +98,7 @@ int main() {
             break;
         case Command::go: {
             int searchTime = INT_MAX;
+            Engine::TT::Init(128);
 
             for (int i = 0; i < tokens.size(); i++) {
                 auto token = tokens[i];
@@ -112,6 +114,7 @@ int main() {
                 Engine::Search::GetBestMoveTime(board, searchTime));
             std::cout << "bestmove " << move.ToString() << '\n';
 
+            Engine::TT::Clean();
             break;
         }
         case Command::quit:
