@@ -3,15 +3,15 @@
 
 #include "chess/internal/move.hpp"
 #include <optional>
+#include <vector>
 namespace Chess::Engine {
 struct PV {
-    PV() : _ply(0) {}
-    PV(size_t ply) : _ply(ply) {}
-    PV(const PV &pv) : _moves(pv._moves), _count(pv._count), _ply(pv._ply) {}
-    std::array<Move, MAX_PLY> _moves;
-    int _count = 0;
-    size_t _ply;
+    PV() : ply(0) {}
+    PV(size_t ply) : ply(ply) {}
+    PV(size_t ply, std::vector<Move> moves) : ply(ply), moves(moves) {}
+    std::vector<Move> moves;
+    size_t ply;
 };
-}
+} // namespace Chess::Engine
 
 #endif

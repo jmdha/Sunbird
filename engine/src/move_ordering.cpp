@@ -19,12 +19,10 @@ void MVVLVA(const Board &board, MoveList &moves) {
 }
 
 void PVPrioity(const Board &board, const PV &pv, MoveList &moves) {
-    size_t pvIndex = board.Ply() - pv._ply;
-    if (pvIndex > pv._count || pv._count == 0)
+    size_t pvIndex = board.Ply() - pv.ply;
+    if (pvIndex > pv.moves.size() || pv.moves.size() == 0)
         return;
-    if (pvIndex > moves.size())
-        return;
-    Move pvMove = pv._moves[pvIndex];
+    Move pvMove = pv.moves[pvIndex];
     for (int i = 0; i < moves.size(); i++) {
         if (moves[i] == pvMove) {
             std::memmove(&moves[i], &moves[i + 1], (moves.size() - i) * sizeof(Move));

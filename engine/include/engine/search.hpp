@@ -14,11 +14,11 @@ namespace Internal {
 /*
  * From a given position, searches all non-quiet moves
  */
-int Quiesce(Board &board, int alpha, int beta);
+int Quiesce(Board &board, int alpha, int beta, const PV &pv);
 /*
  * Finds optimal move for a given position, or until the limit is reached
  */
-int Negamax(Board &board, int alpha, int beta, int depth, PV &pv, PV &ppv,
+int Negamax(Board &board, int alpha, int beta, int depth, const PV &pv,
             SearchLimit *limit = nullptr);
 }; // namespace Internal
 std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth);
