@@ -31,7 +31,7 @@ PV ExtractPV(Board board) {
     std::vector<Move> moves;
     while (moves.size() < 8) {
         auto move = TT::ProbeMove(board.Pos().GetHash());
-        if (move != nullptr) {
+        if (move != nullptr && move->GetValue() != 0) {
             moves.push_back(*move);
             board.MakeMove(*move);
         } else {
@@ -67,7 +67,7 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board,
         Board tempBoard = board;
         auto t0 = std::chrono::steady_clock::now();
         PV tempPV;
-        int score = -Internal::Negamax(tempBoard, -Values::INF, Values::INF,
+        int score = Internal::Negamax(tempBoard, -Values::INF, Values::INF,
                                        depth, pv, &limit);
         auto t1 = std::chrono::steady_clock::now();
         size_t t =

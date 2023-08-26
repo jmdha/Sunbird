@@ -25,6 +25,7 @@ int Quiesce(Board &board, int alpha, int beta, const PV &pv) {
 
     MoveList moves = GenerateMoves<GenType::Attack>(board.Pos());
     MoveOrdering::MVVLVA(board, moves);
+    MoveOrdering::PVPrioity(board, pv, moves);
     for (auto move : moves) {
         board.MakeMove(move);
         int score = -Quiesce(board, -beta, -alpha, pv);
@@ -62,14 +63,14 @@ int Negamax(Board &board, int alpha, int beta, int depth, const PV &pv,
         int value =
             -Negamax(board, -beta, -alpha, depth - 1, pv, limit);
         board.UndoMove();
-        if (value >= beta) {
-            TT::Save(board.Pos().GetHash(), depth, TT::Flag::Lower, beta, move);
-            return beta;
-        }
         if (value > alpha) {
             flag = TT::Flag::Exact;
             alpha = value;
             bm = move;
+        }
+        if (alpha >= beta) {
+            TT::Save(board.Pos().GetHash(), depth, TT::Flag::Lower, beta, move);
+            break;
         }
     }
 

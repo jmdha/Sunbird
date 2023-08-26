@@ -15,7 +15,7 @@ int main(int, char *argv[]) {
     Board board = Import::FEN(fen);
     std::string expectedMove = argv[3];
 
-    auto move = Engine::Search::GetBestMove(board, std::atoi(argv[2]));
+    auto move = Engine::Search::GetBestMoveTime(board, std::atoi(argv[2]));
     Engine::TT::Clean();
 
     if (expectedMove == std::get<Move>(move).ToString())
