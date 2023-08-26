@@ -30,10 +30,10 @@ PV ExtractPV(Board board) {
     int ply = board.Ply();
     std::vector<Move> moves;
     while (moves.size() < 8) {
-        auto move = TT::ProbeMove(board.Pos().GetHash());
-        if (move != nullptr && move->GetValue() != 0) {
-            moves.push_back(*move);
-            board.MakeMove(*move);
+        Move move = TT::ProbeMove(board.Pos().GetHash());
+        if (move.GetValue() != 0) {
+            moves.push_back(move);
+            board.MakeMove(move);
         } else {
             break;
         }
@@ -41,14 +41,6 @@ PV ExtractPV(Board board) {
     return PV(ply, moves);
 }
 } // namespace
-
-std::variant<Move, AlternativeResult> GetBestMove(Board &board, int depth) {
-    if (auto terminal = IsTerminal(board.Pos()); terminal.has_value())
-        return terminal.value();
-
-    Internal::Negamax(board, -Values::INF, Values::INF, depth, PV());
-    return ExtractPV(board).moves[0];
-}
 
 std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board,
                                                       int timeLimit) {
@@ -68,7 +60,7 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board,
         auto t0 = std::chrono::steady_clock::now();
         PV tempPV;
         int score = Internal::Negamax(tempBoard, -Values::INF, Values::INF,
-                                       depth, pv, &limit);
+                                       depth, 0, pv, &limit);
         auto t1 = std::chrono::steady_clock::now();
         size_t t =
             std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0)

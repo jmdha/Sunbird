@@ -51,6 +51,7 @@ NEXT_TOKEN:
 }
 
 int main() {
+            Engine::TT::Init(128);
     Board board = Import::MoveSequence("");
     while (true) {
         std::string input;
@@ -97,8 +98,8 @@ int main() {
 
             break;
         case Command::go: {
+            Engine::TT::Clear();
             int searchTime = INT_MAX;
-            Engine::TT::Init(128);
 
             for (int i = 0; i < tokens.size(); i++) {
                 auto token = tokens[i];
@@ -114,10 +115,10 @@ int main() {
                 Engine::Search::GetBestMoveTime(board, searchTime));
             std::cout << "bestmove " << move.ToString() << '\n';
 
-            Engine::TT::Clean();
             break;
         }
         case Command::quit:
+            Engine::TT::Clean();
             return 0;
         default:
             throw std::logic_error("The impossible has happended: " + input);

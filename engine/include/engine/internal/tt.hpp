@@ -4,40 +4,31 @@
 #include <chess/internal/move.hpp>
 #include <optional>
 namespace Chess::Engine::TT {
-enum struct Flag {
-    None,
-    Exact,
-    Upper,
-    Lower,
-};
+static const int ProbeFail = -1;
+static const int ProbeExact = 0;
+static const int ProbeLower = 1;
+static const int ProbeUpper = 2;
 
 struct Entry {
-    uint64_t key;
-    uint8_t depth;
-    Flag flag = Flag::None;
-    int score;
-    Move move;
-};
-
-struct Bucket {
-    Entry cold;
-    Entry hot;
+    uint64_t key = 0;
+    int value = 0;
+    Move move = Move();
+    uint8_t depth = 0;
+    uint8_t type = -1;
 };
 
 void Init(size_t tableSize);
 void Clean();
 
-struct ProbeResult {
-    bool found;
-    int score;
-    Move move;
-};
+Entry *Probe(uint64_t key);
+int ProbeEval(uint64_t key, int depth, int searchDepth, int alpha, int beta);
+Move ProbeMove(uint64_t key);
 
-ProbeResult Probe(uint64_t key, int depth, int alpha, int beta);
-const Move* ProbeMove(uint64_t key);
-void Save(uint64_t key, int depth, Flag flag, int score, Move move);
+void StoreEval(uint64_t key, int depth, int searchDepth, int value,
+               int evalType, Move move);
 
 size_t HashFull();
+void Clear();
 
 } // namespace Chess::Engine::TT
 
