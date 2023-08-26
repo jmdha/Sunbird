@@ -29,7 +29,7 @@ ProbeResult Probe(uint64_t key, int depth, int alpha, int beta) {
                     result.score = entry->score;
                 else if (entry->flag == Flag::Upper && entry->score <= alpha)
                     result.score = alpha;
-                else if (entry->flag == Flag::Lower && entry->score > beta)
+                else if (entry->flag == Flag::Lower && entry->score >= beta)
                     result.score = beta;
             }
             result.move = entry->move;
