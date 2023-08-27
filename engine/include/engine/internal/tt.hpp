@@ -14,13 +14,12 @@ struct Entry {
     int value = 0;
     Move move = Move();
     uint8_t depth = 0;
-    uint8_t type = -1;
+    int8_t type = -1;
 };
 
 void Init(size_t tableSize);
 void Clean();
 
-Entry *Probe(uint64_t key);
 int ProbeEval(uint64_t key, int depth, int searchDepth, int alpha, int beta);
 Move ProbeMove(uint64_t key);
 

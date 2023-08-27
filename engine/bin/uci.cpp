@@ -73,6 +73,7 @@ int main() {
         case Command::setoption:
             break;
         case Command::ucinewgame:
+            Engine::TT::Clear();
             break;
         case Command::isready:
             std::cout << "readyok" << '\n';
@@ -98,6 +99,8 @@ int main() {
 
             break;
         case Command::go: {
+            // Should not be needed
+            // But it crashes without it
             Engine::TT::Clear();
             int searchTime = INT_MAX;
 

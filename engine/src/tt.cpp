@@ -3,6 +3,7 @@
 
 namespace Chess::Engine::TT {
 
+uint8_t clock = 0;
 size_t size = 0;
 Entry *tt = nullptr;
 void Init(size_t tableSize) {
@@ -19,9 +20,7 @@ void Clean() {
 }
 
 namespace {
-Entry* Get(uint64_t key) {
-    return &tt[key % size];
-}
+Entry *Get(uint64_t key) { return &tt[key % size]; }
 int EvalStore(int score, int ply) {
     if (score != Values::INF)
         return score;
@@ -38,18 +37,14 @@ int EvalRetrieve(int score, int ply) {
         return (score * sign - ply) * sign;
     }
 }
-}
-
-Entry* Probe(uint64_t key) {
-    return Get(key);
-}
+} // namespace
 
 int ProbeEval(uint64_t key, int depth, int searchDepth, int alpha, int beta) {
-    Entry* entry = Get(key);
+    Entry *entry = Get(key);
 
     if (entry->key == key && entry->depth >= depth) {
         const int score = EvalRetrieve(entry->value, searchDepth);
-        
+
         if (entry->type == ProbeExact)
             return score;
         else if (entry->type == ProbeUpper && score <= alpha)
@@ -62,7 +57,9 @@ int ProbeEval(uint64_t key, int depth, int searchDepth, int alpha, int beta) {
 }
 
 Move ProbeMove(uint64_t key) {
-    return Get(key)->move;
+    if (auto entry = Get(key); entry->key == key)
+        return entry->move;
+    return Move();
 }
 
 void StoreEval(uint64_t key, int depth, int searchDepth, int value,
