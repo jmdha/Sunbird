@@ -10,8 +10,8 @@ static const int ProbeLower = 1;
 static const int ProbeUpper = 2;
 
 struct Result {
-    int score;
-    Move move;
+    int score = -1;
+    Move move = Move();
 };
 
 // startup / cleanup

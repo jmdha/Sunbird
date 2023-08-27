@@ -6,6 +6,8 @@
 namespace Chess::Engine::Values {
 constexpr int PHASE_INC[6] = {0, 1, 1, 2, 4, 0};
 constexpr int INF = 99999;
+constexpr int DOUBLED_PAWNS = 15;
+constexpr int PASSED_PAWNS = 20;
 namespace Material {
 namespace Pawn {
 constexpr int MG = 100;

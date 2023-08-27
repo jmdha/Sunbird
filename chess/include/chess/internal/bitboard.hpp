@@ -18,6 +18,7 @@ extern const std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> BABS;
 extern const std::array<std::array<BB, RING_COUNT>, SQUARECOUNT> RINGS;
 extern const std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> ATTACKS;
 extern const std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_ATTACKS;
+extern const std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_PASS;
 
 constexpr inline BB ToBB(Square sq) { return ((BB)1 << (int)sq); }
 
@@ -73,6 +74,8 @@ constexpr inline BB Shift(BB bb, Direction dir) {
 }
 
 constexpr inline BB ShiftM(BB &bb, Direction dir) { return bb = Shift(bb, dir); }
+
+constexpr inline bool Multiple(BB bb) { return bb & (bb - 1); }
 
 // Defines a ray from each square in each direction
 // A ray in the northeast direction:
@@ -147,6 +150,12 @@ constexpr inline BB PawnAttacks(Square sq, Color color) {
     assert(sq != Square::None);
     assert(color != Color::None);
     return PAWN_ATTACKS[(int)color][(int)sq];
+}
+
+constexpr inline BB PawnPassMask(Square sq, Color color) {
+    assert(sq != Square::None);
+    assert(color != Color::None);
+    return PAWN_PASS[(int)color][(int)sq];
 }
 } // namespace Chess
 #endif
