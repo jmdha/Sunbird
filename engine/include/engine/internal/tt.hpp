@@ -9,25 +9,28 @@ static const int ProbeExact = 0;
 static const int ProbeLower = 1;
 static const int ProbeUpper = 2;
 
-struct Entry {
-    uint64_t key = 0;
-    int value = 0;
-    Move move = Move();
-    uint8_t depth = 0;
-    int8_t type = -1;
+struct Result {
+    int score;
+    Move move;
 };
+
+// startup / cleanup
 
 void Init(size_t tableSize);
 void Clean();
 
-int ProbeEval(uint64_t key, int depth, int searchDepth, int alpha, int beta);
-Move ProbeMove(uint64_t key);
-
-void StoreEval(uint64_t key, int depth, int searchDepth, int value,
-               int evalType, Move move);
+// access
 
 size_t HashFull();
+
+Result Probe(uint64_t key, int depth, int searchDepth, int alpha, int beta);
+Move ProbeMove(uint64_t key);
+
+// modifiers
+
 void Clear();
+void StoreEval(uint64_t key, int depth, int searchDepth, int value,
+               int evalType, Move move);
 
 } // namespace Chess::Engine::TT
 

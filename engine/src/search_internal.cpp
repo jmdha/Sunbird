@@ -45,21 +45,20 @@ int Negamax(Board &board, int alpha, int beta, int depth, int searchDepth, const
         return 0;
 
     const uint64_t hash = board.Pos().GetHash();
-    int ttVal = TT::ProbeEval(hash, depth, searchDepth, alpha, beta);
-    if (ttVal != TT::ProbeFail)
-        return ttVal;
+    auto tt = TT::Probe(hash, depth, searchDepth, alpha, beta);
+    if (tt.score != TT::ProbeFail)
+        return tt.score;
 
     if (depth == 0)
         return Quiesce(board, alpha, beta, pv);
 
 
     int ttBound = TT::ProbeUpper;
-    const Move ttMove = TT::ProbeMove(hash);
     MoveList moves = GenerateMoves(board.Pos());
     if (moves.empty())
         return Evaluation::EvalNoMove(board.Pos());
 
-    MoveOrdering::All(board, ttMove, pv, moves);
+    MoveOrdering::All(board, tt.move, pv, moves);
     Move bm;
     for (auto move : moves) {
         PV moveLine;

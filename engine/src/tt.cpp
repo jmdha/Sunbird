@@ -3,24 +3,52 @@
 
 namespace Chess::Engine::TT {
 
-uint8_t clock = 0;
-size_t size = 0;
-Entry *tt = nullptr;
+struct Entry {
+    uint64_t key = 0;
+    int value = 0;
+    Move move = Move();
+    uint8_t depth = 0;
+    int8_t type = -1;
+};
+
+struct Bucket {
+    static const int COUNT = 2;
+    std::array<Entry, COUNT> entries;
+    Entry &operator[](size_t i) { return entries[i]; }
+    const Entry &operator[](size_t i) const { return entries[i]; }
+};
+
+// Sized to cacheline (maybe...)
+static_assert(sizeof(Bucket) == 32);
+
+size_t count = 0;
+Bucket *tt = nullptr;
+
 void Init(size_t tableSize) {
     tableSize *= 1024 * 1024;
-    size = tableSize / sizeof(Entry);
-    tt = new Entry[size];
+    count = tableSize / sizeof(Bucket);
+    tt = new Bucket[count];
 }
 
 void Clean() {
-    if (size != 0) {
-        size = 0;
+    if (count != 0) {
+        count = 0;
         delete[] tt;
     }
 }
 
+size_t HashFull() {
+    size_t hashfull = 0;
+
+    for (size_t i = 0; i < count; i++)
+        for (size_t t = 0; t < Bucket::COUNT; t++)
+            if (tt[i][t].key != 0)
+                hashfull++;
+
+    return hashfull * 1000 / count / Bucket::COUNT;
+}
+
 namespace {
-Entry *Get(uint64_t key) { return &tt[key % size]; }
 int EvalStore(int score, int ply) {
     if (score != Values::INF)
         return score;
@@ -39,50 +67,78 @@ int EvalRetrieve(int score, int ply) {
 }
 } // namespace
 
-int ProbeEval(uint64_t key, int depth, int searchDepth, int alpha, int beta) {
-    Entry *entry = Get(key);
+Result Probe(uint64_t key, int depth, int searchDepth, int alpha, int beta) {
+    Result result{.score = ProbeFail};
+    const Bucket &bucket = tt[key % count];
+    for (size_t i = 0; i < Bucket::COUNT; i++) {
+        const Entry &entry = bucket[i];
+        if (entry.key != key)
+            continue;
 
-    if (entry->key == key && entry->depth >= depth) {
-        const int score = EvalRetrieve(entry->value, searchDepth);
+        result.move = entry.move;
 
-        if (entry->type == ProbeExact)
-            return score;
-        else if (entry->type == ProbeUpper && score <= alpha)
-            return score;
-        else if (entry->type == ProbeLower && score >= beta)
-            return score;
+        // Only a single copy is stored of each position
+        // As such, if one is found but is of low depth
+        // there exists none
+        if (entry.depth < depth)
+            break;
+
+        const int score = EvalRetrieve(entry.value, searchDepth);
+        if (entry.type == ProbeExact)
+            result.score = score;
+        else if (entry.type == ProbeUpper && score <= alpha)
+            result.score = score;
+        else if (entry.type == ProbeLower && score >= beta)
+            result.score = score;
+        break;
     }
-
-    return ProbeFail;
+    return result;
 }
 
 Move ProbeMove(uint64_t key) {
-    if (auto entry = Get(key); entry->key == key)
-        return entry->move;
+    Bucket &bucket = tt[key % count];
+    for (size_t i = 0; i < Bucket::COUNT; i++)
+        if (const Entry &entry = bucket[i]; entry.key == key)
+            return entry.move;
     return Move();
+}
+
+void Clear() {
+    for (size_t i = 0; i < count; i++)
+        tt[i] = Bucket();
 }
 
 void StoreEval(uint64_t key, int depth, int searchDepth, int value,
                int evalType, Move move) {
-    Entry *entry = Get(key);
-    entry->type = evalType;
-    entry->value = EvalStore(value, searchDepth);
-    entry->depth = depth;
-    entry->key = key;
-    entry->move = move;
-}
+    Bucket &bucket = tt[key % count];
 
-size_t HashFull() {
-    size_t hashfull = 0;
-    for (size_t i = 0; i < size; i++) {
-        if (tt[i].key != 0)
-            hashfull++;
+    // First pass check if key already stored
+    // Avoids duplicate storage
+    for (int i = 0; i < Bucket::COUNT; i++) {
+        Entry &entry = bucket[i];
+        if (entry.key != key)
+            continue;
+
+        entry.type = evalType;
+        entry.value = EvalStore(value, searchDepth);
+        entry.depth = depth;
+        entry.key = key;
+        entry.move = move;
+
+        // Found entry
+        // Sort bucket
+        while (i > 0 && entry.depth > bucket[i--].depth)
+            std::swap(entry, bucket[i]); // note decrement in loop condition
+
+        return;
     }
-    return hashfull * 1000 / size;
-}
 
-void Clear() {
-    for (size_t i = 0; i < size; i++)
-        tt[i] = Entry();
+    // Key not found, overwrites lowest depth
+    Entry &entry = bucket[Bucket::COUNT - 1];
+    entry.type = evalType;
+    entry.value = EvalStore(value, searchDepth);
+    entry.depth = depth;
+    entry.key = key;
+    entry.move = move;
 }
 } // namespace Chess::Engine::TT
