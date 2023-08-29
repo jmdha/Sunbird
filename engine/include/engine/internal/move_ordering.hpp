@@ -6,6 +6,8 @@
 #include <engine/internal/pv.hpp>
 
 namespace Chess::Engine::MoveOrdering {
+void Killer(MoveList &moves, Move killerMove);
+
 void MVVLVA(const Board& board, MoveList &moves);
 
 void PVPrioity(const Board& board, const PV &pv, MoveList &moves);

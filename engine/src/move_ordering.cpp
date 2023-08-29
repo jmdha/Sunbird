@@ -3,6 +3,18 @@
 #include <engine/internal/move_ordering.hpp>
 
 namespace Chess::Engine::MoveOrdering {
+void Killer(MoveList &moves, Move killerMove) {
+    for (int i = moves.attacks(); i < moves.size(); i++) {
+        if (moves[i] == killerMove) {
+            std::memmove(&moves[i], &moves[i + 1], (moves.size() - i) * sizeof(Move));
+            std::memmove(&moves[moves.attacks() + 1], &moves[moves.attacks()],
+                         (moves.size() - 1) * sizeof(Move));
+            moves[moves.attacks()] = killerMove;
+            break;
+        }
+    }
+}
+
 void MVVLVA(const Board &board, MoveList &moves) {
     const Position &pos = board.Pos();
     std::sort(moves.begin(), &moves[moves.attacks()], [pos](Move lhs, Move rhs) {
@@ -46,7 +58,7 @@ void TTPrioity(Move move, MoveList &moves) {
     }
 }
 
-void All(const Board &board, Move ttMove, const PV &pv, MoveList &moves) { 
+void All(const Board &board, Move ttMove, const PV &pv, MoveList &moves) {
     MVVLVA(board, moves);
     TTPrioity(ttMove, moves);
     PVPrioity(board, pv, moves);
