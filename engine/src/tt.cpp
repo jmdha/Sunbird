@@ -8,7 +8,7 @@ struct Entry {
     int value = 0;
     Move move = Move();
     uint8_t depth = 0;
-    int8_t type = -1;
+    int8_t type = ProbeFail;
 };
 
 struct Bucket {
@@ -108,37 +108,29 @@ void Clear() {
         tt[i] = Bucket();
 }
 
-void StoreEval(uint64_t key, int depth, int searchDepth, int value,
-               int evalType, Move move) {
+void StoreEval(uint64_t key, int depth, int searchDepth, int value, int evalType, Move move) {
     Bucket &bucket = tt[key % count];
 
     // First pass check if key already stored
     // Avoids duplicate storage
     for (int i = 0; i < Bucket::COUNT; i++) {
         Entry &entry = bucket[i];
-        if (entry.key != key)
-            continue;
+        if (entry.type == ProbeFail ||   // Unused entry
+            i == Bucket::COUNT - 1 ||    // Last entry
+            entry.key == key) [[likely]] // Entry override
+        {
+            entry.type = evalType;
+            entry.value = EvalStore(value, searchDepth);
+            entry.depth = depth;
+            entry.key = key;
+            entry.move = move;
 
-        entry.type = evalType;
-        entry.value = EvalStore(value, searchDepth);
-        entry.depth = depth;
-        entry.key = key;
-        entry.move = move;
-
-        // Found entry
-        // Sort bucket
-        while (i > 0 && entry.depth > bucket[i--].depth)
-            std::swap(entry, bucket[i]); // note decrement in loop condition
-
-        return;
+            // Found entry
+            // Sort bucket
+            while (i > 0 && entry.depth > bucket[i--].depth)
+                std::swap(entry, bucket[i]); // note decrement in loop condition
+            break;
+        }
     }
-
-    // Key not found, overwrites lowest depth
-    Entry &entry = bucket[Bucket::COUNT - 1];
-    entry.type = evalType;
-    entry.value = EvalStore(value, searchDepth);
-    entry.depth = depth;
-    entry.key = key;
-    entry.move = move;
 }
 } // namespace Chess::Engine::TT
