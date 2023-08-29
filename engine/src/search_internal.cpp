@@ -59,7 +59,7 @@ int Negamax(Board &board, int alpha, int beta, int depth, int searchDepth, const
         return Evaluation::EvalNoMove(board.Pos());
 
     MoveOrdering::All(board, tt.move, pv, moves);
-    Move bm;
+    Move bm = moves[0];
     for (auto move : moves) {
         board.MakeMove(move);
         int value =

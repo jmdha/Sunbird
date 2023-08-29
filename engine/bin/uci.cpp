@@ -99,9 +99,6 @@ int main() {
 
             break;
         case Command::go: {
-            // Should not be needed
-            // But it crashes without it
-            Engine::TT::Clear();
             int searchTime = INT_MAX;
 
             for (int i = 0; i < tokens.size(); i++) {
