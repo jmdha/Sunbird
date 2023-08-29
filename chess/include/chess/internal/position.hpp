@@ -138,7 +138,7 @@ inline bool Position::IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard) const 
     return IsKingSafe(tempOccuracyBoard, tempEnemyBoard, GetPieces(GetTurn(), PieceType::King));
 }
 inline bool Position::IsKingSafe(BB tempOccuracyBoard) const noexcept {
-    return IsKingSafe(tempOccuracyBoard, GetPieces(Utilities::GetOppositeColor(GetTurn())));
+    return IsKingSafe(tempOccuracyBoard, GetPieces(~GetTurn()));
 }
 inline bool Position::IsKingSafe() const noexcept { return IsKingSafe(GetPieces()); }
 inline void Position::PlacePiece(Square square, PieceType pType, Color color) noexcept {

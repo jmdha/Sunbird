@@ -22,8 +22,7 @@ void Board::MakeMove(const Move &move) noexcept {
     const Square &from = move.GetFrom();
     const Square &to = move.GetTo();
     const Color &turn = pos.GetTurn();
-    const Color &oppColor = Utilities::GetOppositeColor(turn);
-    pos.SetTurn(oppColor);
+    pos.SetTurn(~turn);
     PieceType pType = pos.GetType(move.GetFrom());
     PieceType newPType = pType;
     PieceType capturedPiece = pos.GetType(move.GetTo());
@@ -38,7 +37,7 @@ void Board::MakeMove(const Move &move) noexcept {
         pos.RemovePiece(INIT_ROOKPOS[(int)turn][castleIndex], PieceType::Rook, turn);
         pos.DisallowCastling(Castling::All, turn);
         break;
-        }
+    }
     case MoveType::NPromotion:
         newPType = PieceType::Knight;
         goto QUIET_PROMOTION;
@@ -78,16 +77,16 @@ void Board::MakeMove(const Move &move) noexcept {
     case MoveType::Capture:
     CAPTURE_PROMOTION:
         pos.RemovePiece(from, pType, turn);
-        pos.RemovePiece(captureTo, capturedPiece, Utilities::GetOppositeColor(turn));
+        pos.RemovePiece(captureTo, capturedPiece, ~turn);
         pos.PlacePiece(to, newPType, turn);
         if (capturedPiece == PieceType::Rook &&
-            to == INIT_ROOKPOS[(int)oppColor][(int)Castling::King - 1])
-            if (pos.AllowsCastling(Castling::King, oppColor))
-                pos.DisallowCastling(Castling::King, oppColor);
+            to == INIT_ROOKPOS[(int)~turn][(int)Castling::King - 1])
+            if (pos.AllowsCastling(Castling::King, ~turn))
+                pos.DisallowCastling(Castling::King, ~turn);
         if (capturedPiece == PieceType::Rook &&
-            to == INIT_ROOKPOS[(int)oppColor][(int)Castling::Queen - 1])
-            if (pos.AllowsCastling(Castling::Queen, oppColor))
-                pos.DisallowCastling(Castling::Queen, oppColor);
+            to == INIT_ROOKPOS[(int)~turn][(int)Castling::Queen - 1])
+            if (pos.AllowsCastling(Castling::Queen, ~turn))
+                pos.DisallowCastling(Castling::Queen, ~turn);
         break;
     default:
         std::invalid_argument("Unexpected move type: " + std::to_string((int)move.GetType()));

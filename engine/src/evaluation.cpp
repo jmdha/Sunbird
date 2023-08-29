@@ -48,8 +48,7 @@ int EvalPawn(const Position &pos, Color color) {
     }
 
     // Passed pawns
-    const BB enemyPawns =
-        pos.GetPieces(Utilities::GetOppositeColor(color), PieceType::Pawn);
+    const BB enemyPawns = pos.GetPieces(~color, PieceType::Pawn);
     for (BB pawns = pos.GetPieces(color, PieceType::Pawn); pawns;) {
         Square pawn = (Square)jank::bit::lsb_pop(pawns);
         if (!(PAWN_PASS[(int)color][(int)pawn] & enemyPawns))

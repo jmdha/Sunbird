@@ -83,13 +83,6 @@ namespace Chess::Utilities {
         return GetSquare((int) row, (int) col);
     }
 
-    constexpr Color GetOppositeColor(Color color) {
-        if (color == Color::White)
-            return Color::Black;
-        else
-            return Color::White;
-    }
-
     constexpr BB NotEdge(Direction dir) {
         switch (dir)
         {

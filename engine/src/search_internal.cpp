@@ -61,7 +61,6 @@ int Negamax(Board &board, int alpha, int beta, int depth, int searchDepth, const
     MoveOrdering::All(board, tt.move, pv, moves);
     Move bm;
     for (auto move : moves) {
-        PV moveLine;
         board.MakeMove(move);
         int value =
             -Negamax(board, -beta, -alpha, depth - 1, searchDepth + 1, pv, limit);
