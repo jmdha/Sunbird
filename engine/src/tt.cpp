@@ -109,6 +109,11 @@ void Clear() {
 }
 
 void StoreEval(uint64_t key, int depth, int searchDepth, int value, int evalType, Move move) {
+    // This check should not be needed
+    // It is a temp fix to handle three-fold repitetion
+    // If it this can be handled some other way, remove this
+    if (searchDepth > 0 && value == 0)
+        return;
     Bucket &bucket = tt[key % count];
 
     // First pass check if key already stored
