@@ -14,7 +14,7 @@ bool Board::IsThreefoldRepetition() const noexcept {
     for (int i = 0; i < _positions.size(); i++)
         if (hash == _positions.at(i).GetHash())
             count++;
-    return count > 1;
+    return count > 2;
 }
 
 void Board::MakeMove(const Move &move) noexcept {
