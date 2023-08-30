@@ -57,13 +57,18 @@ std::pair<int, int> EvalPawn(const Position &pos, Color color) {
             eg += Values::Structure::DoubledPawn::EG;
         }
 
-    // Passed pawns
     for (BB pawns = PAWNS; pawns;) {
         const Square pawn = (Square)jank::bit::lsb_pop(pawns);
-        if (!(PAWN_PASS[(int)color][(int)pawn] & PAWNS_O) && !(Ray(pawn, UP[(int)color]) & PAWNS)) {
+        // Passed pawn check
+        if (!(PawnPassMask(pawn, color) & PAWNS_O) && !(Ray(pawn, UP[(int)color]) & PAWNS)) {
             const int row = Utilities::GetRowIndex(pawn);
             mg += Values::Structure::PassedPawn::MG[(int)color][row];
             eg += Values::Structure::PassedPawn::EG[(int)color][row];
+        }
+        // Isolated pawn check
+        if (!(PawnIsolationMask(pawn) & PAWNS)) {
+            mg += Values::Structure::IsolatedPawn::MG;
+            eg += Values::Structure::IsolatedPawn::EG;
         }
     }
 

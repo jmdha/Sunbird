@@ -25,8 +25,7 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, SQUARECOUNT> SQRAYS = [] {
         for (const auto to : SQUARES) {
             if (from == to)
                 continue;
-            rays[(int)from][(int)to] =
-                RAYS[(int)from][(int)Utilities::GetDirection(from, to)];
+            rays[(int)from][(int)to] = RAYS[(int)from][(int)Utilities::GetDirection(from, to)];
         }
     return rays;
 }();
@@ -37,8 +36,7 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, SQUARECOUNT> XRAYS = [] {
         for (const auto to : SQUARES) {
             if (from == to)
                 continue;
-            rays[(int)from][(int)to] =
-                RAYS[(int)to][(int)Utilities::GetDirection(from, to)];
+            rays[(int)from][(int)to] = RAYS[(int)to][(int)Utilities::GetDirection(from, to)];
         }
     return rays;
 }();
@@ -47,8 +45,8 @@ namespace {
 constexpr BB GenerateRing(Square sq, int offset) {
     BB ring = 0;
 
-    const std::array<Direction, 4> directions{
-        Direction::North, Direction::East, Direction::South, Direction::West};
+    const std::array<Direction, 4> directions{Direction::North, Direction::East, Direction::South,
+                                              Direction::West};
     const std::array<std::array<Direction, 2>, 4> probes{
         std::array{Direction::West, Direction::East},
         std::array{Direction::North, Direction::South},
@@ -87,39 +85,29 @@ namespace {
 constexpr BB GenerateAttacks(PieceType piece, Square sq) {
     switch (piece) {
     case PieceType::Knight:
-        return RINGS[(int)sq][2] & ~(RAYS[(int)sq][(int)Direction::North] |
-                                     RAYS[(int)sq][(int)Direction::East] |
-                                     RAYS[(int)sq][(int)Direction::South] |
-                                     RAYS[(int)sq][(int)Direction::West] |
-                                     RAYS[(int)sq][(int)Direction::NorthWest] |
-                                     RAYS[(int)sq][(int)Direction::NorthEast] |
-                                     RAYS[(int)sq][(int)Direction::SouthWest] |
-                                     RAYS[(int)sq][(int)Direction::SouthEast]);
+        return RINGS[(int)sq][2] &
+               ~(RAYS[(int)sq][(int)Direction::North] | RAYS[(int)sq][(int)Direction::East] |
+                 RAYS[(int)sq][(int)Direction::South] | RAYS[(int)sq][(int)Direction::West] |
+                 RAYS[(int)sq][(int)Direction::NorthWest] |
+                 RAYS[(int)sq][(int)Direction::NorthEast] |
+                 RAYS[(int)sq][(int)Direction::SouthWest] |
+                 RAYS[(int)sq][(int)Direction::SouthEast]);
     case PieceType::King:
         return RINGS[(int)sq][1];
     case PieceType::Rook:
-        return RAYS[(int)sq][(int)Direction::North] |
-               RAYS[(int)sq][(int)Direction::East] |
-               RAYS[(int)sq][(int)Direction::South] |
-               RAYS[(int)sq][(int)Direction::West];
+        return RAYS[(int)sq][(int)Direction::North] | RAYS[(int)sq][(int)Direction::East] |
+               RAYS[(int)sq][(int)Direction::South] | RAYS[(int)sq][(int)Direction::West];
     case PieceType::Bishop:
-        return RAYS[(int)sq][(int)Direction::NorthWest] |
-               RAYS[(int)sq][(int)Direction::NorthEast] |
-               RAYS[(int)sq][(int)Direction::SouthWest] |
-               RAYS[(int)sq][(int)Direction::SouthEast];
+        return RAYS[(int)sq][(int)Direction::NorthWest] | RAYS[(int)sq][(int)Direction::NorthEast] |
+               RAYS[(int)sq][(int)Direction::SouthWest] | RAYS[(int)sq][(int)Direction::SouthEast];
     case PieceType::Queen:
-        return RAYS[(int)sq][(int)Direction::North] |
-               RAYS[(int)sq][(int)Direction::East] |
-               RAYS[(int)sq][(int)Direction::South] |
-               RAYS[(int)sq][(int)Direction::West] |
-               RAYS[(int)sq][(int)Direction::NorthWest] |
-               RAYS[(int)sq][(int)Direction::NorthEast] |
-               RAYS[(int)sq][(int)Direction::SouthWest] |
-               RAYS[(int)sq][(int)Direction::SouthEast];
+        return RAYS[(int)sq][(int)Direction::North] | RAYS[(int)sq][(int)Direction::East] |
+               RAYS[(int)sq][(int)Direction::South] | RAYS[(int)sq][(int)Direction::West] |
+               RAYS[(int)sq][(int)Direction::NorthWest] | RAYS[(int)sq][(int)Direction::NorthEast] |
+               RAYS[(int)sq][(int)Direction::SouthWest] | RAYS[(int)sq][(int)Direction::SouthEast];
     case PieceType::Pawn:
     case PieceType::None:
-        throw std::invalid_argument(
-            "Cannot generate attacks for pawn or no piece type.");
+        throw std::invalid_argument("Cannot generate attacks for pawn or no piece type.");
     }
 }
 } // namespace
@@ -128,8 +116,7 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> ATTACKS = [] {
     auto attacks = decltype(ATTACKS){};
 
     for (const auto pType :
-         {PieceType::Bishop, PieceType::Knight, PieceType::Rook,
-          PieceType::Queen, PieceType::King})
+         {PieceType::Bishop, PieceType::Knight, PieceType::Rook, PieceType::Queen, PieceType::King})
         for (const auto sq : SQUARES)
             attacks[(int)pType][(int)sq] = GenerateAttacks(pType, sq);
     return attacks;
@@ -139,8 +126,7 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> BABS = [] {
     auto babs = decltype(BABS){};
 
     for (const auto pType : PIECES) {
-        if (pType == PieceType::Pawn || pType == PieceType::Knight ||
-            pType == PieceType::King)
+        if (pType == PieceType::Pawn || pType == PieceType::Knight || pType == PieceType::King)
             continue;
         for (const auto sq : SQUARES) {
             BB nonEdge;
@@ -162,23 +148,20 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> BABS = [] {
     return babs;
 }();
 
-constexpr std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_ATTACKS =
-    [] {
-        auto attacks = decltype(PAWN_ATTACKS){};
+constexpr std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_ATTACKS = [] {
+    auto attacks = decltype(PAWN_ATTACKS){};
 
-        for (const auto color : {Color::White, Color::Black})
-            for (const auto sq : SQUARES) {
-                const BB rays =
-                    (color == Color::White)
-                        ? (RAYS[(int)sq][(int)Direction::NorthEast] |
-                           RAYS[(int)sq][(int)Direction::NorthWest])
-                        : (RAYS[(int)sq][(int)Direction::SouthEast] |
-                           RAYS[(int)sq][(int)Direction::SouthWest]);
-                attacks[(int)color][(int)sq] = RINGS[(int)sq][1] & rays;
-            }
+    for (const auto color : {Color::White, Color::Black})
+        for (const auto sq : SQUARES) {
+            const BB rays = (color == Color::White) ? (RAYS[(int)sq][(int)Direction::NorthEast] |
+                                                       RAYS[(int)sq][(int)Direction::NorthWest])
+                                                    : (RAYS[(int)sq][(int)Direction::SouthEast] |
+                                                       RAYS[(int)sq][(int)Direction::SouthWest]);
+            attacks[(int)color][(int)sq] = RINGS[(int)sq][1] & rays;
+        }
 
-        return attacks;
-    }();
+    return attacks;
+}();
 
 constexpr std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_PASS = [] {
     auto passes = decltype(PAWN_PASS){};
@@ -204,5 +187,22 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_PASS = [] {
         }
 
     return passes;
+}();
+
+constexpr std::array<BB, SQUARECOUNT> PAWN_ISOLATION = [] {
+    auto values = decltype(PAWN_ISOLATION){};
+
+    for (const auto square : SQUARES) {
+        BB bb = 0;
+
+        const int index = Utilities::GetColumnIndex(square);
+        if (index > 0)
+            bb |= (BB) COLUMNS[index - 1];
+        if (index < 7)
+            bb |= (BB) COLUMNS[index + 1];
+
+        values[(int)square] = bb;
+    }
+    return values;
 }();
 } // namespace Chess

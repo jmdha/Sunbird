@@ -19,6 +19,7 @@ extern const std::array<std::array<BB, RING_COUNT>, SQUARECOUNT> RINGS;
 extern const std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> ATTACKS;
 extern const std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_ATTACKS;
 extern const std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_PASS;
+extern const std::array<BB, SQUARECOUNT> PAWN_ISOLATION;
 
 constexpr inline BB ToBB(Square sq) { return ((BB)1 << (int)sq); }
 
@@ -157,5 +158,10 @@ constexpr inline BB PawnPassMask(Square sq, Color color) {
     assert(color != Color::None);
     return PAWN_PASS[(int)color][(int)sq];
 }
+constexpr inline BB PawnIsolationMask(Square sq) {
+    assert(sq != Square::None);
+    return PAWN_ISOLATION[(int)sq];
+}
+
 } // namespace Chess
 #endif

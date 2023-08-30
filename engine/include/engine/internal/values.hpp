@@ -10,8 +10,7 @@ constexpr std::array<int, 64> C(std::array<int, 64> a, int b) {
         a[i] += b;
     return a;
 }
-template <int s = 64>
-constexpr std::array<int, s> I(std::array<int, s> array) {
+template <int s = 64> constexpr std::array<int, s> I(std::array<int, s> array) {
     std::array<int, s> newArray;
     for (int i = 0; i < array.size(); i++)
         newArray[i] = array.at(s - 1 - i);
@@ -29,10 +28,13 @@ namespace PassedPawn {
 constexpr std::array<int, 8> MG_WHITE = {0, 0, 5, 10, 20, 40, 80, 0};
 constexpr std::array<int, 8> EG_WHITE = {0, 10, 10, 20, 20, 60, 80, 0};
 
-constexpr std::array<std::array<int, 8>, 2> MG = { MG_WHITE, I<8>(MG_WHITE) };
-constexpr std::array<std::array<int, 8>, 2> EG = { EG_WHITE, I<8>(EG_WHITE) };
-
+constexpr std::array<std::array<int, 8>, 2> MG = {MG_WHITE, I<8>(MG_WHITE)};
+constexpr std::array<std::array<int, 8>, 2> EG = {EG_WHITE, I<8>(EG_WHITE)};
 } // namespace PassedPawn
+namespace IsolatedPawn {
+constexpr int MG = -5;
+constexpr int EG = -10;
+} // namespace IsolatedPawn
 } // namespace Structure
 namespace Material {
 namespace Pawn {
