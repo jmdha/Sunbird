@@ -4,10 +4,36 @@
 #include <array>
 
 namespace Chess::Engine::Values {
+namespace {
+constexpr std::array<int, 64> C(std::array<int, 64> a, int b) {
+    for (int i = 0; i < a.size(); i++)
+        a[i] += b;
+    return a;
+}
+template <int s = 64>
+constexpr std::array<int, s> I(std::array<int, s> array) {
+    std::array<int, s> newArray;
+    for (int i = 0; i < array.size(); i++)
+        newArray[i] = array.at(s - 1 - i);
+    return newArray;
+}
+} // namespace
 constexpr int PHASE_INC[6] = {0, 1, 1, 2, 4, 0};
 constexpr int INF = 99999;
-constexpr int DOUBLED_PAWNS = 15;
-constexpr int PASSED_PAWNS = 20;
+namespace Structure {
+namespace DoubledPawn {
+constexpr int MG = -20;
+constexpr int EG = -30;
+} // namespace DoubledPawn
+namespace PassedPawn {
+constexpr std::array<int, 8> MG_WHITE = {0, 0, 5, 10, 20, 40, 80, 0};
+constexpr std::array<int, 8> EG_WHITE = {0, 10, 10, 20, 20, 60, 80, 0};
+
+constexpr std::array<std::array<int, 8>, 2> MG = { MG_WHITE, I<8>(MG_WHITE) };
+constexpr std::array<std::array<int, 8>, 2> EG = { EG_WHITE, I<8>(EG_WHITE) };
+
+} // namespace PassedPawn
+} // namespace Structure
 namespace Material {
 namespace Pawn {
 constexpr int MG = 100;
@@ -179,41 +205,28 @@ constexpr std::array<int, 64> EG = {
 } // namespace King
 // clang-format on
 } // namespace Position
-namespace {
-constexpr std::array<int, 64> C(std::array<int, 64> a, int b) {
-    for (int i = 0; i < a.size(); i++)
-        a[i] += b;
-    return a;
-}
-constexpr std::array<int, 64> I(std::array<int, 64> array) {
-    std::array<int, 64> newArray;
-    for (int i = 0; i < array.size(); i++)
-        newArray[i] = array.at(63 - i);
-    return newArray;
-} // namespace
-} // namespace
 constexpr std::array<std::array<int, 64>, 6> MG_WHITE = {
     C(Position::Pawn::MG, Material::Pawn::MG),     C(Position::Knight::MG, Material::Knight::MG),
     C(Position::Bishop::MG, Material::Bishop::MG), C(Position::Rook::MG, Material::Rook::MG),
     C(Position::Queen::MG, Material::Queen::MG),   C(Position::King::MG, 0)};
 constexpr std::array<std::array<int, 64>, 6> MG_BLACK = {
-    C(I(Position::Pawn::MG), Material::Pawn::MG),
-    C(I(Position::Knight::MG), Material::Knight::MG),
-    C(I(Position::Bishop::MG), Material::Bishop::MG),
-    C(I(Position::Rook::MG), Material::Rook::MG),
-    C(I(Position::Queen::MG), Material::Queen::MG),
-    C(I(Position::King::MG), 0)};
+    C(I<64>(Position::Pawn::MG), Material::Pawn::MG),
+    C(I<64>(Position::Knight::MG), Material::Knight::MG),
+    C(I<64>(Position::Bishop::MG), Material::Bishop::MG),
+    C(I<64>(Position::Rook::MG), Material::Rook::MG),
+    C(I<64>(Position::Queen::MG), Material::Queen::MG),
+    C(I<64>(Position::King::MG), 0)};
 constexpr std::array<std::array<int, 64>, 6> EG_WHITE = {
     C(Position::Pawn::EG, Material::Pawn::EG),     C(Position::Knight::EG, Material::Knight::EG),
     C(Position::Bishop::EG, Material::Bishop::EG), C(Position::Rook::EG, Material::Rook::EG),
     C(Position::Queen::EG, Material::Queen::EG),   C(Position::King::EG, 0)};
 constexpr std::array<std::array<int, 64>, 6> EG_BLACK = {
-    C(I(Position::Pawn::EG), Material::Pawn::EG),
-    C(I(Position::Knight::EG), Material::Knight::EG),
-    C(I(Position::Bishop::EG), Material::Bishop::EG),
-    C(I(Position::Rook::EG), Material::Rook::EG),
-    C(I(Position::Queen::EG), Material::Queen::EG),
-    C(I(Position::King::EG), 0)};
+    C(I<64>(Position::Pawn::EG), Material::Pawn::EG),
+    C(I<64>(Position::Knight::EG), Material::Knight::EG),
+    C(I<64>(Position::Bishop::EG), Material::Bishop::EG),
+    C(I<64>(Position::Rook::EG), Material::Rook::EG),
+    C(I<64>(Position::Queen::EG), Material::Queen::EG),
+    C(I<64>(Position::King::EG), 0)};
 constexpr std::array<std::array<std::array<int, 64>, 6>, 2> MG{MG_WHITE, MG_BLACK};
 constexpr std::array<std::array<std::array<int, 64>, 6>, 2> EG{EG_WHITE, EG_BLACK};
 } // namespace Chess::Engine::Values
