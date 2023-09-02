@@ -48,3 +48,5 @@ target_compile_features(
     PUBLIC
     cxx_std_20
 )
+
+include(${CMAKE_CURRENT_LIST_DIR}/test/CMakeLists.txt)
