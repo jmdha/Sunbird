@@ -1,7 +1,7 @@
 #ifndef CHESS_BITBOARD
 #define CHESS_BITBOARD
 
-#include "chess/internal/utilities.hpp"
+#include "utilities.hpp"
 #include "constants.hpp"
 #include <cstdint>
 

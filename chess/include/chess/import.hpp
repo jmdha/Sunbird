@@ -31,6 +31,6 @@ Board Algebraic(std::string game);
  * Creates a board and call the callback with boardstate resulting from each algebraic move
  */
 void Algebraic(std::string game, std::function<void(const Board &)> callback);
-}; // namespace Chess::Import
+} // namespace Chess::Import
 
 #endif

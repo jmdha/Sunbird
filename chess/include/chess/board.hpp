@@ -8,7 +8,6 @@
 #include "internal/bitboard.hpp"
 #include "internal/constants.hpp"
 #include "internal/position.hpp"
-#include "jank/container/fixed_stack.hpp"
 
 namespace Chess {
 // Class representing the current, and historic, state of a game of chess
@@ -32,7 +31,8 @@ public:
     void UndoMove() noexcept;
 
 private:
-    jank::container::fixed_stack<Position, MAX_PLY> _positions;
+    std::array<Position, MAX_PLY> positions;
+    size_t positionCount = 0;
     size_t _moves;
 };
 
@@ -41,11 +41,11 @@ inline size_t Board::MoveCount() const noexcept {
 }
 
 inline size_t Board::Ply() const noexcept {
-    return _positions.size();
+    return positionCount;
 }
 
 inline const Position& Board::Pos() const noexcept {
-    return _positions.top();
+    return positions.at(positionCount - 1);
 }
 
 } // namespace Chess

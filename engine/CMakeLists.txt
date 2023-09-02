@@ -1,5 +1,3 @@
-include(chess/CMakeLists.txt)
-
 set(ENGINE_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/src)
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/include)
 set(ENGINE_INCLUDE_BUILD_DIR ${ENGINE_INCLUDE_DIR}/engine)
@@ -22,15 +20,26 @@ set(ENGINE_SRC
     ${ENGINE_SRC_DIR}/tt.cpp
     )
 
-add_library(ENGINE ${ENGINE_HEADERS} ${ENGINE_SRC})
-target_link_libraries(ENGINE PUBLIC CHESS)
-target_include_directories(ENGINE PUBLIC ${ENGINE_INCLUDE_DIR})
+add_library(
+    ENGINE 
+    ${ENGINE_HEADERS}
+    ${ENGINE_SRC}
+)
 
-if (NOT IGNORE_TEST)
-    include(${CMAKE_CURRENT_LIST_DIR}/test/CMakeLists.txt)
-endif ()
+target_link_libraries(
+    ENGINE
+    PUBLIC
+    CHESS
+)
 
-if (NOT IGNORE_BIN)
-    add_executable(Sunbird ${CMAKE_CURRENT_LIST_DIR}/bin/uci.cpp)
-    target_link_libraries(Sunbird PRIVATE ENGINE)
-endif ()
+target_include_directories(
+    ENGINE
+    PUBLIC
+    "$<BUILD_INTERFACE:${ENGINE_INCLUDE_DIR}>"
+)
+
+target_compile_features(
+    ENGINE
+    PUBLIC
+    cxx_std_20
+)

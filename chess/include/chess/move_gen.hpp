@@ -73,6 +73,6 @@ MoveList GenerateMoves(const Position &pos, Color color, PieceType pType) {
     }
     return moves;
 }
-}; // namespace Chess::MoveGen
+} // namespace Chess::MoveGen
 
 #endif

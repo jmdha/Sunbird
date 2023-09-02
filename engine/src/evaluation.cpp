@@ -1,9 +1,9 @@
-#include "chess/internal/constants.hpp"
-#include "chess/internal/utilities.hpp"
+#include <chess/internal/bit.hpp>
+#include <chess/internal/constants.hpp>
+#include <chess/internal/utilities.hpp>
 #include <chess/internal/bitboard.hpp>
 #include <engine/evaluation.hpp>
 #include <engine/internal/values.hpp>
-#include <jank/bit/bit.hpp>
 
 namespace Chess::Engine::Evaluation {
 namespace Internal {
@@ -12,7 +12,7 @@ std::pair<int, int> CalculatePhase(const Position &pos) {
 
     for (auto pType : PIECES) {
         const BB pieces = pos.GetPieces(pType);
-        const int count = jank::bit::popcount(pieces);
+        const int count = Bit::popcount(pieces);
         game_phase += count * Values::PHASE_INC[(int)pType];
     }
 
@@ -27,7 +27,7 @@ std::pair<int, int> EvalPieceSquare(const Position &pos, Color color) {
 
     for (auto pType : PIECES) {
         for (BB pieces = pos.GetPieces(color, pType); pieces;) {
-            const Square piece = (Square)jank::bit::lsb_pop(pieces);
+            const Square piece = (Square)Bit::lsb_pop(pieces);
             mg += Values::MG[(int)color][(int)pType][(int)piece];
             eg += Values::EG[(int)color][(int)pType][(int)piece];
         }
@@ -58,7 +58,7 @@ std::pair<int, int> EvalPawn(const Position &pos, Color color) {
         }
 
     for (BB pawns = PAWNS; pawns;) {
-        const Square pawn = (Square)jank::bit::lsb_pop(pawns);
+        const Square pawn = (Square)Bit::lsb_pop(pawns);
         // Passed pawn check
         if (!(PawnPassMask(pawn, color) & PAWNS_O) && !(Ray(pawn, UP[(int)color]) & PAWNS)) {
             const int row = Utilities::GetRowIndex(pawn);

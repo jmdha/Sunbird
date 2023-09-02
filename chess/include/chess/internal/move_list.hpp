@@ -1,7 +1,7 @@
 #ifndef CHESS_MOVE_LIST
 #define CHESS_MOVE_LIST
 
-#include "chess/board.hpp"
+#include "../board.hpp"
 #include "constants.hpp"
 #include "move.hpp"
 #include <algorithm>

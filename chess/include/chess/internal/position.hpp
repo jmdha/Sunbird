@@ -1,12 +1,12 @@
 #ifndef CHESS_POSITION
 #define CHESS_POSITION
 
+#include "bit.hpp"
 #include "bitboard.hpp"
-#include "chess/internal/utilities.hpp"
 #include "constants.hpp"
 #include "move.hpp"
+#include "utilities.hpp"
 #include "zobrist.hpp"
-#include <jank/bit/bit.hpp>
 
 namespace Chess {
 struct Position {
@@ -58,7 +58,7 @@ private:
 
 inline uint64_t Position::GetHash() const noexcept { return _hash; }
 inline Color Position::GetTurn() const noexcept { return (Color)(_misc & 0x1); }
-inline Column Position::GetEP() const noexcept { 
+inline Column Position::GetEP() const noexcept {
     const int index = (_misc >> 5) & 0xf;
     if (index == 0)
         return Column::None;
@@ -66,7 +66,7 @@ inline Column Position::GetEP() const noexcept {
         return COLUMNS[index - 1];
 }
 inline Castling Position::GetCastling(Color color) const noexcept {
-    return (Castling) (((_misc >> 1) & (0x3 << (2 * (int)color))) >> (2 * (int)color));
+    return (Castling)(((_misc >> 1) & (0x3 << (2 * (int)color))) >> (2 * (int)color));
 }
 inline bool Position::AllowsCastling(Castling castling, Color color) const noexcept {
     return (int)GetCastling(color) & (int)castling;
@@ -90,7 +90,7 @@ inline Color Position::GetColor(Square square) const noexcept {
 inline int Position::GetPieceCount(Color color, PieceType pType) const noexcept {
     assert(color != Color::None);
     assert(pType != PieceType::None);
-    return jank::bit::popcount(GetPieces(color, pType));
+    return Bit::popcount(GetPieces(color, pType));
 }
 inline BB Position::GetPieces() const noexcept { return _colorBB[0] | _colorBB[1]; }
 inline BB Position::GetPieces(PieceType pType) const noexcept {
@@ -129,7 +129,7 @@ inline void Position::SetEP(Column column) noexcept {
     _misc &= ~0x1e0;
     if (column == Column::None) [[likely]]
         return;
-    const BB index = jank::bit::lsb((BB)column) + 1;
+    const BB index = Bit::lsb((BB)column) + 1;
     _misc |= (index & 0xf) << 5;
     _hash = Zobrist::FlipEnPassant(_hash, column);
 }

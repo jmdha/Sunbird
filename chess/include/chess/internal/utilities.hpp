@@ -7,7 +7,7 @@
 #include <bitset>
 
 #include "constants.hpp"
-#include "jank/bit/bit.hpp"
+
 namespace Chess::Utilities {
     static PieceChar GetPieceChar(char c) {
         return (PieceChar) c;

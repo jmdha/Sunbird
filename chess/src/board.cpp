@@ -1,18 +1,18 @@
-#include "chess/internal/utilities.hpp"
-#include "jank/bit/bit.hpp"
+#include <chess/internal/utilities.hpp>
+#include <chess/internal/bit.hpp>
 #include <chess/board.hpp>
 #include <stdexcept>
 
-using jank::bit::lsb;
-
 using namespace Chess;
-Board::Board(Position position) { _positions.push(std::move(position)); }
+Board::Board(Position position) { 
+    positions.at(positionCount++) = std::move(position);
+}
 
 bool Board::IsThreefoldRepetition() const noexcept {
     uint64_t hash = Pos().GetHash();
     int count = 0;
-    for (int i = 0; i < _positions.size(); i++)
-        if (hash == _positions.at(i).GetHash())
+    for (size_t i = 0; i < positionCount; i++)
+        if (hash == positions.at(i).GetHash())
             count++;
     return count > 2;
 }
@@ -71,9 +71,9 @@ void Board::MakeMove(const Move &move) noexcept {
     case MoveType::EPCapture:
         capturedPiece = PieceType::Pawn;
         if (turn == Color::White)
-            captureTo = (Square)lsb(Shift<Direction::South>(ToBB(captureTo)));
+            captureTo = (Square)Bit::lsb(Shift<Direction::South>(ToBB(captureTo)));
         else
-            captureTo = (Square)lsb(Shift<Direction::North>(ToBB(captureTo)));
+            captureTo = (Square)Bit::lsb(Shift<Direction::North>(ToBB(captureTo)));
     case MoveType::Capture:
     CAPTURE_PROMOTION:
         pos.RemovePiece(from, pType, turn);
@@ -106,8 +106,8 @@ void Board::MakeMove(const Move &move) noexcept {
             pos.DisallowCastling(Castling::Queen, turn);
     }
 
-    _positions.push(std::move(pos));
+    positions.at(positionCount++) = pos;
     _moves++;
 }
 
-void Board::UndoMove() noexcept { _positions.pop(); }
+void Board::UndoMove() noexcept { positionCount--; }

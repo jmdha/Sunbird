@@ -1,5 +1,6 @@
-#include "chess/internal/utilities.hpp"
+#include <chess/internal/utilities.hpp>
 #include <chess/internal/bitboard.hpp>
+#include <chess/internal/bit.hpp>
 
 using namespace Chess;
 
@@ -174,12 +175,12 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_PASS = [] {
             bb |= Ray(square, dir[(int)color]);
             if (((BB)Column::A & square) == 0) {
                 BB b = Shift<Direction::West>(ToBB(square));
-                Square n = (Square)jank::bit::lsb(b);
+                Square n = (Square)Bit::lsb(b);
                 bb |= Ray(n, dir[(int)color]);
             }
             if (((BB)Column::H & square) == 0) {
                 BB b = Shift<Direction::East>(ToBB(square));
-                Square n = (Square)jank::bit::lsb(b);
+                Square n = (Square)Bit::lsb(b);
                 bb |= Ray(n, dir[(int)color]);
             }
 
