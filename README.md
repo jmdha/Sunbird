@@ -1,6 +1,10 @@
 # Sunbird
 <img src="https://github.com/jamadaha/Sunbird/actions/workflows/ctest.yml/badge.svg">
 
+[![lichess-bullet](https://lichess-shield.vercel.app/api?username=sun_bird&format=bullet)](https://lichess.org/@/sun_bird/perf/bullet)
+[![lichess-blitz](https://lichess-shield.vercel.app/api?username=sun_bird&format=blitz)](https://lichess.org/@/sun_bird/perf/blitz)
+[![lichess-rapid](https://lichess-shield.vercel.app/api?username=sun_bird&format=rapid)](https://lichess.org/@/sun_bord/perf/rapid)
+
 A UCI chess engine written in CPP.
 
 Play against it [here](https://lichess.org/@/sun_bird).
