@@ -1,8 +1,8 @@
 #ifndef CHESS_BITBOARD
 #define CHESS_BITBOARD
 
-#include "utilities.hpp"
 #include "constants.hpp"
+#include "utilities.hpp"
 #include <cstdint>
 
 /**
@@ -21,7 +21,7 @@ extern const std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_ATTACKS;
 extern const std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_PASS;
 extern const std::array<BB, SQUARECOUNT> PAWN_ISOLATION;
 
-constexpr inline BB ToBB(Square sq) { return ((BB)1 << (int)sq); }
+constexpr inline BB ToBB(Square sq) { return (static_cast<BB>(1) << static_cast<int>(sq)); }
 
 constexpr inline BB operator&(BB bb, Square sq) { return bb & ToBB(sq); }
 constexpr inline BB operator|(BB bb, Square sq) { return bb | ToBB(sq); }
@@ -89,7 +89,7 @@ constexpr inline bool Multiple(BB bb) { return bb & (bb - 1); }
 constexpr inline BB Ray(Square sq, Direction dir) {
     assert(sq != Square::None);
     assert(dir != Direction::None);
-    return RAYS[(int)sq][(int)dir];
+    return RAYS[static_cast<size_t>(sq)][static_cast<size_t>(dir)];
 }
 
 // Defines a ray from a square through each other square
@@ -103,7 +103,7 @@ constexpr inline BB Ray(Square from, Square to) {
     assert(from != Square::None);
     assert(to != Square::None);
     assert(from != to);
-    return SQRAYS[(int)from][(int)to];
+    return SQRAYS[static_cast<size_t>(from)][static_cast<size_t>(to)];
 }
 
 // Defines a ray from behind target square
@@ -116,14 +116,14 @@ constexpr inline BB Ray(Square from, Square to) {
 constexpr inline BB XRay(Square from, Square to) {
     assert(from != Square::None);
     assert(to != Square::None);
-    return XRAYS[(int)from][(int)to];
+    return XRAYS[static_cast<size_t>(from)][static_cast<size_t>(to)];
 }
 
 constexpr inline BB BAndB(Square sq, PieceType pType) {
     assert(sq != Square::None);
     assert(pType != PieceType::None);
     assert(pType != PieceType::Pawn);
-    return BABS[(int)pType][(int)sq];
+    return BABS[static_cast<size_t>(pType)][static_cast<size_t>(sq)];
 }
 
 // A ring for each square and offset
@@ -133,34 +133,34 @@ constexpr inline BB BAndB(Square sq, PieceType pType) {
 // .XXX.             X...X
 // ..... offset 2 -> XXXXX
 // Where p is the square and X is the bits in the ring at a given offset
-constexpr inline BB Ring(Square sq, int offset) {
+constexpr inline BB Ring(Square sq, size_t offset) {
     assert(sq != Square::None);
     assert(offset > 0 && offset < 8);
-    return RINGS[(int)sq][offset];
+    return RINGS[static_cast<size_t>(sq)][offset];
 }
 
 // The available moves on a clear board for pieces, except pawn
 constexpr inline BB Attacks(Square sq, PieceType pType) {
     assert(pType != PieceType::Pawn);
     assert(pType != PieceType::None);
-    return ATTACKS[(int)pType][(int)sq];
+    return ATTACKS[static_cast<size_t>(pType)][static_cast<size_t>(sq)];
 }
 
 // The available moves on a clear board for pawns
 constexpr inline BB PawnAttacks(Square sq, Color color) {
     assert(sq != Square::None);
     assert(color != Color::None);
-    return PAWN_ATTACKS[(int)color][(int)sq];
+    return PAWN_ATTACKS[static_cast<size_t>(color)][static_cast<size_t>(sq)];
 }
 
 constexpr inline BB PawnPassMask(Square sq, Color color) {
     assert(sq != Square::None);
     assert(color != Color::None);
-    return PAWN_PASS[(int)color][(int)sq];
+    return PAWN_PASS[static_cast<size_t>(color)][static_cast<size_t>(sq)];
 }
 constexpr inline BB PawnIsolationMask(Square sq) {
     assert(sq != Square::None);
-    return PAWN_ISOLATION[(int)sq];
+    return PAWN_ISOLATION[static_cast<size_t>(sq)];
 }
 
 } // namespace Chess

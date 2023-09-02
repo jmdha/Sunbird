@@ -27,7 +27,7 @@ std::optional<AlternativeResult> IsTerminal(const Position &pos) {
         return {};
 }
 PV ExtractPV(Board board) {
-    int ply = board.Ply();
+    size_t ply = board.Ply();
     std::vector<Move> moves;
     while (moves.size() < 8) {
         Move move = TT::ProbeMove(board.Pos().GetHash());
@@ -76,17 +76,17 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board,
         printf(" nps %zu", nps);
         printf(" hashfull %zu", TT::HashFull());
         bool errorOccured = true;
-        if (auto tempPV = ExtractPV(board); !tempPV.moves.empty()) {
+        if (auto tempPV = ExtractPV(board); !tempPV.empty()) {
             pv = tempPV; 
             errorOccured = false;
         }
         std::cout << " pv ";
-        for (int i = 0; i < pv.moves.size(); i++)
-            std::cout << pv.moves[i].ToString() << " ";
+        for (int i = 0; i < pv.size(); i++)
+            std::cout << pv[i].ToString() << " ";
         std::cout << '\n';
         if (std::abs(score) == Values::INF || errorOccured)
             break;
     }
-    return pv.moves[0];
+    return pv[0];
 }
 } // namespace Chess::Engine::Search

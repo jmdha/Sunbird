@@ -14,15 +14,15 @@ struct MoveList {
     bool empty() const { return index == 0; }
     // Selection sort
     void sort(std::array<int, MAXMOVECOUNT> &scores) {
-        for (int i = 0; i < index; i++)
-            for (int t = i + 1; t < index; t++)
+        for (size_t i = 0; i < index; i++)
+            for (size_t t = i + 1; t < index; t++)
                 if (scores[i] < scores[t]) {
                     std::swap(scores[i], scores[t]);
                     std::swap(moves[i], moves[t]);
                 }
     }
-    Move &operator[](int i) { return moves[i]; }
-    const Move &operator[](int i) const { return moves[i]; }
+    Move &operator[](size_t i) { return moves[i]; }
+    const Move &operator[](size_t i) const { return moves[i]; }
     void operator<<(Move move) {
         moves[index++] = move;
         if (move.IsCapture())
@@ -35,10 +35,10 @@ struct MoveList {
 
 private:
     std::array<Move, MAXMOVECOUNT> moves;
-    int index = 0;
+    size_t index = 0;
     // Index of first quiet move
     // Attack moves are always stored first in moves
-    int quietIndex = 0;
+    size_t quietIndex = 0;
 };
 } // namespace Chess
 

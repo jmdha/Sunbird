@@ -3,7 +3,7 @@
 using namespace Chess;
 
 bool Position::IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard,
-                          BB tempKingBoard) const noexcept {
+                          BB tempKingBoard) const {
     if (tempKingBoard == 0)
         return true;
     BB kingPosIndex = Bit::lsb_pop(tempKingBoard);
@@ -50,7 +50,7 @@ bool Position::IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard,
     return true;
 }
 
-BB Position::GenerateAttackSquares(Color color) const noexcept {
+BB Position::GenerateAttackSquares(Color color) const {
     BB attacks = 0;
 
     BB tempPieces[PIECECOUNT];

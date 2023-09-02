@@ -1,7 +1,7 @@
 #include <chess/internal/bit.hpp>
+#include <chess/internal/bitboard.hpp>
 #include <chess/internal/constants.hpp>
 #include <chess/internal/utilities.hpp>
-#include <chess/internal/bitboard.hpp>
 #include <engine/evaluation.hpp>
 #include <engine/internal/values.hpp>
 
@@ -13,7 +13,7 @@ std::pair<int, int> CalculatePhase(const Position &pos) {
     for (auto pType : PIECES) {
         const BB pieces = pos.GetPieces(pType);
         const int count = Bit::popcount(pieces);
-        game_phase += count * Values::PHASE_INC[(int)pType];
+        game_phase += count * Values::PHASE_INC[static_cast<int>(pType)];
     }
 
     const int mg = std::min(24, game_phase);
@@ -21,15 +21,18 @@ std::pair<int, int> CalculatePhase(const Position &pos) {
     return {mg, eg};
 }
 
-std::pair<int, int> EvalPieceSquare(const Position &pos, Color color) {
+template<Color color>
+std::pair<int, int> EvalPieceSquare(const Position &pos) {
+    const size_t colorI = static_cast<size_t>(color);
     int mg = 0;
     int eg = 0;
 
     for (auto pType : PIECES) {
+        const size_t pieceI = static_cast<size_t>(pType);
         for (BB pieces = pos.GetPieces(color, pType); pieces;) {
-            const Square piece = (Square)Bit::lsb_pop(pieces);
-            mg += Values::MG[(int)color][(int)pType][(int)piece];
-            eg += Values::EG[(int)color][(int)pType][(int)piece];
+            const Square piece = static_cast<Square>(Bit::lsb_pop(pieces));
+            mg += Values::MG[colorI][pieceI][static_cast<size_t>(piece)];
+            eg += Values::EG[colorI][pieceI][static_cast<size_t>(piece)];
         }
     }
 
@@ -37,12 +40,14 @@ std::pair<int, int> EvalPieceSquare(const Position &pos, Color color) {
 }
 
 std::pair<int, int> EvalPieceSquare(const Position &pos) {
-    const auto white = EvalPieceSquare(pos, Color::White);
-    const auto black = EvalPieceSquare(pos, Color::Black);
+    const auto white = EvalPieceSquare<Color::White>(pos);
+    const auto black = EvalPieceSquare<Color::Black>(pos);
     return {white.first - black.first, white.second - black.second};
 }
 
-std::pair<int, int> EvalPawn(const Position &pos, Color color) {
+template<Color color>
+std::pair<int, int> EvalPawn(const Position &pos) {
+    const size_t colorI = static_cast<size_t>(color);
     static Direction UP[2] = {Direction::North, Direction::South};
     int mg = 0;
     int eg = 0;
@@ -52,18 +57,18 @@ std::pair<int, int> EvalPawn(const Position &pos, Color color) {
 
     // Doubled pawns
     for (auto column : COLUMNS)
-        if (Multiple(PAWNS & (BB)column)) {
+        if (Multiple(PAWNS & static_cast<BB>(column))) {
             mg += Values::Structure::DoubledPawn::MG;
             eg += Values::Structure::DoubledPawn::EG;
         }
 
     for (BB pawns = PAWNS; pawns;) {
-        const Square pawn = (Square)Bit::lsb_pop(pawns);
+        const Square pawn = static_cast<Square>(Bit::lsb_pop(pawns));
         // Passed pawn check
-        if (!(PawnPassMask(pawn, color) & PAWNS_O) && !(Ray(pawn, UP[(int)color]) & PAWNS)) {
+        if (!(PawnPassMask(pawn, color) & PAWNS_O) && !(Ray(pawn, UP[colorI]) & PAWNS)) {
             const int row = Utilities::GetRowIndex(pawn);
-            mg += Values::Structure::PassedPawn::MG[(int)color][row];
-            eg += Values::Structure::PassedPawn::EG[(int)color][row];
+            mg += Values::Structure::PassedPawn::MG[colorI][static_cast<size_t>(row)];
+            eg += Values::Structure::PassedPawn::EG[colorI][static_cast<size_t>(row)];
         }
         // Isolated pawn check
         if (!(PawnIsolationMask(pawn) & PAWNS)) {
@@ -76,8 +81,8 @@ std::pair<int, int> EvalPawn(const Position &pos, Color color) {
 }
 
 std::pair<int, int> EvalPawn(const Position &pos) {
-    const auto white = EvalPawn(pos, Color::White);
-    const auto black = EvalPawn(pos, Color::Black);
+    const auto white = EvalPawn<Color::White>(pos);
+    const auto black = EvalPawn<Color::Black>(pos);
     return {white.first - black.first, white.second - black.second};
 }
 } // namespace Internal

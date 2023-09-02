@@ -4,7 +4,7 @@
 
 namespace Chess::Engine::MoveOrdering {
 void Killer(MoveList &moves, Move killerMove) {
-    for (int i = moves.attacks(); i < moves.size(); i++) {
+    for (size_t i = moves.attacks(); i < moves.size(); i++) {
         if (moves[i] == killerMove) {
             std::memmove(&moves[i], &moves[i + 1], (moves.size() - i) * sizeof(Move));
             std::memmove(&moves[moves.attacks() + 1], &moves[moves.attacks()],
@@ -18,12 +18,12 @@ void Killer(MoveList &moves, Move killerMove) {
 void MVVLVA(const Board &board, MoveList &moves) {
     const Position &pos = board.Pos();
     std::sort(moves.begin(), &moves[moves.attacks()], [pos](Move lhs, Move rhs) {
-        const int leftCapture = (int)pos.GetType(lhs.GetTo());
-        const int rightCapture = (int)pos.GetType(rhs.GetTo());
+        const int leftCapture = static_cast<int>(pos.GetType(lhs.GetTo()));
+        const int rightCapture = static_cast<int>(pos.GetType(rhs.GetTo()));
         if (leftCapture > rightCapture)
             return true;
-        const int leftPiece = (int)pos.GetType(lhs.GetFrom());
-        const int rightPiece = (int)pos.GetType(rhs.GetFrom());
+        const int leftPiece = static_cast<int>(pos.GetType(lhs.GetFrom()));
+        const int rightPiece = static_cast<int>(pos.GetType(rhs.GetFrom()));
         if (leftCapture == rightCapture && leftPiece < rightPiece)
             return true;
         return false;
@@ -31,11 +31,11 @@ void MVVLVA(const Board &board, MoveList &moves) {
 }
 
 void PVPrioity(const Board &board, const PV &pv, MoveList &moves) {
-    size_t pvIndex = board.Ply() - pv.ply;
-    if (pvIndex > pv.moves.size() || pv.moves.size() == 0)
+    size_t pvIndex = board.Ply() - pv.ply();
+    if (pvIndex > pv.size() || pv.size() == 0)
         return;
-    Move pvMove = pv.moves[pvIndex];
-    for (int i = 0; i < moves.size(); i++) {
+    Move pvMove = pv[pvIndex];
+    for (size_t i = 0; i < moves.size(); i++) {
         if (moves[i] == pvMove) {
             std::memmove(&moves[i], &moves[i + 1], (moves.size() - i) * sizeof(Move));
             std::memmove(&moves[1], &moves[0], (moves.size() - 1) * sizeof(Move));
@@ -48,7 +48,7 @@ void PVPrioity(const Board &board, const PV &pv, MoveList &moves) {
 void TTPrioity(Move move, MoveList &moves) {
     if (move.GetValue() == 0)
         return;
-    for (int i = 0; i < moves.size(); i++) {
+    for (size_t i = 0; i < moves.size(); i++) {
         if (moves[i] == move) {
             std::memmove(&moves[i], &moves[i + 1], (moves.size() - i) * sizeof(Move));
             std::memmove(&moves[1], &moves[0], (moves.size() - 1) * sizeof(Move));

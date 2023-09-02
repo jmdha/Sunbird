@@ -11,28 +11,28 @@ namespace Chess {
 class Move {
 public:
     Move() = default;
-    explicit Move(uint16_t move) : move(move) {}
-    explicit Move(MoveType type) : move((int)type & 0xf){};
+    explicit Move(uint16_t move) : _move(move) {}
+    explicit Move(MoveType type) : _move(static_cast<uint16_t>(type) & 0xf) {}
 
     Move(MoveType type, Square from, Square to)
-        : move(((int)type & 0xf) + (((int)from & 0x3f) << 4) + (((int)to & 0x3f) << 10)){};
+        : _move(((int)type & 0xf) + (((int)from & 0x3f) << 4) + (((int)to & 0x3f) << 10)) {}
 
     inline std::string ToString() const;
 
-    inline uint16_t GetValue() const noexcept { return move; }
-    inline MoveType GetType() const noexcept { return (MoveType)(move & 0xf); }
-    inline Square GetFrom() const noexcept { return (Square)((move >> 4) & 0x3f); }
-    inline Square GetTo() const noexcept { return (Square)((move >> 10) & 0x3f); }
-    inline bool IsCapture() const noexcept { return move & CaptureBit; }
-    inline bool IsPromotion() const noexcept { return move & PromotionBit; }
+    inline uint16_t GetValue() const noexcept { return _move; }
+    inline MoveType GetType() const noexcept { return static_cast<MoveType>(_move & 0xf); }
+    inline Square GetFrom() const noexcept { return static_cast<Square>((_move >> 4) & 0x3f); }
+    inline Square GetTo() const noexcept { return static_cast<Square>((_move >> 10) & 0x3f); }
+    inline bool IsCapture() const noexcept { return _move & CaptureBit; }
+    inline bool IsPromotion() const noexcept { return _move & PromotionBit; }
     inline bool IsTactical() const noexcept { return IsCapture() || IsPromotion(); }
-    inline bool IsCastle() const noexcept { return move & CastlingBit; }
+    inline bool IsCastle() const noexcept { return _move & CastlingBit; }
     inline bool IsEP() const noexcept { return GetType() == MoveType::EPCapture; }
 
-    friend bool operator==(Move const &lhs, Move const &rhs) { return lhs.move == rhs.move; }
+    friend bool operator==(Move const &lhs, Move const &rhs) { return lhs._move == rhs._move; }
 
 private:
-    uint16_t move = 0;
+    uint16_t _move = 0;
 };
 
 inline std::string Move::ToString() const {

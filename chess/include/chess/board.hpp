@@ -4,7 +4,7 @@
 #include <cassert>
 #include <string>
 
-#include "chess/internal/move.hpp"
+#include "internal/move.hpp"
 #include "internal/bitboard.hpp"
 #include "internal/constants.hpp"
 #include "internal/position.hpp"
