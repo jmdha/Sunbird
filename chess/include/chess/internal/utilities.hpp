@@ -70,9 +70,7 @@ constexpr Color GetPieceColor(PieceChar pieceChar) {
 
 constexpr Square GetSquare(int x, int y) { return static_cast<Square>(x + 8 * y); }
 
-constexpr Square GetSquare(char row, char column) {
-    return GetSquare(row - 97, column - 49);
-}
+constexpr Square GetSquare(char row, char column) { return GetSquare(row - 97, column - 49); }
 
 constexpr Column GetColumn(int columnIndex) {
     switch (columnIndex) {
@@ -99,7 +97,9 @@ constexpr Column GetColumn(int columnIndex) {
 
 constexpr Column GetColumnByChar(char column) { return GetColumn(column - 97); }
 
-constexpr size_t GetColumnIndex(Square square) { return COLUMN_INDEX.at((int)square); }
+constexpr size_t GetColumnIndex(Square square) {
+    return COLUMN_INDEX.at(static_cast<size_t>(square));
+}
 
 constexpr size_t GetColumnIndex(Column col) {
     switch (col) {
@@ -125,9 +125,11 @@ constexpr size_t GetColumnIndex(Column col) {
     throw std::logic_error("Invalid flow");
 }
 
-constexpr Column GetColumn(Square square) { return COLUMN_BY_SQUARE.at((int)square); }
+constexpr Column GetColumn(Square square) {
+    return COLUMN_BY_SQUARE.at(static_cast<size_t>(square));
+}
 
-constexpr Row GetRow(int rowIndex) {
+constexpr Row GetRow(size_t rowIndex) {
     switch (rowIndex) {
     case 0:
         return Row::Row1;
@@ -150,18 +152,20 @@ constexpr Row GetRow(int rowIndex) {
     }
 }
 
-constexpr int GetRowIndex(Square square) { return ((int)square - ((int)square % 8)) / 8; }
+constexpr size_t GetRowIndex(Square square) {
+    return (static_cast<size_t>(square) - (static_cast<size_t>(square) % 8)) / 8;
+}
 
 constexpr Row GetRow(Square square) { return GetRow(GetRowIndex(square)); }
 
-constexpr Row GetRowByChar(char row) { return GetRow(row - '1'); }
+constexpr Row GetRowByChar(char row) { return GetRow(static_cast<size_t>(row - '1')); }
 
-static std::string GetSquareString(Square sq) {
+constexpr std::string GetSquareString(Square sq) {
     std::string square;
-    int col = GetColumnIndex(sq);
-    int row = GetRowIndex(sq);
-    square += 'a' + col;
-    square += '1' + row;
+    const size_t col = GetColumnIndex(sq);
+    const size_t row = GetRowIndex(sq);
+    square += 'a' + static_cast<char>(col);
+    square += '1' + static_cast<char>(row);
     return square;
 }
 

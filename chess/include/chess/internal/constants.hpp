@@ -124,7 +124,7 @@ constexpr std::array<Column, 64> COLUMN_BY_SQUARE = {
     Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H,
     Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H};
 
-constexpr std::array<int, SQUARECOUNT> COLUMN_INDEX = {
+constexpr std::array<size_t, SQUARECOUNT> COLUMN_INDEX = {
     0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7,
     0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7};
 
