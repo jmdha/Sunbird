@@ -39,6 +39,7 @@ Play against it [here](https://lichess.org/@/sun_bird).
 * Move Ordering
   * MVV-LVA [[wiki](https://www.chessprogramming.org/MVV-LVA)]
   * PV [[wiki](https://www.chessprogramming.org/PV-Move)]
+* Transposition Table [[wiki](https://www.chessprogramming.org/Transposition_Table)]
     
 ### Evaluation
 * Material Point Value [[wiki](https://www.chessprogramming.org/Material)]
