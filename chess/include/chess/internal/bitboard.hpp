@@ -24,6 +24,7 @@ extern const std::array<BB, SQUARECOUNT> PAWN_ISOLATION;
 
 constexpr inline BB ToBB(Square sq) { return (static_cast<BB>(1) << static_cast<int>(sq)); }
 constexpr inline Square First(BB bb) { return static_cast<Square>(Bit::lsb(bb)); }
+constexpr inline Square Last(BB bb) { return static_cast<Square>(Bit::msb(bb)); }
 constexpr inline Square Next(BB &bb) { return static_cast<Square>(Bit::lsb_pop(bb)); }
 
 // clang-format off

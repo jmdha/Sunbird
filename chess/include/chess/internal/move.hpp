@@ -15,7 +15,9 @@ public:
     explicit Move(MoveType type) : _move(static_cast<uint16_t>(type) & 0xf) {}
 
     Move(MoveType type, Square from, Square to)
-        : _move(((int)type & 0xf) + (((int)from & 0x3f) << 4) + (((int)to & 0x3f) << 10)) {}
+        : _move(static_cast<uint16_t>(static_cast<uint16_t>(type) & 0xf) +
+                static_cast<uint16_t>((static_cast<uint16_t>(from) & 0x3f) << 4) +
+                static_cast<uint16_t>((static_cast<uint16_t>(to) & 0x3f) << 10)) {}
 
     inline std::string ToString() const;
 

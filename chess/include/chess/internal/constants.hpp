@@ -29,16 +29,18 @@ using BB = uint64_t;
 #define EDGE 0xff818181818181ff
 #define CORNER 0x8100000000000081
 
-enum class Color { White, Black, None };
+enum class Color : uint16_t { White, Black, None };
 inline Color operator~(Color color) {
     assert(color != Color::None);
     return static_cast<Color>(1 ^ static_cast<int>(color));
 }
 
-enum class PieceType { Pawn, Knight, Bishop, Rook, Queen, King, None };
+enum class PieceType : uint16_t { Pawn, Knight, Bishop, Rook, Queen, King, None };
 constexpr std::array<PieceType, PIECECOUNT> PIECES{PieceType::Pawn,   PieceType::Knight,
                                                    PieceType::Bishop, PieceType::Rook,
                                                    PieceType::Queen,  PieceType::King};
+static const std::array<PieceType, PIECECOUNT - 1> NON_PAWNS = {
+    PieceType::Knight, PieceType::Bishop, PieceType::Rook, PieceType::Queen, PieceType::King};
 
 enum class PieceChar : char {
     PawnWhite = 'P',
@@ -57,7 +59,7 @@ enum class PieceChar : char {
 };
 
 // clang-format off
-enum class Square {
+enum class Square : uint16_t {
     A1,B1,C1,D1,E1,F1,G1,H1,
     A2,B2,C2,D2,E2,F2,G2,H2,
     A3,B3,C3,D3,E3,F3,G3,H3,
@@ -126,7 +128,7 @@ constexpr std::array<int, SQUARECOUNT> COLUMN_INDEX = {
     0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7,
     0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7};
 
-enum class Direction : int {
+enum class Direction : uint16_t {
     North,
     East,
     South,
@@ -143,20 +145,18 @@ constexpr std::array<Direction, 8> DIRECTIONS = {
     Direction::North,     Direction::East,      Direction::South,     Direction::West,
     Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest};
 
-constexpr std::array<BB, 8> EDGES = {
-    static_cast<BB>(Row::Row8),
-    static_cast<BB>(Column::H),
-    static_cast<BB>(Row::Row1),
-    static_cast<BB>(Column::A),
+constexpr std::array<BB, 8> EDGES = {static_cast<BB>(Row::Row8),
+                                     static_cast<BB>(Column::H),
+                                     static_cast<BB>(Row::Row1),
+                                     static_cast<BB>(Column::A),
 
-    static_cast<BB>(Row::Row8) | static_cast<BB>(Column::H),
-    static_cast<BB>(Row::Row8) | static_cast<BB>(Column::A),
-    static_cast<BB>(Row::Row1) | static_cast<BB>(Column::H),
-    static_cast<BB>(Row::Row1) | static_cast<BB>(Column::A)
-};
+                                     static_cast<BB>(Row::Row8) | static_cast<BB>(Column::H),
+                                     static_cast<BB>(Row::Row8) | static_cast<BB>(Column::A),
+                                     static_cast<BB>(Row::Row1) | static_cast<BB>(Column::H),
+                                     static_cast<BB>(Row::Row1) | static_cast<BB>(Column::A)};
 
 // NOTE: The values of MoveType are used, and should not be changed
-enum class MoveType {
+enum class MoveType : uint16_t {
     Quiet = 0,
     DoublePawnPush = 1,
     KingCastle = 2,
@@ -182,7 +182,9 @@ constexpr std::array<MoveType, 4> PromotionCapturesMoves{
 #define CaptureBit 0x4
 #define CastlingBit 0x2
 
-enum class Castling { None, King, Queen, All };
+enum class Castling : uint16_t { None, King, Queen, All };
+
+inline Castling operator~(Castling v) { return static_cast<Castling>(~static_cast<uint16_t>(v)); }
 
 inline Castling operator&(Castling lhs, Castling rhs) {
     return static_cast<Castling>(static_cast<int>(lhs) & static_cast<int>(rhs));

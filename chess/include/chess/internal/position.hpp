@@ -67,7 +67,8 @@ inline Column Position::GetEP() const {
         return COLUMNS[index - 1];
 }
 inline Castling Position::GetCastling(Color color) const {
-    return (Castling)(((_misc >> 1) & (0x3 << (2 * (int)color))) >> (2 * (int)color));
+    return static_cast<Castling>(((_misc >> 1) & (0x3 << (2 * static_cast<uint16_t>(color)))) >>
+                                 (2 * static_cast<uint16_t>(color)));
 }
 inline bool Position::AllowsCastling(Castling castling, Color color) const {
     return static_cast<int>(GetCastling(color) & castling) != 0;
@@ -119,12 +120,12 @@ inline void Position::SetTurn(Color color) {
 }
 inline void Position::SetCastling(Castling castling, Color color) {
     _hash = Zobrist::FlipCastling(_hash, color, castling);
-    _misc &= ~((0x3 << (2 * static_cast<int>(color))) << 1);
-    _misc |= ((int)castling << (2 * (int)color)) << 1;
+    _misc &= ~((0x3 << (2 * static_cast<uint16_t>(color))) << 1);
+    _misc |= (static_cast<uint16_t>(castling) << (2 * static_cast<uint16_t>(color))) << 1;
 }
 inline void Position::DisallowCastling(Castling castling, Color color) {
     const Castling priorCastling = GetCastling(color);
-    SetCastling((Castling)((int)priorCastling & ~((int)castling)), color);
+    SetCastling(priorCastling & ~castling, color);
     if (priorCastling != GetCastling(color))
         _hash = Zobrist::FlipCastling(_hash, color, castling);
 }
