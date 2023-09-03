@@ -160,7 +160,7 @@ constexpr Row GetRow(Square square) { return GetRow(GetRowIndex(square)); }
 
 constexpr Row GetRowByChar(char row) { return GetRow(static_cast<size_t>(row - '1')); }
 
-constexpr std::string GetSquareString(Square sq) {
+inline std::string GetSquareString(Square sq) {
     std::string square;
     const size_t col = GetColumnIndex(sq);
     const size_t row = GetRowIndex(sq);
