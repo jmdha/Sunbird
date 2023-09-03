@@ -143,20 +143,17 @@ constexpr std::array<Direction, 8> DIRECTIONS = {
     Direction::North,     Direction::East,      Direction::South,     Direction::West,
     Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest};
 
-enum class NotEdge : BB {
-    North = 0xffffffffffffff,
-    East = 0x7f7f7f7f7f7f7f7f,
-    South = 0xffffffffffffff00,
-    West = 0xfefefefefefefefe,
-    NorthEast = North & East,
-    NorthWest = North & West,
-    SouthEast = South & East,
-    SouthWest = South & West,
-};
+constexpr std::array<BB, 8> EDGES = {
+    static_cast<BB>(Row::Row8),
+    static_cast<BB>(Column::H),
+    static_cast<BB>(Row::Row1),
+    static_cast<BB>(Column::A),
 
-constexpr NotEdge notEdges[8] = {NotEdge::North,     NotEdge::East,      NotEdge::South,
-                                 NotEdge::West,      NotEdge::NorthEast, NotEdge::NorthWest,
-                                 NotEdge::SouthEast, NotEdge::SouthWest};
+    static_cast<BB>(Row::Row8) | static_cast<BB>(Column::H),
+    static_cast<BB>(Row::Row8) | static_cast<BB>(Column::A),
+    static_cast<BB>(Row::Row1) | static_cast<BB>(Column::H),
+    static_cast<BB>(Row::Row1) | static_cast<BB>(Column::A)
+};
 
 // NOTE: The values of MoveType are used, and should not be changed
 enum class MoveType {

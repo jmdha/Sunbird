@@ -26,6 +26,8 @@ constexpr inline BB ToBB(Square sq) { return (static_cast<BB>(1) << static_cast<
 constexpr inline Square First(BB bb) { return static_cast<Square>(Bit::lsb(bb)); }
 constexpr inline Square Next(BB &bb) { return static_cast<Square>(Bit::lsb_pop(bb)); }
 
+// clang-format off
+
 constexpr inline BB operator&(BB bb, Square sq) { return bb & ToBB(sq); }
 constexpr inline BB operator|(BB bb, Square sq) { return bb | ToBB(sq); }
 constexpr inline BB operator^(BB bb, Square sq) { return bb ^ ToBB(sq); }
@@ -37,9 +39,15 @@ constexpr inline BB operator&(Square sq, BB bb) { return bb & sq; }
 constexpr inline BB operator|(Square sq, BB bb) { return bb | sq; }
 constexpr inline BB operator^(Square sq, BB bb) { return bb ^ sq; }
 
+constexpr inline BB operator&(Column l, Column r) { return static_cast<BB>(l) & static_cast<BB>(r); }
+constexpr inline BB operator|(Column l, Column r) { return static_cast<BB>(l) | static_cast<BB>(r); }
+constexpr inline BB operator^(Column l, Column r) { return static_cast<BB>(l) ^ static_cast<BB>(r); }
 constexpr inline BB operator&(BB bb, Column c) { return bb & static_cast<BB>(c); }
 constexpr inline BB operator|(BB bb, Column c) { return bb | static_cast<BB>(c); }
 constexpr inline BB operator^(BB bb, Column c) { return bb ^ static_cast<BB>(c); }
+constexpr inline BB &operator&=(BB bb, Column c) { return bb &= static_cast<BB>(c); }
+constexpr inline BB &operator|=(BB bb, Column c) { return bb |= static_cast<BB>(c); }
+constexpr inline BB &operator^=(BB bb, Column c) { return bb ^= static_cast<BB>(c); }
 constexpr inline BB operator&(Column c, Square sq) { return static_cast<BB>(c) & sq; }
 constexpr inline BB operator|(Column c, Square sq) { return static_cast<BB>(c) | sq; }
 constexpr inline BB operator^(Column c, Square sq) { return static_cast<BB>(c) ^ sq; }
@@ -47,15 +55,30 @@ constexpr inline BB operator&(Square sq, Column c) { return c & sq; }
 constexpr inline BB operator|(Square sq, Column c) { return c | sq; }
 constexpr inline BB operator^(Square sq, Column c) { return c ^ sq; }
 
+constexpr inline BB operator&(Row l, Row r) { return static_cast<BB>(l) & static_cast<BB>(r); }
+constexpr inline BB operator|(Row l, Row r) { return static_cast<BB>(l) | static_cast<BB>(r); }
+constexpr inline BB operator^(Row l, Row r) { return static_cast<BB>(l) ^ static_cast<BB>(r); }
 constexpr inline BB operator&(BB bb, Row r) { return bb & static_cast<BB>(r); }
 constexpr inline BB operator|(BB bb, Row r) { return bb | static_cast<BB>(r); }
 constexpr inline BB operator^(BB bb, Row r) { return bb ^ static_cast<BB>(r); }
+constexpr inline BB &operator&=(BB bb, Row r) { return bb &= static_cast<BB>(r); }
+constexpr inline BB &operator|=(BB bb, Row r) { return bb |= static_cast<BB>(r); }
+constexpr inline BB &operator^=(BB bb, Row r) { return bb ^= static_cast<BB>(r); }
 constexpr inline BB operator&(Row r, Square sq) { return static_cast<BB>(r) & sq; }
 constexpr inline BB operator|(Row r, Square sq) { return static_cast<BB>(r) | sq; }
 constexpr inline BB operator^(Row r, Square sq) { return static_cast<BB>(r) ^ sq; }
 constexpr inline BB operator&(Square sq, Row r) { return r & sq; }
 constexpr inline BB operator|(Square sq, Row r) { return r | sq; }
 constexpr inline BB operator^(Square sq, Row r) { return r ^ sq; }
+
+constexpr inline BB operator&(Column c, Row r) { return static_cast<BB>(c) & static_cast<BB>(r); }
+constexpr inline BB operator|(Column c, Row r) { return static_cast<BB>(c) | static_cast<BB>(r); }
+constexpr inline BB operator^(Column c, Row r) { return static_cast<BB>(c) ^ static_cast<BB>(r); }
+constexpr inline BB operator&(Row r, Column c) { return c & r; }
+constexpr inline BB operator|(Row r, Column c) { return c | r; }
+constexpr inline BB operator^(Row r, Column c) { return c ^ r; }
+
+// clang-format on
 
 template <Direction D> constexpr inline BB Shift(BB bb) {
     if constexpr (D == Direction::North)

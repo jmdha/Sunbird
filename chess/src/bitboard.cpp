@@ -1,6 +1,6 @@
-#include <chess/internal/utilities.hpp>
-#include <chess/internal/bitboard.hpp>
 #include <chess/internal/bit.hpp>
+#include <chess/internal/bitboard.hpp>
+#include <chess/internal/utilities.hpp>
 
 using namespace Chess;
 
@@ -12,10 +12,10 @@ constexpr std::array<std::array<BB, DIRECTIONCOUNT>, SQUARECOUNT> RAYS = [] {
             BB ray = 0;
 
             BB dot = ToBB(sq);
-            while (dot & Utilities::NotEdge(dir))
+            while (dot & (~EDGES[static_cast<size_t>(dir)]))
                 ray |= ShiftM(dot, dir);
 
-            rays[(int)sq][(int)dir] = ray;
+            rays[static_cast<size_t>(sq)][static_cast<size_t>(dir)] = ray;
         }
     return rays;
 }();
@@ -26,7 +26,8 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, SQUARECOUNT> SQRAYS = [] {
         for (const auto to : SQUARES) {
             if (from == to)
                 continue;
-            rays[(int)from][(int)to] = RAYS[(int)from][(int)Utilities::GetDirection(from, to)];
+            const Direction dir = Utilities::GetDirection(from, to);
+            rays[static_cast<size_t>(from)][static_cast<size_t>(to)] = Ray(from, dir);
         }
     return rays;
 }();
@@ -37,13 +38,14 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, SQUARECOUNT> XRAYS = [] {
         for (const auto to : SQUARES) {
             if (from == to)
                 continue;
-            rays[(int)from][(int)to] = RAYS[(int)to][(int)Utilities::GetDirection(from, to)];
+            const Direction dir = Utilities::GetDirection(from, to);
+            rays[static_cast<size_t>(from)][static_cast<size_t>(to)] = Ray(to, dir);
         }
     return rays;
 }();
 
 namespace {
-constexpr BB GenerateRing(Square sq, int offset) {
+constexpr BB GenerateRing(Square sq, size_t offset) {
     BB ring = 0;
 
     const std::array<Direction, 4> directions{Direction::North, Direction::East, Direction::South,
@@ -54,16 +56,16 @@ constexpr BB GenerateRing(Square sq, int offset) {
         std::array{Direction::West, Direction::East},
         std::array{Direction::North, Direction::South}};
 
-    for (int i = 0; i < directions.size(); ++i) {
+    for (size_t i = 0; i < directions.size(); ++i) {
         BB dot = ToBB(sq);
-        for (int o = 0; o < offset; ++o) {
-            if (dot & (~(BB)notEdges[(int)directions[i]])) {
+        for (size_t o = 0; o < offset; ++o) {
+            if (dot & (EDGES[static_cast<size_t>(directions[i])])) {
                 dot = 0;
                 break;
             }
             dot = Shift(dot, directions.at(i));
             for (const auto dir : probes.at(i))
-                if (!(dot & (~(BB)notEdges[(int)dir])))
+                if (!(dot & (EDGES[static_cast<size_t>(dir)])))
                     dot |= Shift(dot, dir);
         }
         ring |= dot;
@@ -76,8 +78,8 @@ constexpr std::array<std::array<BB, RING_COUNT>, SQUARECOUNT> RINGS = [] {
     auto rings = decltype(RINGS){};
 
     for (const auto sq : SQUARES)
-        for (int i = 1; i < RING_COUNT; i++)
-            rings[(int)sq][i] = GenerateRing(sq, i);
+        for (size_t i = 1; i < RING_COUNT; i++)
+            rings[static_cast<size_t>(sq)][i] = GenerateRing(sq, i);
 
     return rings;
 }();
@@ -86,26 +88,23 @@ namespace {
 constexpr BB GenerateAttacks(PieceType piece, Square sq) {
     switch (piece) {
     case PieceType::Knight:
-        return RINGS[(int)sq][2] &
-               ~(RAYS[(int)sq][(int)Direction::North] | RAYS[(int)sq][(int)Direction::East] |
-                 RAYS[(int)sq][(int)Direction::South] | RAYS[(int)sq][(int)Direction::West] |
-                 RAYS[(int)sq][(int)Direction::NorthWest] |
-                 RAYS[(int)sq][(int)Direction::NorthEast] |
-                 RAYS[(int)sq][(int)Direction::SouthWest] |
-                 RAYS[(int)sq][(int)Direction::SouthEast]);
+        return Ring(sq, 2) & ~(Ray(sq, Direction::North) | Ray(sq, Direction::East) |
+                               Ray(sq, Direction::South) | Ray(sq, Direction::West) |
+                               Ray(sq, Direction::NorthWest) | Ray(sq, Direction::NorthEast) |
+                               Ray(sq, Direction::SouthWest) | Ray(sq, Direction::SouthEast));
     case PieceType::King:
-        return RINGS[(int)sq][1];
+        return Ring(sq, 1);
     case PieceType::Rook:
-        return RAYS[(int)sq][(int)Direction::North] | RAYS[(int)sq][(int)Direction::East] |
-               RAYS[(int)sq][(int)Direction::South] | RAYS[(int)sq][(int)Direction::West];
+        return Ray(sq, Direction::North) | Ray(sq, Direction::East) | Ray(sq, Direction::South) |
+               Ray(sq, Direction::West);
     case PieceType::Bishop:
-        return RAYS[(int)sq][(int)Direction::NorthWest] | RAYS[(int)sq][(int)Direction::NorthEast] |
-               RAYS[(int)sq][(int)Direction::SouthWest] | RAYS[(int)sq][(int)Direction::SouthEast];
+        return Ray(sq, Direction::NorthWest) | Ray(sq, Direction::NorthEast) |
+               Ray(sq, Direction::SouthWest) | Ray(sq, Direction::SouthEast);
     case PieceType::Queen:
-        return RAYS[(int)sq][(int)Direction::North] | RAYS[(int)sq][(int)Direction::East] |
-               RAYS[(int)sq][(int)Direction::South] | RAYS[(int)sq][(int)Direction::West] |
-               RAYS[(int)sq][(int)Direction::NorthWest] | RAYS[(int)sq][(int)Direction::NorthEast] |
-               RAYS[(int)sq][(int)Direction::SouthWest] | RAYS[(int)sq][(int)Direction::SouthEast];
+        return Ray(sq, Direction::North) | Ray(sq, Direction::East) | Ray(sq, Direction::South) |
+               Ray(sq, Direction::West) | Ray(sq, Direction::NorthWest) |
+               Ray(sq, Direction::NorthEast) | Ray(sq, Direction::SouthWest) |
+               Ray(sq, Direction::SouthEast);
     case PieceType::Pawn:
     case PieceType::None:
         throw std::invalid_argument("Cannot generate attacks for pawn or no piece type.");
@@ -116,10 +115,11 @@ constexpr BB GenerateAttacks(PieceType piece, Square sq) {
 constexpr std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> ATTACKS = [] {
     auto attacks = decltype(ATTACKS){};
 
-    for (const auto pType :
-         {PieceType::Bishop, PieceType::Knight, PieceType::Rook, PieceType::Queen, PieceType::King})
+    for (const auto p : PIECES)
         for (const auto sq : SQUARES)
-            attacks[(int)pType][(int)sq] = GenerateAttacks(pType, sq);
+            if (p != PieceType::Pawn)
+                attacks[static_cast<size_t>(p)][static_cast<size_t>(sq)] = GenerateAttacks(p, sq);
+
     return attacks;
 }();
 
@@ -135,15 +135,18 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> BABS = [] {
                 nonEdge = ~EDGE;
             else if (sq & CORNER)
                 nonEdge = ~CORNER;
-            else if (sq & (BB)Row::Row1)
-                nonEdge = ~((BB)Row::Row8 | (BB)Column::A | (BB)Column::H);
-            else if (sq & (BB)Row::Row8)
-                nonEdge = ~((BB)Row::Row1 | (BB)Column::A | (BB)Column::H);
-            else if (sq & (BB)Column::A)
-                nonEdge = ~((BB)Row::Row1 | (BB)Row::Row8 | (BB)Column::H);
-            else if (sq & (BB)Column::H)
-                nonEdge = ~((BB)Row::Row1 | (BB)Row::Row8 | (BB)Column::A);
-            babs[(int)pType][(int)sq] = ATTACKS[(int)pType][(int)sq] & nonEdge;
+            else if (sq & Row::Row1)
+                nonEdge = ~(Row::Row8 | Column::A | Column::H);
+            else if (sq & Row::Row8)
+                nonEdge = ~(Row::Row1 | Column::A | Column::H);
+            else if (sq & Column::A)
+                nonEdge = ~(Row::Row1 | Row::Row8 | Column::H);
+            else if (sq & Column::H)
+                nonEdge = ~(Row::Row1 | Row::Row8 | Column::A);
+            else
+                throw std::logic_error("Should not happen");
+            babs[static_cast<size_t>(pType)][static_cast<size_t>(sq)] =
+                Attacks(sq, pType) & nonEdge;
         }
     }
     return babs;
@@ -154,11 +157,10 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_ATTACKS = [] 
 
     for (const auto color : {Color::White, Color::Black})
         for (const auto sq : SQUARES) {
-            const BB rays = (color == Color::White) ? (RAYS[(int)sq][(int)Direction::NorthEast] |
-                                                       RAYS[(int)sq][(int)Direction::NorthWest])
-                                                    : (RAYS[(int)sq][(int)Direction::SouthEast] |
-                                                       RAYS[(int)sq][(int)Direction::SouthWest]);
-            attacks[(int)color][(int)sq] = RINGS[(int)sq][1] & rays;
+            const BB rays = (color == Color::White)
+                                ? (Ray(sq, Direction::NorthEast) | Ray(sq, Direction::NorthWest))
+                                : (Ray(sq, Direction::SouthEast) | Ray(sq, Direction::SouthWest));
+            attacks[static_cast<size_t>(color)][static_cast<size_t>(sq)] = Ring(sq, 1) & rays;
         }
 
     return attacks;
@@ -172,19 +174,19 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_PASS = [] {
             const Direction dir[2] = {Direction::North, Direction::South};
             BB bb = 0;
 
-            bb |= Ray(square, dir[(int)color]);
-            if (((BB)Column::A & square) == 0) {
+            bb |= Ray(square, dir[static_cast<size_t>(color)]);
+            if ((Column::A & square) == 0) {
                 BB b = Shift<Direction::West>(ToBB(square));
-                Square n = (Square)Bit::lsb(b);
-                bb |= Ray(n, dir[(int)color]);
+                Square n = First(b);
+                bb |= Ray(n, dir[static_cast<size_t>(color)]);
             }
-            if (((BB)Column::H & square) == 0) {
+            if ((Column::H & square) == 0) {
                 BB b = Shift<Direction::East>(ToBB(square));
-                Square n = (Square)Bit::lsb(b);
-                bb |= Ray(n, dir[(int)color]);
+                Square n = First(b);
+                bb |= Ray(n, dir[static_cast<size_t>(color)]);
             }
 
-            passes[(int)color][(int)square] = bb;
+            passes[static_cast<size_t>(color)][static_cast<size_t>(square)] = bb;
         }
 
     return passes;
@@ -196,13 +198,13 @@ constexpr std::array<BB, SQUARECOUNT> PAWN_ISOLATION = [] {
     for (const auto square : SQUARES) {
         BB bb = 0;
 
-        const int index = Utilities::GetColumnIndex(square);
+        const size_t index = Utilities::GetColumnIndex(square);
         if (index > 0)
-            bb |= (BB) COLUMNS[index - 1];
+            bb |= COLUMNS[index - 1];
         if (index < 7)
-            bb |= (BB) COLUMNS[index + 1];
+            bb |= COLUMNS[index + 1];
 
-        values[(int)square] = bb;
+        values[static_cast<size_t>(square)] = bb;
     }
     return values;
 }();

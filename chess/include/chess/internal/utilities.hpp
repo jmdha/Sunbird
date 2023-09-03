@@ -74,30 +74,6 @@ constexpr Square GetSquare(char row, char column) {
     return GetSquare(row - 97, column - 49);
 }
 
-constexpr BB NotEdge(Direction dir) {
-    switch (dir) {
-    case Direction::North:
-        return (BB)NotEdge::North;
-    case Direction::East:
-        return (BB)NotEdge::East;
-    case Direction::South:
-        return (BB)NotEdge::South;
-    case Direction::West:
-        return (BB)NotEdge::West;
-    case Direction::NorthEast:
-        return (BB)NotEdge::North & (BB)NotEdge::East;
-    case Direction::NorthWest:
-        return (BB)NotEdge::North & (BB)NotEdge::West;
-    case Direction::SouthEast:
-        return (BB)NotEdge::South & (BB)NotEdge::East;
-    case Direction::SouthWest:
-        return (BB)NotEdge::South & (BB)NotEdge::West;
-    case Direction::None:
-        throw std::invalid_argument("No direction given");
-    }
-    throw std::logic_error("Invalid flow");
-}
-
 constexpr Column GetColumn(int columnIndex) {
     switch (columnIndex) {
     case 0:
@@ -123,9 +99,9 @@ constexpr Column GetColumn(int columnIndex) {
 
 constexpr Column GetColumnByChar(char column) { return GetColumn(column - 97); }
 
-constexpr int GetColumnIndex(Square square) { return COLUMN_INDEX.at((int)square); }
+constexpr size_t GetColumnIndex(Square square) { return COLUMN_INDEX.at((int)square); }
 
-constexpr int GetColumnIndex(Column col) {
+constexpr size_t GetColumnIndex(Column col) {
     switch (col) {
     case Column::A:
         return 0;
