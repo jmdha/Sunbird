@@ -4,7 +4,6 @@ set(ENGINE_INCLUDE_BUILD_DIR ${ENGINE_INCLUDE_DIR}/engine)
 
 set(ENGINE_HEADERS
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/values.hpp
-    ${ENGINE_INCLUDE_BUILD_DIR}/internal/positions.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/move_ordering.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/pv.hpp
     ${ENGINE_INCLUDE_BUILD_DIR}/internal/tt.hpp

@@ -26,6 +26,7 @@ public:
     inline BB GetPieces(PieceType pType) const;
     inline BB GetPieces(Color color) const;
     inline BB GetPieces(Color color, PieceType pType) const;
+    inline Square GetKing(Color color) const;
 
     bool IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard, BB tempKingBoard) const;
     inline bool IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard) const;
@@ -69,7 +70,7 @@ inline Castling Position::GetCastling(Color color) const {
     return (Castling)(((_misc >> 1) & (0x3 << (2 * (int)color))) >> (2 * (int)color));
 }
 inline bool Position::AllowsCastling(Castling castling, Color color) const {
-    return GetCastling(color) & castling;
+    return static_cast<int>(GetCastling(color) & castling) != 0;
 }
 inline PieceType Position::GetType(Square square) const {
     assert(square != Square::None);
@@ -106,6 +107,10 @@ inline BB Position::GetPieces(Color color, PieceType pType) const {
     assert(pType != PieceType::None);
     return _colorBB[static_cast<size_t>(color)] & _pieceBB[static_cast<size_t>(pType)];
 }
+inline Square Position::GetKing(Color color) const {
+    assert(color != Color::None);
+    return static_cast<Square>(Bit::lsb(GetPieces(color, PieceType::King)));
+}
 inline void Position::SetTurn(Color color) {
     if (color != GetTurn())
         _hash = Zobrist::FlipColor(_hash);
@@ -126,7 +131,7 @@ inline void Position::DisallowCastling(Castling castling, Color color) {
 inline void Position::SetEP(Column column) {
     if (auto EP = GetEP(); column != EP)
         _hash = Zobrist::FlipEnPassant(_hash, EP);
-    _misc &= ~0x1e0;
+    _misc &= static_cast<uint16_t>(~0x1e0);
     if (column == Column::None) [[likely]]
         return;
     const int index = Bit::lsb(static_cast<BB>(column)) + 1;

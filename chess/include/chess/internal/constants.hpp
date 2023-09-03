@@ -187,8 +187,8 @@ constexpr std::array<MoveType, 4> PromotionCapturesMoves{
 
 enum class Castling { None, King, Queen, All };
 
-inline bool operator&(Castling lhs, Castling rhs) {
-    return (static_cast<int>(lhs) & static_cast<int>(rhs)) != 0;
+inline Castling operator&(Castling lhs, Castling rhs) {
+    return static_cast<Castling>(static_cast<int>(lhs) & static_cast<int>(rhs));
 }
 
 inline Castling operator^(Castling lhs, Castling rhs) {
@@ -198,19 +198,13 @@ inline Castling operator^(Castling lhs, Castling rhs) {
 #define CASTLING_KING_BIT 0x0
 #define CASTLING_QUEEN_BIT 0x1
 
-enum class CastlingBlockSquares : BB {
-    KSideWhite = 0x60,
-    QSideWhite = 0xe,
-    KSideBlack = 0x6000000000000000,
-    QSideBlack = 0xe00000000000000
-};
+constexpr std::array<std::array<BB, 4>, COLORCOUNT> CASTLING_BLOCK_SQUARES{
+    std::array<BB, 4>{0x0, 0x60, 0xe, 0x6e},
+    std::array<BB, 4>{0x0, 0x6000000000000000, 0xe00000000000000, 0x6e00000000000000}};
 
-enum class CastlingAttackSquares : BB {
-    KSideWhite = 0x70,
-    QSideWhite = 0x1c,
-    KSideBlack = 0x7000000000000000,
-    QSideBlack = 0x1c00000000000000
-};
+constexpr std::array<std::array<BB, 4>, COLORCOUNT> CASTLING_ATTACK_SQUARES{
+    std::array<BB, 4>{0x0, 0x70, 0x1c, 0x7c},
+    std::array<BB, 4>{0x0, 0x7000000000000000, 0x1c00000000000000, 0x7c00000000000000}};
 } // namespace Chess
 
 #endif // CONSTANTS
