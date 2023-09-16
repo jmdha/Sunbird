@@ -18,19 +18,18 @@
 namespace Chess::Engine::Search {
 namespace {
 std::optional<AlternativeResult> IsTerminal(const Position &pos) {
-    MoveList moves =
-        MoveGen::GenerateMoves<MoveGen::GenType::All>(pos, pos.GetTurn());
+    const MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(pos, pos.GetTurn());
     if (moves.empty())
-        return Evaluation::Eval(pos) == 0 ? AlternativeResult::Draw
-                                          : AlternativeResult::Checkmate;
+        return Evaluation::Eval(pos) == 0 ? AlternativeResult::Draw : AlternativeResult::Checkmate;
     else
         return {};
 }
+
 PV ExtractPV(Board board) {
-    size_t ply = board.Ply();
+    const size_t ply = board.Ply();
     std::vector<Move> moves;
     while (moves.size() < 8) {
-        Move move = TT::ProbeMove(board.Pos().GetHash());
+        const Move move = TT::ProbeMove(board.Pos().GetHash());
         if (move.GetValue() != 0) {
             moves.push_back(move);
             board.MakeMove(move);
@@ -40,10 +39,49 @@ PV ExtractPV(Board board) {
     }
     return PV(ply, moves);
 }
+
+std::variant<Move, AlternativeResult> IterativeDeepening(Board &board, int timeLimit) {
+    std::jmp_buf exitBuffer;
+    SearchLimit limit = SearchLimit(exitBuffer, timeLimit);
+
+    PV pv = PV();
+    const size_t priorMoveCount = board.MoveCount();
+    for (int depth = 1; depth < 256 && !setjmp(exitBuffer); depth++) {
+        auto t0 = std::chrono::steady_clock::now();
+        int score = Internal::Negamax(board, -Values::INF, Values::INF, depth, 0, pv, &limit);
+        auto t1 = std::chrono::steady_clock::now();
+        size_t t = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+        timeLimit -= t;
+        pv = ExtractPV(board);
+        std::cout << "info";
+        printf(" depth %d", depth);
+        printf(" score cp %d", score);
+        printf(" time %zu ms", t);
+        auto nodes = board.MoveCount() - priorMoveCount;
+        printf(" nodes %zu", nodes);
+        auto nps = nodes / std::max((size_t)1, (t / 1000));
+        printf(" nps %zu", nps);
+        printf(" hashfull %zu", TT::HashFull());
+        std::cout << " pv ";
+        for (int i = 0; i < pv.size(); i++)
+            std::cout << pv[i].ToString() << " ";
+        std::cout << '\n';
+        if (std::abs(score) == Values::INF)
+            break;
+    }
+
+    if (pv.empty()) {
+        // This should not happen, but nevertheless it sometimes does
+        printf("info pv empty, redoing iterativedeepening");
+        TT::Clear();
+        return IterativeDeepening(board, timeLimit + 10);
+    } else {
+        return pv[0];
+    }
+}
 } // namespace
 
-std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board,
-                                                      int timeLimit) {
+std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit) {
     if (auto terminal = IsTerminal(board.Pos()); terminal.has_value())
         return terminal.value();
     if (auto moves = MoveGen::GenerateMoves(board.Pos()); moves.size() == 1)
@@ -51,42 +89,6 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board,
 
     std::cout << "info fen " << Export::FEN(board.Pos()) << '\n';
 
-    std::jmp_buf exitBuffer;
-    SearchLimit limit = SearchLimit(exitBuffer, timeLimit);
-    PV pv;
-
-    for (int depth = 1; depth < 256 && !setjmp(exitBuffer); depth++) {
-        Board tempBoard = board;
-        auto t0 = std::chrono::steady_clock::now();
-        PV tempPV;
-        int score = Internal::Negamax(tempBoard, -Values::INF, Values::INF,
-                                       depth, 0, pv, &limit);
-        auto t1 = std::chrono::steady_clock::now();
-        size_t t =
-            std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0)
-                .count();
-        timeLimit -= t;
-        std::cout << "info";
-        printf(" depth %d", depth);
-        printf(" score cp %d", score);
-        printf(" time %zu ms", t);
-        auto nodes = tempBoard.MoveCount() - board.MoveCount();
-        printf(" nodes %zu", nodes);
-        auto nps = nodes / std::max((size_t)1, (t / 1000));
-        printf(" nps %zu", nps);
-        printf(" hashfull %zu", TT::HashFull());
-        bool errorOccured = true;
-        if (auto tempPV = ExtractPV(board); !tempPV.empty()) {
-            pv = tempPV; 
-            errorOccured = false;
-        }
-        std::cout << " pv ";
-        for (int i = 0; i < pv.size(); i++)
-            std::cout << pv[i].ToString() << " ";
-        std::cout << '\n';
-        if (std::abs(score) == Values::INF || errorOccured)
-            break;
-    }
-    return pv[0];
+    return IterativeDeepening(board, timeLimit);
 }
 } // namespace Chess::Engine::Search

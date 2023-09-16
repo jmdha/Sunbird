@@ -15,8 +15,8 @@ public:
     inline size_t size() const { return _moves.size(); }
     inline size_t ply() const { return _ply; }
 
-    inline Move& operator[](size_t i) { return _moves[i]; }
-    inline const Move& operator[](size_t i) const { return _moves[i]; }
+    inline Move &operator[](size_t i) { return _moves[i]; }
+    inline const Move &operator[](size_t i) const { return _moves[i]; }
 
 private:
     std::vector<Move> _moves;

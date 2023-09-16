@@ -29,8 +29,7 @@ Move ProbeMove(uint64_t key);
 // modifiers
 
 void Clear();
-void StoreEval(uint64_t key, int depth, int searchDepth, int value,
-               int evalType, Move move);
+void StoreEval(uint64_t key, int depth, int searchDepth, int value, int evalType, Move move);
 
 } // namespace Chess::Engine::TT
 

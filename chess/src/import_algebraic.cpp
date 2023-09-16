@@ -6,7 +6,7 @@
 #include <cctype>
 #include <optional>
 #include <sstream>
-
+//
 namespace Chess::Import {
 namespace {
 // Removes unnecessary information from the game string
@@ -138,24 +138,28 @@ std::optional<Move> ParseToken(const Board &board, std::string token) {
         if (tempMove.IsCapture() == isCapture && tempMove.GetTo() == toSquare) {
             if (promotionType.has_value()) {
                 switch (promotionType.value()) {
-                    case PieceType::Knight:
-                        if (tempMove.GetType() != (!isCapture ? MoveType::NPromotion : MoveType::NPromotionCapture))
-                            continue;
-                        break;
-                    case PieceType::Bishop:
-                        if (tempMove.GetType() != (!isCapture ? MoveType::BPromotion : MoveType::BPromotionCapture))
-                            continue;
-                        break;
-                    case PieceType::Rook:
-                        if (tempMove.GetType() != (!isCapture ? MoveType::RPromotion : MoveType::RPromotionCapture))
-                            continue;
-                        break;
-                    case PieceType::Queen:
-                        if (tempMove.GetType() != (!isCapture ? MoveType::QPromotion : MoveType::QPromotionCapture))
-                            continue;
-                        break;
-                    default:
-                        throw std::logic_error("Unexpected promotion type");
+                case PieceType::Knight:
+                    if (tempMove.GetType() !=
+                        (!isCapture ? MoveType::NPromotion : MoveType::NPromotionCapture))
+                        continue;
+                    break;
+                case PieceType::Bishop:
+                    if (tempMove.GetType() !=
+                        (!isCapture ? MoveType::BPromotion : MoveType::BPromotionCapture))
+                        continue;
+                    break;
+                case PieceType::Rook:
+                    if (tempMove.GetType() !=
+                        (!isCapture ? MoveType::RPromotion : MoveType::RPromotionCapture))
+                        continue;
+                    break;
+                case PieceType::Queen:
+                    if (tempMove.GetType() !=
+                        (!isCapture ? MoveType::QPromotion : MoveType::QPromotionCapture))
+                        continue;
+                    break;
+                default:
+                    throw std::logic_error("Unexpected promotion type");
                 }
             }
             return tempMove;
@@ -175,14 +179,15 @@ Board Algebraic(std::string game) {
     for (auto token : tokens) {
         std::optional<Move> move = ParseToken(board, token);
         if (!move.has_value())
-            throw std::logic_error("No matching move for \"" + token + "\" in game \"" + game + "\"");
+            throw std::logic_error("No matching move for \"" + token + "\" in game \"" + game +
+                                   "\"");
         board.MakeMove(move.value());
     }
 
     return board;
 }
 
-void Algebraic(std::string game, std::function<void(const Board&)> callback) {
+void Algebraic(std::string game, std::function<void(const Board &)> callback) {
     Board board = Import::FEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
     std::string tempGame = game;
@@ -193,9 +198,10 @@ void Algebraic(std::string game, std::function<void(const Board&)> callback) {
     for (auto token : tokens) {
         std::optional<Move> move = ParseToken(board, token);
         if (!move.has_value())
-            throw std::logic_error("No matching move for \"" + token + "\" in game \"" + game + "\"");
+            throw std::logic_error("No matching move for \"" + token + "\" in game \"" + game +
+                                   "\"");
         board.MakeMove(move.value());
         callback(board);
     }
 }
-} // namespace Import
+} // namespace Chess::Import
