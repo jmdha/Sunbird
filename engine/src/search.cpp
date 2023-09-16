@@ -14,6 +14,7 @@
 #include <iostream>
 #include <optional>
 #include <stdexcept>
+#include <utility>
 
 namespace Chess::Engine::Search {
 namespace {
@@ -72,14 +73,31 @@ std::variant<Move, AlternativeResult> IterativeDeepening(Board &board, int timeL
 
     if (pv.empty()) {
         // This should not happen, but nevertheless it sometimes does
-        printf("info pv empty, redoing iterativedeepening");
+        printf("info pv empty, doing manual search at depth 3\n");
         TT::Clear();
-        return IterativeDeepening(board, timeLimit + 10);
+        return GetBestMoveDepth(board, 3);
     } else {
         return pv[0];
     }
 }
 } // namespace
+
+std::variant<Move, AlternativeResult> GetBestMoveDepth(Board &board, int depth) {
+    if (auto terminal = IsTerminal(board.Pos()); terminal.has_value())
+        return terminal.value();
+    assert(depth > 0);
+
+    std::optional<std::pair<Move, int>> bestMove;
+    for (auto move : MoveGen::GenerateMoves(board.Pos())) {
+        board.MakeMove(move);
+        int value = -Internal::Negamax(board, -Values::INF, Values::INF, depth - 1, 0, PV());
+        board.UndoMove();
+        if (!bestMove.has_value() || value > bestMove.value().second)
+            bestMove = {move, value};
+    }
+
+    return bestMove.value().first;
+}
 
 std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit) {
     if (auto terminal = IsTerminal(board.Pos()); terminal.has_value())
