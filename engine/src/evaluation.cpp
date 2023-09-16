@@ -21,8 +21,7 @@ std::pair<int, int> CalculatePhase(const Position &pos) {
     return {mg, eg};
 }
 
-template<Color color>
-std::pair<int, int> EvalPieceSquare(const Position &pos) {
+template <Color color> std::pair<int, int> EvalPieceSquare(const Position &pos) {
     const size_t colorI = static_cast<size_t>(color);
     int mg = 0;
     int eg = 0;
@@ -45,8 +44,7 @@ std::pair<int, int> EvalPieceSquare(const Position &pos) {
     return {white.first - black.first, white.second - black.second};
 }
 
-template<Color color>
-std::pair<int, int> EvalPawn(const Position &pos) {
+template <Color color> std::pair<int, int> EvalPawn(const Position &pos) {
     const size_t colorI = static_cast<size_t>(color);
     static Direction UP[2] = {Direction::North, Direction::South};
     int mg = 0;

@@ -33,13 +33,13 @@ set(CHESS_SRC
 
 add_library(
     CHESS
-    ${CHESS_HEADERS} 
+    ${CHESS_HEADERS}
     ${CHESS_SRC}
 )
 
 target_include_directories(
     CHESS
-    PUBLIC 
+    PUBLIC
     "$<BUILD_INTERFACE:${CHESS_INCLUDE_DIR}>"
 )
 
@@ -49,4 +49,6 @@ target_compile_features(
     cxx_std_20
 )
 
-include(${CMAKE_CURRENT_LIST_DIR}/test/CMakeLists.txt)
+if (NOT IGNORE_TEST)
+    include(${CMAKE_CURRENT_LIST_DIR}/test/CMakeLists.txt)
+endif ()

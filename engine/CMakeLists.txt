@@ -20,7 +20,7 @@ set(ENGINE_SRC
     )
 
 add_library(
-    ENGINE 
+    ENGINE
     ${ENGINE_HEADERS}
     ${ENGINE_SRC}
 )
@@ -43,4 +43,6 @@ target_compile_features(
     cxx_std_20
 )
 
-include(${CMAKE_CURRENT_LIST_DIR}/test/CMakeLists.txt)
+if (NOT IGNORE_TEST)
+    include(${CMAKE_CURRENT_LIST_DIR}/test/CMakeLists.txt)
+endif ()
