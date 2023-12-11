@@ -30,16 +30,16 @@ public:
     void UndoMove() noexcept;
 
 private:
-    std::array<Position, MAX_PLY> positions;
-    size_t positionCount = 0;
-    size_t _moves;
+    std::array<Position, MAX_PLY> positions; // The current, and prior, state of the board
+    size_t current_ply = 0;                  // How many moves deep the current game is
+    size_t _moves; // How many moves have been applied to the board, including those that are undone
 };
 
 inline size_t Board::MoveCount() const noexcept { return _moves; }
 
-inline size_t Board::Ply() const noexcept { return positionCount; }
+inline size_t Board::Ply() const noexcept { return current_ply; }
 
-inline const Position &Board::Pos() const noexcept { return positions.at(positionCount - 1); }
+inline const Position &Board::Pos() const noexcept { return positions.at(current_ply - 1); }
 
 } // namespace Chess
 

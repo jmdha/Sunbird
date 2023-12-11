@@ -51,4 +51,4 @@ std::string FEN(const Position &pos) {
 
     return fen;
 }
-} // namespace Export
+} // namespace Chess::Export

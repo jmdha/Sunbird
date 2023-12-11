@@ -46,9 +46,9 @@ constexpr inline BB operator^(Column l, Column r) { return static_cast<BB>(l) ^ 
 constexpr inline BB operator&(BB bb, Column c) { return bb & static_cast<BB>(c); }
 constexpr inline BB operator|(BB bb, Column c) { return bb | static_cast<BB>(c); }
 constexpr inline BB operator^(BB bb, Column c) { return bb ^ static_cast<BB>(c); }
-constexpr inline BB &operator&=(BB bb, Column c) { return bb &= static_cast<BB>(c); }
-constexpr inline BB &operator|=(BB bb, Column c) { return bb |= static_cast<BB>(c); }
-constexpr inline BB &operator^=(BB bb, Column c) { return bb ^= static_cast<BB>(c); }
+constexpr inline BB operator&=(BB bb, Column c) { return bb &= static_cast<BB>(c); }
+constexpr inline BB operator|=(BB bb, Column c) { return bb |= static_cast<BB>(c); }
+constexpr inline BB operator^=(BB bb, Column c) { return bb ^= static_cast<BB>(c); }
 constexpr inline BB operator&(Column c, Square sq) { return static_cast<BB>(c) & sq; }
 constexpr inline BB operator|(Column c, Square sq) { return static_cast<BB>(c) | sq; }
 constexpr inline BB operator^(Column c, Square sq) { return static_cast<BB>(c) ^ sq; }
@@ -62,9 +62,9 @@ constexpr inline BB operator^(Row l, Row r) { return static_cast<BB>(l) ^ static
 constexpr inline BB operator&(BB bb, Row r) { return bb & static_cast<BB>(r); }
 constexpr inline BB operator|(BB bb, Row r) { return bb | static_cast<BB>(r); }
 constexpr inline BB operator^(BB bb, Row r) { return bb ^ static_cast<BB>(r); }
-constexpr inline BB &operator&=(BB bb, Row r) { return bb &= static_cast<BB>(r); }
-constexpr inline BB &operator|=(BB bb, Row r) { return bb |= static_cast<BB>(r); }
-constexpr inline BB &operator^=(BB bb, Row r) { return bb ^= static_cast<BB>(r); }
+constexpr inline BB operator&=(BB bb, Row r) { return bb &= static_cast<BB>(r); }
+constexpr inline BB operator|=(BB bb, Row r) { return bb |= static_cast<BB>(r); }
+constexpr inline BB operator^=(BB bb, Row r) { return bb ^= static_cast<BB>(r); }
 constexpr inline BB operator&(Row r, Square sq) { return static_cast<BB>(r) & sq; }
 constexpr inline BB operator|(Row r, Square sq) { return static_cast<BB>(r) | sq; }
 constexpr inline BB operator^(Row r, Square sq) { return static_cast<BB>(r) ^ sq; }

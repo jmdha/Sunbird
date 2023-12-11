@@ -7,7 +7,6 @@
 
 namespace Chess::MoveGen {
 namespace {
-
 // HACK: This needs to be refactored
 template <GenType gType> void GenerateKingMoves(const Position &pos, Color color, MoveList &moves) {
     const std::array<BB, 4> &blockSquares = CASTLING_BLOCK_SQUARES[static_cast<size_t>(color)];

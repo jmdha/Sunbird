@@ -1,17 +1,15 @@
-#include <chess/internal/utilities.hpp>
-#include <chess/internal/bit.hpp>
 #include <chess/board.hpp>
+#include <chess/internal/bit.hpp>
+#include <chess/internal/utilities.hpp>
 #include <stdexcept>
 
 using namespace Chess;
-Board::Board(Position position) { 
-    positions.at(positionCount++) = std::move(position);
-}
+Board::Board(Position position) { positions.at(current_ply++) = std::move(position); }
 
 bool Board::IsThreefoldRepetition() const noexcept {
     uint64_t hash = Pos().GetHash();
     int count = 0;
-    for (size_t i = 0; i < positionCount; i++)
+    for (size_t i = 0; i < current_ply; i++)
         if (hash == positions.at(i).GetHash())
             count++;
     return count > 2;
@@ -106,8 +104,8 @@ void Board::MakeMove(const Move &move) noexcept {
             pos.DisallowCastling(Castling::Queen, turn);
     }
 
-    positions.at(positionCount++) = pos;
+    positions.at(current_ply++) = pos;
     _moves++;
 }
 
-void Board::UndoMove() noexcept { positionCount--; }
+void Board::UndoMove() noexcept { current_ply--; }

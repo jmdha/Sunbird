@@ -11,7 +11,7 @@
 #include "move_gen.hpp"
 
 namespace Chess::Perft {
-    int RunFromPosition(Board &board, int depth);
-    int PerftDivide(Board &board, int depth);
-} // namespace Chess
+int RunFromPosition(Board &board, int depth);
+int PerftDivide(Board &board, int depth);
+} // namespace Chess::Perft
 #endif // PERFT
