@@ -25,7 +25,7 @@ size_t count = 0;
 Bucket *tt = nullptr;
 
 void Init(size_t tableSize) {
-    tableSize *= 1024 * 1024;
+    tableSize *= 1024;
     count = tableSize / sizeof(Bucket);
     tt = new Bucket[count];
 }
