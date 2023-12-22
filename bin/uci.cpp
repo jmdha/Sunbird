@@ -36,7 +36,7 @@ NEXT_TOKEN:
 }
 
 int main() {
-    Engine::TT::Init(128);
+    Engine::TT::Init(1);
     Board board = Import::MoveSequence("");
     while (true) {
         std::string input;
