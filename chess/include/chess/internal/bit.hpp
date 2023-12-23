@@ -1,6 +1,7 @@
 #ifndef CHESS_BIT
 #define CHESS_BIT
 
+#include <cassert>
 #include <cstdint>
 
 namespace Chess::Bit {
@@ -11,6 +12,7 @@ namespace Chess::Bit {
  * @example ...10 -> 1
  */
 constexpr inline int lsb(uint16_t x) {
+    assert(x != 0);
 #if defined(__GNUC__)
     return __builtin_ctz(x);
 #else
@@ -25,6 +27,7 @@ constexpr inline int lsb(uint16_t x) {
  * @example ...10 -> 1
  */
 constexpr inline int lsb(uint32_t x) {
+    assert(x != 0);
 #if defined(__GNUC__)
     return __builtin_ctzl(x);
 #else
@@ -39,6 +42,7 @@ constexpr inline int lsb(uint32_t x) {
  * @example ...10 -> 1
  */
 constexpr inline int lsb(uint64_t x) {
+    assert(x != 0);
 #if defined(__GNUC__)
     return __builtin_ctzll(x);
 #else
@@ -54,6 +58,7 @@ constexpr inline int lsb(uint64_t x) {
  * @example ...10 -> 1
  */
 constexpr inline int lsb_pop(uint16_t &x) {
+    assert(x != 0);
     const int t = lsb(x);
     x ^= static_cast<uint16_t>(1) << t;
     return t;
@@ -67,6 +72,7 @@ constexpr inline int lsb_pop(uint16_t &x) {
  * @example ...10 -> 1
  */
 constexpr inline int lsb_pop(uint32_t &x) {
+    assert(x != 0);
     const int t = lsb(x);
     x ^= static_cast<uint32_t>(1) << t;
     return t;
@@ -80,6 +86,7 @@ constexpr inline int lsb_pop(uint32_t &x) {
  * @example ...10 -> 1
  */
 constexpr inline int lsb_pop(uint64_t &x) {
+    assert(x != 0);
     const int t = lsb(x);
     x ^= static_cast<uint64_t>(1) << t;
     return t;
@@ -92,6 +99,7 @@ constexpr inline int lsb_pop(uint64_t &x) {
  * @example 01... -> 1
  */
 constexpr inline int msb(uint16_t x) {
+    assert(x != 0);
 #if defined(__GNUC__)
     return 31 ^ __builtin_clz(x);
 #else
@@ -106,6 +114,7 @@ constexpr inline int msb(uint16_t x) {
  * @example 01... -> 1
  */
 constexpr inline int msb(uint32_t x) {
+    assert(x != 0);
 #if defined(__GNUC__)
 #if __x86_64__ || __ppc64__
     return 63 ^ __builtin_clzl(x);
@@ -125,6 +134,7 @@ constexpr inline int msb(uint32_t x) {
  * @example 01... -> 1
  */
 constexpr inline int msb(uint64_t x) {
+    assert(x != 0);
 #if defined(__GNUC__)
     static_assert(sizeof(unsigned long long) == 8);
     return 63 ^ __builtin_clzll(x);

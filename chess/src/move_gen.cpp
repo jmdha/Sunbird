@@ -61,10 +61,12 @@ template <GenType gType> void GeneratePawnMoves(const Position &pos, Color color
                     else
                         moves << Move(MoveType::Quiet, piece, to);
                 }
-                to = First(Ray(piece, dir) & Ring(piece, 2));
-                if (ToBB(piece) & PawnRow[static_cast<size_t>(color)] && !(to & pos.GetPieces()))
-                    if (pos.IsKingSafe(pos.GetPieces() ^ piece | to))
-                        moves << Move(MoveType::DoublePawnPush, piece, to);
+                if (ToBB(piece) & PawnRow[static_cast<size_t>(color)]) {
+                    to = First(Ray(piece, dir) & Ring(piece, 2));
+                    if (!(to & pos.GetPieces()))
+                        if (pos.IsKingSafe(pos.GetPieces() ^ piece | to))
+                            moves << Move(MoveType::DoublePawnPush, piece, to);
+                }
             }
         }
         if constexpr (gType == GenType::Attack || gType == GenType::All) {
