@@ -14,6 +14,7 @@ template <GenType gType> void GenerateKingMoves(const Position &pos, Color color
 
     const auto attackedSquares = pos.GenerateAttackSquares(~color);
     const Square kingPos = pos.GetKing(color);
+    assert(kingPos != Square::None);
     if constexpr (gType == GenType::Quiet || gType == GenType::All) {
         BB qMoves = Ring(kingPos, 1) & ~pos.GetPieces() & ~attackedSquares;
         while (qMoves) {
