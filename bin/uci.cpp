@@ -19,6 +19,9 @@ const std::unordered_map<std::string, Command> Commands{
     {"quit", Command::quit}, {"position", Command::position}, {"ucinewgame", Command::ucinewgame},
     {"go", Command::go},     {"stop", Command::stop}};
 
+enum class Option { hash };
+const std::unordered_map<std::string, Option> Options{{"hash", Option::hash}};
+
 // There must a better way to tokenize in cpp (excluding boost)
 std::vector<std::string> Tokenize(std::string s) {
     std::vector<std::string> tokens;
@@ -36,7 +39,7 @@ NEXT_TOKEN:
 }
 
 int main() {
-    Engine::TT::Init(1);
+    Engine::TT::Init(32);
     Board board = Import::MoveSequence("");
     while (true) {
         std::string input;
@@ -55,6 +58,23 @@ int main() {
             std::cout << "uciok" << '\n';
             break;
         case Command::setoption:
+            if (!Options.contains(tokens[1])) {
+                std::cout << "unknown option: " << tokens[1] << '\n';
+                continue;
+            }
+            switch (Options.at(tokens[1])) {
+            case Option::hash:
+                if (tokens.size() < 3)
+                    continue;
+                auto hash_size = std::atoi(tokens[2].c_str());
+                if (hash_size == 0) {
+                    std::cout << "hash size cannot be 0" << '\n';
+                    continue;
+                }
+                Engine::TT::Clean();
+                Engine::TT::Init(hash_size);
+                break;
+            }
             break;
         case Command::ucinewgame:
             Engine::TT::Clear();
