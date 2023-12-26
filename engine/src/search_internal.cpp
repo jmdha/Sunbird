@@ -45,9 +45,9 @@ int Negamax(Board &board, int alpha, int beta, int depth, int searchDepth, const
         for (Move &move : killer_moves)
             move = Move(0);
 
-    if (limit != nullptr && depth > 1 && limit->Reached())
+    [[unlikely]] if (limit != nullptr && depth > 3 && limit->Reached())
         limit->Exit();
-    if (board.IsThreefoldRepetition())
+    [[unlikely]] if (board.IsThreefoldRepetition())
         return 0;
 
     const uint64_t hash = board.Pos().GetHash();

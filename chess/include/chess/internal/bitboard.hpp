@@ -121,7 +121,19 @@ constexpr inline BB Shift(BB bb, Direction dir) {
     throw std::invalid_argument("Invalid control flow.");
 }
 
+constexpr inline BB Shift(BB bb, Direction dir, size_t count) {
+    for (size_t i = 0; i < count; i++)
+        bb = Shift(bb, dir);
+    return bb;
+}
+
 constexpr inline BB ShiftM(BB &bb, Direction dir) { return bb = Shift(bb, dir); }
+
+constexpr inline BB ShiftM(BB &bb, Direction dir, size_t count) {
+    for (size_t i = 0; i < count; i++)
+        bb = Shift(bb, dir);
+    return bb;
+}
 
 constexpr inline bool Multiple(BB bb) { return bb & (bb - 1); }
 
