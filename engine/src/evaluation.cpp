@@ -6,7 +6,7 @@
 #include <engine/internal/values.hpp>
 
 namespace Chess::Engine::Evaluation {
-namespace Internal {
+namespace {
 std::pair<int, int> CalculatePhase(const Position &pos) {
     int game_phase = 0;
 
@@ -83,18 +83,18 @@ std::pair<int, int> EvalPawn(const Position &pos) {
     const auto black = EvalPawn<Color::Black>(pos);
     return {white.first - black.first, white.second - black.second};
 }
-} // namespace Internal
+} // namespace
 
 int Eval(const Position &pos) {
-    const std::pair<int, int> game_phase = Internal::CalculatePhase(pos);
+    const std::pair<int, int> game_phase = CalculatePhase(pos);
 
     int value = 0;
 
-    const std::pair<int, int> piece_square = Internal::EvalPieceSquare(pos);
+    const std::pair<int, int> piece_square = EvalPieceSquare(pos);
     value += game_phase.first * piece_square.first;
     value += game_phase.second * piece_square.second;
 
-    const std::pair<int, int> pawn_structure = Internal::EvalPawn(pos);
+    const std::pair<int, int> pawn_structure = EvalPawn(pos);
     value += game_phase.first * pawn_structure.first;
     value += game_phase.second * pawn_structure.second;
 
