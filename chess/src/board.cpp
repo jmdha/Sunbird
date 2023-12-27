@@ -8,11 +8,10 @@ Board::Board(Position position) { positions.at(current_ply++) = std::move(positi
 
 bool Board::IsThreefoldRepetition() const noexcept {
     uint64_t hash = Pos().GetHash();
-    int count = 0;
-    for (size_t i = 0; i < current_ply; i++)
+    for (size_t i = 0; i < current_ply - 1; i++)
         if (hash == positions.at(i).GetHash())
-            count++;
-    return count > 2;
+            return true;
+    return false;
 }
 
 void Board::MakeMove(const Move &move) noexcept {
