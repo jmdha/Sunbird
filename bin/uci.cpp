@@ -67,7 +67,7 @@ int main() {
             case Option::hash:
                 if (tokens.size() < 3)
                     continue;
-                auto hash_size = std::atoi(tokens[3].c_str());
+                auto hash_size = std::atoi(tokens[4].c_str());
                 if (hash_size == 0) {
                     std::cout << "hash size cannot be 0" << '\n';
                     continue;
