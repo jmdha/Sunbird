@@ -20,7 +20,7 @@ const std::unordered_map<std::string, Command> Commands{
     {"go", Command::go},     {"stop", Command::stop}};
 
 enum class Option { hash };
-const std::unordered_map<std::string, Option> Options{{"hash", Option::hash}};
+const std::unordered_map<std::string, Option> Options{{"Hash", Option::hash}};
 
 // There must a better way to tokenize in cpp (excluding boost)
 std::vector<std::string> Tokenize(std::string s) {
