@@ -147,6 +147,40 @@ template <PieceType pType> void GenerateAttack(const Position &pos, Color color,
         }
     }
 }
+template <PieceType pType> void GenerateAll(const Position &pos, Color color, MoveList &moves) {
+    static_assert(pType != PieceType::King && pType != PieceType::Pawn);
+
+    BB pieces = pos.GetPieces(color, pType);
+    while (pieces) {
+        const Square piece = Next(pieces);
+        BB unblocked = Attacks(piece, pType);
+        for (size_t offset = 1; offset < 8; ++offset) {
+            BB ring = Ring(piece, offset);
+            BB potMoves = ring & unblocked;
+            BB blockers = potMoves & pos.GetPieces();
+            potMoves ^= blockers;
+
+            while (potMoves) {
+                const Square sq = Next(potMoves);
+                if (pos.IsKingSafe((pos.GetPieces() ^ piece | sq)))
+                    moves << Move(MoveType::Quiet, piece, sq);
+            }
+
+            BB temp = blockers;
+            while (temp)
+                unblocked = unblocked & ~Ray(piece, Next(temp));
+
+            blockers &= pos.GetPieces(~color);
+            while (blockers) {
+                const Square blocker = Next(blockers);
+                if (pos.IsKingSafe((pos.GetPieces() ^ piece) | blocker,
+                                   pos.GetPieces(~color) ^ blocker))
+                    moves << Move(MoveType::Capture, static_cast<Square>(piece),
+                                  static_cast<Square>(blocker));
+            }
+        }
+    }
+}
 } // namespace
 
 template <GenType gType, PieceType pType>
@@ -157,8 +191,7 @@ void Generate(const Position &pos, Color color, MoveList &moves) {
         else if constexpr (pType == PieceType::Pawn)
             GeneratePawnMoves<GenType::All>(pos, color, moves);
         else {
-            GenerateAttack<pType>(pos, color, moves);
-            GenerateQuiet<pType>(pos, color, moves);
+            GenerateAll<pType>(pos, color, moves);
         }
 
     } else if constexpr (gType == GenType::Attack) {
