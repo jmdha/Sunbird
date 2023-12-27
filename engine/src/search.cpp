@@ -60,8 +60,8 @@ std::variant<Move, AlternativeResult> IterativeDeepening(Board &board, int timeL
         printf(" time %zu ms", t);
         auto nodes = board.MoveCount() - priorMoveCount;
         printf(" nodes %zu", nodes);
-        auto nps = nodes / std::max((size_t)1, (t / 1000));
-        printf(" nps %zu", nps);
+        auto nps = nodes / (double)t * 1000;
+        printf(" nps %zu", (size_t)nps);
         printf(" hashfull %zu", TT::HashFull());
         std::cout << " pv ";
         for (int i = 0; i < pv.size(); i++)
