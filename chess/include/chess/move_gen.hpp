@@ -19,7 +19,15 @@ template <GenType, PieceType> void Generate(const Position &pos, Color color, Mo
 // Generates moves for all pieces
 template <GenType gType> MoveList GenerateMoves(const Position &pos, Color color) {
     MoveList moves;
-    if constexpr (gType == GenType::All || gType == GenType::Attack) {
+    if constexpr (gType == GenType::All) {
+        Generate<GenType::All, PieceType::Pawn>(pos, color, moves);
+        Generate<GenType::All, PieceType::Knight>(pos, color, moves);
+        Generate<GenType::All, PieceType::Bishop>(pos, color, moves);
+        Generate<GenType::All, PieceType::Rook>(pos, color, moves);
+        Generate<GenType::All, PieceType::Queen>(pos, color, moves);
+        Generate<GenType::All, PieceType::King>(pos, color, moves);
+    }
+    if constexpr (gType == GenType::Attack) {
         Generate<GenType::Attack, PieceType::Pawn>(pos, color, moves);
         Generate<GenType::Attack, PieceType::Knight>(pos, color, moves);
         Generate<GenType::Attack, PieceType::Bishop>(pos, color, moves);
@@ -27,7 +35,7 @@ template <GenType gType> MoveList GenerateMoves(const Position &pos, Color color
         Generate<GenType::Attack, PieceType::Queen>(pos, color, moves);
         Generate<GenType::Attack, PieceType::King>(pos, color, moves);
     }
-    if constexpr (gType == GenType::All || gType == GenType::Quiet) {
+    if constexpr (gType == GenType::Quiet) {
         Generate<GenType::Quiet, PieceType::Pawn>(pos, color, moves);
         Generate<GenType::Quiet, PieceType::Knight>(pos, color, moves);
         Generate<GenType::Quiet, PieceType::Bishop>(pos, color, moves);
