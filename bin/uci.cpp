@@ -55,6 +55,9 @@ int main() {
         case Command::uci:
             std::cout << "id name " << _PROJECT_NAME << " v" << _PROJECT_VERSION << '\n';
             std::cout << "id author " << _PROJECT_AUTHOR << '\n';
+            for (const auto option : Options) {
+                std::cout << "option " << option.first << '\n';
+            }
             std::cout << "uciok" << '\n';
             break;
         case Command::setoption:
