@@ -12,33 +12,39 @@ bool Position::IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard, BB tempKingBo
     BB enemyKnights = GetPieces(PieceType::Knight) & tempEnemyBoard;
     BB enemyPawns = GetPieces(PieceType::Pawn) & tempEnemyBoard;
 
-    // clang-format off
     if (Ray(kingPosIndex, Direction::North) & enemyRooks) [[unlikely]]
-        if (First(Ray(kingPosIndex, Direction::North) & enemyRooks) == First(Ray(kingPosIndex, Direction::North) & tempOccuracyBoard))
+        if (First(Ray(kingPosIndex, Direction::North) & enemyRooks) ==
+            First(Ray(kingPosIndex, Direction::North) & tempOccuracyBoard)) [[unlikely]]
             return false;
     if (Ray(kingPosIndex, Direction::East) & enemyRooks) [[unlikely]]
-        if (First(Ray(kingPosIndex, Direction::East) & enemyRooks) == First(Ray(kingPosIndex, Direction::East) & tempOccuracyBoard))
+        if (First(Ray(kingPosIndex, Direction::East) & enemyRooks) ==
+            First(Ray(kingPosIndex, Direction::East) & tempOccuracyBoard)) [[unlikely]]
             return false;
     if (Ray(kingPosIndex, Direction::South) & enemyRooks) [[unlikely]]
-        if (Last(Ray(kingPosIndex, Direction::South) & enemyRooks) == Last(Ray(kingPosIndex, Direction::South) & tempOccuracyBoard))
+        if (Last(Ray(kingPosIndex, Direction::South) & enemyRooks) ==
+            Last(Ray(kingPosIndex, Direction::South) & tempOccuracyBoard)) [[unlikely]]
             return false;
     if (Ray(kingPosIndex, Direction::West) & enemyRooks) [[unlikely]]
-        if (Last(Ray(kingPosIndex, Direction::West) & enemyRooks) == Last(Ray(kingPosIndex, Direction::West) & tempOccuracyBoard))
+        if (Last(Ray(kingPosIndex, Direction::West) & enemyRooks) ==
+            Last(Ray(kingPosIndex, Direction::West) & tempOccuracyBoard)) [[unlikely]]
             return false;
 
     if (Ray(kingPosIndex, Direction::NorthEast) & enemyBishops) [[unlikely]]
-        if (First(Ray(kingPosIndex, Direction::NorthEast) & enemyBishops) == First(Ray(kingPosIndex, Direction::NorthEast) & tempOccuracyBoard))
+        if (First(Ray(kingPosIndex, Direction::NorthEast) & enemyBishops) ==
+            First(Ray(kingPosIndex, Direction::NorthEast) & tempOccuracyBoard)) [[unlikely]]
             return false;
     if (Ray(kingPosIndex, Direction::NorthWest) & enemyBishops) [[unlikely]]
-        if (First(Ray(kingPosIndex, Direction::NorthWest) & enemyBishops) == First(Ray(kingPosIndex, Direction::NorthWest) & tempOccuracyBoard))
+        if (First(Ray(kingPosIndex, Direction::NorthWest) & enemyBishops) ==
+            First(Ray(kingPosIndex, Direction::NorthWest) & tempOccuracyBoard)) [[unlikely]]
             return false;
     if (Ray(kingPosIndex, Direction::SouthEast) & enemyBishops) [[unlikely]]
-        if (Last(Ray(kingPosIndex, Direction::SouthEast) & enemyBishops) == Last(Ray(kingPosIndex, Direction::SouthEast) & tempOccuracyBoard))
+        if (Last(Ray(kingPosIndex, Direction::SouthEast) & enemyBishops) ==
+            Last(Ray(kingPosIndex, Direction::SouthEast) & tempOccuracyBoard)) [[unlikely]]
             return false;
     if (Ray(kingPosIndex, Direction::SouthWest) & enemyBishops) [[unlikely]]
-        if (Last(Ray(kingPosIndex, Direction::SouthWest) & enemyBishops) == Last(Ray(kingPosIndex, Direction::SouthWest) & tempOccuracyBoard))
+        if (Last(Ray(kingPosIndex, Direction::SouthWest) & enemyBishops) ==
+            Last(Ray(kingPosIndex, Direction::SouthWest) & tempOccuracyBoard)) [[unlikely]]
             return false;
-    // clang-format on
 
     if (Attacks(kingPosIndex, PieceType::Knight) & enemyKnights) [[unlikely]]
         return false;
