@@ -4,13 +4,13 @@
 
 #include <chess/board.hpp>
 #include <chess/import.hpp>
-#include <engine/search.hpp>
 #include <engine/internal/tt.hpp>
+#include <engine/search.hpp>
 
 using namespace Chess;
 
 int main(int, char *argv[]) {
-    Engine::TT::Init(128);
+    Engine::TT::Init(32);
     std::string fen = std::string(argv[1]);
     Board board = Import::FEN(fen);
     std::string expectedMove = argv[3];

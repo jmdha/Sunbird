@@ -43,6 +43,7 @@ template <GenType gType> MoveList GenerateMoves(const Position &pos, Color color
         Generate<GenType::Quiet, PieceType::Queen>(pos, color, moves);
         Generate<GenType::Quiet, PieceType::King>(pos, color, moves);
     }
+    moves.finish();
     return moves;
 }
 template <GenType gType = GenType::All> inline MoveList GenerateMoves(const Position &pos) {
@@ -75,6 +76,7 @@ template <GenType gType> MoveList GenerateMoves(const Position &pos, Color color
     case PieceType::None:
         break;
     }
+    moves.finish();
     return moves;
 }
 } // namespace Chess::MoveGen

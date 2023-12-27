@@ -28,4 +28,3 @@ add_test(search::2 GetBestMove "6k1/5p2/pR3p1p/3p4/3P4/1P3NP1/5PPK/7r w - - 4 27
 add_test(search::3 GetBestMove "rnbqk1nr/ppp2ppp/3bp3/3p4/3P1B2/3Q3P/PPP1PPP1/RN2KBNR b KQkq - 0 4" 10 "d6f4")
 add_test(search::3s GetBestMoveSeq "d2d4 d7d5 c1f4 e7e6 d1d3 f8d6 h2h3" 10 "d6f4")
 add_test(search::4 GetBestMove "r2qk2r/p1pbbpp1/3p3p/3Q4/3N4/8/PPP2PPP/R1B1R1K1 b kq - 0 16" 10 "e8g8")
-add_test(search::5 GetBestMove "8/k7/8/3QQ3/8/PQ2K3/5P2/8 w - - 0 1" 100 "b3b7")

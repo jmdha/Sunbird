@@ -10,7 +10,7 @@
 using namespace Chess;
 
 int main(int, char *argv[]) {
-    Engine::TT::Init(128);
+    Engine::TT::Init(32);
     std::string fen = std::string(argv[1]);
     Board board = Import::MoveSequence(fen);
     std::string expectedMove = argv[3];

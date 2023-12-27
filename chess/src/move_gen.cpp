@@ -1,3 +1,4 @@
+#include "chess/internal/move_list.hpp"
 #include <chess/internal/bit.hpp>
 #include <chess/internal/bitboard.hpp>
 #include <chess/internal/constants.hpp>
@@ -21,25 +22,27 @@ template <GenType gType> void GenerateKingMoves(const Position &pos, Color color
             const Square move = Next(qMoves);
             if (pos.IsKingSafe((pos.GetPieces() ^ kingPos | move), pos.GetPieces(~color),
                                ToBB(move)))
-                moves << Move(MoveType::Quiet, kingPos, move);
+                moves.push<MoveList::Quiet>(Move(MoveType::Quiet, kingPos, move));
         }
         if (pos.AllowsCastling(Castling::King, color) &&
             !(pos.GetPieces() & blockSquares[static_cast<size_t>(Castling::King)]) &&
             !(attackedSquares & attackSquares[static_cast<size_t>(Castling::King)]))
-            moves << Move(MoveType::KingCastle, kingPos,
-                          First(Shift<Direction::East>(Shift<Direction::East>(ToBB(kingPos)))));
+            moves.push<MoveList::Quiet>(
+                Move(MoveType::KingCastle, kingPos,
+                     First(Shift<Direction::East>(Shift<Direction::East>(ToBB(kingPos))))));
         if (pos.AllowsCastling(Castling::Queen, color) &&
             !(pos.GetPieces() & blockSquares[static_cast<size_t>(Castling::Queen)]) &&
             !(attackedSquares & attackSquares[static_cast<size_t>(Castling::Queen)]))
-            moves << Move(MoveType::QueenCastle, kingPos,
-                          First(Shift<Direction::West>(Shift<Direction::West>(ToBB(kingPos)))));
+            moves.push<MoveList::Quiet>(
+                Move(MoveType::QueenCastle, kingPos,
+                     First(Shift<Direction::West>(Shift<Direction::West>(ToBB(kingPos))))));
     }
     if constexpr (gType == GenType::Attack || gType == GenType::All) {
         BB aMoves = Ring(kingPos, 1) & pos.GetPieces(~color) & ~attackedSquares;
         while (aMoves) {
             const Square move = Next(aMoves);
             if (pos.IsKingSafe(pos.GetPieces() ^ kingPos, pos.GetPieces(~color) ^ move, ToBB(move)))
-                moves << Move(MoveType::Capture, kingPos, move);
+                moves.push<MoveList::Attack>(Move(MoveType::Capture, kingPos, move));
         }
     }
 }
@@ -57,15 +60,15 @@ template <GenType gType> void GeneratePawnMoves(const Position &pos, Color color
                 if (pos.IsKingSafe(pos.GetPieces() ^ piece | to)) {
                     if (ToBB(piece) & PawnRow[static_cast<size_t>(~color)])
                         for (const auto prom : PromotionMoves)
-                            moves << Move(prom, piece, to);
+                            moves.push<MoveList::Quiet>(Move(prom, piece, to));
                     else
-                        moves << Move(MoveType::Quiet, piece, to);
+                        moves.push<MoveList::Quiet>(Move(MoveType::Quiet, piece, to));
                 }
                 if (ToBB(piece) & PawnRow[static_cast<size_t>(color)]) {
                     to = First(Ray(piece, dir) & Ring(piece, 2));
                     if (!(to & pos.GetPieces()))
                         if (pos.IsKingSafe(pos.GetPieces() ^ piece | to))
-                            moves << Move(MoveType::DoublePawnPush, piece, to);
+                            moves.push<MoveList::Quiet>(Move(MoveType::DoublePawnPush, piece, to));
                 }
             }
         }
@@ -78,9 +81,9 @@ template <GenType gType> void GeneratePawnMoves(const Position &pos, Color color
                                    pos.GetPieces(~color) ^ attack)) {
                     if (piece & PawnRow[static_cast<size_t>(~color)])
                         for (const auto prom : PromotionCapturesMoves)
-                            moves << Move(prom, piece, attack);
+                            moves.push<MoveList::Attack>(Move(prom, piece, attack));
                     else
-                        moves << Move(MoveType::Capture, piece, attack);
+                        moves.push<MoveList::Attack>(Move(MoveType::Capture, piece, attack));
                 }
             }
             BB attack = PawnAttacks(piece, color) &
@@ -90,7 +93,7 @@ template <GenType gType> void GeneratePawnMoves(const Position &pos, Color color
                 const Square captured = First(Shift(ToBB(sq), dirs[static_cast<size_t>(~color)]));
                 if (pos.IsKingSafe((pos.GetPieces() ^ piece ^ captured) | sq,
                                    pos.GetPieces(~color) ^ captured | sq))
-                    moves << Move(MoveType::EPCapture, piece, sq);
+                    moves.push<MoveList::Attack>(Move(MoveType::EPCapture, piece, sq));
             }
         }
     }
@@ -116,7 +119,7 @@ template <PieceType pType> void GenerateQuiet(const Position &pos, Color color, 
             while (potMoves) {
                 const Square sq = Next(potMoves);
                 if (pos.IsKingSafe((pos.GetPieces() ^ piece | sq)))
-                    moves << Move(MoveType::Quiet, piece, sq);
+                    moves.push<MoveList::Quiet>(Move(MoveType::Quiet, piece, sq));
             }
         }
     }
@@ -141,8 +144,8 @@ template <PieceType pType> void GenerateAttack(const Position &pos, Color color,
                 const Square blocker = Next(blockers);
                 if (pos.IsKingSafe((pos.GetPieces() ^ piece) | blocker,
                                    pos.GetPieces(~color) ^ blocker))
-                    moves << Move(MoveType::Capture, static_cast<Square>(piece),
-                                  static_cast<Square>(blocker));
+                    moves.push<MoveList::Attack>(Move(MoveType::Capture, static_cast<Square>(piece),
+                                                      static_cast<Square>(blocker)));
             }
         }
     }
@@ -163,7 +166,7 @@ template <PieceType pType> void GenerateAll(const Position &pos, Color color, Mo
             while (potMoves) {
                 const Square sq = Next(potMoves);
                 if (pos.IsKingSafe((pos.GetPieces() ^ piece | sq)))
-                    moves << Move(MoveType::Quiet, piece, sq);
+                    moves.push<MoveList::Quiet>(Move(MoveType::Quiet, piece, sq));
             }
 
             BB temp = blockers;
@@ -175,8 +178,8 @@ template <PieceType pType> void GenerateAll(const Position &pos, Color color, Mo
                 const Square blocker = Next(blockers);
                 if (pos.IsKingSafe((pos.GetPieces() ^ piece) | blocker,
                                    pos.GetPieces(~color) ^ blocker))
-                    moves << Move(MoveType::Capture, static_cast<Square>(piece),
-                                  static_cast<Square>(blocker));
+                    moves.push<MoveList::Attack>(Move(MoveType::Capture, static_cast<Square>(piece),
+                                                      static_cast<Square>(blocker)));
             }
         }
     }
@@ -193,7 +196,6 @@ void Generate(const Position &pos, Color color, MoveList &moves) {
         else {
             GenerateAll<pType>(pos, color, moves);
         }
-
     } else if constexpr (gType == GenType::Attack) {
         if constexpr (pType == PieceType::King)
             GenerateKingMoves<GenType::Attack>(pos, color, moves);
