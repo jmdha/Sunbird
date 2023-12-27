@@ -55,19 +55,19 @@ int main() {
         case Command::uci:
             std::cout << "id name " << _PROJECT_NAME << " v" << _PROJECT_VERSION << '\n';
             std::cout << "id author " << _PROJECT_AUTHOR << "\n\n";
-            std::cout << "option Hash type spin default 32 min 1 max 512" << '\n';
+            std::cout << "option name Hash type spin default 32 min 1 max 512" << '\n';
             std::cout << "uciok" << '\n';
             break;
         case Command::setoption:
-            if (!Options.contains(tokens[1])) {
+            if (!Options.contains(tokens[2])) {
                 std::cout << "unknown option: " << tokens[1] << '\n';
                 continue;
             }
-            switch (Options.at(tokens[1])) {
+            switch (Options.at(tokens[2])) {
             case Option::hash:
                 if (tokens.size() < 3)
                     continue;
-                auto hash_size = std::atoi(tokens[2].c_str());
+                auto hash_size = std::atoi(tokens[3].c_str());
                 if (hash_size == 0) {
                     std::cout << "hash size cannot be 0" << '\n';
                     continue;
