@@ -14,7 +14,7 @@ using BB = uint64_t;
 #define HEIGHT 8
 #define SQUARECOUNT 64
 
-#define MAX_PLY 256
+#define MAX_PLY 512
 
 // 218 I believe to be the max number of moves
 #define MAXMOVECOUNT 256
