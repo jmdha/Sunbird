@@ -19,6 +19,7 @@ Play against it [here](https://lichess.org/@/sun_bird).
 1. [Features](#Features)
 2. [Benchmark](#Benchmark)
 3. [How to Build](#How-To-Build)
+4. [Comparison](#Comparison)
 
 ## Features
 ### State
@@ -65,3 +66,20 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DIGNORE_TEST=true &&\
 cmake --build build
 ```
 The executable can then be found in `chess_engine/build/engine/`.
+
+## Comparison
+The result of games played by the rules specified in [CCRL(blitz)](http://computerchess.org.uk/ccrl/404/). 
+
+Ratings are calculated by [BaysianElo](https://github.com/ddugovic/BayesianElo).
+| Rank Name         | Elo  | +   | -   | games | score | oppo. | draws |
+|-------------------|------|-----|-----|-------|-------|-------|-------|
+| 1 Sunbird_v1.2.2  | 181  | 79  | 66  | 52    | 70%   | 20    | 44%   |
+| 2 Sunbird_v1.2.1  | 90   | 71  | 69  | 52    | 54%   | 51    | 46%   |
+| 3 Sunbird_v1.2.0  | 48   | 74  | 77  | 52    | 46%   | 62    | 38%   |
+| 4 Sunbird_v1.1.2  | -55  | 275 | 172 | 12    | 67%   | -187  | 17%   |
+| 5 Sunbird_v1.1.0  | -58  | 268 | 186 | 12    | 63%   | -159  | 8%    |
+| 6 Sunbird_v1.1.1  | -113 | 199 | 199 | 12    | 50%   | -125  | 17%   |
+| 7 Sunbird_v1.0.6  | -123 | 186 | 268 | 12    | 38%   | -47   | 8%    |
+| 8 Sunbird_v1.0.4  | -233 | 178 | 368 | 12    | 21%   | -13   | 8%    |
+| 9 Sunbird_v1.0.5  | -284 | 178 | 368 | 12    | 21%   | -64   | 8%    |
+| 10 Sunbird_v1.0.0 | -517 | 198 | 55  | 12    | 4%    | 16    | 8%    |
