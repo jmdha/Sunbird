@@ -6,9 +6,8 @@ namespace Chess::Engine::MoveOrdering {
 void Killer(MoveList &moves, Move killerMove) {
     for (size_t i = moves.attacks(); i < moves.size(); i++) {
         if (moves[i] == killerMove) {
-            std::memmove(&moves[i], &moves[i + 1], (moves.size() - i) * sizeof(Move));
             std::memmove(&moves[moves.attacks() + 1], &moves[moves.attacks()],
-                         (moves.size() - 1) * sizeof(Move));
+                         (i - moves.attacks()) * sizeof(Move));
             moves[moves.attacks()] = killerMove;
             break;
         }
@@ -37,8 +36,7 @@ void PVPrioity(const Board &board, const PV &pv, MoveList &moves) {
     Move pvMove = pv[pvIndex];
     for (size_t i = 0; i < moves.size(); i++) {
         if (moves[i] == pvMove) {
-            std::memmove(&moves[i], &moves[i + 1], (moves.size() - i) * sizeof(Move));
-            std::memmove(&moves[1], &moves[0], (moves.size() - 1) * sizeof(Move));
+            std::memmove(&moves[1], &moves[0], i * sizeof(Move));
             moves[0] = pvMove;
             break;
         }
@@ -49,9 +47,8 @@ void TTPrioity(Move move, MoveList &moves) {
     if (move.GetValue() == 0)
         return;
     for (size_t i = 0; i < moves.size(); i++) {
-        if (moves[i] == move) {
-            std::memmove(&moves[i], &moves[i + 1], (moves.size() - i) * sizeof(Move));
-            std::memmove(&moves[1], &moves[0], (moves.size() - 1) * sizeof(Move));
+        if (i != 0 && moves[i] == move) {
+            std::memmove(&moves[1], &moves[0], i * sizeof(Move));
             moves[0] = move;
             break;
         }
