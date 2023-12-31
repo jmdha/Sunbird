@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
             size_t t = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
             time += t;
         }
-        std::cout << nodes << " nodes " << nodes / time * 1000 << " nps" << '\n';
+        std::cout << nodes << " nodes " << nodes * 1000 / time << " nps" << '\n';
         exit(0);
     }
     Board board = Import::MoveSequence("");
