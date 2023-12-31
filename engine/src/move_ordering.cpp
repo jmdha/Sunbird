@@ -4,7 +4,7 @@
 
 namespace Chess::Engine::MoveOrdering {
 void Killer(MoveList &moves, Move killerMove) {
-    for (size_t i = moves.attacks(); i < moves.size(); i++) {
+    for (size_t i = moves.attacks() + 1; i < moves.size(); i++) {
         if (moves[i] == killerMove) {
             std::memmove(&moves[moves.attacks() + 1], &moves[moves.attacks()],
                          (i - moves.attacks()) * sizeof(Move));
@@ -34,7 +34,7 @@ void PVPrioity(const Board &board, const PV &pv, MoveList &moves) {
     if (pvIndex > pv.size() || pv.size() == 0)
         return;
     Move pvMove = pv[pvIndex];
-    for (size_t i = 0; i < moves.size(); i++) {
+    for (size_t i = 1; i < moves.size(); i++) {
         if (moves[i] == pvMove) {
             std::memmove(&moves[1], &moves[0], i * sizeof(Move));
             moves[0] = pvMove;
@@ -46,8 +46,8 @@ void PVPrioity(const Board &board, const PV &pv, MoveList &moves) {
 void TTPrioity(Move move, MoveList &moves) {
     if (move.GetValue() == 0)
         return;
-    for (size_t i = 0; i < moves.size(); i++) {
-        if (i != 0 && moves[i] == move) {
+    for (size_t i = 1; i < moves.size(); i++) {
+        if (moves[i] == move) {
             std::memmove(&moves[1], &moves[0], i * sizeof(Move));
             moves[0] = move;
             break;
