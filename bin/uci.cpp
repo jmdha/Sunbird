@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
 
         auto tokens = Tokenize(input);
         if (!Commands.contains(tokens[0])) {
-            std::cout << "unknown command: " << tokens[0] << '\n';
+            printf("unknown command: %s\n", tokens[0].c_str());
             continue;
         }
 
@@ -81,6 +81,7 @@ int main(int argc, char **argv) {
             std::cout << "option name Hash type spin default 32 min 1 max 512" << '\n';
             std::cout << "option name Threads type spin default 1 min 1 max 1" << '\n';
             std::cout << "uciok" << '\n';
+            std::flush(std::cout);
             break;
         case Command::setoption:
             if (!Options.contains(tokens[2])) {
@@ -105,7 +106,7 @@ int main(int argc, char **argv) {
             Engine::TT::Clear();
             break;
         case Command::isready:
-            std::cout << "readyok" << '\n';
+            printf("readyok\n");
             break;
         case Command::position:
             if (tokens[1] == "startpos") {

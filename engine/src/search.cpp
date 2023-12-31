@@ -76,6 +76,7 @@ std::variant<Move, AlternativeResult> IterativeDeepening(Board &board, int timeL
         for (int i = 0; i < pv.size(); i++)
             std::cout << pv[i].ToString() << " ";
         std::cout << '\n';
+        std::flush(std::cout);
         if (std::abs(score) == Values::INF)
             break;
     }
