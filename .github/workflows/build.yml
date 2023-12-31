@@ -1,0 +1,27 @@
+name: Build
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build_and_archive:
+    name: Build and Archive
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        nnue_flags: [avx2, avx512]
+        cpu_flags: [popcnt, pext]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: lukka/get-cmake@latest
+    - name: Clone Sunbird
+      uses: actions/checkout@v3
+    - name: Build Sunbird ${{ matrix.flags }}
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DIGNORE_TEST
+    - name: Archive ${{ matrix.nnue_flags }}-${{ matrix.cpu_flags }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ github.sha }}-linux-${{ matrix.nnue_flags }}-${{ matrix.cpu_flags }}
+        path: sunbird
