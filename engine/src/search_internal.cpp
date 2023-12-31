@@ -56,7 +56,7 @@ int Negamax(Board &board, int alpha, int beta, int depth, int searchDepth, const
     if (tt.score != TT::ProbeFail)
         return tt.score;
 
-    if (depth == 0)
+    if (depth <= 0)
         return Quiesce(board, alpha, beta, pv);
 
     int ttBound = TT::ProbeUpper;
@@ -75,7 +75,7 @@ int Negamax(Board &board, int alpha, int beta, int depth, int searchDepth, const
         if (i == 0)
             score = -Negamax(board, -beta, -alpha, depth - 1, searchDepth + 1, pv, limit);
         else {
-            score = -Negamax(board, -alpha - 1, -alpha, depth - 1, searchDepth + 1, pv, limit);
+            score = -Negamax(board, -alpha - 1, -alpha, depth - 2, searchDepth + 1, pv, limit);
             if (score > alpha && score < beta)
                 score = -Negamax(board, -beta, -alpha, depth - 1, searchDepth + 1, pv, limit);
         }
