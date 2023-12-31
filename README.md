@@ -68,18 +68,16 @@ cmake --build build
 The executable can then be found in `chess_engine/build/engine/`.
 
 ## Comparison
-The result of games played by the rules specified in [CCRL(blitz)](http://computerchess.org.uk/ccrl/404/). 
-
-Ratings are calculated by [BaysianElo](https://github.com/ddugovic/BayesianElo).
-| Rank Name         | Elo  | +   | -   | games | score | oppo. | draws |
-|-------------------|------|-----|-----|-------|-------|-------|-------|
-| 1 Sunbird_v1.2.2  | 181  | 79  | 66  | 52    | 70%   | 20    | 44%   |
-| 2 Sunbird_v1.2.1  | 90   | 71  | 69  | 52    | 54%   | 51    | 46%   |
-| 3 Sunbird_v1.2.0  | 48   | 74  | 77  | 52    | 46%   | 62    | 38%   |
-| 4 Sunbird_v1.1.2  | -55  | 275 | 172 | 12    | 67%   | -187  | 17%   |
-| 5 Sunbird_v1.1.0  | -58  | 268 | 186 | 12    | 63%   | -159  | 8%    |
-| 6 Sunbird_v1.1.1  | -113 | 199 | 199 | 12    | 50%   | -125  | 17%   |
-| 7 Sunbird_v1.0.6  | -123 | 186 | 268 | 12    | 38%   | -47   | 8%    |
-| 8 Sunbird_v1.0.4  | -233 | 178 | 368 | 12    | 21%   | -13   | 8%    |
-| 9 Sunbird_v1.0.5  | -284 | 178 | 368 | 12    | 21%   | -64   | 8%    |
-| 10 Sunbird_v1.0.0 | -517 | 198 | 55  | 12    | 4%    | 16    | 8%    |
+| # PLAYER          | : | RATING | POINTS | PLAYED | (%) |
+|-------------------|---|--------|--------|--------|-----|
+| 1 Sunbird_v1.2.3  | : | 2545.6 | 780.5  | 1249   | 62  |
+| 2 Sunbird_v1.2.2  | : | 2481.0 | 575.5  | 1249   | 46  |
+| 3 Sunbird_v1.2.1  | : | 2391.2 | 124.5  | 200    | 62  |
+| 4 Sunbird_v1.2.0  | : | 2357.2 | 115.5  | 200    | 58  |
+| 5 Sunbird_v1.1.2  | : | 2334.9 | 109.5  | 200    | 55  |
+| 6 Sunbird_v1.1.1  | : | 2316.5 | 104.5  | 200    | 52  |
+| 7 Sunbird_v1.1.0  | : | 2303.7 | 101.0  | 200    | 50  |
+| 8 Sunbird_v1.0.6  | : | 2235.2 | 82.5   | 200    | 41  |
+| 9 Sunbird_v1.0.5  | : | 2136.4 | 57.5   | 200    | 29  |
+| 10 Sunbird_v1.0.4 | : | 2105.9 | 50.5   | 200    | 25  |
+| 11 Sunbird_v1.0.0 | : | 2092.2 | 47.5   | 200    | 24  |
