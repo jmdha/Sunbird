@@ -1,10 +1,9 @@
 #ifndef CHESS_IMPORT
 #define CHESS_IMPORT
 
+#include "board.hpp"
 #include <functional>
 #include <string>
-
-#include "board.hpp"
 
 namespace Chess::Import {
 /**

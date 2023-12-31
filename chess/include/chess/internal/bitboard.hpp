@@ -3,8 +3,7 @@
 
 #include "bit.hpp"
 #include "constants.hpp"
-#include "utilities.hpp"
-#include <cstdint>
+#include <stdexcept>
 
 /**
  * Contains various functions and overloads related to bitboards

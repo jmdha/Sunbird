@@ -4,8 +4,6 @@
 #include "bit.hpp"
 #include "bitboard.hpp"
 #include "constants.hpp"
-#include "move.hpp"
-#include "utilities.hpp"
 #include "zobrist.hpp"
 
 namespace Chess {

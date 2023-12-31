@@ -1,17 +1,12 @@
+#include <array>
 #include <chess/internal/utilities.hpp>
 #include <chess/internal/zobrist.hpp>
-
-#include <array>
-#include <climits>
-#include <cassert>
-#include <random>
 
 using namespace Chess;
 
 namespace {
 constexpr int SQUARE_HASH_COUNT = 2 * 6 * 64;
-template <uint64_t l>
-constexpr std::array<uint64_t, l> GenerateHashes() {
+template <uint64_t l> constexpr std::array<uint64_t, l> GenerateHashes() {
     std::array<uint64_t, l> tempTable;
 
     uint64_t startState = 0x181818ffff181818;
@@ -40,6 +35,4 @@ uint64_t Zobrist::FlipCastling(uint64_t hash, Color col, Castling side) {
 uint64_t Zobrist::FlipEnPassant(uint64_t hash, Column col) {
     return hash ^ hashes[SQUARE_HASH_COUNT + 4 + Utilities::GetColumnIndex(col)];
 }
-uint64_t Zobrist::FlipColor(uint64_t hash) {
-    return hash ^ 0xaa55aa55aa55aa55;
-}
+uint64_t Zobrist::FlipColor(uint64_t hash) { return hash ^ 0xaa55aa55aa55aa55; }

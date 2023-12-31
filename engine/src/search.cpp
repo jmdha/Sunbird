@@ -48,7 +48,7 @@ std::variant<Move, AlternativeResult> IterativeDeepening(Board &board, int timeL
     int alpha = -Values::INF;
     int beta = Values::INF;
     const size_t priorMoveCount = board.MoveCount();
-    for (int depth = 1; depth < 256 && !setjmp(exitBuffer); depth++) {
+    for (int depth = 1; depth < MAX_SEARCH_DEPTH && !setjmp(exitBuffer); depth++) {
         auto t0 = std::chrono::steady_clock::now();
         int score = Internal::Negamax(board, alpha, beta, depth, 0, pv, &limit);
         if ((score <= alpha) || (score >= beta)) {

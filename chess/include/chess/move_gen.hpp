@@ -1,12 +1,7 @@
 #ifndef CHESS_MOVE_GEN
 #define CHESS_MOVE_GEN
 
-#include <memory>
-#include <string>
-#include <vector>
-
 #include "internal/constants.hpp"
-#include "internal/move.hpp"
 #include "internal/move_list.hpp"
 #include "internal/position.hpp"
 

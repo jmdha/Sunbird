@@ -2,8 +2,8 @@
 #define CHESS_ENGINE_PV
 
 #include "chess/internal/move.hpp"
-#include <optional>
 #include <vector>
+
 namespace Chess::Engine {
 struct PV {
 public:

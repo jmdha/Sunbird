@@ -1,3 +1,4 @@
+#include "chess/internal/utilities.hpp"
 #include <chess/export.hpp>
 
 namespace Chess::Export {

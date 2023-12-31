@@ -1,8 +1,6 @@
 #ifndef CHESS_UTILITIES
 #define CHESS_UTILITIES
 
-#include <bitset>
-#include <cmath>
 #include <stdexcept>
 #include <strings.h>
 

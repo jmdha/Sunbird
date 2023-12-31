@@ -1,10 +1,6 @@
 #ifndef CHESS_BOARD
 #define CHESS_BOARD
 
-#include <cassert>
-#include <string>
-
-#include "internal/bitboard.hpp"
 #include "internal/constants.hpp"
 #include "internal/move.hpp"
 #include "internal/position.hpp"

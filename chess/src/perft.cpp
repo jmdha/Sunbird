@@ -1,3 +1,5 @@
+#include "chess/internal/move_list.hpp"
+#include "chess/move_gen.hpp"
 #include <chess/perft.hpp>
 
 namespace Chess::Perft {
@@ -35,4 +37,4 @@ int PerftDivide(Board &board, int depth) {
 
     return total;
 }
-}
+} // namespace Chess::Perft

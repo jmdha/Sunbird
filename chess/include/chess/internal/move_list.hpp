@@ -1,12 +1,10 @@
 #ifndef CHESS_MOVE_LIST
 #define CHESS_MOVE_LIST
 
-#include "../board.hpp"
 #include "constants.hpp"
 #include "move.hpp"
 #include <algorithm>
 #include <cstring>
-#include <vector>
 
 namespace Chess {
 struct MoveList {

@@ -2,6 +2,7 @@
 #define CHESS_ENGINE_TRANSPOSITION_TABLE
 
 #include <chess/internal/move.hpp>
+
 namespace Chess::Engine::TT {
 #define DEFAULT_HASH_SIZE 16
 

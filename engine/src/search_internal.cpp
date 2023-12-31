@@ -1,12 +1,10 @@
 #include "engine/internal/move_ordering.hpp"
 #include "engine/internal/tt.hpp"
-#include "engine/internal/values.hpp"
 #include <chess/internal/move_list.hpp>
 #include <chess/move_gen.hpp>
 #include <cstring>
 #include <engine/evaluation.hpp>
 #include <engine/search.hpp>
-#include <unordered_set>
 
 using namespace Chess::MoveGen;
 
@@ -41,7 +39,7 @@ int Quiesce(Board &board, int alpha, int beta, const PV &pv) {
 
 int Negamax(Board &board, int alpha, int beta, int depth, int searchDepth, const PV &pv,
             SearchLimit *limit) {
-    static std::array<Move, 256> killer_moves;
+    static std::array<Move, MAX_SEARCH_DEPTH> killer_moves;
     if (searchDepth == 0) // New search
         for (Move &move : killer_moves)
             move = Move(0);

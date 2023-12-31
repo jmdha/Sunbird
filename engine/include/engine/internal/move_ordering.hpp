@@ -1,6 +1,7 @@
 #ifndef CHESS_ENGINE_MOVE_ORDERING
 #define CHESS_ENGINE_MOVE_ORDERING
 
+#include "chess/board.hpp"
 #include <chess/internal/move_list.hpp>
 #include <chess/internal/position.hpp>
 #include <engine/internal/pv.hpp>

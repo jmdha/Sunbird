@@ -1,11 +1,9 @@
 #ifndef CHESS_MOVE
 #define CHESS_MOVE
 
-#include <cassert>
-#include <string>
-
 #include "constants.hpp"
 #include "utilities.hpp"
+#include <string>
 
 namespace Chess {
 class Move {

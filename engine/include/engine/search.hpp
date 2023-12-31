@@ -5,7 +5,6 @@
 #include <chess/internal/move.hpp>
 #include <engine/internal/pv.hpp>
 #include <engine/internal/search_limit.hpp>
-#include <optional>
 #include <variant>
 
 namespace Chess::Engine::Search {
