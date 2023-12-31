@@ -38,14 +38,19 @@ Play against it [here](https://lichess.org/@/sun_bird).
 * Alpha-Beta Pruning [[wiki](https://www.chessprogramming.org/Alpha-Beta)]
 * Iterative Deepening [[wiki](https://www.chessprogramming.org/Iterative_Deepening)]
 * Quiescence Search [[wiki](https://www.chessprogramming.org/Quiescence_Search)]
+* PVS [[wiki](https://www.chessprogramming.org/Principal_Variation_Search)]
 * Move Ordering
   * MVV-LVA [[wiki](https://www.chessprogramming.org/MVV-LVA)]
   * PV [[wiki](https://www.chessprogramming.org/PV-Move)]
+  * Killer Heuristic [[wiki](https://www.chessprogramming.org/Killer_Heuristic)]
 * Transposition Table [[wiki](https://www.chessprogramming.org/Transposition_Table)]
     
 ### Evaluation
 * Material Point Value [[wiki](https://www.chessprogramming.org/Material)]
 * Piece-Square Tables [[wiki](https://www.chessprogramming.org/Piece-Square_Tables)]
+* Pawn Structure
+    * Doubled pawns
+    * Passed pawns
 * Tapered by game phase [[wiki](https://www.chessprogramming.org/Tapered_Eval)]
 
 ## Benchmark
