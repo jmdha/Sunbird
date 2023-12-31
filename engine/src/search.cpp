@@ -57,8 +57,8 @@ std::variant<Move, AlternativeResult> IterativeDeepening(Board &board, int timeL
             beta = Values::INF;
             score = Internal::Negamax(board, alpha, beta, depth, 0, pv, &limit);
         } else {
-            alpha = score - 50;
-            beta = score + 50;
+            alpha = score - 25;
+            beta = score + 25;
         }
         auto t1 = std::chrono::steady_clock::now();
         size_t t = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
