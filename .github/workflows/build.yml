@@ -19,7 +19,7 @@ jobs:
     - name: Clone Sunbird
       uses: actions/checkout@v3
     - name: Build Sunbird ${{ matrix.flags }}
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DIGNORE_TEST
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DIGNORE_TEST=true
     - name: Archive ${{ matrix.nnue_flags }}-${{ matrix.cpu_flags }}
       uses: actions/upload-artifact@v3
       with:
