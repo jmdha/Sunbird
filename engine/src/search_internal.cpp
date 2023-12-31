@@ -1,5 +1,6 @@
 #include "engine/internal/move_ordering.hpp"
 #include "engine/internal/tt.hpp"
+#include "engine/internal/values.hpp"
 #include <chess/internal/move_list.hpp>
 #include <chess/move_gen.hpp>
 #include <cstring>
@@ -67,19 +68,27 @@ int Negamax(Board &board, int alpha, int beta, int depth, int searchDepth, const
         MoveOrdering::Killer(moves, killer_move);
     MoveOrdering::All(board, tt.move, pv, moves);
     Move bm = moves[0];
-    for (auto move : moves) {
+    for (size_t i = 0; i < moves.size(); i++) {
+        const Move &move = moves[i];
         board.MakeMove(move);
-        int value = -Negamax(board, -beta, -alpha, depth - 1, searchDepth + 1, pv, limit);
+        int score;
+        if (i == 0)
+            score = -Negamax(board, -beta, -alpha, depth - 1, searchDepth + 1, pv, limit);
+        else {
+            score = -Negamax(board, -alpha - 1, -alpha, depth - 1, searchDepth + 1, pv, limit);
+            if (score > alpha && score < beta)
+                score = -Negamax(board, -beta, -alpha, depth - 1, searchDepth + 1, pv, limit);
+        }
         board.UndoMove();
-        if (value >= beta) {
+        if (score >= beta) {
             TT::StoreEval(hash, depth, searchDepth, beta, TT::ProbeLower, move);
             if (!move.IsCapture())
                 killer_moves[searchDepth] = move;
             return beta;
         }
-        if (value > alpha) {
+        if (score > alpha) {
             ttBound = TT::ProbeExact;
-            alpha = value;
+            alpha = score;
             bm = move;
         }
     }
