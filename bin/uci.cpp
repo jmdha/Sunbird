@@ -1,10 +1,10 @@
+#include "engine/internal/tt.hpp"
 #include <climits>
 #include <iostream>
 #include <string>
 
 #include <chess/board.hpp>
 #include <chess/import.hpp>
-#include <engine/internal/tt.hpp>
 #include <engine/search.hpp>
 #include <unordered_map>
 
@@ -46,7 +46,7 @@ NEXT_TOKEN:
 }
 
 int main(int argc, char **argv) {
-    Engine::TT::Init(32);
+    Engine::TT::Init();
     if (argc > 1 && std::string(argv[1]) == "bench") {
         size_t nodes = 0;
         size_t time = 0;

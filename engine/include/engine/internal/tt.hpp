@@ -2,8 +2,9 @@
 #define CHESS_ENGINE_TRANSPOSITION_TABLE
 
 #include <chess/internal/move.hpp>
-#include <optional>
 namespace Chess::Engine::TT {
+#define DEFAULT_HASH_SIZE 16
+
 static const int ProbeFail = -1;
 static const int ProbeExact = 0;
 static const int ProbeLower = 1;
@@ -16,7 +17,7 @@ struct Result {
 
 // startup / cleanup
 
-void Init(size_t tableSize);
+void Init(size_t tableSize = DEFAULT_HASH_SIZE);
 void Clean();
 
 // access
