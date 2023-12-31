@@ -56,6 +56,7 @@ int main() {
             std::cout << "id name " << _PROJECT_NAME << " v" << _PROJECT_VERSION << '\n';
             std::cout << "id author " << _PROJECT_AUTHOR << "\n\n";
             std::cout << "option name Hash type spin default 32 min 1 max 512" << '\n';
+            std::cout << "option name Threads type spin default 1 min 1 max 1" << '\n';
             std::cout << "uciok" << '\n';
             break;
         case Command::setoption:
