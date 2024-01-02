@@ -24,6 +24,7 @@ void Board::MakeMove(const Move &move) noexcept {
     PieceType newPType = pType;
     PieceType capturedPiece = pos.GetType(move.GetTo());
     Square captureTo = to;
+    Column ep = Column::None;
     switch (move.GetType()) {
     case MoveType::KingCastle:
     case MoveType::QueenCastle: {
@@ -48,6 +49,7 @@ void Board::MakeMove(const Move &move) noexcept {
         newPType = PieceType::Queen;
         goto QUIET_PROMOTION;
     case MoveType::DoublePawnPush:
+        ep = Utilities::GetColumn(from);
     case MoveType::Quiet:
     QUIET_PROMOTION:
         pos.RemovePiece(from, pType, turn);
@@ -89,10 +91,7 @@ void Board::MakeMove(const Move &move) noexcept {
         std::invalid_argument("Unexpected move type: " + std::to_string((int)move.GetType()));
     }
 
-    if (move.GetType() == MoveType::DoublePawnPush) [[unlikely]]
-        pos.SetEP(Utilities::GetColumn(move.GetFrom()));
-    else
-        pos.SetEP(Column::None);
+    pos.SetEP(ep);
 
     if (pType == PieceType::King) [[unlikely]]
         pos.DisallowCastling(Castling::All, turn);
