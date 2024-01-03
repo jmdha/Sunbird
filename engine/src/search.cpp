@@ -18,7 +18,7 @@
 namespace Chess::Engine::Search {
 namespace {
 std::optional<AlternativeResult> IsTerminal(const Position &pos) {
-    const MoveList moves = MoveGen::GenerateMoves<MoveGen::GenType::All>(pos, pos.GetTurn());
+    const MoveList moves = MoveGen::GenerateAll(pos, pos.GetTurn());
     if (moves.empty())
         return Evaluation::Eval(pos) == 0 ? AlternativeResult::Draw : AlternativeResult::Checkmate;
     else
@@ -100,7 +100,7 @@ std::variant<Move, AlternativeResult> GetBestMoveDepth(Board &board, int depth) 
     assert(depth > 0);
 
     std::optional<std::pair<Move, int>> bestMove;
-    for (auto move : MoveGen::GenerateMoves(board.Pos())) {
+    for (auto move : MoveGen::GenerateAll(board.Pos(), board.Pos().GetTurn())) {
         board.MakeMove(move);
         int value = -Internal::Negamax(board, -Values::INF, Values::INF, depth - 1, 0, PV());
         board.UndoMove();
@@ -114,7 +114,7 @@ std::variant<Move, AlternativeResult> GetBestMoveDepth(Board &board, int depth) 
 std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit) {
     if (auto terminal = IsTerminal(board.Pos()); terminal.has_value())
         return terminal.value();
-    if (auto moves = MoveGen::GenerateMoves(board.Pos()); moves.size() == 1)
+    if (auto moves = MoveGen::GenerateAll(board.Pos(), board.Pos().GetTurn()); moves.size() == 1)
         return moves[0];
 
     std::cout << "info fen " << Export::FEN(board.Pos()) << '\n';

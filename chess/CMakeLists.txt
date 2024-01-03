@@ -24,7 +24,6 @@ set(CHESS_SRC
     ${CHESS_SRC_DIR}/move_gen.cpp
     ${CHESS_SRC_DIR}/perft.cpp
     ${CHESS_SRC_DIR}/import_FEN.cpp
-    ${CHESS_SRC_DIR}/import_algebraic.cpp
     ${CHESS_SRC_DIR}/import_sequence.cpp
     ${CHESS_SRC_DIR}/export_FEN.cpp
     ${CHESS_SRC_DIR}/position.cpp

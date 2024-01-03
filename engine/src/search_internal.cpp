@@ -23,7 +23,7 @@ int Quiesce(Board &board, int alpha, int beta, const PV &pv) {
     if (AB(standPat, alpha, beta))
         return beta;
 
-    MoveList moves = GenerateMoves<GenType::Attack>(board.Pos());
+    MoveList moves = GenerateAttack(board.Pos(), board.Pos().GetTurn());
     MoveOrdering::MVVLVA(board, moves);
     MoveOrdering::PVPrioity(board, pv, moves);
     for (auto move : moves) {
@@ -58,7 +58,7 @@ int Negamax(Board &board, int alpha, int beta, int depth, int searchDepth, const
         return tt.score;
 
     int ttBound = TT::ProbeUpper;
-    MoveList moves = GenerateMoves(board.Pos());
+    MoveList moves = GenerateAll(board.Pos(), board.Pos().GetTurn());
     if (moves.empty())
         return Evaluation::EvalNoMove(board.Pos());
 

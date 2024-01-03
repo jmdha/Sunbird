@@ -98,32 +98,6 @@ template <GenType gType> void GeneratePawnMoves(const Position &pos, Color color
     }
 }
 
-// Generates possible quiet moves for pieces of type pType
-template <PieceType pType> void GenerateQuiet(const Position &pos, Color color, MoveList &moves) {
-    static_assert(pType != PieceType::King && pType != PieceType::Pawn);
-
-    BB pieces = pos.GetPieces(color, pType);
-    while (pieces) {
-        const Square piece = Next(pieces);
-        BB unblocked = Attacks(piece, pType);
-        for (size_t offset = 1; offset < 8; ++offset) {
-            BB ring = Ring(piece, offset);
-            BB potMoves = ring & unblocked;
-            BB blockers = potMoves & pos.GetPieces();
-            potMoves ^= blockers;
-
-            while (blockers)
-                unblocked = unblocked & ~Ray(piece, Next(blockers));
-
-            while (potMoves) {
-                const Square sq = Next(potMoves);
-                if (pos.IsKingSafe((pos.GetPieces() ^ piece | sq)))
-                    moves.push<MoveList::Quiet>(Move(MoveType::Quiet, piece, sq));
-            }
-        }
-    }
-}
-
 // Generates possible attack moves for pieces of type pType
 template <PieceType pType> void GenerateAttack(const Position &pos, Color color, MoveList &moves) {
     static_assert(pType != PieceType::King && pType != PieceType::Pawn);
@@ -208,56 +182,33 @@ template <GenType g> void GenerateKnightMoves(const Position &pos, Color color, 
 }
 } // namespace
 
-template <GenType gType, PieceType pType>
-void Generate(const Position &pos, Color color, MoveList &moves) {
-    if constexpr (gType == GenType::All) {
-        if constexpr (pType == PieceType::King)
-            GenerateKingMoves<GenType::All>(pos, color, moves);
-        else if constexpr (pType == PieceType::Pawn)
-            GeneratePawnMoves<GenType::All>(pos, color, moves);
-        else if constexpr (pType == PieceType::Knight)
-            GenerateKnightMoves<GenType::All>(pos, color, moves);
-        else {
-            GenerateAll<pType>(pos, color, moves);
-        }
-    } else if constexpr (gType == GenType::Attack) {
-        if constexpr (pType == PieceType::King)
-            GenerateKingMoves<GenType::Attack>(pos, color, moves);
-        else if constexpr (pType == PieceType::Pawn)
-            GeneratePawnMoves<GenType::Attack>(pos, color, moves);
-        else if constexpr (pType == PieceType::Knight)
-            GenerateKnightMoves<GenType::Attack>(pos, color, moves);
-        else
-            GenerateAttack<pType>(pos, color, moves);
-    } else if constexpr (gType == GenType::Quiet) {
-        if constexpr (pType == PieceType::King)
-            GenerateKingMoves<GenType::Quiet>(pos, color, moves);
-        else if constexpr (pType == PieceType::Pawn)
-            GeneratePawnMoves<GenType::Quiet>(pos, color, moves);
-        else if constexpr (pType == PieceType::Knight)
-            GenerateKnightMoves<GenType::Quiet>(pos, color, moves);
-        else
-            GenerateQuiet<pType>(pos, color, moves);
-    }
+MoveList GenerateAll(const Position &pos, Color color) {
+    MoveList moves;
+
+    GenerateAll<PieceType::Queen>(pos, color, moves);
+    GenerateAll<PieceType::Rook>(pos, color, moves);
+    GenerateAll<PieceType::Bishop>(pos, color, moves);
+
+    GenerateKnightMoves<GenType::All>(pos, color, moves);
+    GenerateKingMoves<GenType::All>(pos, color, moves);
+    GeneratePawnMoves<GenType::All>(pos, color, moves);
+
+    moves.finish();
+    return moves;
 }
-// clang-format off
-template void Generate<GenType::All,    PieceType::Pawn>  (const Position &, Color, MoveList &moves);
-template void Generate<GenType::All,    PieceType::Knight>(const Position &, Color, MoveList &moves);
-template void Generate<GenType::All,    PieceType::Bishop>(const Position &, Color, MoveList &moves);
-template void Generate<GenType::All,    PieceType::Rook>  (const Position &, Color, MoveList &moves);
-template void Generate<GenType::All,    PieceType::Queen> (const Position &, Color, MoveList &moves);
-template void Generate<GenType::All,    PieceType::King>  (const Position &, Color, MoveList &moves);
-template void Generate<GenType::Quiet,  PieceType::Pawn>  (const Position &, Color, MoveList &moves);
-template void Generate<GenType::Quiet,  PieceType::Knight>(const Position &, Color, MoveList &moves);
-template void Generate<GenType::Quiet,  PieceType::Bishop>(const Position &, Color, MoveList &moves);
-template void Generate<GenType::Quiet,  PieceType::Rook>  (const Position &, Color, MoveList &moves);
-template void Generate<GenType::Quiet,  PieceType::Queen> (const Position &, Color, MoveList &moves);
-template void Generate<GenType::Quiet,  PieceType::King>  (const Position &, Color, MoveList &moves);
-template void Generate<GenType::Attack, PieceType::Pawn>  (const Position &, Color, MoveList &moves);
-template void Generate<GenType::Attack, PieceType::Knight>(const Position &, Color, MoveList &moves);
-template void Generate<GenType::Attack, PieceType::Bishop>(const Position &, Color, MoveList &moves);
-template void Generate<GenType::Attack, PieceType::Rook>  (const Position &, Color, MoveList &moves);
-template void Generate<GenType::Attack, PieceType::Queen> (const Position &, Color, MoveList &moves);
-template void Generate<GenType::Attack, PieceType::King>  (const Position &, Color, MoveList &moves);
-// clang-format on
+
+MoveList GenerateAttack(const Position &pos, Color color) {
+    MoveList moves;
+
+    GenerateAttack<PieceType::Queen>(pos, color, moves);
+    GenerateAttack<PieceType::Rook>(pos, color, moves);
+    GenerateAttack<PieceType::Bishop>(pos, color, moves);
+
+    GenerateKnightMoves<GenType::Attack>(pos, color, moves);
+    GenerateKingMoves<GenType::Attack>(pos, color, moves);
+    GeneratePawnMoves<GenType::Attack>(pos, color, moves);
+
+    moves.finish();
+    return moves;
+}
 } // namespace Chess::MoveGen

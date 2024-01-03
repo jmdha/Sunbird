@@ -2,7 +2,6 @@
 #define CHESS_IMPORT
 
 #include "board.hpp"
-#include <functional>
 #include <string>
 
 namespace Chess::Import {
@@ -19,17 +18,6 @@ Board FEN(std::string FEN);
  */
 Board MoveSequence(std::string moves);
 void MoveSequence(Board &board, std::string moves);
-
-/**
- * Creates a board and sets it's state to that resulting from the algebraic sequence of moves
- * https://en.wikipedia.org/wiki/Algebraic_notation_(chess)
- */
-Board Algebraic(std::string game);
-
-/**
- * Creates a board and call the callback with boardstate resulting from each algebraic move
- */
-void Algebraic(std::string game, std::function<void(const Board &)> callback);
 } // namespace Chess::Import
 
 #endif
