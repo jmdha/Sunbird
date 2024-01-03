@@ -6,7 +6,6 @@
 #include "internal/position.hpp"
 
 namespace Chess::MoveGen {
-enum class GenType { Quiet, Attack, All };
 MoveList GenerateAll(const Position &pos, Color color);
 MoveList GenerateAttack(const Position &pos, Color color);
 } // namespace Chess::MoveGen

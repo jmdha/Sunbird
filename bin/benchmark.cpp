@@ -2,7 +2,6 @@
 #include "chess/perft.hpp"
 #include <chrono>
 #include <cstddef>
-#include <ostream>
 #include <string>
 #include <vector>
 

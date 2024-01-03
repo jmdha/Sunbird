@@ -6,7 +6,7 @@
 #include <chess/move_gen.hpp>
 
 namespace Chess::MoveGen {
-namespace {
+enum class GenType { Attack, All };
 // HACK: This needs to be refactored
 template <GenType gType> void GenerateKingMoves(const Position &pos, Color color, MoveList &moves) {
     const std::array<BB, 4> &blockSquares = CASTLING_BLOCK_SQUARES[static_cast<size_t>(color)];
@@ -15,7 +15,7 @@ template <GenType gType> void GenerateKingMoves(const Position &pos, Color color
     const auto attackedSquares = pos.GenerateAttackSquares(~color);
     const Square kingPos = pos.GetKing(color);
     assert(kingPos != Square::None);
-    if constexpr (gType == GenType::Quiet || gType == GenType::All) {
+    if constexpr (gType == GenType::All) {
         BB qMoves = Ring(kingPos, 1) & ~pos.GetPieces() & ~attackedSquares;
         while (qMoves) {
             const Square move = Next(qMoves);
@@ -53,7 +53,7 @@ template <GenType gType> void GeneratePawnMoves(const Position &pos, Color color
     BB pieces = pos.GetPieces(color, PieceType::Pawn);
     while (pieces) {
         const Square piece = Next(pieces);
-        if constexpr (gType == GenType::Quiet || gType == GenType::All) {
+        if constexpr (gType == GenType::All) {
             Square to = static_cast<Square>(Bit::lsb(Ray(piece, dir) & Ring(piece, 1)));
             if (!(to & pos.GetPieces())) {
                 if (pos.IsKingSafe(pos.GetPieces() ^ piece | to)) {
@@ -170,7 +170,7 @@ template <GenType g> void GenerateKnightMoves(const Position &pos, Color color, 
                                                       static_cast<Square>(attack)));
             }
         }
-        if constexpr (g == GenType::All || g == GenType::Quiet) {
+        if constexpr (g == GenType::All) {
             for (BB attacks = Attacks(piece, PieceType::Knight) & ~pos.GetPieces(); attacks;) {
                 const Square attack = Next(attacks);
                 if (pos.IsKingSafe((pos.GetPieces() ^ piece) | attack))
@@ -180,7 +180,6 @@ template <GenType g> void GenerateKnightMoves(const Position &pos, Color color, 
         }
     }
 }
-} // namespace
 
 MoveList GenerateAll(const Position &pos, Color color) {
     MoveList moves;

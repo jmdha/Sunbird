@@ -47,22 +47,6 @@ NEXT_TOKEN:
 
 int main(int argc, char **argv) {
     Engine::TT::Init();
-    if (argc > 1 && std::string(argv[1]) == "bench") {
-        size_t nodes = 0;
-        size_t time = 0;
-        for (const auto &pos : POSITIONS) {
-            Board board = Import::FEN(pos);
-
-            std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-            Engine::Search::GetBestMoveDepth(board, 5);
-            std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-            nodes += board.MoveCount();
-            size_t t = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-            time += t;
-        }
-        std::cout << nodes << " nodes " << nodes * 1000 / time << " nps" << '\n';
-        exit(0);
-    }
     Board board = Import::MoveSequence("");
     while (true) {
         std::string input;
