@@ -49,13 +49,13 @@ int Negamax(Board &board, int alpha, int beta, int depth, int searchDepth, const
     [[unlikely]] if (board.IsThreefoldRepetition())
         return 0;
 
+    if (depth <= 0)
+        return Quiesce(board, alpha, beta, pv);
+
     const uint64_t hash = board.Pos().GetHash();
     auto tt = TT::Probe(hash, depth, searchDepth, alpha, beta);
     if (tt.score != TT::ProbeFail)
         return tt.score;
-
-    if (depth <= 0)
-        return Quiesce(board, alpha, beta, pv);
 
     int ttBound = TT::ProbeUpper;
     MoveList moves = GenerateMoves(board.Pos());
