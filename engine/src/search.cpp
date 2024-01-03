@@ -75,7 +75,7 @@ std::variant<Move, AlternativeResult> IterativeDeepening(Board &board, int timeL
         }
         printf(" hashfull %zu", TT::HashFull());
         std::cout << " pv ";
-        for (int i = 0; i < pv.size(); i++)
+        for (size_t i = 0; i < pv.size(); i++)
             std::cout << pv[i].ToString() << " ";
         std::cout << '\n';
         std::flush(std::cout);

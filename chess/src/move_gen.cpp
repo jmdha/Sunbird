@@ -99,7 +99,7 @@ template <GenType gType> void GeneratePawnMoves(const Position &pos, Color color
 }
 
 // Generates possible attack moves for pieces of type pType
-template <PieceType pType> void GenerateAttack(const Position &pos, Color color, MoveList &moves) {
+template <PieceType pType> void SliderAttack(const Position &pos, Color color, MoveList &moves) {
     static_assert(pType != PieceType::King && pType != PieceType::Pawn);
 
     BB pieces = pos.GetPieces(color, pType);
@@ -123,7 +123,7 @@ template <PieceType pType> void GenerateAttack(const Position &pos, Color color,
         }
     }
 }
-template <PieceType pType> void GenerateAll(const Position &pos, Color color, MoveList &moves) {
+template <PieceType pType> void SliderAll(const Position &pos, Color color, MoveList &moves) {
     static_assert(pType != PieceType::King && pType != PieceType::Pawn);
 
     BB pieces = pos.GetPieces(color, pType);
@@ -184,9 +184,9 @@ template <GenType g> void GenerateKnightMoves(const Position &pos, Color color, 
 MoveList GenerateAll(const Position &pos, Color color) {
     MoveList moves;
 
-    GenerateAll<PieceType::Queen>(pos, color, moves);
-    GenerateAll<PieceType::Rook>(pos, color, moves);
-    GenerateAll<PieceType::Bishop>(pos, color, moves);
+    SliderAll<PieceType::Queen>(pos, color, moves);
+    SliderAll<PieceType::Rook>(pos, color, moves);
+    SliderAll<PieceType::Bishop>(pos, color, moves);
 
     GenerateKnightMoves<GenType::All>(pos, color, moves);
     GenerateKingMoves<GenType::All>(pos, color, moves);
@@ -199,9 +199,9 @@ MoveList GenerateAll(const Position &pos, Color color) {
 MoveList GenerateAttack(const Position &pos, Color color) {
     MoveList moves;
 
-    GenerateAttack<PieceType::Queen>(pos, color, moves);
-    GenerateAttack<PieceType::Rook>(pos, color, moves);
-    GenerateAttack<PieceType::Bishop>(pos, color, moves);
+    SliderAttack<PieceType::Queen>(pos, color, moves);
+    SliderAttack<PieceType::Rook>(pos, color, moves);
+    SliderAttack<PieceType::Bishop>(pos, color, moves);
 
     GenerateKnightMoves<GenType::Attack>(pos, color, moves);
     GenerateKingMoves<GenType::Attack>(pos, color, moves);

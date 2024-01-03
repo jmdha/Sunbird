@@ -2,17 +2,18 @@
 #define CHESS_ENGINE_VALUES
 
 #include <array>
+#include <cstddef>
 
 namespace Chess::Engine::Values {
 namespace {
 constexpr std::array<int, 64> C(std::array<int, 64> a, int b) {
-    for (int i = 0; i < a.size(); i++)
+    for (size_t i = 0; i < a.size(); i++)
         a[i] += b;
     return a;
 }
 template <int s = 64> constexpr std::array<int, s> I(std::array<int, s> array) {
     std::array<int, s> newArray;
-    for (int i = 0; i < array.size(); i++)
+    for (size_t i = 0; i < array.size(); i++)
         newArray[i] = array.at(s - 1 - i);
     return newArray;
 }

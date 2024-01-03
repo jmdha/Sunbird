@@ -13,7 +13,7 @@ project(
 )
 
 set(CMAKE_CXX_STANDARD 20)
-add_compile_options(-march=native -flto)
+add_compile_options(-Wall -march=native -flto)
 
 include(chess/CMakeLists.txt)
 include(engine/CMakeLists.txt)

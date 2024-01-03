@@ -5,6 +5,9 @@
 using namespace Chess;
 
 constexpr int SQUARE_HASH_COUNT = 2 * 6 * 64;
+// Generate hashses in a pseudo-random way
+// Cannot use *actual* randomness as its compile time
+// This is, however, good enough
 constexpr std::array<uint64_t, SQUARE_HASH_COUNT> HASHES = [] {
     auto tempTable = decltype(HASHES){};
 
