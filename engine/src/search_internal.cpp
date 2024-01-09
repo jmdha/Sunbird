@@ -28,6 +28,10 @@ int Quiesce(Board &board, int alpha, int beta, const PV &pv) {
     MoveOrdering::PVPrioity(board, pv, moves);
     for (auto move : moves) {
         board.MakeMove(move);
+        if (!board.Pos().IsKingSafe(~board.Pos().GetTurn())) {
+            board.UndoMove();
+            continue;
+        }
         int score = -Quiesce(board, -beta, -alpha, pv);
         board.UndoMove();
         if (AB(score, alpha, beta))
@@ -69,6 +73,10 @@ int Negamax(Board &board, int alpha, int beta, int depth, int searchDepth, const
     for (size_t i = 0; i < moves.size(); i++) {
         const Move &move = moves[i];
         board.MakeMove(move);
+        if (!board.Pos().IsKingSafe(~board.Pos().GetTurn())) {
+            board.UndoMove();
+            continue;
+        }
         int score;
         if (i == 0)
             score = -Negamax(board, -beta, -alpha, depth - 1, searchDepth + 1, pv, limit);

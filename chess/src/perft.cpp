@@ -5,14 +5,15 @@
 namespace Chess::Perft {
 namespace {
 int Run(Board &board, int depth) {
+    if (depth == 0)
+        return 1;
     MoveList moves = MoveGen::GenerateAll(board.Pos(), board.Pos().GetTurn());
-    if (depth == 1)
-        return moves.size();
     int leafCount = 0;
 
     for (auto move : moves) {
         board.MakeMove(move);
-        leafCount += Run(board, depth - 1);
+        if (board.Pos().IsKingSafe(~board.Pos().GetTurn()))
+            leafCount += Run(board, depth - 1);
         board.UndoMove();
     }
 
@@ -29,10 +30,12 @@ int PerftDivide(Board &board, int depth) {
 
     for (auto move : moves) {
         board.MakeMove(move);
-        int count = Run(board, depth - 1);
+        if (board.Pos().IsKingSafe(~board.Pos().GetTurn())) {
+            int count = Run(board, depth - 1);
+            printf("%s: %d\n", move.ToString().c_str(), count);
+            total += count;
+        }
         board.UndoMove();
-        printf("%s: %d\n", move.ToString().c_str(), count);
-        total += count;
     }
 
     return total;

@@ -104,7 +104,7 @@ int Eval(const Position &pos) {
 }
 
 int EvalNoMove(const Position &pos) {
-    bool isKingSafe = pos.IsKingSafe();
+    bool isKingSafe = pos.IsKingSafe(pos.GetTurn());
     // Checkmate
     if (!isKingSafe)
         return -Values::INF;

@@ -26,10 +26,7 @@ public:
     inline BB GetPieces(Color color, PieceType pType) const;
     inline Square GetKing(Color color) const;
 
-    bool IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard, BB tempKingBoard) const;
-    inline bool IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard) const;
-    inline bool IsKingSafe(BB tempOccuracyBoard) const;
-    inline bool IsKingSafe() const;
+    bool IsKingSafe(Color turn) const;
 
     BB GenerateAttackSquares(Color color) const;
 
@@ -138,13 +135,6 @@ inline void Position::SetEP(Column column) {
     _hash = Zobrist::FlipEnPassant(_hash, column);
 }
 
-inline bool Position::IsKingSafe(BB tempOccuracyBoard, BB tempEnemyBoard) const {
-    return IsKingSafe(tempOccuracyBoard, tempEnemyBoard, GetPieces(GetTurn(), PieceType::King));
-}
-inline bool Position::IsKingSafe(BB tempOccuracyBoard) const {
-    return IsKingSafe(tempOccuracyBoard, GetPieces(~GetTurn()));
-}
-inline bool Position::IsKingSafe() const { return IsKingSafe(GetPieces()); }
 inline void Position::PlacePiece(Square square, PieceType pType, Color color) {
     assert(square != Square::None);
     assert(pType != PieceType::None);
