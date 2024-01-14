@@ -187,7 +187,6 @@ MoveList GenerateAttack(const Position &pos, Color color) {
     GenerateKingMoves<GenType::Attack>(pos, color, moves);
     GeneratePawnMoves<GenType::Attack>(pos, color, moves);
 
-    moves.finish();
     return moves;
 }
 } // namespace Chess::MoveGen
