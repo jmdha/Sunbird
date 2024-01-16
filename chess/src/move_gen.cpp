@@ -6,43 +6,13 @@
 #include <chess/move_gen.hpp>
 
 namespace Chess::MoveGen {
+typedef BB (*AttackFunc)(Square);
 enum class GenType { Attack, All };
-// HACK: This needs to be refactored
-template <GenType gType> void GenerateKingMoves(const Position &pos, Color color, MoveList &moves) {
-    const std::array<BB, 4> &blockSquares = CASTLING_BLOCK_SQUARES[static_cast<size_t>(color)];
-    const std::array<BB, 4> &attackSquares = CASTLING_ATTACK_SQUARES[static_cast<size_t>(color)];
-
-    const auto attackedSquares = pos.GenerateAttackSquares(~color);
-    const Square kingPos = pos.GetKing(color);
-    assert(kingPos != Square::None);
-    if constexpr (gType == GenType::All) {
-        BB qMoves = Ring(kingPos, 1) & ~pos.GetPieces() & ~attackedSquares;
-        while (qMoves) {
-            const Square move = Next(qMoves);
-            moves.push<MoveList::Quiet>(Move(MoveType::Quiet, kingPos, move));
-        }
-        if (pos.AllowsCastling(Castling::King, color) &&
-            !(pos.GetPieces() & blockSquares[static_cast<size_t>(Castling::King)]) &&
-            !(attackedSquares & attackSquares[static_cast<size_t>(Castling::King)]))
-            moves.push<MoveList::Quiet>(
-                Move(MoveType::KingCastle, kingPos,
-                     First(Shift<Direction::East>(Shift<Direction::East>(ToBB(kingPos))))));
-        if (pos.AllowsCastling(Castling::Queen, color) &&
-            !(pos.GetPieces() & blockSquares[static_cast<size_t>(Castling::Queen)]) &&
-            !(attackedSquares & attackSquares[static_cast<size_t>(Castling::Queen)]))
-            moves.push<MoveList::Quiet>(
-                Move(MoveType::QueenCastle, kingPos,
-                     First(Shift<Direction::West>(Shift<Direction::West>(ToBB(kingPos))))));
-    }
-    if constexpr (gType == GenType::Attack || gType == GenType::All) {
-        BB aMoves = Ring(kingPos, 1) & pos.GetPieces(~color) & ~attackedSquares;
-        while (aMoves) {
-            const Square move = Next(aMoves);
-            moves.push<MoveList::Attack>(Move(MoveType::Capture, kingPos, move));
-        }
-    }
+template <MoveList::Type t>
+void BuildMoves(MoveList &moves, Square sq, BB targets, MoveType move_type) {
+    while (targets)
+        moves.push<t>(Move(move_type, sq, (Square)Bit::lsb_pop(targets)));
 }
-
 // HACK: This needs to be refactored
 template <GenType gType> void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
     constexpr Direction dirs[2] = {Direction::North, Direction::South};
@@ -86,91 +56,99 @@ template <GenType gType> void GeneratePawnMoves(const Position &pos, Color color
     }
 }
 
-// Generates possible attack moves for pieces of type pType
-template <PieceType pType> void SliderAttack(const Position &pos, Color color, MoveList &moves) {
-    static_assert(pType != PieceType::King && pType != PieceType::Pawn);
-
-    BB pieces = pos.GetPieces(color, pType);
+void SliderAttack(MoveList &moves, AttackFunc F, BB pieces, BB occ, BB nus) {
     while (pieces) {
         const Square piece = Next(pieces);
-        BB unblocked = Attacks(piece, pType);
+        BB unblocked = F(piece);
         for (size_t offset = 1; offset < 8; ++offset) {
             BB ring = Ring(piece, offset);
-            BB blockers = ring & unblocked & pos.GetPieces();
-            BB temp = blockers;
-            while (temp)
-                unblocked = unblocked & ~Ray(piece, Next(temp));
-            blockers &= pos.GetPieces(~color);
-            while (blockers) {
-                const Square blocker = Next(blockers);
-                moves.push<MoveList::Attack>(Move(MoveType::Capture, static_cast<Square>(piece),
-                                                  static_cast<Square>(blocker)));
-            }
+            BB blockers = ring & unblocked & occ;
+
+            BuildMoves<MoveList::Attack>(moves, piece, blockers & nus, MoveType::Capture);
+
+            while (blockers)
+                unblocked &= ~Ray(piece, (Square)Bit::lsb_pop(blockers));
         }
     }
 }
-template <PieceType pType> void SliderAll(const Position &pos, Color color, MoveList &moves) {
-    static_assert(pType != PieceType::King && pType != PieceType::Pawn);
 
-    BB pieces = pos.GetPieces(color, pType);
+void SliderAll(MoveList &moves, AttackFunc F, BB pieces, BB occ, BB nus) {
     while (pieces) {
         const Square piece = Next(pieces);
-        BB unblocked = Attacks(piece, pType);
+        BB unblocked = F(piece);
         for (size_t offset = 1; offset < 8; ++offset) {
             BB ring = Ring(piece, offset);
-            BB potMoves = ring & unblocked;
-            BB blockers = potMoves & pos.GetPieces();
-            potMoves ^= blockers;
+            BB pot_moves = ring & unblocked;
+            BB quiet_moves = pot_moves & (~occ);
+            BB capture_moves = pot_moves & nus;
 
-            while (potMoves) {
-                const Square sq = Next(potMoves);
-                moves.push<MoveList::Quiet>(Move(MoveType::Quiet, piece, sq));
-            }
+            BuildMoves<MoveList::Quiet>(moves, piece, quiet_moves, MoveType::Quiet);
+            BuildMoves<MoveList::Attack>(moves, piece, capture_moves, MoveType::Capture);
 
-            BB temp = blockers;
-            while (temp)
-                unblocked = unblocked & ~Ray(piece, Next(temp));
-
-            blockers &= pos.GetPieces(~color);
-            while (blockers) {
-                const Square blocker = Next(blockers);
-                moves.push<MoveList::Attack>(Move(MoveType::Capture, static_cast<Square>(piece),
-                                                  static_cast<Square>(blocker)));
-            }
+            BB blockers = pot_moves & occ;
+            while (blockers)
+                unblocked &= ~Ray(piece, (Square)Bit::lsb_pop(blockers));
         }
     }
 }
-template <GenType g> void GenerateKnightMoves(const Position &pos, Color color, MoveList &moves) {
-    BB pieces = pos.GetPieces(color, PieceType::Knight);
+
+template <MoveList::Type t>
+void BuildJumperMoves(MoveList &moves, AttackFunc F, BB pieces, BB targets, MoveType move_type) {
     while (pieces) {
-        const Square piece = Next(pieces);
-        if constexpr (g == GenType::All || g == GenType::Attack) {
-            for (BB attacks = Attacks(piece, PieceType::Knight) & pos.GetPieces(~color); attacks;) {
-                const Square attack = Next(attacks);
-                moves.push<MoveList::Attack>(Move(MoveType::Capture, static_cast<Square>(piece),
-                                                  static_cast<Square>(attack)));
-            }
-        }
-        if constexpr (g == GenType::All) {
-            for (BB attacks = Attacks(piece, PieceType::Knight) & ~pos.GetPieces(); attacks;) {
-                const Square attack = Next(attacks);
-                moves.push<MoveList::Quiet>(
-                    Move(MoveType::Quiet, static_cast<Square>(piece), static_cast<Square>(attack)));
-            }
-        }
+        Square sq = (Square)Bit::lsb_pop(pieces);
+        BuildMoves<t>(moves, sq, F(sq) & targets, move_type);
     }
+}
+
+void GenerateCastlingMoves(MoveList &moves, Castling castling, Color turn, BB occ, BB attacks) {
+    static const Square KING_POS[2] = {Square::E1, Square::E8};
+    static const Square KING_CASTLE_POS[2] = {Square::G1, Square::G8};
+    static const Square QUEEN_CASTLE_POS[2] = {Square::C1, Square::C8};
+    static const BB KING_BLOCKERS[2] = {0x60lu, 0x6000000000000000lu};
+    static const BB QUEEN_BLOCKERS[2] = {0xelu, 0xe00000000000000lu};
+    static const BB QUEEN_ATTACKERS[2] = {0xclu, 0xc00000000000000lu};
+
+    if ((bool)(castling & Castling::King) && !(occ & KING_BLOCKERS[turn]) &&
+        !(attacks & KING_BLOCKERS[turn]))
+        moves.push<MoveList::Quiet>(
+            Move(MoveType::KingCastle, KING_POS[turn], KING_CASTLE_POS[turn]));
+    if ((bool)(castling & Castling::Queen) && !(occ & QUEEN_BLOCKERS[turn]) &&
+        !(attacks & QUEEN_ATTACKERS[turn]))
+        moves.push<MoveList::Quiet>(
+            Move(MoveType::QueenCastle, KING_POS[turn], QUEEN_CASTLE_POS[turn]));
 }
 
 MoveList GenerateAll(const Position &pos, Color color) {
     MoveList moves;
 
-    SliderAll<PieceType::Queen>(pos, color, moves);
-    SliderAll<PieceType::Rook>(pos, color, moves);
-    SliderAll<PieceType::Bishop>(pos, color, moves);
+    const BB us = pos.GetPieces(color);
+    const BB nus = pos.GetPieces(~color);
+    const BB occ = pos.GetPieces();
+    const BB empty = ~occ;
 
-    GenerateKnightMoves<GenType::All>(pos, color, moves);
-    GenerateKingMoves<GenType::All>(pos, color, moves);
+    const BB pawns = pos.GetPieces(color, PieceType::Pawn);
+    const BB knights = pos.GetPieces(color, PieceType::Knight);
+    const BB kings = pos.GetPieces(color, PieceType::King);
+    const BB queens = pos.GetPieces(color, PieceType::Queen);
+    const BB bishops = pos.GetPieces(color, PieceType::Bishop) | queens;
+    const BB rooks = pos.GetPieces(color, PieceType::Rook) | queens;
+
     GeneratePawnMoves<GenType::All>(pos, color, moves);
+
+    SliderAll(moves, BishopAttacks, bishops, occ, nus);
+    SliderAll(moves, RookAttacks, rooks, occ, nus);
+
+    BuildJumperMoves<MoveList::Attack>(moves, KnightAttacks, knights, nus, MoveType::Capture);
+    BuildJumperMoves<MoveList::Quiet>(moves, KnightAttacks, knights, empty, MoveType::Quiet);
+
+    BB attacks = pos.GenerateAttackSquares(~color);
+    BuildJumperMoves<MoveList::Attack>(moves, KingAttacks, kings, nus & (~attacks),
+                                       MoveType::Capture);
+    BuildJumperMoves<MoveList::Quiet>(moves, KingAttacks, kings, empty & (~attacks),
+                                      MoveType::Quiet);
+
+    if (!(attacks & kings))
+        GenerateCastlingMoves(moves, pos.GetCastling(color), color, occ, attacks);
 
     moves.finish();
     return moves;
@@ -179,13 +157,27 @@ MoveList GenerateAll(const Position &pos, Color color) {
 MoveList GenerateAttack(const Position &pos, Color color) {
     MoveList moves;
 
-    SliderAttack<PieceType::Queen>(pos, color, moves);
-    SliderAttack<PieceType::Rook>(pos, color, moves);
-    SliderAttack<PieceType::Bishop>(pos, color, moves);
+    const BB us = pos.GetPieces(color);
+    const BB nus = pos.GetPieces(~color);
+    const BB occ = pos.GetPieces();
+    const BB empty = ~occ;
 
-    GenerateKnightMoves<GenType::Attack>(pos, color, moves);
-    GenerateKingMoves<GenType::Attack>(pos, color, moves);
+    const BB pawns = pos.GetPieces(color, PieceType::Pawn);
+    const BB knights = pos.GetPieces(color, PieceType::Knight);
+    const BB kings = pos.GetPieces(color, PieceType::King);
+    const BB queens = pos.GetPieces(color, PieceType::Queen);
+    const BB bishops = pos.GetPieces(color, PieceType::Bishop) | queens;
+    const BB rooks = pos.GetPieces(color, PieceType::Rook) | queens;
+
     GeneratePawnMoves<GenType::Attack>(pos, color, moves);
+
+    SliderAttack(moves, BishopAttacks, bishops, occ, nus);
+    SliderAttack(moves, RookAttacks, rooks, occ, nus);
+
+    BuildJumperMoves<MoveList::Attack>(moves, KnightAttacks, knights, nus, MoveType::Capture);
+    BB attacks = pos.GenerateAttackSquares(~color);
+    BuildJumperMoves<MoveList::Attack>(moves, KingAttacks, kings, nus & (~attacks),
+                                       MoveType::Capture);
 
     return moves;
 }

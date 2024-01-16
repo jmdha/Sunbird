@@ -197,6 +197,22 @@ constexpr inline BB Ring(Square sq, size_t offset) {
     return RINGS[static_cast<size_t>(sq)][offset];
 }
 
+constexpr inline BB KnightAttacks(Square sq) {
+    return ATTACKS[static_cast<size_t>(PieceType::Knight)][static_cast<size_t>(sq)];
+}
+
+constexpr inline BB BishopAttacks(Square sq) {
+    return ATTACKS[static_cast<size_t>(PieceType::Bishop)][static_cast<size_t>(sq)];
+}
+
+constexpr inline BB RookAttacks(Square sq) {
+    return ATTACKS[static_cast<size_t>(PieceType::Rook)][static_cast<size_t>(sq)];
+}
+
+constexpr inline BB KingAttacks(Square sq) {
+    return ATTACKS[static_cast<size_t>(PieceType::King)][static_cast<size_t>(sq)];
+}
+
 // The available moves on a clear board for pieces, except pawn
 constexpr inline BB Attacks(Square sq, PieceType pType) {
     assert(pType != PieceType::Pawn);
