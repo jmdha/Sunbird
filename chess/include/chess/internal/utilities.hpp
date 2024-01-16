@@ -12,17 +12,17 @@ constexpr PieceChar GetPieceChar(char c) { return static_cast<PieceChar>(c); }
 constexpr PieceChar GetPieceChar(PieceType type, Color color) {
     switch (type) {
     case PieceType::Bishop:
-        return (color == Color::White) ? PieceChar::BishopWhite : PieceChar::BishopBlack;
+        return (color == WHITE) ? PieceChar::BishopWhite : PieceChar::BishopBlack;
     case PieceType::King:
-        return (color == Color::White) ? PieceChar::KingWhite : PieceChar::KingBlack;
+        return (color == WHITE) ? PieceChar::KingWhite : PieceChar::KingBlack;
     case PieceType::Knight:
-        return (color == Color::White) ? PieceChar::KnightWhite : PieceChar::KnightBlack;
+        return (color == WHITE) ? PieceChar::KnightWhite : PieceChar::KnightBlack;
     case PieceType::Pawn:
-        return (color == Color::White) ? PieceChar::PawnWhite : PieceChar::PawnBlack;
+        return (color == WHITE) ? PieceChar::PawnWhite : PieceChar::PawnBlack;
     case PieceType::Queen:
-        return (color == Color::White) ? PieceChar::QueenWhite : PieceChar::QueenBlack;
+        return (color == WHITE) ? PieceChar::QueenWhite : PieceChar::QueenBlack;
     case PieceType::Rook:
-        return (color == Color::White) ? PieceChar::RookWhite : PieceChar::RookBlack;
+        return (color == WHITE) ? PieceChar::RookWhite : PieceChar::RookBlack;
     default:
         return PieceChar::None;
     }
@@ -61,9 +61,9 @@ constexpr PieceType GetPieceType(PieceChar pieceChar) {
 
 constexpr Color GetPieceColor(PieceChar pieceChar) {
     if (std::isupper(static_cast<char>(pieceChar)))
-        return Color::White;
+        return WHITE;
     else
-        return Color::Black;
+        return BLACK;
 }
 
 constexpr Square GetSquare(int x, int y) { return static_cast<Square>(x + 8 * y); }
@@ -193,9 +193,9 @@ constexpr Direction GetDirection(Square from, Square to) {
 
 constexpr Color GetTurn(char turn) {
     if (turn == 'w' || turn == 'W')
-        return Color::White;
+        return WHITE;
     else
-        return Color::Black;
+        return BLACK;
 }
 } // namespace Chess::Utilities
 

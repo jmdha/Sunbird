@@ -11,15 +11,15 @@
 namespace Chess {
 #define RING_COUNT 8
 
-extern const std::array<std::array<BB, DIRECTIONCOUNT>, SQUARECOUNT> RAYS;
-extern const std::array<std::array<BB, SQUARECOUNT>, SQUARECOUNT> SQRAYS;
-extern const std::array<std::array<BB, SQUARECOUNT>, SQUARECOUNT> XRAYS;
-extern const std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> BABS;
-extern const std::array<std::array<BB, RING_COUNT>, SQUARECOUNT> RINGS;
-extern const std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> ATTACKS;
-extern const std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_ATTACKS;
-extern const std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_PASS;
-extern const std::array<BB, SQUARECOUNT> PAWN_ISOLATION;
+extern const std::array<std::array<BB, DIRECTIONCOUNT>, SQUARE_COUNT> RAYS;
+extern const std::array<std::array<BB, SQUARE_COUNT>, SQUARE_COUNT> SQRAYS;
+extern const std::array<std::array<BB, SQUARE_COUNT>, SQUARE_COUNT> XRAYS;
+extern const std::array<std::array<BB, SQUARE_COUNT>, PIECE_COUNT> BABS;
+extern const std::array<std::array<BB, RING_COUNT>, SQUARE_COUNT> RINGS;
+extern const std::array<std::array<BB, SQUARE_COUNT>, PIECE_COUNT> ATTACKS;
+extern const std::array<std::array<BB, SQUARE_COUNT>, COLOR_COUNT> PAWN_ATTACKS;
+extern const std::array<std::array<BB, SQUARE_COUNT>, COLOR_COUNT> PAWN_PASS;
+extern const std::array<BB, SQUARE_COUNT> PAWN_ISOLATION;
 
 constexpr inline BB ToBB(Square sq) { return (static_cast<BB>(1) << static_cast<int>(sq)); }
 constexpr inline Square First(BB bb) { return static_cast<Square>(Bit::lsb(bb)); }
@@ -207,13 +207,13 @@ constexpr inline BB Attacks(Square sq, PieceType pType) {
 // The available moves on a clear board for pawns
 constexpr inline BB PawnAttacks(Square sq, Color color) {
     assert(sq != Square::None);
-    assert(color != Color::None);
+    assert(color != COLOR_NONE);
     return PAWN_ATTACKS[static_cast<size_t>(color)][static_cast<size_t>(sq)];
 }
 
 constexpr inline BB PawnPassMask(Square sq, Color color) {
     assert(sq != Square::None);
-    assert(color != Color::None);
+    assert(color != COLOR_NONE);
     return PAWN_PASS[static_cast<size_t>(color)][static_cast<size_t>(sq)];
 }
 constexpr inline BB PawnIsolationMask(Square sq) {

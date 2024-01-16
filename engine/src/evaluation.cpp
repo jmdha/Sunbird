@@ -39,8 +39,8 @@ template <Color color> std::pair<int, int> EvalPieceSquare(const Position &pos) 
 }
 
 std::pair<int, int> EvalPieceSquare(const Position &pos) {
-    const auto white = EvalPieceSquare<Color::White>(pos);
-    const auto black = EvalPieceSquare<Color::Black>(pos);
+    const auto white = EvalPieceSquare<WHITE>(pos);
+    const auto black = EvalPieceSquare<BLACK>(pos);
     return {white.first - black.first, white.second - black.second};
 }
 
@@ -79,8 +79,8 @@ template <Color color> std::pair<int, int> EvalPawn(const Position &pos) {
 }
 
 std::pair<int, int> EvalPawn(const Position &pos) {
-    const auto white = EvalPawn<Color::White>(pos);
-    const auto black = EvalPawn<Color::Black>(pos);
+    const auto white = EvalPawn<WHITE>(pos);
+    const auto black = EvalPawn<BLACK>(pos);
     return {white.first - black.first, white.second - black.second};
 }
 } // namespace
@@ -100,7 +100,7 @@ int Eval(const Position &pos) {
 
     value /= 24;
 
-    return (pos.GetTurn() == Color::White) ? value : -value;
+    return (pos.GetTurn() == WHITE) ? value : -value;
 }
 
 int EvalNoMove(const Position &pos) {

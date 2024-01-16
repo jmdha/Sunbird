@@ -5,7 +5,7 @@
 using namespace Chess;
 
 namespace Chess {
-constexpr std::array<std::array<BB, DIRECTIONCOUNT>, SQUARECOUNT> RAYS = [] {
+constexpr std::array<std::array<BB, DIRECTIONCOUNT>, SQUARE_COUNT> RAYS = [] {
     auto rays = decltype(RAYS){};
     for (const auto sq : SQUARES)
         for (const auto dir : DIRECTIONS) {
@@ -20,7 +20,7 @@ constexpr std::array<std::array<BB, DIRECTIONCOUNT>, SQUARECOUNT> RAYS = [] {
     return rays;
 }();
 
-constexpr std::array<std::array<BB, SQUARECOUNT>, SQUARECOUNT> SQRAYS = [] {
+constexpr std::array<std::array<BB, SQUARE_COUNT>, SQUARE_COUNT> SQRAYS = [] {
     auto rays = decltype(SQRAYS){};
     for (const auto from : SQUARES)
         for (const auto to : SQUARES) {
@@ -32,7 +32,7 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, SQUARECOUNT> SQRAYS = [] {
     return rays;
 }();
 
-constexpr std::array<std::array<BB, SQUARECOUNT>, SQUARECOUNT> XRAYS = [] {
+constexpr std::array<std::array<BB, SQUARE_COUNT>, SQUARE_COUNT> XRAYS = [] {
     auto rays = decltype(XRAYS){};
     for (const auto from : SQUARES)
         for (const auto to : SQUARES) {
@@ -74,7 +74,7 @@ constexpr BB GenerateRing(Square sq, size_t offset) {
     return ring;
 }
 } // namespace
-constexpr std::array<std::array<BB, RING_COUNT>, SQUARECOUNT> RINGS = [] {
+constexpr std::array<std::array<BB, RING_COUNT>, SQUARE_COUNT> RINGS = [] {
     auto rings = decltype(RINGS){};
 
     for (const auto sq : SQUARES)
@@ -112,7 +112,7 @@ constexpr BB GenerateAttacks(PieceType piece, Square sq) {
 }
 } // namespace
 
-constexpr std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> ATTACKS = [] {
+constexpr std::array<std::array<BB, SQUARE_COUNT>, PIECE_COUNT> ATTACKS = [] {
     auto attacks = decltype(ATTACKS){};
 
     for (const auto p : PIECES)
@@ -123,7 +123,7 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> ATTACKS = [] {
     return attacks;
 }();
 
-constexpr std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> BABS = [] {
+constexpr std::array<std::array<BB, SQUARE_COUNT>, PIECE_COUNT> BABS = [] {
     auto babs = decltype(BABS){};
 
     for (const auto pType : PIECES) {
@@ -152,12 +152,12 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, PIECECOUNT> BABS = [] {
     return babs;
 }();
 
-constexpr std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_ATTACKS = [] {
+constexpr std::array<std::array<BB, SQUARE_COUNT>, COLOR_COUNT> PAWN_ATTACKS = [] {
     auto attacks = decltype(PAWN_ATTACKS){};
 
-    for (const auto color : {Color::White, Color::Black})
+    for (const auto color : {WHITE, BLACK})
         for (const auto sq : SQUARES) {
-            const BB rays = (color == Color::White)
+            const BB rays = (color == WHITE)
                                 ? (Ray(sq, Direction::NorthEast) | Ray(sq, Direction::NorthWest))
                                 : (Ray(sq, Direction::SouthEast) | Ray(sq, Direction::SouthWest));
             attacks[static_cast<size_t>(color)][static_cast<size_t>(sq)] = Ring(sq, 1) & rays;
@@ -166,10 +166,10 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_ATTACKS = [] 
     return attacks;
 }();
 
-constexpr std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_PASS = [] {
+constexpr std::array<std::array<BB, SQUARE_COUNT>, COLOR_COUNT> PAWN_PASS = [] {
     auto passes = decltype(PAWN_PASS){};
 
-    for (const auto color : {Color::White, Color::Black})
+    for (const auto color : {WHITE, BLACK})
         for (const auto square : SQUARES) {
             const Direction dir[2] = {Direction::North, Direction::South};
             BB bb = 0;
@@ -192,7 +192,7 @@ constexpr std::array<std::array<BB, SQUARECOUNT>, COLORCOUNT> PAWN_PASS = [] {
     return passes;
 }();
 
-constexpr std::array<BB, SQUARECOUNT> PAWN_ISOLATION = [] {
+constexpr std::array<BB, SQUARE_COUNT> PAWN_ISOLATION = [] {
     auto values = decltype(PAWN_ISOLATION){};
 
     for (const auto square : SQUARES) {

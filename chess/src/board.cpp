@@ -69,7 +69,7 @@ void Board::MakeMove(const Move &move) noexcept {
         goto CAPTURE_PROMOTION;
     case MoveType::EPCapture:
         capturedPiece = PieceType::Pawn;
-        if (turn == Color::White)
+        if (turn == WHITE)
             captureTo = (Square)Bit::lsb(Shift<Direction::South>(ToBB(captureTo)));
         else
             captureTo = (Square)Bit::lsb(Shift<Direction::North>(ToBB(captureTo)));

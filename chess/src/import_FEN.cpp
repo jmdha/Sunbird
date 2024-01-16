@@ -15,7 +15,8 @@ Board FEN(std::string FEN) {
             else {
                 const PieceType pType = Utilities::GetPieceType((PieceChar)FEN[0]);
                 const Color pColor = Utilities::GetPieceColor((PieceChar)FEN[0]);
-                pos.PlacePiece(Utilities::GetSquare(WIDTH - (remainingSquares--), y), pType, pColor);
+                pos.PlacePiece(Utilities::GetSquare(WIDTH - (remainingSquares--), y), pType,
+                               pColor);
             }
 
             FEN.erase(0, 1);
@@ -31,22 +32,22 @@ Board FEN(std::string FEN) {
     while (FEN[0] != ' ') {
         switch (FEN[0]) {
         case 'K':
-            castling[(int)Color::White] = castling[(int)Color::White] ^ Castling::King;
+            castling[(int)WHITE] = castling[(int)WHITE] ^ Castling::King;
             break;
         case 'k':
-            castling[(int)Color::Black] = castling[(int)Color::Black] ^ Castling::King;
+            castling[(int)BLACK] = castling[(int)BLACK] ^ Castling::King;
             break;
         case 'Q':
-            castling[(int)Color::White] = castling[(int)Color::White] ^ Castling::Queen;
+            castling[(int)WHITE] = castling[(int)WHITE] ^ Castling::Queen;
             break;
         case 'q':
-            castling[(int)Color::Black] = castling[(int)Color::Black] ^ Castling::Queen;
+            castling[(int)BLACK] = castling[(int)BLACK] ^ Castling::Queen;
             break;
         }
         FEN.erase(0, 1);
     }
     FEN.erase(0, 1);
-    for (auto color : {Color::White, Color::Black}) {
+    for (auto color : {WHITE, BLACK}) {
         if (!((int)castling[(int)color] & (int)Castling::King))
             pos.DisallowCastling(Castling::King, color);
         if (!((int)castling[(int)color] & (int)Castling::Queen))

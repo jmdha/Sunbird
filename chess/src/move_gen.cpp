@@ -76,8 +76,8 @@ template <GenType gType> void GeneratePawnMoves(const Position &pos, Color color
                 else
                     moves.push<MoveList::Attack>(Move(MoveType::Capture, piece, attack));
             }
-            BB attack = PawnAttacks(piece, color) &
-                        ((color == Color::White) ? Row::Row6 : Row::Row3) & pos.GetEP();
+            BB attack = PawnAttacks(piece, color) & ((color == WHITE) ? Row::Row6 : Row::Row3) &
+                        pos.GetEP();
             if (attack) {
                 const Square sq = Next(attack);
                 moves.push<MoveList::Attack>(Move(MoveType::EPCapture, piece, sq));

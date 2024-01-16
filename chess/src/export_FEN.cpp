@@ -27,7 +27,7 @@ std::string FEN(const Position &pos) {
             fen += "/";
     }
 
-    if (pos.GetTurn() == Color::White)
+    if (pos.GetTurn() == WHITE)
         fen += " w ";
     else
         fen += " b ";
@@ -37,13 +37,13 @@ std::string FEN(const Position &pos) {
         fen += c;
         anyCastling = true;
     };
-    if (pos.AllowsCastling(Castling::King, Color::White))
+    if (pos.AllowsCastling(Castling::King, WHITE))
         addCastlingToFen('K');
-    if (pos.AllowsCastling(Castling::Queen, Color::White))
+    if (pos.AllowsCastling(Castling::Queen, WHITE))
         addCastlingToFen('Q');
-    if (pos.AllowsCastling(Castling::King, Color::Black))
+    if (pos.AllowsCastling(Castling::King, BLACK))
         addCastlingToFen('k');
-    if (pos.AllowsCastling(Castling::Queen, Color::Black))
+    if (pos.AllowsCastling(Castling::Queen, BLACK))
         addCastlingToFen('q');
     if (!anyCastling)
         fen += '-';

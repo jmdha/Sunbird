@@ -8,20 +8,29 @@
 
 namespace Chess {
 
+// A bitmask of a chess board, where a one corresponds to the index of the square
 using BB = uint64_t;
 
+// Width of a chess board
 #define WIDTH 8
+// Height of a chess board
 #define HEIGHT 8
-#define SQUARECOUNT 64
+// Total number of squares on a chess board
+#define SQUARE_COUNT (WIDTH * HEIGHT)
 
-#define MAX_SEARCH_DEPTH 256
+// How many colors there are
+#define COLOR_COUNT 2
+// How many types of pieces there are
+#define PIECE_COUNT 6
+
+// Maximum number of moves in a game
 #define MAX_PLY 512
-
+// Maximum depth to search, should be lower than MAX_PLY
+#define MAX_SEARCH_DEPTH 256
+// Maximum number of possible moves at any given position
 // 218 I believe to be the max number of moves
 #define MAXMOVECOUNT 256
 
-#define PIECECOUNT 6
-#define COLORCOUNT 2
 #define DIRECTIONCOUNT 8
 
 #define PAWNROWWHITE 1
@@ -30,17 +39,17 @@ using BB = uint64_t;
 #define EDGE 0xff818181818181ff
 #define CORNER 0x8100000000000081
 
-enum class Color : uint16_t { White, Black, None };
+enum Color { WHITE, BLACK, COLOR_NONE };
 inline Color operator~(Color color) {
-    assert(color != Color::None);
+    assert(color != COLOR_NONE);
     return static_cast<Color>(1 ^ static_cast<int>(color));
 }
 
 enum class PieceType : uint16_t { Pawn, Knight, Bishop, Rook, Queen, King, None };
-constexpr std::array<PieceType, PIECECOUNT> PIECES{PieceType::Pawn,   PieceType::Knight,
-                                                   PieceType::Bishop, PieceType::Rook,
-                                                   PieceType::Queen,  PieceType::King};
-static const std::array<PieceType, PIECECOUNT - 1> NON_PAWNS = {
+constexpr std::array<PieceType, PIECE_COUNT> PIECES{PieceType::Pawn,   PieceType::Knight,
+                                                    PieceType::Bishop, PieceType::Rook,
+                                                    PieceType::Queen,  PieceType::King};
+static const std::array<PieceType, PIECE_COUNT - 1> NON_PAWNS = {
     PieceType::Knight, PieceType::Bishop, PieceType::Rook, PieceType::Queen, PieceType::King};
 
 enum class PieceChar : char {
@@ -73,7 +82,7 @@ enum class Square : uint16_t {
 };
 // clang-format on
 
-constexpr std::array<Square, SQUARECOUNT> SQUARES = [] {
+constexpr std::array<Square, SQUARE_COUNT> SQUARES = [] {
     auto s = decltype(SQUARES){};
     for (size_t i = 0; i < 64; i++)
         s[i] = static_cast<Square>(i);
@@ -125,7 +134,7 @@ constexpr std::array<Column, 64> COLUMN_BY_SQUARE = {
     Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H,
     Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H};
 
-constexpr std::array<size_t, SQUARECOUNT> COLUMN_INDEX = {
+constexpr std::array<size_t, SQUARE_COUNT> COLUMN_INDEX = {
     0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7,
     0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7};
 
@@ -198,11 +207,11 @@ inline Castling operator^(Castling lhs, Castling rhs) {
 #define CASTLING_KING_BIT 0x0
 #define CASTLING_QUEEN_BIT 0x1
 
-constexpr std::array<std::array<BB, 4>, COLORCOUNT> CASTLING_BLOCK_SQUARES{
+constexpr std::array<std::array<BB, 4>, COLOR_COUNT> CASTLING_BLOCK_SQUARES{
     std::array<BB, 4>{0x0, 0x60, 0xe, 0x6e},
     std::array<BB, 4>{0x0, 0x6000000000000000, 0xe00000000000000, 0x6e00000000000000}};
 
-constexpr std::array<std::array<BB, 4>, COLORCOUNT> CASTLING_ATTACK_SQUARES{
+constexpr std::array<std::array<BB, 4>, COLOR_COUNT> CASTLING_ATTACK_SQUARES{
     std::array<BB, 4>{0x0, 0x70, 0x1c, 0x7c},
     std::array<BB, 4>{0x0, 0x7000000000000000, 0x1c00000000000000, 0x7c00000000000000}};
 } // namespace Chess

@@ -31,7 +31,7 @@ void MoveSequence(Board &board, std::string moves) {
                     type = MoveType::DoublePawnPush;
                 // If promotion
                 else if (Utilities::GetRow(toSquare) ==
-                         ((fromColor == Color::White) ? Row::Row8 : Row::Row1)) {
+                         ((fromColor == WHITE) ? Row::Row8 : Row::Row1)) {
                     // If none capture promotion
                     if (toType == PieceType::None) {
                         if (moves.length() == 5) {
@@ -80,4 +80,4 @@ Board MoveSequence(std::string moves) {
     return board;
 }
 
-} // namespace Import
+} // namespace Chess::Import

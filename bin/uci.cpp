@@ -114,8 +114,8 @@ int main(int argc, char **argv) {
 
             for (size_t i = 0; i < tokens.size(); i++) {
                 auto token = tokens[i];
-                if ((board.Pos().GetTurn() == Color::White && token == "wtime") ||
-                    (board.Pos().GetTurn() == Color::Black && token == "btime")) {
+                if ((board.Pos().GetTurn() == WHITE && token == "wtime") ||
+                    (board.Pos().GetTurn() == BLACK && token == "btime")) {
                     searchTime = std::stoi(tokens[i + 1]);
                     searchTime = static_cast<int>(searchTime * 0.05);
                 } else if (token == "movetime")

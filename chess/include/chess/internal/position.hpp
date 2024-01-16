@@ -40,8 +40,8 @@ public:
 
 private:
     uint64_t _hash = 0;
-    BB _pieceBB[PIECECOUNT]{0};
-    BB _colorBB[COLORCOUNT]{0};
+    BB _pieceBB[PIECE_COUNT]{0};
+    BB _colorBB[COLOR_COUNT]{0};
     /*
      * 1 bit - [1]:   Turn
      * 4 bit - [2-5]: Castling rights
@@ -77,15 +77,15 @@ inline PieceType Position::GetType(Square square) const {
 }
 inline Color Position::GetColor(Square square) const {
     assert(square != Square::None);
-    if (square & _colorBB[static_cast<size_t>(Color::White)])
-        return Color::White;
-    else if (square & _colorBB[static_cast<size_t>(Color::Black)])
-        return Color::Black;
+    if (square & _colorBB[static_cast<size_t>(WHITE)])
+        return WHITE;
+    else if (square & _colorBB[static_cast<size_t>(BLACK)])
+        return BLACK;
     else
-        return Color::None;
+        return COLOR_NONE;
 }
 inline int Position::GetPieceCount(Color color, PieceType pType) const {
-    assert(color != Color::None);
+    assert(color != COLOR_NONE);
     assert(pType != PieceType::None);
     return Bit::popcount(GetPieces(color, pType));
 }
@@ -95,16 +95,16 @@ inline BB Position::GetPieces(PieceType pType) const {
     return _pieceBB[static_cast<size_t>(pType)];
 }
 inline BB Position::GetPieces(Color color) const {
-    assert(color != Color::None);
+    assert(color != COLOR_NONE);
     return _colorBB[static_cast<size_t>(color)];
 }
 inline BB Position::GetPieces(Color color, PieceType pType) const {
-    assert(color != Color::None);
+    assert(color != COLOR_NONE);
     assert(pType != PieceType::None);
     return _colorBB[static_cast<size_t>(color)] & _pieceBB[static_cast<size_t>(pType)];
 }
 inline Square Position::GetKing(Color color) const {
-    assert(color != Color::None);
+    assert(color != COLOR_NONE);
     return static_cast<Square>(Bit::lsb(GetPieces(color, PieceType::King)));
 }
 inline void Position::SetTurn(Color color) {
@@ -138,7 +138,7 @@ inline void Position::SetEP(Column column) {
 inline void Position::PlacePiece(Square square, PieceType pType, Color color) {
     assert(square != Square::None);
     assert(pType != PieceType::None);
-    assert(color != Color::None);
+    assert(color != COLOR_NONE);
     _pieceBB[static_cast<size_t>(pType)] |= square;
     _colorBB[static_cast<size_t>(color)] |= square;
     _hash = Zobrist::FlipSquare(_hash, square, pType, color);
@@ -146,7 +146,7 @@ inline void Position::PlacePiece(Square square, PieceType pType, Color color) {
 inline void Position::RemovePiece(Square square, PieceType pType, Color color) {
     assert(square != Square::None);
     assert(pType != PieceType::None);
-    assert(color != Color::None);
+    assert(color != COLOR_NONE);
     _pieceBB[static_cast<size_t>(pType)] ^= square;
     _colorBB[static_cast<size_t>(color)] ^= square;
     _hash = Zobrist::FlipSquare(_hash, square, pType, color);
