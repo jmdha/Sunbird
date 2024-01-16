@@ -1,9 +1,9 @@
 #ifndef CHESS_BOARD
 #define CHESS_BOARD
 
-#include "internal/constants.hpp"
 #include "internal/move.hpp"
 #include "internal/position.hpp"
+#include "internal/types.hpp"
 
 namespace Chess {
 // Class representing the current, and historic, state of a game of chess

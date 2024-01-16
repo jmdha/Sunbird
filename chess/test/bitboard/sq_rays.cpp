@@ -1,11 +1,8 @@
+#include <chess/internal/bitboard.hpp>
+#include <chess/internal/utilities.hpp>
 #include <cstdlib>
 #include <sstream>
-#include <stdexcept>
 #include <string>
-
-#include <chess/internal/bitboard.hpp>
-#include <chess/internal/constants.hpp>
-#include <chess/internal/utilities.hpp>
 
 using namespace Chess;
 

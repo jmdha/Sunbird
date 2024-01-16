@@ -2,7 +2,7 @@
 #define CHESS_ENGINE_EVALUATION
 
 #include <chess/board.hpp>
-#include <chess/internal/constants.hpp>
+#include <chess/internal/types.hpp>
 
 namespace Chess::Engine::Evaluation {
 int Eval(const Position &pos);

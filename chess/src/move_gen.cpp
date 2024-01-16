@@ -1,7 +1,7 @@
 #include "chess/internal/move_list.hpp"
 #include <chess/internal/bit.hpp>
 #include <chess/internal/bitboard.hpp>
-#include <chess/internal/constants.hpp>
+#include <chess/internal/types.hpp>
 #include <chess/internal/utilities.hpp>
 #include <chess/move_gen.hpp>
 

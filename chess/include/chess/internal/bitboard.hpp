@@ -2,7 +2,7 @@
 #define CHESS_BITBOARD
 
 #include "bit.hpp"
-#include "constants.hpp"
+#include "types.hpp"
 #include <stdexcept>
 
 /**

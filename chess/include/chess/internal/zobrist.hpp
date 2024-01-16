@@ -1,7 +1,7 @@
 #ifndef CHESS_ZOBRIST
 #define CHESS_ZOBRIST
 
-#include "constants.hpp"
+#include "types.hpp"
 
 namespace Chess::Zobrist {
 uint64_t FlipSquare(uint64_t hash, Square square, PieceType type, Color color);

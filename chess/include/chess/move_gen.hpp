@@ -1,9 +1,9 @@
 #ifndef CHESS_MOVE_GEN
 #define CHESS_MOVE_GEN
 
-#include "internal/constants.hpp"
 #include "internal/move_list.hpp"
 #include "internal/position.hpp"
+#include "internal/types.hpp"
 
 namespace Chess::MoveGen {
 MoveList GenerateAll(const Position &pos, Color color);

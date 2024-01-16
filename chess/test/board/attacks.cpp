@@ -1,17 +1,12 @@
-#include <stdexcept>
-#include <string>
-#include <cstdlib>
-
-#include <string>
-#include <sstream>
-
-#include <chess/internal/constants.hpp>
 #include <chess/board.hpp>
 #include <chess/import.hpp>
+#include <cstdlib>
+#include <sstream>
+#include <string>
 
 using namespace Chess;
 
-int main(int, char* argv[]) {
+int main(int, char *argv[]) {
     std::string FEN = std::string(argv[1]);
     BB expected;
     std::stringstream(std::string(argv[2])) >> expected;

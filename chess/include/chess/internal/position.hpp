@@ -3,7 +3,7 @@
 
 #include "bit.hpp"
 #include "bitboard.hpp"
-#include "constants.hpp"
+#include "types.hpp"
 #include "zobrist.hpp"
 
 namespace Chess {

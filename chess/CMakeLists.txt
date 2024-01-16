@@ -5,7 +5,7 @@ set(CHESS_INCLUDE_BUILD_DIR ${CHESS_INCLUDE_DIR}/chess)
 set(CHESS_HEADERS
     ${CHESS_INCLUDE_BUILD_DIR}/internal/bit.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/internal/bitboard.hpp
-    ${CHESS_INCLUDE_BUILD_DIR}/internal/constants.hpp
+    ${CHESS_INCLUDE_BUILD_DIR}/internal/types.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/internal/move.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/internal/move_list.hpp
     ${CHESS_INCLUDE_BUILD_DIR}/internal/utilities.hpp

@@ -1,8 +1,8 @@
 #ifndef CHESS_MOVE_LIST
 #define CHESS_MOVE_LIST
 
-#include "constants.hpp"
 #include "move.hpp"
+#include "types.hpp"
 #include <algorithm>
 #include <cstring>
 

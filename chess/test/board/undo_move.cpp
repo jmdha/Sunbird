@@ -1,17 +1,12 @@
-#include <stdexcept>
-#include <string>
-#include <cstdlib>
-
-#include <string>
-#include <sstream>
-
-#include <chess/internal/constants.hpp>
 #include <chess/board.hpp>
 #include <chess/import.hpp>
+#include <cstdlib>
+#include <stdexcept>
+#include <string>
 
 using namespace Chess;
 
-int main(int, char* argv[]) {
+int main(int, char *argv[]) {
     std::string FEN = std::string(argv[1]);
     Board board = Import::FEN(FEN);
 
@@ -29,17 +24,27 @@ int main(int, char* argv[]) {
 
         PieceType fromPiece = board.Pos().GetType(fromSquare);
         PieceType toPiece = board.Pos().GetType(toSquare);
-        if (fromPiece == PieceType::Pawn && Utilities::GetColumn(fromSquare) != Utilities::GetColumn(toSquare) && toPiece == PieceType::None)
+        if (fromPiece == PieceType::Pawn &&
+            Utilities::GetColumn(fromSquare) != Utilities::GetColumn(toSquare) &&
+            toPiece == PieceType::None)
             move = Move(MoveType::EPCapture, fromSquare, toSquare);
         else if (fromPiece == PieceType::Pawn && sMove.size() == 5) {
             if (sMove[4] == 'q')
-                move = Move((toPiece == PieceType::None) ? MoveType::QPromotion : MoveType::QPromotionCapture, fromSquare, toSquare);
+                move = Move((toPiece == PieceType::None) ? MoveType::QPromotion
+                                                         : MoveType::QPromotionCapture,
+                            fromSquare, toSquare);
             else if (sMove[4] == 'r')
-                move = Move((toPiece == PieceType::None) ? MoveType::RPromotion : MoveType::RPromotionCapture, fromSquare, toSquare);
+                move = Move((toPiece == PieceType::None) ? MoveType::RPromotion
+                                                         : MoveType::RPromotionCapture,
+                            fromSquare, toSquare);
             else if (sMove[4] == 'b')
-                move = Move((toPiece == PieceType::None) ? MoveType::BPromotion : MoveType::BPromotionCapture, fromSquare, toSquare);
+                move = Move((toPiece == PieceType::None) ? MoveType::BPromotion
+                                                         : MoveType::BPromotionCapture,
+                            fromSquare, toSquare);
             else if (sMove[4] == 'n')
-                move = Move((toPiece == PieceType::None) ? MoveType::NPromotion : MoveType::NPromotionCapture, fromSquare, toSquare);
+                move = Move((toPiece == PieceType::None) ? MoveType::NPromotion
+                                                         : MoveType::NPromotionCapture,
+                            fromSquare, toSquare);
         } else {
             MoveType moveType = (toPiece == PieceType::None) ? MoveType::Quiet : MoveType::Capture;
 

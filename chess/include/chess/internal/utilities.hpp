@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <strings.h>
 
-#include "constants.hpp"
+#include "types.hpp"
 
 namespace Chess::Utilities {
 constexpr PieceChar GetPieceChar(char c) { return static_cast<PieceChar>(c); }

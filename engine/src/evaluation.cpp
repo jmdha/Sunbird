@@ -1,6 +1,6 @@
 #include <chess/internal/bit.hpp>
 #include <chess/internal/bitboard.hpp>
-#include <chess/internal/constants.hpp>
+#include <chess/internal/types.hpp>
 #include <chess/internal/utilities.hpp>
 #include <engine/evaluation.hpp>
 #include <engine/internal/values.hpp>

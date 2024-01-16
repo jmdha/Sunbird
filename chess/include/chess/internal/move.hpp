@@ -1,7 +1,7 @@
 #ifndef CHESS_MOVE
 #define CHESS_MOVE
 
-#include "constants.hpp"
+#include "types.hpp"
 #include "utilities.hpp"
 #include <string>
 

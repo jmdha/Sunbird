@@ -1,17 +1,11 @@
-#include <stdexcept>
-#include <string>
-#include <cstdlib>
-
-#include <string>
-#include <sstream>
-
-#include <chess/internal/constants.hpp>
 #include <chess/board.hpp>
 #include <chess/import.hpp>
+#include <cstdlib>
+#include <string>
 
 using namespace Chess;
 
-int main(int, char* argv[]) {
+int main(int, char *argv[]) {
     std::string iCol = std::string(argv[1]);
     Column col;
     if (iCol == "a")

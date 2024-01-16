@@ -1,5 +1,5 @@
 #include <chess/export.hpp>
-#include <chess/internal/constants.hpp>
+#include <chess/internal/types.hpp>
 #include <chess/move_gen.hpp>
 #include <chrono>
 #include <csetjmp>

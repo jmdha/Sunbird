@@ -1,10 +1,9 @@
-#include <cstdlib>
-#include <stdexcept>
-#include <string>
-
 #include <chess/board.hpp>
 #include <chess/import.hpp>
 #include <chess/perft.hpp>
+#include <cstdlib>
+#include <stdexcept>
+#include <string>
 
 using namespace Chess;
 
