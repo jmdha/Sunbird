@@ -17,9 +17,8 @@ Play against it [here](https://lichess.org/@/sun_bird).
 
 ## Table of Contents
 1. [Features](#Features)
-2. [Benchmark](#Benchmark)
-3. [How to Build](#How-To-Build)
-4. [Comparison](#Comparison)
+2. [How to Build](#How-To-Build)
+3. [Comparison](#Comparison)
 
 ## Features
 ### State
@@ -53,16 +52,6 @@ Play against it [here](https://lichess.org/@/sun_bird).
     * Passed pawns
 * Tapered by game phase [[wiki](https://www.chessprogramming.org/Tapered_Eval)]
 
-## Benchmark
-These are run on a i5-13600k with a single thread.
-
-For the purposes here, a "node" is a move done.
-
-### Perft
-**52m nodes/s**
-
-### Search
-**10m nodes/s**
 ## How to Build
 Navigate to root folder of project, then run the following to build engine.
 ```
