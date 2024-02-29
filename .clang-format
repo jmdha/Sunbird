@@ -1,4 +1,8 @@
 ColumnLimit: 100
 IndentWidth: 4
 AccessModifierOffset: -4
-
+AlignAfterOpenBracket: BlockIndent  # Align
+AlwaysBreakTemplateDeclarations: Yes  # Yes
+AlignConsecutiveAssignments: true
+AllowShortIfStatementsOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
