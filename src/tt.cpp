@@ -1,7 +1,7 @@
 #include "tt.hpp"
 #include "values.hpp"
 
-namespace Chess::Engine::TT {
+namespace Engine::TT {
 
 struct Entry {
     uint64_t key  = 0;
@@ -129,4 +129,4 @@ void StoreEval(uint64_t key, int depth, int searchDepth, int value, int evalType
         }
     }
 }
-} // namespace Chess::Engine::TT
+} // namespace Engine::TT

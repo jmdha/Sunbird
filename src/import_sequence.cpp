@@ -1,20 +1,19 @@
 #include "import.hpp"
 #include "utilities.hpp"
 
-namespace Chess::Import {
+namespace Import {
 // HACK: Refactor this
 void MoveSequence(Board &board, std::string moves) {
     std::string move;
     for (int i = 0; i < moves.length(); i++) {
-        if (moves[i] != ' ')
-            move.push_back(moves[i]);
+        if (moves[i] != ' ') move.push_back(moves[i]);
 
         if (moves[i] == ' ' || i == (int)moves.length() - 1) {
-            Square fromSquare = Utilities::GetSquare(move[0], move[1]);
-            Square toSquare = Utilities::GetSquare(move[2], move[3]);
+            Square fromSquare  = Utilities::GetSquare(move[0], move[1]);
+            Square toSquare    = Utilities::GetSquare(move[2], move[3]);
             PieceType fromType = board.Pos().GetType(fromSquare);
-            PieceType toType = board.Pos().GetType(toSquare);
-            Color fromColor = board.Pos().GetColor(fromSquare);
+            PieceType toType   = board.Pos().GetType(toSquare);
+            Color fromColor    = board.Pos().GetColor(fromSquare);
             MoveType type;
             // Is castling?
             //// Is kingside castle
@@ -26,12 +25,13 @@ void MoveSequence(Board &board, std::string moves) {
 
             else if (fromType == PieceType::Pawn) {
                 // If double pawn push
-                if (std::abs((int)Utilities::GetRowIndex(fromSquare) -
-                             (int)Utilities::GetRowIndex(toSquare)) == 2)
+                if (std::abs(
+                        (int)Utilities::GetRowIndex(fromSquare) -
+                        (int)Utilities::GetRowIndex(toSquare)
+                    ) == 2)
                     type = MoveType::DoublePawnPush;
                 // If promotion
-                else if (Utilities::GetRow(toSquare) ==
-                         ((fromColor == WHITE) ? Row::Row8 : Row::Row1)) {
+                else if (Utilities::GetRow(toSquare) == ((fromColor == WHITE) ? Row::Row8 : Row::Row1)) {
                     // If none capture promotion
                     if (toType == PieceType::None) {
                         if (moves.length() == 5) {
@@ -80,4 +80,4 @@ Board MoveSequence(std::string moves) {
     return board;
 }
 
-} // namespace Chess::Import
+} // namespace Import

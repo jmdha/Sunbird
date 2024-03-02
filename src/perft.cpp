@@ -2,7 +2,7 @@
 #include "move_gen.hpp"
 #include "move_list.hpp"
 
-namespace Chess::Perft {
+namespace Perft {
 namespace {
 int Run(Board &board, int depth) {
     if (depth == 0) return 1;
@@ -38,4 +38,4 @@ int PerftDivide(Board &board, int depth) {
 
     return total;
 }
-} // namespace Chess::Perft
+} // namespace Perft

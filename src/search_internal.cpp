@@ -6,9 +6,9 @@
 #include "tt.hpp"
 #include <cstring>
 
-using namespace Chess::MoveGen;
+using namespace MoveGen;
 
-namespace Chess::Engine::Search::Internal {
+namespace Engine::Search::Internal {
 namespace {
 bool AB(int score, int &alpha, int beta) {
     if (score >= beta) return true;
@@ -95,4 +95,4 @@ int Negamax(
     TT::StoreEval(hash, depth, searchDepth, alpha, ttBound, bm);
     return alpha;
 }
-} // namespace Chess::Engine::Search::Internal
+} // namespace Engine::Search::Internal

@@ -5,9 +5,9 @@
 #include "position.hpp"
 #include "types.hpp"
 
-namespace Chess::MoveGen {
+namespace MoveGen {
 MoveList GenerateAll(const Position &pos, Color color);
 MoveList GenerateAttack(const Position &pos, Color color);
-} // namespace Chess::MoveGen
+} // namespace MoveGen
 
 #endif

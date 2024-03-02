@@ -6,7 +6,6 @@
 #include "types.hpp"
 #include "zobrist.hpp"
 
-namespace Chess {
 struct Position {
 public:
     // access
@@ -149,6 +148,5 @@ inline void Position::RemovePiece(Square square, PieceType pType, Color color) {
     _colorBB[static_cast<size_t>(color)] ^= square;
     _hash = Zobrist::FlipSquare(_hash, square, pType, color);
 }
-} // namespace Chess
 
 #endif

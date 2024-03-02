@@ -2,8 +2,6 @@
 #include "utilities.hpp"
 #include <array>
 
-using namespace Chess;
-
 constexpr int SQUARE_HASH_COUNT = 2 * 6 * 64;
 // Generate hashses in a pseudo-random way
 // Cannot use *actual* randomness as its compile time

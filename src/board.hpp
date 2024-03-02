@@ -5,7 +5,6 @@
 #include "position.hpp"
 #include "types.hpp"
 
-namespace Chess {
 // Class representing the current, and historic, state of a game of chess
 class Board {
 public:
@@ -36,7 +35,5 @@ inline size_t Board::MoveCount() const noexcept { return _moves; }
 inline size_t Board::Ply() const noexcept { return current_ply; }
 
 inline const Position &Board::Pos() const noexcept { return positions.at(current_ply - 1); }
-
-} // namespace Chess
 
 #endif // CHESS_BOARD

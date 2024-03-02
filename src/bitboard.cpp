@@ -2,9 +2,6 @@
 #include "bit.hpp"
 #include "utilities.hpp"
 
-using namespace Chess;
-
-namespace Chess {
 constexpr std::array<std::array<BB, DIRECTIONCOUNT>, SQUARE_COUNT> RAYS = [] {
     auto rays = decltype(RAYS){};
     for (const auto sq : SQUARES)
@@ -202,4 +199,3 @@ constexpr std::array<BB, SQUARE_COUNT> PAWN_ISOLATION = [] {
     }
     return values;
 }();
-} // namespace Chess

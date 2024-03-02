@@ -1,7 +1,5 @@
 #include "position.hpp"
 
-using namespace Chess;
-
 bool Position::IsKingSafe(Color turn) const {
     Square king = GetKing(turn);
 

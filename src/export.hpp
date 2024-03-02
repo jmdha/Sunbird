@@ -4,7 +4,7 @@
 #include "position.hpp"
 #include <string>
 
-namespace Chess::Export {
+namespace Export {
 std::string FEN(const Position &board);
 }
 

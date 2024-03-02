@@ -8,7 +8,6 @@
 /**
  * Contains various functions and overloads related to bitboards
  */
-namespace Chess {
 #define RING_COUNT 8
 
 extern const std::array<std::array<BB, DIRECTIONCOUNT>, SQUARE_COUNT> RAYS;
@@ -241,5 +240,4 @@ constexpr inline BB PawnIsolationMask(Square sq) {
     return PAWN_ISOLATION[static_cast<size_t>(sq)];
 }
 
-} // namespace Chess
 #endif

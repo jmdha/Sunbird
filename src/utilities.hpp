@@ -6,56 +6,44 @@
 
 #include "types.hpp"
 
-namespace Chess::Utilities {
+namespace Utilities {
 constexpr PieceChar GetPieceChar(char c) { return static_cast<PieceChar>(c); }
 
 constexpr PieceChar GetPieceChar(PieceType type, Color color) {
     switch (type) {
     case PieceType::Bishop:
         return (color == WHITE) ? PieceChar::BishopWhite : PieceChar::BishopBlack;
-    case PieceType::King:
-        return (color == WHITE) ? PieceChar::KingWhite : PieceChar::KingBlack;
+    case PieceType::King: return (color == WHITE) ? PieceChar::KingWhite : PieceChar::KingBlack;
     case PieceType::Knight:
         return (color == WHITE) ? PieceChar::KnightWhite : PieceChar::KnightBlack;
-    case PieceType::Pawn:
-        return (color == WHITE) ? PieceChar::PawnWhite : PieceChar::PawnBlack;
-    case PieceType::Queen:
-        return (color == WHITE) ? PieceChar::QueenWhite : PieceChar::QueenBlack;
-    case PieceType::Rook:
-        return (color == WHITE) ? PieceChar::RookWhite : PieceChar::RookBlack;
-    default:
-        return PieceChar::None;
+    case PieceType::Pawn: return (color == WHITE) ? PieceChar::PawnWhite : PieceChar::PawnBlack;
+    case PieceType::Queen: return (color == WHITE) ? PieceChar::QueenWhite : PieceChar::QueenBlack;
+    case PieceType::Rook: return (color == WHITE) ? PieceChar::RookWhite : PieceChar::RookBlack;
+    default: return PieceChar::None;
     }
 }
 
 constexpr PieceType GetPieceType(PieceChar pieceChar) {
     switch (pieceChar) {
     case PieceChar::BishopBlack:
-    case PieceChar::BishopWhite:
-        return PieceType::Bishop;
+    case PieceChar::BishopWhite: return PieceType::Bishop;
 
     case PieceChar::KingBlack:
-    case PieceChar::KingWhite:
-        return PieceType::King;
+    case PieceChar::KingWhite: return PieceType::King;
 
     case PieceChar::KnightBlack:
-    case PieceChar::KnightWhite:
-        return PieceType::Knight;
+    case PieceChar::KnightWhite: return PieceType::Knight;
 
     case PieceChar::PawnBlack:
-    case PieceChar::PawnWhite:
-        return PieceType::Pawn;
+    case PieceChar::PawnWhite: return PieceType::Pawn;
 
     case PieceChar::QueenBlack:
-    case PieceChar::QueenWhite:
-        return PieceType::Queen;
+    case PieceChar::QueenWhite: return PieceType::Queen;
 
     case PieceChar::RookBlack:
-    case PieceChar::RookWhite:
-        return PieceType::Rook;
+    case PieceChar::RookWhite: return PieceType::Rook;
 
-    default:
-        return PieceType::None;
+    default: return PieceType::None;
     }
 }
 
@@ -72,24 +60,15 @@ constexpr Square GetSquare(char row, char column) { return GetSquare(row - 97, c
 
 constexpr Column GetColumn(int columnIndex) {
     switch (columnIndex) {
-    case 0:
-        return Column::A;
-    case 1:
-        return Column::B;
-    case 2:
-        return Column::C;
-    case 3:
-        return Column::D;
-    case 4:
-        return Column::E;
-    case 5:
-        return Column::F;
-    case 6:
-        return Column::G;
-    case 7:
-        return Column::H;
-    default:
-        return Column::None;
+    case 0: return Column::A;
+    case 1: return Column::B;
+    case 2: return Column::C;
+    case 3: return Column::D;
+    case 4: return Column::E;
+    case 5: return Column::F;
+    case 6: return Column::G;
+    case 7: return Column::H;
+    default: return Column::None;
     }
 }
 
@@ -101,24 +80,15 @@ constexpr size_t GetColumnIndex(Square square) {
 
 constexpr size_t GetColumnIndex(Column col) {
     switch (col) {
-    case Column::A:
-        return 0;
-    case Column::B:
-        return 1;
-    case Column::C:
-        return 2;
-    case Column::D:
-        return 3;
-    case Column::E:
-        return 4;
-    case Column::F:
-        return 5;
-    case Column::G:
-        return 6;
-    case Column::H:
-        return 7;
-    case Column::None:
-        return 8;
+    case Column::A: return 0;
+    case Column::B: return 1;
+    case Column::C: return 2;
+    case Column::D: return 3;
+    case Column::E: return 4;
+    case Column::F: return 5;
+    case Column::G: return 6;
+    case Column::H: return 7;
+    case Column::None: return 8;
     }
     throw std::logic_error("Invalid flow");
 }
@@ -129,24 +99,15 @@ constexpr Column GetColumn(Square square) {
 
 constexpr Row GetRow(size_t rowIndex) {
     switch (rowIndex) {
-    case 0:
-        return Row::Row1;
-    case 1:
-        return Row::Row2;
-    case 2:
-        return Row::Row3;
-    case 3:
-        return Row::Row4;
-    case 4:
-        return Row::Row5;
-    case 5:
-        return Row::Row6;
-    case 6:
-        return Row::Row7;
-    case 7:
-        return Row::Row8;
-    default:
-        return Row::None;
+    case 0: return Row::Row1;
+    case 1: return Row::Row2;
+    case 2: return Row::Row3;
+    case 3: return Row::Row4;
+    case 4: return Row::Row5;
+    case 5: return Row::Row6;
+    case 6: return Row::Row7;
+    case 7: return Row::Row8;
+    default: return Row::None;
     }
 }
 
@@ -197,6 +158,6 @@ constexpr Color GetTurn(char turn) {
     else
         return BLACK;
 }
-} // namespace Chess::Utilities
+} // namespace Utilities
 
 #endif // UTILITIES

@@ -14,7 +14,7 @@
 #include <optional>
 #include <utility>
 
-namespace Chess::Engine::Search {
+namespace Engine::Search {
 namespace {
 std::optional<AlternativeResult> IsTerminal(const Position &pos) {
     const MoveList moves = MoveGen::GenerateAll(pos, pos.GetTurn());
@@ -116,4 +116,4 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimi
 
     return IterativeDeepening(board, timeLimit);
 }
-} // namespace Chess::Engine::Search
+} // namespace Engine::Search

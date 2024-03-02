@@ -6,12 +6,12 @@
 #include "position.hpp"
 #include "pv.hpp"
 
-namespace Chess::Engine::MoveOrdering {
+namespace Engine::MoveOrdering {
 void Killer(MoveList &moves, Move killerMove);
 void MVVLVA(const Board &board, MoveList &moves);
 void PVPrioity(const Board &board, const PV &pv, MoveList &moves);
 void TTPrioity(Move move, MoveList &moves);
 void All(const Board &board, Move ttMove, const PV &pv, MoveList &moves);
-} // namespace Chess::Engine::MoveOrdering
+} // namespace Engine::MoveOrdering
 
 #endif

@@ -4,14 +4,15 @@
 #include <array>
 #include <cstddef>
 
-namespace Chess::Engine::Values {
+namespace Engine::Values {
 namespace {
 constexpr std::array<int, 64> C(std::array<int, 64> a, int b) {
     for (size_t i = 0; i < a.size(); i++)
         a[i] += b;
     return a;
 }
-template <int s = 64> constexpr std::array<int, s> I(std::array<int, s> array) {
+template <int s = 64>
+constexpr std::array<int, s> I(std::array<int, s> array) {
     std::array<int, s> newArray;
     for (size_t i = 0; i < array.size(); i++)
         newArray[i] = array.at(s - 1 - i);
@@ -19,7 +20,7 @@ template <int s = 64> constexpr std::array<int, s> I(std::array<int, s> array) {
 }
 } // namespace
 constexpr int PHASE_INC[6] = {0, 1, 1, 2, 4, 0};
-constexpr int INF = 99999;
+constexpr int INF          = 99999;
 namespace Structure {
 namespace DoubledPawn {
 constexpr int MG = -20;
@@ -233,5 +234,5 @@ inline std::array<std::array<int, 64>, 6> EG_WHITE = {
     C(I<64>(Position::King::EG), 0)};
 inline std::array<std::array<std::array<int, 64>, 6>, 2> MG{MG_WHITE, MG_BLACK};
 inline std::array<std::array<std::array<int, 64>, 6>, 2> EG{EG_WHITE, EG_BLACK};
-} // namespace Chess::Engine::Values
+} // namespace Engine::Values
 #endif

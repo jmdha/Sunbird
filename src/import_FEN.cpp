@@ -1,8 +1,8 @@
+#include "import.hpp"
 #include "position.hpp"
 #include "utilities.hpp"
-#include "import.hpp"
 
-namespace Chess::Import {
+namespace Import {
 Board FEN(std::string FEN) {
     Position pos;
 
@@ -14,9 +14,10 @@ Board FEN(std::string FEN) {
                 remainingSquares -= (int)FEN[0] - 48;
             else {
                 const PieceType pType = Utilities::GetPieceType((PieceChar)FEN[0]);
-                const Color pColor = Utilities::GetPieceColor((PieceChar)FEN[0]);
-                pos.PlacePiece(Utilities::GetSquare(WIDTH - (remainingSquares--), y), pType,
-                               pColor);
+                const Color pColor    = Utilities::GetPieceColor((PieceChar)FEN[0]);
+                pos.PlacePiece(
+                    Utilities::GetSquare(WIDTH - (remainingSquares--), y), pType, pColor
+                );
             }
 
             FEN.erase(0, 1);
@@ -31,18 +32,10 @@ Board FEN(std::string FEN) {
     std::array<Castling, 2> castling{Castling::None, Castling::None};
     while (FEN[0] != ' ') {
         switch (FEN[0]) {
-        case 'K':
-            castling[(int)WHITE] = castling[(int)WHITE] ^ Castling::King;
-            break;
-        case 'k':
-            castling[(int)BLACK] = castling[(int)BLACK] ^ Castling::King;
-            break;
-        case 'Q':
-            castling[(int)WHITE] = castling[(int)WHITE] ^ Castling::Queen;
-            break;
-        case 'q':
-            castling[(int)BLACK] = castling[(int)BLACK] ^ Castling::Queen;
-            break;
+        case 'K': castling[(int)WHITE] = castling[(int)WHITE] ^ Castling::King; break;
+        case 'k': castling[(int)BLACK] = castling[(int)BLACK] ^ Castling::King; break;
+        case 'Q': castling[(int)WHITE] = castling[(int)WHITE] ^ Castling::Queen; break;
+        case 'q': castling[(int)BLACK] = castling[(int)BLACK] ^ Castling::Queen; break;
         }
         FEN.erase(0, 1);
     }
@@ -64,4 +57,4 @@ Board FEN(std::string FEN) {
 
     return Board(pos);
 }
-} // namespace Chess::Import
+} // namespace Import

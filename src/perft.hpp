@@ -3,8 +3,8 @@
 
 #include "board.hpp"
 
-namespace Chess::Perft {
+namespace Perft {
 int RunFromPosition(Board &board, int depth);
 int PerftDivide(Board &board, int depth);
-} // namespace Chess::Perft
+} // namespace Perft
 #endif // PERFT

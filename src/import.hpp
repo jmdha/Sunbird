@@ -4,7 +4,7 @@
 #include "board.hpp"
 #include <string>
 
-namespace Chess::Import {
+namespace Import {
 /**
  * Creates a board and sets the state to that of the given FEN string
  * https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -18,6 +18,6 @@ Board FEN(std::string FEN);
  */
 Board MoveSequence(std::string moves);
 void MoveSequence(Board &board, std::string moves);
-} // namespace Chess::Import
+} // namespace Import
 
 #endif

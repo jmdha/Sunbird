@@ -7,7 +7,7 @@
 #include "search_limit.hpp"
 #include <variant>
 
-namespace Chess::Engine::Search {
+namespace Engine::Search {
 enum class AlternativeResult { Draw, Checkmate };
 namespace Internal {
 /*
@@ -24,6 +24,6 @@ int Negamax(
 }; // namespace Internal
 std::variant<Move, AlternativeResult> GetBestMoveDepth(Board &board, int depth);
 std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit);
-} // namespace Chess::Engine::Search
+} // namespace Engine::Search
 
 #endif // ENGINE_NEGAMAX

@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-using namespace Chess;
-
 const std::vector<std::string> PERFT_POSITIONS{
     "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",                 // Init,
     "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - ",        // Kiwipete
@@ -22,10 +20,10 @@ int main() {
     size_t total_time  = 0;
     size_t total_nodes = 0;
     for (uint i = 0; i < PERFT_POSITIONS.size(); i++) {
-        Board board = Chess::Import::FEN(PERFT_POSITIONS[i]);
+        Board board = Import::FEN(PERFT_POSITIONS[i]);
         printf("%d/%zu\n", i + 1, PERFT_POSITIONS.size());
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-        const auto count                            = Chess::Perft::RunFromPosition(board, 5);
+        const auto count                            = Perft::RunFromPosition(board, 5);
         std::chrono::steady_clock::time_point end   = std::chrono::steady_clock::now();
         size_t time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
         total_time += time;

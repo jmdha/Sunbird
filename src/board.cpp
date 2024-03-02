@@ -3,7 +3,6 @@
 #include "utilities.hpp"
 #include <stdexcept>
 
-using namespace Chess;
 Board::Board(Position position) { positions.at(current_ply++) = std::move(position); }
 
 bool Board::IsThreefoldRepetition() const noexcept {

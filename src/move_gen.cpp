@@ -5,7 +5,7 @@
 #include "types.hpp"
 #include "utilities.hpp"
 
-namespace Chess::MoveGen {
+namespace MoveGen {
 typedef BB (*AttackFunc)(Square);
 enum class GenType { Attack, All };
 template <MoveList::Type t>
@@ -187,4 +187,4 @@ MoveList GenerateAttack(const Position &pos, Color color) {
 
     return moves;
 }
-} // namespace Chess::MoveGen
+} // namespace MoveGen

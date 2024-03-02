@@ -6,8 +6,6 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace Chess {
-
 // A bitmask of a chess board, where a one corresponds to the index of the square
 using BB = uint64_t;
 
@@ -53,19 +51,19 @@ static const std::array<PieceType, PIECE_COUNT - 1> NON_PAWNS = {
     PieceType::Knight, PieceType::Bishop, PieceType::Rook, PieceType::Queen, PieceType::King};
 
 enum class PieceChar : char {
-    PawnWhite = 'P',
-    PawnBlack = 'p',
+    PawnWhite   = 'P',
+    PawnBlack   = 'p',
     KnightWhite = 'N',
     KnightBlack = 'n',
     BishopWhite = 'B',
     BishopBlack = 'b',
-    RookWhite = 'R',
-    RookBlack = 'r',
-    QueenWhite = 'Q',
-    QueenBlack = 'q',
-    KingWhite = 'K',
-    KingBlack = 'k',
-    None = 'O'
+    RookWhite   = 'R',
+    RookBlack   = 'r',
+    QueenWhite  = 'Q',
+    QueenBlack  = 'q',
+    KingWhite   = 'K',
+    KingBlack   = 'k',
+    None        = 'O'
 };
 
 // clang-format off
@@ -90,7 +88,7 @@ constexpr std::array<Square, SQUARE_COUNT> SQUARES = [] {
 }();
 
 constexpr Square INIT_ROOKPOS[2][2] = {{Square::H1, Square::A1}, {Square::H8, Square::A8}};
-constexpr Square INIT_KINGPOS[2] = {Square::E1, Square::E8};
+constexpr Square INIT_KINGPOS[2]    = {Square::E1, Square::E8};
 constexpr Square CASTLEPOS_KING[2][2]{{Square::G1, Square::C1}, {Square::G8, Square::C8}};
 constexpr Square CASTLEPOS_ROOK[2][2]{{Square::F1, Square::D1}, {Square::F8, Square::D8}};
 
@@ -110,14 +108,14 @@ constexpr Row PawnRow[2] = {Row::Row2, Row::Row7};
 constexpr Row PushRow[2] = {Row::Row4, Row::Row5};
 
 enum class Column : BB {
-    A = 0x101010101010101,
-    B = 0x202020202020202,
-    C = 0x404040404040404,
-    D = 0x808080808080808,
-    E = 0x1010101010101010,
-    F = 0x2020202020202020,
-    G = 0x4040404040404040,
-    H = 0x8080808080808080,
+    A    = 0x101010101010101,
+    B    = 0x202020202020202,
+    C    = 0x404040404040404,
+    D    = 0x808080808080808,
+    E    = 0x1010101010101010,
+    F    = 0x2020202020202020,
+    G    = 0x4040404040404040,
+    H    = 0x8080808080808080,
     None = 0x0
 };
 
@@ -155,35 +153,36 @@ constexpr std::array<Direction, 8> DIRECTIONS = {
     Direction::North,     Direction::East,      Direction::South,     Direction::West,
     Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest};
 
-constexpr std::array<BB, 8> EDGES = {static_cast<BB>(Row::Row8),
-                                     static_cast<BB>(Column::H),
-                                     static_cast<BB>(Row::Row1),
-                                     static_cast<BB>(Column::A),
+constexpr std::array<BB, 8> EDGES = {
+    static_cast<BB>(Row::Row8),
+    static_cast<BB>(Column::H),
+    static_cast<BB>(Row::Row1),
+    static_cast<BB>(Column::A),
 
-                                     static_cast<BB>(Row::Row8) | static_cast<BB>(Column::H),
-                                     static_cast<BB>(Row::Row8) | static_cast<BB>(Column::A),
-                                     static_cast<BB>(Row::Row1) | static_cast<BB>(Column::H),
-                                     static_cast<BB>(Row::Row1) | static_cast<BB>(Column::A)};
+    static_cast<BB>(Row::Row8) | static_cast<BB>(Column::H),
+    static_cast<BB>(Row::Row8) | static_cast<BB>(Column::A),
+    static_cast<BB>(Row::Row1) | static_cast<BB>(Column::H),
+    static_cast<BB>(Row::Row1) | static_cast<BB>(Column::A)};
 
 // NOTE: The values of MoveType are used, and should not be changed
 enum class MoveType : uint16_t {
-    Quiet = 0,
-    DoublePawnPush = 1,
-    KingCastle = 2,
-    QueenCastle = 3,
-    Capture = 4,
-    EPCapture = 5,
-    NPromotion = 8,
-    BPromotion = 9,
-    RPromotion = 10,
-    QPromotion = 11,
+    Quiet             = 0,
+    DoublePawnPush    = 1,
+    KingCastle        = 2,
+    QueenCastle       = 3,
+    Capture           = 4,
+    EPCapture         = 5,
+    NPromotion        = 8,
+    BPromotion        = 9,
+    RPromotion        = 10,
+    QPromotion        = 11,
     NPromotionCapture = 12,
     BPromotionCapture = 13,
     RPromotionCapture = 14,
     QPromotionCapture = 15
 };
-constexpr std::array<MoveType, 4> PromotionMoves{MoveType::NPromotion, MoveType::BPromotion,
-                                                 MoveType::RPromotion, MoveType::QPromotion};
+constexpr std::array<MoveType, 4> PromotionMoves{
+    MoveType::NPromotion, MoveType::BPromotion, MoveType::RPromotion, MoveType::QPromotion};
 constexpr std::array<MoveType, 4> PromotionCapturesMoves{
     MoveType::NPromotionCapture, MoveType::BPromotionCapture, MoveType::RPromotionCapture,
     MoveType::QPromotionCapture};
@@ -214,6 +213,4 @@ constexpr std::array<std::array<BB, 4>, COLOR_COUNT> CASTLING_BLOCK_SQUARES{
 constexpr std::array<std::array<BB, 4>, COLOR_COUNT> CASTLING_ATTACK_SQUARES{
     std::array<BB, 4>{0x0, 0x70, 0x1c, 0x7c},
     std::array<BB, 4>{0x0, 0x7000000000000000, 0x1c00000000000000, 0x7c00000000000000}};
-} // namespace Chess
-
 #endif // CONSTANTS
