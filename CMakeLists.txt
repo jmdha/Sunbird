@@ -20,7 +20,6 @@ set(sources
     src/bitboard.hpp
     src/board.hpp
     src/evaluation.hpp
-    src/export.hpp
     src/import.hpp
     src/move.hpp
     src/move_gen.hpp
@@ -39,7 +38,6 @@ set(sources
     src/bitboard.cpp
     src/board.cpp
     src/evaluation.cpp
-    src/export_FEN.cpp
     src/import_FEN.cpp
     src/import_sequence.cpp
     src/move_gen.cpp

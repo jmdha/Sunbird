@@ -1,6 +1,5 @@
 #include "search.hpp"
 #include "evaluation.hpp"
-#include "export.hpp"
 #include "move_gen.hpp"
 #include "move_ordering.hpp"
 #include "pv.hpp"
@@ -111,8 +110,6 @@ std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimi
     if (auto terminal = IsTerminal(board.Pos()); terminal.has_value()) return terminal.value();
     if (auto moves = MoveGen::GenerateAll(board.Pos(), board.Pos().GetTurn()); moves.size() == 1)
         return moves[0];
-
-    std::cout << "info fen " << Export::FEN(board.Pos()) << '\n';
 
     return IterativeDeepening(board, timeLimit);
 }
