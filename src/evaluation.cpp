@@ -1,9 +1,9 @@
+#include "evaluation.hpp"
 #include "bit.hpp"
 #include "bitboard.hpp"
 #include "types.hpp"
 #include "utilities.hpp"
 #include "values.hpp"
-#include "evaluation.hpp"
 
 namespace Chess::Engine::Evaluation {
 namespace {
@@ -12,7 +12,7 @@ std::pair<int, int> CalculatePhase(const Position &pos) {
 
     for (auto pType : PIECES) {
         const BB pieces = pos.GetPieces(pType);
-        const int count = Bit::popcount(pieces);
+        const int count = popcount(pieces);
         game_phase += count * Values::PHASE_INC[static_cast<int>(pType)];
     }
 
@@ -21,15 +21,16 @@ std::pair<int, int> CalculatePhase(const Position &pos) {
     return {mg, eg};
 }
 
-template <Color color> std::pair<int, int> EvalPieceSquare(const Position &pos) {
+template <Color color>
+std::pair<int, int> EvalPieceSquare(const Position &pos) {
     const size_t colorI = static_cast<size_t>(color);
-    int mg = 0;
-    int eg = 0;
+    int mg              = 0;
+    int eg              = 0;
 
     for (auto pType : PIECES) {
         const size_t pieceI = static_cast<size_t>(pType);
         for (BB pieces = pos.GetPieces(color, pType); pieces;) {
-            const Square piece = static_cast<Square>(Bit::lsb_pop(pieces));
+            const Square piece = static_cast<Square>(lsb_pop(pieces));
             mg += Values::MG[colorI][pieceI][static_cast<size_t>(piece)];
             eg += Values::EG[colorI][pieceI][static_cast<size_t>(piece)];
         }
@@ -44,13 +45,14 @@ std::pair<int, int> EvalPieceSquare(const Position &pos) {
     return {white.first - black.first, white.second - black.second};
 }
 
-template <Color color> std::pair<int, int> EvalPawn(const Position &pos) {
-    const size_t colorI = static_cast<size_t>(color);
+template <Color color>
+std::pair<int, int> EvalPawn(const Position &pos) {
+    const size_t colorI    = static_cast<size_t>(color);
     static Direction UP[2] = {Direction::North, Direction::South};
-    int mg = 0;
-    int eg = 0;
+    int mg                 = 0;
+    int eg                 = 0;
 
-    const BB PAWNS = pos.GetPieces(color, PieceType::Pawn);
+    const BB PAWNS   = pos.GetPieces(color, PieceType::Pawn);
     const BB PAWNS_O = pos.GetPieces(~color, PieceType::Pawn);
 
     // Doubled pawns
@@ -61,7 +63,7 @@ template <Color color> std::pair<int, int> EvalPawn(const Position &pos) {
         }
 
     for (BB pawns = PAWNS; pawns;) {
-        const Square pawn = static_cast<Square>(Bit::lsb_pop(pawns));
+        const Square pawn = static_cast<Square>(lsb_pop(pawns));
         // Passed pawn check
         if (!(PawnPassMask(pawn, color) & PAWNS_O) && !(Ray(pawn, UP[colorI]) & PAWNS)) {
             const int row = Utilities::GetRowIndex(pawn);
@@ -106,8 +108,7 @@ int Eval(const Position &pos) {
 int EvalNoMove(const Position &pos) {
     bool isKingSafe = pos.IsKingSafe(pos.GetTurn());
     // Checkmate
-    if (!isKingSafe)
-        return -Values::INF;
+    if (!isKingSafe) return -Values::INF;
     // Stalemate
     else
         return 0;

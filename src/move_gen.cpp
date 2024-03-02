@@ -11,7 +11,7 @@ enum class GenType { Attack, All };
 template <MoveList::Type t>
 void BuildMoves(MoveList &moves, Square sq, BB targets, MoveType move_type) {
     while (targets)
-        moves.push<t>(Move(move_type, sq, (Square)Bit::lsb_pop(targets)));
+        moves.push<t>(Move(move_type, sq, (Square)lsb_pop(targets)));
 }
 // HACK: This needs to be refactored
 template <GenType gType>
@@ -22,7 +22,7 @@ void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
     while (pieces) {
         const Square piece = Next(pieces);
         if constexpr (gType == GenType::All) {
-            Square to = static_cast<Square>(Bit::lsb(Ray(piece, dir) & Ring(piece, 1)));
+            Square to = static_cast<Square>(lsb(Ray(piece, dir) & Ring(piece, 1)));
             if (!(to & pos.GetPieces())) {
                 if (ToBB(piece) & PawnRow[static_cast<size_t>(~color)])
                     for (const auto prom : PromotionMoves)
@@ -68,7 +68,7 @@ void SliderAttack(MoveList &moves, AttackFunc F, BB pieces, BB occ, BB nus) {
             BuildMoves<MoveList::Attack>(moves, piece, blockers & nus, MoveType::Capture);
 
             while (blockers)
-                unblocked &= ~Ray(piece, (Square)Bit::lsb_pop(blockers));
+                unblocked &= ~Ray(piece, (Square)lsb_pop(blockers));
         }
     }
 }
@@ -88,7 +88,7 @@ void SliderAll(MoveList &moves, AttackFunc F, BB pieces, BB occ, BB nus) {
 
             BB blockers = pot_moves & occ;
             while (blockers)
-                unblocked &= ~Ray(piece, (Square)Bit::lsb_pop(blockers));
+                unblocked &= ~Ray(piece, (Square)lsb_pop(blockers));
         }
     }
 }
@@ -96,7 +96,7 @@ void SliderAll(MoveList &moves, AttackFunc F, BB pieces, BB occ, BB nus) {
 template <MoveList::Type t>
 void BuildJumperMoves(MoveList &moves, AttackFunc F, BB pieces, BB targets, MoveType move_type) {
     while (pieces) {
-        Square sq = (Square)Bit::lsb_pop(pieces);
+        Square sq = (Square)lsb_pop(pieces);
         BuildMoves<t>(moves, sq, F(sq) & targets, move_type);
     }
 }

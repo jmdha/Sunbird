@@ -22,9 +22,9 @@ extern const std::array<std::array<BB, SQUARE_COUNT>, COLOR_COUNT> PAWN_PASS;
 extern const std::array<BB, SQUARE_COUNT> PAWN_ISOLATION;
 
 constexpr inline BB ToBB(Square sq) { return (static_cast<BB>(1) << static_cast<int>(sq)); }
-constexpr inline Square First(BB bb) { return static_cast<Square>(Bit::lsb(bb)); }
-constexpr inline Square Last(BB bb) { return static_cast<Square>(Bit::msb(bb)); }
-constexpr inline Square Next(BB &bb) { return static_cast<Square>(Bit::lsb_pop(bb)); }
+constexpr inline Square First(BB bb) { return static_cast<Square>(lsb(bb)); }
+constexpr inline Square Last(BB bb) { return static_cast<Square>(msb(bb)); }
+constexpr inline Square Next(BB &bb) { return static_cast<Square>(lsb_pop(bb)); }
 
 // clang-format off
 
@@ -80,7 +80,8 @@ constexpr inline BB operator^(Row r, Column c) { return c ^ r; }
 
 // clang-format on
 
-template <Direction D> constexpr inline BB Shift(BB bb) {
+template <Direction D>
+constexpr inline BB Shift(BB bb) {
     if constexpr (D == Direction::North)
         return bb << 8;
     else if constexpr (D == Direction::East)
@@ -101,7 +102,10 @@ template <Direction D> constexpr inline BB Shift(BB bb) {
         return bb;
 }
 
-template <Direction D> constexpr inline BB ShiftM(BB &bb) { return bb = Shift<D>(bb); }
+template <Direction D>
+constexpr inline BB ShiftM(BB &bb) {
+    return bb = Shift<D>(bb);
+}
 
 constexpr inline BB Shift(BB bb, Direction dir) {
     // clang-format off

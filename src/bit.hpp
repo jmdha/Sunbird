@@ -4,7 +4,6 @@
 #include <cassert>
 #include <cstdint>
 
-namespace Chess::Bit {
 /**
  * @brief Returns the number of trailing 0-bits in x, starting from the least significant bit
  * @param x A non-zero unsigned 16 bit number
@@ -184,6 +183,5 @@ constexpr inline int popcount(uint64_t x) {
     throw std::logic_error("Not implemented.");
 #endif
 }
-} // namespace Chess::Bit
 
 #endif

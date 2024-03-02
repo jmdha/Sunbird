@@ -88,7 +88,7 @@ inline Color Position::GetColor(Square square) const {
 inline int Position::GetPieceCount(Color color, PieceType pType) const {
     assert(color != COLOR_NONE);
     assert(pType != PieceType::None);
-    return Bit::popcount(GetPieces(color, pType));
+    return popcount(GetPieces(color, pType));
 }
 inline BB Position::GetPieces() const { return _colorBB[0] | _colorBB[1]; }
 inline BB Position::GetPieces(PieceType pType) const {
@@ -106,7 +106,7 @@ inline BB Position::GetPieces(Color color, PieceType pType) const {
 }
 inline Square Position::GetKing(Color color) const {
     assert(color != COLOR_NONE);
-    return static_cast<Square>(Bit::lsb(GetPieces(color, PieceType::King)));
+    return static_cast<Square>(lsb(GetPieces(color, PieceType::King)));
 }
 inline void Position::SetTurn(Color color) {
     if (color != GetTurn()) _hash = Zobrist::FlipColor(_hash);
@@ -128,7 +128,7 @@ inline void Position::SetEP(Column column) {
     _misc &= static_cast<uint16_t>(~0x1e0);
     if (column == Column::None) [[likely]]
         return;
-    const int index = Bit::lsb(static_cast<BB>(column)) + 1;
+    const int index = lsb(static_cast<BB>(column)) + 1;
     _misc |= (index & 0xf) << 5;
     _hash = Zobrist::FlipEnPassant(_hash, column);
 }
