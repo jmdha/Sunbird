@@ -8,7 +8,7 @@
 
 using namespace MoveGen;
 
-namespace Engine::Search::Internal {
+namespace Search::Internal {
 namespace {
 bool AB(int score, int &alpha, int beta) {
     if (score >= beta) return true;
@@ -95,4 +95,4 @@ int Negamax(
     TT::StoreEval(hash, depth, searchDepth, alpha, ttBound, bm);
     return alpha;
 }
-} // namespace Engine::Search::Internal
+} // namespace Search::Internal

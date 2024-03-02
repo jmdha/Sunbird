@@ -5,7 +5,7 @@
 #include "utilities.hpp"
 #include "values.hpp"
 
-namespace Engine::Evaluation {
+namespace Evaluation {
 namespace {
 std::pair<int, int> CalculatePhase(const Position &pos) {
     int game_phase = 0;
@@ -113,4 +113,4 @@ int EvalNoMove(const Position &pos) {
     else
         return 0;
 }
-} // namespace Engine::Evaluation
+} // namespace Evaluation

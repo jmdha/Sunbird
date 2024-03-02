@@ -4,7 +4,7 @@
 #include <array>
 #include <cstddef>
 
-namespace Engine::Values {
+namespace Values {
 namespace {
 constexpr std::array<int, 64> C(std::array<int, 64> a, int b) {
     for (size_t i = 0; i < a.size(); i++)
@@ -234,5 +234,5 @@ inline std::array<std::array<int, 64>, 6> EG_WHITE = {
     C(I<64>(Position::King::EG), 0)};
 inline std::array<std::array<std::array<int, 64>, 6>, 2> MG{MG_WHITE, MG_BLACK};
 inline std::array<std::array<std::array<int, 64>, 6>, 2> EG{EG_WHITE, EG_BLACK};
-} // namespace Engine::Values
+} // namespace Values
 #endif

@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <cstring>
 
-namespace Engine::MoveOrdering {
+namespace MoveOrdering {
 void Killer(MoveList &moves, Move killerMove) {
     for (size_t i = moves.attacks() + 1; i < moves.size(); i++) {
         if (moves[i] == killerMove) {
@@ -58,4 +58,4 @@ void All(const Board &board, Move ttMove, const PV &pv, MoveList &moves) {
     TTPrioity(ttMove, moves);
     PVPrioity(board, pv, moves);
 }
-} // namespace Engine::MoveOrdering
+} // namespace MoveOrdering

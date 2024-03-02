@@ -41,7 +41,7 @@ NEXT_TOKEN:
 }
 
 int main(int argc, char **argv) {
-    Engine::TT::Init();
+    TT::Init();
     Board board = Import::MoveSequence("");
     while (true) {
         std::string input;
@@ -75,12 +75,12 @@ int main(int argc, char **argv) {
                     std::cout << "hash size cannot be 0" << '\n';
                     continue;
                 }
-                Engine::TT::Clean();
-                Engine::TT::Init(hash_size);
+                TT::Clean();
+                TT::Init(hash_size);
                 break;
             }
             break;
-        case Command::ucinewgame: Engine::TT::Clear(); break;
+        case Command::ucinewgame: TT::Clear(); break;
         case Command::isready: printf("readyok\n"); break;
         case Command::position:
             if (tokens[1] == "startpos") {
@@ -113,12 +113,12 @@ int main(int argc, char **argv) {
                     searchTime = std::stoi(tokens[i + 1]);
             }
 
-            Move move = std::get<Move>(Engine::Search::GetBestMoveTime(board, searchTime));
+            Move move = std::get<Move>(Search::GetBestMoveTime(board, searchTime));
             std::cout << "bestmove " << move.ToString() << '\n';
 
             break;
         }
-        case Command::quit: Engine::TT::Clean(); return 0;
+        case Command::quit: TT::Clean(); return 0;
         default: throw std::logic_error("The impossible has happended: " + input);
         }
     }

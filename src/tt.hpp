@@ -3,7 +3,7 @@
 
 #include "move.hpp"
 
-namespace Engine::TT {
+namespace TT {
 #define DEFAULT_HASH_SIZE 16
 
 static const int ProbeFail  = -1;
@@ -33,6 +33,6 @@ Move ProbeMove(uint64_t key);
 void Clear();
 void StoreEval(uint64_t key, int depth, int searchDepth, int value, int evalType, Move move);
 
-} // namespace Engine::TT
+} // namespace TT
 
 #endif

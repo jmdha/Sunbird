@@ -4,7 +4,6 @@
 #include "move.hpp"
 #include <vector>
 
-namespace Engine {
 struct PV {
 public:
     PV() : _ply(0) {}
@@ -22,6 +21,5 @@ private:
     std::vector<Move> _moves;
     size_t _ply;
 };
-} // namespace Engine
 
 #endif
