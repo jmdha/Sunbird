@@ -1,11 +1,10 @@
-#include "engine/internal/tt.hpp"
+#include <board.hpp>
 #include <climits>
+#include <import.hpp>
 #include <iostream>
+#include <search.hpp>
 #include <string>
-
-#include <chess/board.hpp>
-#include <chess/import.hpp>
-#include <engine/search.hpp>
+#include <tt.hpp>
 #include <unordered_map>
 
 using namespace Chess;
@@ -37,11 +36,9 @@ NEXT_TOKEN:
     if (auto p = s.find_first_of((inApro) ? '"' : ' ', (inApro) ? 1 : 0); p != std::string::npos) {
         tokens.push_back(s.substr((inApro) ? 1 : 0, inApro ? p - 1 : p));
         s = s.substr(p + 1, s.size() - p);
-        if (!s.empty())
-            goto NEXT_TOKEN;
+        if (!s.empty()) goto NEXT_TOKEN;
     }
-    if (!s.empty())
-        tokens.push_back(s);
+    if (!s.empty()) tokens.push_back(s);
     return tokens;
 }
 
@@ -74,8 +71,7 @@ int main(int argc, char **argv) {
             }
             switch (Options.at(tokens[2])) {
             case Option::hash:
-                if (tokens.size() < 3)
-                    continue;
+                if (tokens.size() < 3) continue;
                 auto hash_size = std::atoi(tokens[4].c_str());
                 if (hash_size == 0) {
                     std::cout << "hash size cannot be 0" << '\n';
@@ -86,21 +82,18 @@ int main(int argc, char **argv) {
                 break;
             }
             break;
-        case Command::ucinewgame:
-            Engine::TT::Clear();
-            break;
-        case Command::isready:
-            printf("readyok\n");
-            break;
+        case Command::ucinewgame: Engine::TT::Clear(); break;
+        case Command::isready: printf("readyok\n"); break;
         case Command::position:
             if (tokens[1] == "startpos") {
                 board = Import::MoveSequence("");
             } else if (tokens[1] == "fen") {
-                auto fenIndex = input.find("fen") + 4;
+                auto fenIndex   = input.find("fen") + 4;
                 auto movesIndex = input.find("moves");
-                std::string fen = input.substr(fenIndex, (movesIndex == std::string::npos)
-                                                             ? input.size() - fenIndex
-                                                             : movesIndex - fenIndex - 1);
+                std::string fen = input.substr(
+                    fenIndex, (movesIndex == std::string::npos) ? input.size() - fenIndex
+                                                                : movesIndex - fenIndex - 1
+                );
                 board = Import::FEN(fen);
             } else
                 throw std::logic_error("Unexpected token in position: \"" + tokens[1] + '\"');
@@ -127,11 +120,8 @@ int main(int argc, char **argv) {
 
             break;
         }
-        case Command::quit:
-            Engine::TT::Clean();
-            return 0;
-        default:
-            throw std::logic_error("The impossible has happended: " + input);
+        case Command::quit: Engine::TT::Clean(); return 0;
+        default: throw std::logic_error("The impossible has happended: " + input);
         }
     }
 }

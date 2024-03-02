@@ -1,5 +1,5 @@
-#include "chess/import.hpp"
-#include "chess/perft.hpp"
+#include "import.hpp"
+#include "perft.hpp"
 #include <chrono>
 #include <cstddef>
 #include <string>
@@ -19,21 +19,23 @@ const std::vector<std::string> PERFT_POSITIONS{
 int main() {
     printf("MEASURING PERFT\n");
 
-    size_t total_time = 0;
+    size_t total_time  = 0;
     size_t total_nodes = 0;
     for (uint i = 0; i < PERFT_POSITIONS.size(); i++) {
         Board board = Chess::Import::FEN(PERFT_POSITIONS[i]);
         printf("%d/%zu\n", i + 1, PERFT_POSITIONS.size());
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-        const auto count = Chess::Perft::RunFromPosition(board, 5);
-        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+        const auto count                            = Chess::Perft::RunFromPosition(board, 5);
+        std::chrono::steady_clock::time_point end   = std::chrono::steady_clock::now();
         size_t time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
         total_time += time;
         total_nodes += count;
     }
 
-    printf("Nodes: %zu, Time: %zu, NPS: %zu\n", total_nodes, total_time,
-           total_nodes / total_time * 1000);
+    printf(
+        "Nodes: %zu, Time: %zu, NPS: %zu\n", total_nodes, total_time,
+        total_nodes / total_time * 1000
+    );
     printf("FINISHED  PERFT\n");
     return 0;
 }
