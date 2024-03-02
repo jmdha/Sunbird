@@ -1,5 +1,4 @@
-#ifndef CHESS_IMPORT
-#define CHESS_IMPORT
+#pragma once
 
 #include "board.hpp"
 #include <string>
@@ -19,5 +18,3 @@ Board FEN(std::string FEN);
 Board MoveSequence(std::string moves);
 void MoveSequence(Board &board, std::string moves);
 } // namespace Import
-
-#endif

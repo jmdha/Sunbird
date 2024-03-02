@@ -1,5 +1,4 @@
-#ifndef CHESS_ENGINE_TRANSPOSITION_TABLE
-#define CHESS_ENGINE_TRANSPOSITION_TABLE
+#pragma once
 
 #include "move.hpp"
 
@@ -34,5 +33,3 @@ void Clear();
 void StoreEval(uint64_t key, int depth, int searchDepth, int value, int evalType, Move move);
 
 } // namespace TT
-
-#endif

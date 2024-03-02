@@ -1,5 +1,4 @@
-#ifndef CHESS_ENGINE_MOVE_ORDERING
-#define CHESS_ENGINE_MOVE_ORDERING
+#pragma once
 
 #include "board.hpp"
 #include "move_list.hpp"
@@ -13,5 +12,3 @@ void PVPrioity(const Board &board, const PV &pv, MoveList &moves);
 void TTPrioity(Move move, MoveList &moves);
 void All(const Board &board, Move ttMove, const PV &pv, MoveList &moves);
 } // namespace MoveOrdering
-
-#endif

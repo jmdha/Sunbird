@@ -1,5 +1,4 @@
-#ifndef CHESS_ENGINE_NEGAMAX
-#define CHESS_ENGINE_NEGAMAX
+#pragma once
 
 #include "board.hpp"
 #include "move.hpp"
@@ -25,5 +24,3 @@ int Negamax(
 std::variant<Move, AlternativeResult> GetBestMoveDepth(Board &board, int depth);
 std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit);
 } // namespace Search
-
-#endif // ENGINE_NEGAMAX

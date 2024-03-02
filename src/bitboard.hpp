@@ -1,5 +1,4 @@
-#ifndef CHESS_BITBOARD
-#define CHESS_BITBOARD
+#pragma once
 
 #include "bit.hpp"
 #include "types.hpp"
@@ -239,5 +238,3 @@ constexpr inline BB PawnIsolationMask(Square sq) {
     assert(sq != Square::None);
     return PAWN_ISOLATION[static_cast<size_t>(sq)];
 }
-
-#endif

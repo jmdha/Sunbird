@@ -1,10 +1,8 @@
-#ifndef CHESS_UTILITIES
-#define CHESS_UTILITIES
-
-#include <stdexcept>
-#include <strings.h>
+#pragma once
 
 #include "types.hpp"
+#include <stdexcept>
+#include <strings.h>
 
 namespace Utilities {
 constexpr PieceChar GetPieceChar(char c) { return static_cast<PieceChar>(c); }
@@ -159,5 +157,3 @@ constexpr Color GetTurn(char turn) {
         return BLACK;
 }
 } // namespace Utilities
-
-#endif // UTILITIES

@@ -1,5 +1,4 @@
-#ifndef CHESS_MOVE_LIST
-#define CHESS_MOVE_LIST
+#pragma once
 
 #include "move.hpp"
 #include "types.hpp"
@@ -45,5 +44,3 @@ private:
     size_t attack_count = 0;
     size_t quiet_count  = 0;
 };
-
-#endif // CHESS_MOVE_LIST

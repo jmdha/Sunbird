@@ -1,5 +1,4 @@
-#ifndef CHESS_ENGINE_SEARCH_LIMIT
-#define CHESS_ENGINE_SEARCH_LIMIT
+#pragma once
 
 #include <chrono>
 #include <csetjmp>
@@ -25,5 +24,3 @@ inline bool SearchLimit::Reached() { return _endTime < std::chrono::steady_clock
 
 inline void SearchLimit::Exit() { longjmp(_jmpBuf, 1); }
 }; // namespace Search
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef CHESS_POSITION
-#define CHESS_POSITION
+#pragma once
 
 #include "bit.hpp"
 #include "bitboard.hpp"
@@ -148,5 +147,3 @@ inline void Position::RemovePiece(Square square, PieceType pType, Color color) {
     _colorBB[static_cast<size_t>(color)] ^= square;
     _hash = Zobrist::FlipSquare(_hash, square, pType, color);
 }
-
-#endif

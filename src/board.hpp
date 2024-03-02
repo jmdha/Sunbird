@@ -1,5 +1,4 @@
-#ifndef CHESS_BOARD
-#define CHESS_BOARD
+#pragma once
 
 #include "move.hpp"
 #include "position.hpp"
@@ -35,5 +34,3 @@ inline size_t Board::MoveCount() const noexcept { return _moves; }
 inline size_t Board::Ply() const noexcept { return current_ply; }
 
 inline const Position &Board::Pos() const noexcept { return positions.at(current_ply - 1); }
-
-#endif // CHESS_BOARD

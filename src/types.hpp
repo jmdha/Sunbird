@@ -1,5 +1,4 @@
-#ifndef CHESS_CONSTANTS
-#define CHESS_CONSTANTS
+#pragma once
 
 #include <array>
 #include <cassert>
@@ -213,4 +212,3 @@ constexpr std::array<std::array<BB, 4>, COLOR_COUNT> CASTLING_BLOCK_SQUARES{
 constexpr std::array<std::array<BB, 4>, COLOR_COUNT> CASTLING_ATTACK_SQUARES{
     std::array<BB, 4>{0x0, 0x70, 0x1c, 0x7c},
     std::array<BB, 4>{0x0, 0x7000000000000000, 0x1c00000000000000, 0x7c00000000000000}};
-#endif // CONSTANTS

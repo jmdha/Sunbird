@@ -1,5 +1,4 @@
-#ifndef CHESS_ENGINE_VALUES
-#define CHESS_ENGINE_VALUES
+#pragma once
 
 #include <array>
 #include <cstddef>
@@ -235,4 +234,3 @@ inline std::array<std::array<int, 64>, 6> EG_WHITE = {
 inline std::array<std::array<std::array<int, 64>, 6>, 2> MG{MG_WHITE, MG_BLACK};
 inline std::array<std::array<std::array<int, 64>, 6>, 2> EG{EG_WHITE, EG_BLACK};
 } // namespace Values
-#endif

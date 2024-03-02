@@ -1,5 +1,4 @@
-#ifndef CHESS_MOVE
-#define CHESS_MOVE
+#pragma once
 
 #include "types.hpp"
 #include "utilities.hpp"
@@ -52,5 +51,3 @@ inline std::string Move::ToString() const {
     }
     return tempMove;
 }
-
-#endif // MOVE

@@ -1,5 +1,4 @@
-#ifndef CHESS_ZOBRIST
-#define CHESS_ZOBRIST
+#pragma once
 
 #include "types.hpp"
 
@@ -9,5 +8,3 @@ uint64_t FlipCastling(uint64_t hash, Color col, Castling side);
 uint64_t FlipEnPassant(uint64_t hash, Column col);
 uint64_t FlipColor(uint64_t hash);
 } // namespace Zobrist
-
-#endif // CHESS_ZOBRIST

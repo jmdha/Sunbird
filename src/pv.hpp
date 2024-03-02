@@ -1,5 +1,4 @@
-#ifndef CHESS_ENGINE_PV
-#define CHESS_ENGINE_PV
+#pragma once
 
 #include "move.hpp"
 #include <vector>
@@ -21,5 +20,3 @@ private:
     std::vector<Move> _moves;
     size_t _ply;
 };
-
-#endif

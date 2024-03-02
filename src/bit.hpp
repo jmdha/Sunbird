@@ -1,5 +1,4 @@
-#ifndef CHESS_BIT
-#define CHESS_BIT
+#pragma once
 
 #include <cassert>
 #include <cstdint>
@@ -183,5 +182,3 @@ constexpr inline int popcount(uint64_t x) {
     throw std::logic_error("Not implemented.");
 #endif
 }
-
-#endif
