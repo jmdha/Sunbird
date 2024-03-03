@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14.0)
 add_definitions(
         -D_PROJECT_NAME="Sunbird"
         -D_PROJECT_AUTHOR="jamadaha"
-        -D_PROJECT_VERSION="1.2.5"
+        -D_PROJECT_VERSION="dev"
 )
 
 project(
@@ -25,7 +25,6 @@ set(sources
     src/move_gen.hpp
     src/move_list.hpp
     src/move_ordering.hpp
-    src/perft.hpp
     src/position.hpp
     src/pv.hpp
     src/search.hpp
@@ -42,7 +41,6 @@ set(sources
     src/import_sequence.cpp
     src/move_gen.cpp
     src/move_ordering.cpp
-    src/perft.cpp
     src/position.cpp
     src/search.cpp
     src/search_internal.cpp
@@ -51,3 +49,4 @@ set(sources
 )
 
 include(bin/CMakeLists.txt)
+include(tests/CMakeLists.txt)
