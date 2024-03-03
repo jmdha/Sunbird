@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14.0)
 add_definitions(
         -D_PROJECT_NAME="Sunbird"
         -D_PROJECT_AUTHOR="jamadaha"
-        -D_PROJECT_VERSION="dev"
+        -D_PROJECT_VERSION="1.2.5"
 )
 
 project(

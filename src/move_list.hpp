@@ -2,7 +2,6 @@
 
 #include "move.hpp"
 #include "types.hpp"
-#include <algorithm>
 #include <cstring>
 
 struct MoveList {
@@ -10,15 +9,6 @@ struct MoveList {
     size_t size() const { return attack_count + quiet_count; }
     size_t attacks() const { return attack_count; }
     bool empty() const { return size() == 0; }
-    // Selection sort
-    void sort(std::array<int, MAXMOVECOUNT> &scores) {
-        for (size_t i = 0; i < size(); i++)
-            for (size_t t = i + 1; t < size(); t++)
-                if (scores[i] < scores[t]) {
-                    std::swap(scores[i], scores[t]);
-                    std::swap(moves[i], moves[t]);
-                }
-    }
     Move &operator[](size_t i) { return moves[i]; }
     const Move &operator[](size_t i) const { return moves[i]; }
     template <Type t>

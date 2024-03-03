@@ -5,10 +5,10 @@ namespace Import {
 // HACK: Refactor this
 void MoveSequence(Board &board, std::string moves) {
     std::string move;
-    for (int i = 0; i < moves.length(); i++) {
+    for (size_t i = 0; i < moves.length(); i++) {
         if (moves[i] != ' ') move.push_back(moves[i]);
 
-        if (moves[i] == ' ' || i == (int)moves.length() - 1) {
+        if (moves[i] == ' ' || i == moves.length() - 1) {
             Square fromSquare  = Utilities::GetSquare(move[0], move[1]);
             Square toSquare    = Utilities::GetSquare(move[2], move[3]);
             PieceType fromType = board.Pos().GetType(fromSquare);

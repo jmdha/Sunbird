@@ -124,12 +124,10 @@ void GenerateCastlingMoves(MoveList &moves, Castling castling, Color turn, BB oc
 MoveList GenerateAll(const Position &pos, Color color) {
     MoveList moves;
 
-    const BB us    = pos.GetPieces(color);
     const BB nus   = pos.GetPieces(~color);
     const BB occ   = pos.GetPieces();
     const BB empty = ~occ;
 
-    const BB pawns   = pos.GetPieces(color, PieceType::Pawn);
     const BB knights = pos.GetPieces(color, PieceType::Knight);
     const BB kings   = pos.GetPieces(color, PieceType::King);
     const BB queens  = pos.GetPieces(color, PieceType::Queen);
@@ -162,12 +160,9 @@ MoveList GenerateAll(const Position &pos, Color color) {
 MoveList GenerateAttack(const Position &pos, Color color) {
     MoveList moves;
 
-    const BB us    = pos.GetPieces(color);
-    const BB nus   = pos.GetPieces(~color);
-    const BB occ   = pos.GetPieces();
-    const BB empty = ~occ;
+    const BB nus = pos.GetPieces(~color);
+    const BB occ = pos.GetPieces();
 
-    const BB pawns   = pos.GetPieces(color, PieceType::Pawn);
     const BB knights = pos.GetPieces(color, PieceType::Knight);
     const BB kings   = pos.GetPieces(color, PieceType::King);
     const BB queens  = pos.GetPieces(color, PieceType::Queen);
