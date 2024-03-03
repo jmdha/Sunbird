@@ -19,11 +19,11 @@ void Killer(MoveList &moves, Move killerMove) {
 void MVVLVA(const Board &board, MoveList &moves) {
     const Position &pos = board.Pos();
     std::sort(moves.begin(), &moves[moves.attacks()], [pos](Move lhs, Move rhs) {
-        const int leftCapture  = static_cast<int>(pos.GetType(lhs.GetTo()));
-        const int rightCapture = static_cast<int>(pos.GetType(rhs.GetTo()));
+        const int leftCapture  = static_cast<int>(pos.GetType(lhs.Destination()));
+        const int rightCapture = static_cast<int>(pos.GetType(rhs.Destination()));
         if (leftCapture > rightCapture) return true;
-        const int leftPiece  = static_cast<int>(pos.GetType(lhs.GetFrom()));
-        const int rightPiece = static_cast<int>(pos.GetType(rhs.GetFrom()));
+        const int leftPiece  = static_cast<int>(pos.GetType(lhs.Origin()));
+        const int rightPiece = static_cast<int>(pos.GetType(rhs.Origin()));
         if (leftCapture == rightCapture && leftPiece < rightPiece) return true;
         return false;
     });
@@ -43,7 +43,7 @@ void PVPrioity(const Board &board, const PV &pv, MoveList &moves) {
 }
 
 void TTPrioity(Move move, MoveList &moves) {
-    if (move.GetValue() == 0) return;
+    if (!move.IsDefined()) return;
     for (size_t i = 1; i < moves.size(); i++) {
         if (moves[i] == move) {
             std::memmove(&moves[1], &moves[0], i * sizeof(Move));

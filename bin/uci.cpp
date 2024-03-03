@@ -21,7 +21,8 @@ enum class Command { uci, isready, setoption, quit, position, ucinewgame, go, st
 const std::unordered_map<std::string, Command> Commands{
     {"uci", Command::uci},   {"isready", Command::isready},   {"setoption", Command::setoption},
     {"quit", Command::quit}, {"position", Command::position}, {"ucinewgame", Command::ucinewgame},
-    {"go", Command::go},     {"stop", Command::stop}};
+    {"go", Command::go},     {"stop", Command::stop}
+};
 
 enum class Option { hash };
 const std::unordered_map<std::string, Option> Options{{"Hash", Option::hash}};
@@ -114,7 +115,7 @@ int main(int argc, char **argv) {
             }
 
             Move move = std::get<Move>(Search::GetBestMoveTime(board, searchTime));
-            std::cout << "bestmove " << move.ToString() << '\n';
+            std::cout << "bestmove " << move.Export() << '\n';
 
             break;
         }

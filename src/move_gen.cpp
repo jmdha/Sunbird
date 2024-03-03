@@ -8,9 +8,9 @@ namespace MoveGen {
 typedef BB (*AttackFunc)(Square);
 enum class GenType { Attack, All };
 template <MoveList::Type t>
-void BuildMoves(MoveList &moves, Square sq, BB targets, MoveType move_type) {
+void BuildMoves(MoveList &moves, Square sq, BB targets, Move::Type move_type) {
     while (targets)
-        moves.push<t>(Move(move_type, sq, (Square)lsb_pop(targets)));
+        moves.push<t>(Move(sq, (Square)lsb_pop(targets), move_type));
 }
 // HACK: This needs to be refactored
 template <GenType gType>
@@ -23,15 +23,17 @@ void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
         if constexpr (gType == GenType::All) {
             Square to = static_cast<Square>(lsb(Ray(piece, dir) & Ring(piece, 1)));
             if (!(to & pos.GetPieces())) {
-                if (ToBB(piece) & PawnRow[static_cast<size_t>(~color)])
-                    for (const auto prom : PromotionMoves)
-                        moves.push<MoveList::Quiet>(Move(prom, piece, to));
-                else
-                    moves.push<MoveList::Quiet>(Move(MoveType::Quiet, piece, to));
+                if (ToBB(piece) & PawnRow[static_cast<size_t>(~color)]) {
+                    moves.push<MoveList::Quiet>(Move(piece, to, Move::NPromotion));
+                    moves.push<MoveList::Quiet>(Move(piece, to, Move::BPromotion));
+                    moves.push<MoveList::Quiet>(Move(piece, to, Move::RPromotion));
+                    moves.push<MoveList::Quiet>(Move(piece, to, Move::QPromotion));
+                } else
+                    moves.push<MoveList::Quiet>(Move(piece, to, Move::Quiet));
                 if (ToBB(piece) & PawnRow[static_cast<size_t>(color)]) {
                     to = First(Ray(piece, dir) & Ring(piece, 2));
                     if (!(to & pos.GetPieces()))
-                        moves.push<MoveList::Quiet>(Move(MoveType::DoublePawnPush, piece, to));
+                        moves.push<MoveList::Quiet>(Move(piece, to, Move::DoublePawnPush));
                 }
             }
         }
@@ -40,17 +42,19 @@ void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
             while (attacks) {
                 const Square attack = Next(attacks);
                 assert(pos.GetType((Square)attack) != PIECE_NONE);
-                if (piece & PawnRow[static_cast<size_t>(~color)])
-                    for (const auto prom : PromotionCapturesMoves)
-                        moves.push<MoveList::Attack>(Move(prom, piece, attack));
-                else
-                    moves.push<MoveList::Attack>(Move(MoveType::Capture, piece, attack));
+                if (piece & PawnRow[static_cast<size_t>(~color)]) {
+                    moves.push<MoveList::Attack>(Move(piece, attack, Move::NPromotionCapture));
+                    moves.push<MoveList::Attack>(Move(piece, attack, Move::BPromotionCapture));
+                    moves.push<MoveList::Attack>(Move(piece, attack, Move::RPromotionCapture));
+                    moves.push<MoveList::Attack>(Move(piece, attack, Move::QPromotionCapture));
+                } else
+                    moves.push<MoveList::Attack>(Move(piece, attack, Move::Capture));
             }
             BB attack = PawnAttacks(piece, color) & ((color == WHITE) ? Row::Row6 : Row::Row3) &
                         pos.GetEP();
             if (attack) {
                 const Square sq = Next(attack);
-                moves.push<MoveList::Attack>(Move(MoveType::EPCapture, piece, sq));
+                moves.push<MoveList::Attack>(Move(piece, sq, Move::EPCapture));
             }
         }
     }
@@ -64,7 +68,7 @@ void SliderAttack(MoveList &moves, AttackFunc F, BB pieces, BB occ, BB nus) {
             BB ring     = Ring(piece, offset);
             BB blockers = ring & unblocked & occ;
 
-            BuildMoves<MoveList::Attack>(moves, piece, blockers & nus, MoveType::Capture);
+            BuildMoves<MoveList::Attack>(moves, piece, blockers & nus, Move::Capture);
 
             while (blockers)
                 unblocked &= ~Ray(piece, (Square)lsb_pop(blockers));
@@ -82,8 +86,8 @@ void SliderAll(MoveList &moves, AttackFunc F, BB pieces, BB occ, BB nus) {
             BB quiet_moves   = pot_moves & (~occ);
             BB capture_moves = pot_moves & nus;
 
-            BuildMoves<MoveList::Quiet>(moves, piece, quiet_moves, MoveType::Quiet);
-            BuildMoves<MoveList::Attack>(moves, piece, capture_moves, MoveType::Capture);
+            BuildMoves<MoveList::Quiet>(moves, piece, quiet_moves, Move::Quiet);
+            BuildMoves<MoveList::Attack>(moves, piece, capture_moves, Move::Capture);
 
             BB blockers = pot_moves & occ;
             while (blockers)
@@ -93,7 +97,7 @@ void SliderAll(MoveList &moves, AttackFunc F, BB pieces, BB occ, BB nus) {
 }
 
 template <MoveList::Type t>
-void BuildJumperMoves(MoveList &moves, AttackFunc F, BB pieces, BB targets, MoveType move_type) {
+void BuildJumperMoves(MoveList &moves, AttackFunc F, BB pieces, BB targets, Move::Type move_type) {
     while (pieces) {
         Square sq = (Square)lsb_pop(pieces);
         BuildMoves<t>(moves, sq, F(sq) & targets, move_type);
@@ -110,13 +114,10 @@ void GenerateCastlingMoves(MoveList &moves, Castling castling, Color turn, BB oc
 
     if ((bool)(castling & Castling::King) && !(occ & KING_BLOCKERS[turn]) &&
         !(attacks & KING_BLOCKERS[turn]))
-        moves.push<MoveList::Quiet>(
-            Move(MoveType::KingCastle, KING_POS[turn], KING_CASTLE_POS[turn])
-        );
+        moves.push<MoveList::Quiet>(Move(KING_POS[turn], KING_CASTLE_POS[turn], Move::KingCastle));
     if ((bool)(castling & Castling::Queen) && !(occ & QUEEN_BLOCKERS[turn]) &&
         !(attacks & QUEEN_ATTACKERS[turn]))
-        moves.push<MoveList::Quiet>(
-            Move(MoveType::QueenCastle, KING_POS[turn], QUEEN_CASTLE_POS[turn])
+        moves.push<MoveList::Quiet>(Move(KING_POS[turn], QUEEN_CASTLE_POS[turn], Move::QueenCastle)
         );
 }
 
@@ -138,16 +139,12 @@ MoveList GenerateAll(const Position &pos, Color color) {
     SliderAll(moves, BishopAttacks, bishops, occ, nus);
     SliderAll(moves, RookAttacks, rooks, occ, nus);
 
-    BuildJumperMoves<MoveList::Attack>(moves, KnightAttacks, knights, nus, MoveType::Capture);
-    BuildJumperMoves<MoveList::Quiet>(moves, KnightAttacks, knights, empty, MoveType::Quiet);
+    BuildJumperMoves<MoveList::Attack>(moves, KnightAttacks, knights, nus, Move::Capture);
+    BuildJumperMoves<MoveList::Quiet>(moves, KnightAttacks, knights, empty, Move::Quiet);
 
     BB attacks = pos.GenerateAttackSquares(~color);
-    BuildJumperMoves<MoveList::Attack>(
-        moves, KingAttacks, kings, nus & (~attacks), MoveType::Capture
-    );
-    BuildJumperMoves<MoveList::Quiet>(
-        moves, KingAttacks, kings, empty & (~attacks), MoveType::Quiet
-    );
+    BuildJumperMoves<MoveList::Attack>(moves, KingAttacks, kings, nus & (~attacks), Move::Capture);
+    BuildJumperMoves<MoveList::Quiet>(moves, KingAttacks, kings, empty & (~attacks), Move::Quiet);
 
     if (!(attacks & kings))
         GenerateCastlingMoves(moves, pos.GetCastling(color), color, occ, attacks);
@@ -173,11 +170,9 @@ MoveList GenerateAttack(const Position &pos, Color color) {
     SliderAttack(moves, BishopAttacks, bishops, occ, nus);
     SliderAttack(moves, RookAttacks, rooks, occ, nus);
 
-    BuildJumperMoves<MoveList::Attack>(moves, KnightAttacks, knights, nus, MoveType::Capture);
+    BuildJumperMoves<MoveList::Attack>(moves, KnightAttacks, knights, nus, Move::Capture);
     BB attacks = pos.GenerateAttackSquares(~color);
-    BuildJumperMoves<MoveList::Attack>(
-        moves, KingAttacks, kings, nus & (~attacks), MoveType::Capture
-    );
+    BuildJumperMoves<MoveList::Attack>(moves, KingAttacks, kings, nus & (~attacks), Move::Capture);
 
     return moves;
 }

@@ -39,6 +39,7 @@ set(sources
     src/evaluation.cpp
     src/import_FEN.cpp
     src/import_sequence.cpp
+    src/move.cpp
     src/move_gen.cpp
     src/move_ordering.cpp
     src/position.cpp

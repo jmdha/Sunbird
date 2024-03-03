@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
+#include <string>
 
 // A bitmask of a chess board, where a one corresponds to the index of the square
 using BB = uint64_t;
@@ -45,6 +46,7 @@ inline Color operator~(Color color) {
 enum Piece { PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, PIECE_NONE };
 constexpr std::array<Piece, PIECE_COUNT> PIECES{PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING};
 static const std::array<Piece, PIECE_COUNT - 1> NON_PAWNS = {KNIGHT, BISHOP, ROOK, QUEEN, KING};
+static const std::string PIECE_CHARS[COLOR_COUNT]         = {"PNBRQK", "pnbrqk"};
 
 enum class PieceChar : char {
     PawnWhite   = 'P',
@@ -74,14 +76,30 @@ enum Square {
     A8,B8,C8,D8,E8,F8,G8,H8,
     SQUARE_NONE
 };
-// clang-format on
 
-constexpr std::array<Square, SQUARE_COUNT> SQUARES = [] {
-    auto s = decltype(SQUARES){};
-    for (size_t i = 0; i < 64; i++)
-        s[i] = static_cast<Square>(i);
-    return s;
-}();
+constexpr std::array<Square, SQUARE_COUNT> SQUARES {
+    A1,B1,C1,D1,E1,F1,G1,H1,
+    A2,B2,C2,D2,E2,F2,G2,H2,
+    A3,B3,C3,D3,E3,F3,G3,H3,
+    A4,B4,C4,D4,E4,F4,G4,H4,
+    A5,B5,C5,D5,E5,F5,G5,H5,
+    A6,B6,C6,D6,E6,F6,G6,H6,
+    A7,B7,C7,D7,E7,F7,G7,H7,
+    A8,B8,C8,D8,E8,F8,G8,H8,
+};
+
+// The name of each square index
+static inline std::array<std::string, SQUARE_COUNT> SQUARE_NAMES = {
+    "a1","b1","c1","d1","e1","f1","g1","h1",
+    "a2","b2","c2","d2","e2","f2","g2","h2",
+    "a3","b3","c3","d3","e3","f3","g3","h3",
+    "a4","b4","c4","d4","e4","f4","g4","h4",
+    "a5","b5","c5","d5","e5","f5","g5","h5",
+    "a6","b6","c6","d6","e6","f6","g6","h6",
+    "a7","b7","c7","d7","e7","f7","g7","h7",
+    "a8","b8","c8","d8","e8","f8","g8","h8"
+};
+// clang-format on
 
 constexpr Square INIT_ROOKPOS[2][2] = {{Square::H1, Square::A1}, {Square::H8, Square::A8}};
 constexpr Square INIT_KINGPOS[2]    = {Square::E1, Square::E8};
@@ -163,35 +181,6 @@ constexpr std::array<BB, 8> EDGES = {
     static_cast<BB>(Row::Row1) | static_cast<BB>(Column::H),
     static_cast<BB>(Row::Row1) | static_cast<BB>(Column::A)
 };
-
-// NOTE: The values of MoveType are used, and should not be changed
-enum class MoveType : uint16_t {
-    Quiet             = 0,
-    DoublePawnPush    = 1,
-    KingCastle        = 2,
-    QueenCastle       = 3,
-    Capture           = 4,
-    EPCapture         = 5,
-    NPromotion        = 8,
-    BPromotion        = 9,
-    RPromotion        = 10,
-    QPromotion        = 11,
-    NPromotionCapture = 12,
-    BPromotionCapture = 13,
-    RPromotionCapture = 14,
-    QPromotionCapture = 15
-};
-constexpr std::array<MoveType, 4> PromotionMoves{
-    MoveType::NPromotion, MoveType::BPromotion, MoveType::RPromotion, MoveType::QPromotion
-};
-constexpr std::array<MoveType, 4> PromotionCapturesMoves{
-    MoveType::NPromotionCapture, MoveType::BPromotionCapture, MoveType::RPromotionCapture,
-    MoveType::QPromotionCapture
-};
-
-#define PromotionBit 0x8
-#define CaptureBit 0x4
-#define CastlingBit 0x2
 
 enum class Castling : uint16_t { None, King, Queen, All };
 

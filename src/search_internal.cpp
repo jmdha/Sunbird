@@ -43,7 +43,7 @@ int Negamax(
     static std::array<Move, MAX_SEARCH_DEPTH> killer_moves;
     if (searchDepth == 0) // New search
         for (Move &move : killer_moves)
-            move = Move(0);
+            move = Move();
 
     [[unlikely]] if (limit != nullptr && depth > 3 && limit->Reached())
         limit->Exit();
@@ -60,7 +60,7 @@ int Negamax(
     MoveList moves = GenerateAll(board.Pos(), board.Pos().GetTurn());
     if (moves.empty()) return Evaluation::EvalNoMove(board.Pos());
 
-    if (Move killer_move = killer_moves[searchDepth]; killer_move.GetValue() != 0)
+    if (Move killer_move = killer_moves[searchDepth]; killer_move.IsDefined())
         MoveOrdering::Killer(moves, killer_move);
     MoveOrdering::All(board, tt.move, pv, moves);
     Move bm = moves[0];

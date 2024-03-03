@@ -28,7 +28,7 @@ PV ExtractPV(Board board) {
     std::vector<Move> moves;
     while (moves.size() < 8) {
         const Move move = TT::ProbeMove(board.Pos().GetHash());
-        if (move.GetValue() != 0) {
+        if (move.IsDefined()) {
             moves.push_back(move);
             board.MakeMove(move);
         } else {
@@ -63,11 +63,11 @@ std::variant<Move, AlternativeResult> IterativeDeepening(Board &board, int timeL
         pv                 = ExtractPV(board);
         const size_t nodes = board.MoveCount() - priorMoveCount;
         printf(
-            "info depth %d score cp %d time %zu ms nodes %zu nps %zu hashfull %zu pv", depth, score,
+            "info depth %d score cp %d time %zu ms nodes %zu nps %zu hashfull %zu pv ", depth, score,
             t, nodes, nodes * 1000 / std::max(t, (size_t)1), TT::HashFull()
         );
         for (size_t i = 0; i < pv.size(); i++)
-            std::cout << pv[i].ToString() << " ";
+            std::cout << pv[i].Export() << " ";
         std::cout << '\n';
         std::flush(std::cout);
         if (std::abs(score) == Values::INF) break;

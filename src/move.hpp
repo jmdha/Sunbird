@@ -1,53 +1,55 @@
 #pragma once
 
 #include "types.hpp"
-#include "utilities.hpp"
 #include <string>
 
+// A chess move. Includes information regarding origin square, destination square and type of move.
 class Move {
 public:
-    Move() = default;
-    explicit Move(uint16_t move) : _move(move) {}
-    explicit Move(MoveType type) : _move(static_cast<uint16_t>(type) & 0xf) {}
+    enum Type {
+        Quiet             = 0,
+        DoublePawnPush    = 1,
+        KingCastle        = 2,
+        QueenCastle       = 3,
+        Capture           = 4,
+        EPCapture         = 5,
+        NPromotion        = 8,
+        BPromotion        = 9,
+        RPromotion        = 10,
+        QPromotion        = 11,
+        NPromotionCapture = 12,
+        BPromotionCapture = 13,
+        RPromotionCapture = 14,
+        QPromotionCapture = 15
+    };
 
-    Move(MoveType type, Square from, Square to)
-        : _move(
-              static_cast<uint16_t>(static_cast<uint16_t>(type) & 0xf) +
-              static_cast<uint16_t>((static_cast<uint16_t>(from) & 0x3f) << 4) +
-              static_cast<uint16_t>((static_cast<uint16_t>(to) & 0x3f) << 10)
-          ) {}
+    Move() noexcept = default;
+    Move(Square origin, Square destination, Type type) noexcept;
+    // Creates a move from a string in smith notation
+    Move(BB occ, BB kings, BB pawns, const std::string &move) noexcept;
 
-    inline std::string ToString() const;
-
-    inline uint16_t GetValue() const noexcept { return _move; }
-    inline MoveType GetType() const noexcept { return static_cast<MoveType>(_move & 0xf); }
-    inline Square GetFrom() const noexcept { return static_cast<Square>((_move >> 4) & 0x3f); }
-    inline Square GetTo() const noexcept { return static_cast<Square>((_move >> 10) & 0x3f); }
-    inline bool IsCapture() const noexcept { return _move & CaptureBit; }
-    inline bool IsPromotion() const noexcept { return _move & PromotionBit; }
-    inline bool IsTactical() const noexcept { return IsCapture() || IsPromotion(); }
-    inline bool IsCastle() const noexcept { return _move & CastlingBit; }
-    inline bool IsEP() const noexcept { return GetType() == MoveType::EPCapture; }
-
-    friend bool operator==(Move const &lhs, Move const &rhs) { return lhs._move == rhs._move; }
+    Square Origin() const noexcept;
+    Square Destination() const noexcept;
+    Type GetType() const noexcept;
+    bool IsDefined() const noexcept;
+    bool IsCapture() const noexcept;
+    bool IsPromotion() const noexcept;
+    bool IsEnPassant() const noexcept;
+    bool IsDouble() const noexcept;
+    bool IsKingCastle() const noexcept;
+    bool IsQueenCastle() const noexcept;
+    bool IsCastle() const noexcept;
+    Piece PromotionPiece() const noexcept;
+    std::string Export() const noexcept;
+    bool operator==(const Move &move) const noexcept;
 
 private:
-    uint16_t _move = 0;
+    // A move is encoded in 16 bits
+    //
+    //  6 bits: origin square
+    //  6 bits: destination square
+    //  4 bits: move type
+    //
+    // Where Move=0 is an undefined move
+    uint16_t internal;
 };
-
-inline std::string Move::ToString() const {
-    std::string tempMove;
-    tempMove += Utilities::GetSquareString(GetFrom());
-    tempMove += Utilities::GetSquareString(GetTo());
-    if (IsPromotion()) {
-        if (GetType() == MoveType::QPromotion || GetType() == MoveType::QPromotionCapture)
-            tempMove += "q";
-        else if (GetType() == MoveType::RPromotion || GetType() == MoveType::RPromotionCapture)
-            tempMove += "r";
-        else if (GetType() == MoveType::BPromotion || GetType() == MoveType::BPromotionCapture)
-            tempMove += "b";
-        else if (GetType() == MoveType::NPromotion || GetType() == MoveType::NPromotionCapture)
-            tempMove += "n";
-    }
-    return tempMove;
-}

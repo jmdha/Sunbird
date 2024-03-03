@@ -14,13 +14,13 @@ void MoveSequence(Board &board, std::string moves) {
             Piece fromType    = board.Pos().GetType(fromSquare);
             Piece toType      = board.Pos().GetType(toSquare);
             Color fromColor   = board.Pos().GetColor(fromSquare);
-            MoveType type;
+            Move::Type type;
             // Is castling?
             //// Is kingside castle
-            if (fromType == KING && (move == "e1g1" || move == "e8g8")) type = MoveType::KingCastle;
+            if (fromType == KING && (move == "e1g1" || move == "e8g8")) type = Move::KingCastle;
             //// Is queenside castle
             else if (fromType == KING && (move == "e1c1" || move == "e8c8"))
-                type = MoveType::QueenCastle;
+                type = Move::QueenCastle;
 
             else if (fromType == PAWN) {
                 // If double pawn push
@@ -28,45 +28,45 @@ void MoveSequence(Board &board, std::string moves) {
                         (int)Utilities::GetRowIndex(fromSquare) -
                         (int)Utilities::GetRowIndex(toSquare)
                     ) == 2)
-                    type = MoveType::DoublePawnPush;
+                    type = Move::DoublePawnPush;
                 // If promotion
                 else if (Utilities::GetRow(toSquare) == ((fromColor == WHITE) ? Row::Row8 : Row::Row1)) {
                     // If none capture promotion
                     if (toType == PIECE_NONE) {
                         if (moves.length() == 5) {
                             if (move[4] == 'r')
-                                type = MoveType::RPromotion;
+                                type = Move::RPromotion;
                             else if (move[4] == 'n')
-                                type = MoveType::NPromotion;
+                                type = Move::NPromotion;
                             else if (move[4] == 'b')
-                                type = MoveType::BPromotion;
+                                type = Move::BPromotion;
                         } else
-                            type = MoveType::QPromotion;
+                            type = Move::QPromotion;
                     } else {
                         // Capture promotion
                         if (moves.length() == 5) {
                             if (move[4] == 'r')
-                                type = MoveType::RPromotionCapture;
+                                type = Move::RPromotionCapture;
                             else if (move[4] == 'n')
-                                type = MoveType::NPromotionCapture;
+                                type = Move::NPromotionCapture;
                             else if (move[4] == 'b')
-                                type = MoveType::BPromotionCapture;
+                                type = Move::BPromotionCapture;
                         } else
-                            type = MoveType::QPromotionCapture;
+                            type = Move::QPromotionCapture;
                     }
                 } else if (toType != PIECE_NONE)
-                    type = MoveType::Capture;
+                    type = Move::Capture;
                 else {
                     if (Utilities::GetColumn(fromSquare) != Utilities::GetColumn(toSquare))
-                        type = MoveType::EPCapture;
+                        type = Move::EPCapture;
                     else
-                        type = MoveType::Quiet;
+                        type = Move::Quiet;
                 }
             } else if (toType != PIECE_NONE)
-                type = MoveType::Capture;
+                type = Move::Capture;
             else
-                type = MoveType::Quiet;
-            Move tempMove = Move(type, fromSquare, toSquare);
+                type = Move::Quiet;
+            Move tempMove = Move(fromSquare, toSquare, type);
             board.MakeMove(tempMove);
             move = "";
         }
