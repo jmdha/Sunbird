@@ -21,7 +21,7 @@ constexpr std::array<uint64_t, SQUARE_HASH_COUNT> HASHES = [] {
     return tempTable;
 }();
 
-uint64_t Zobrist::FlipSquare(uint64_t hash, Square square, PieceType type, Color color) {
+uint64_t Zobrist::FlipSquare(uint64_t hash, Square square, Piece type, Color color) {
     return hash ^ HASHES[(64 * 6) * (int)color + 64 * (int)type + (int)square];
 }
 

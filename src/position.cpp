@@ -4,14 +4,14 @@ bool Position::IsKingSafe(Color turn) const {
     Square king = GetKing(turn);
 
     BB occ     = GetPieces();
-    BB pawns   = GetPieces(~turn, PieceType::Pawn);
-    BB knights = GetPieces(~turn, PieceType::Knight);
-    BB bishops = (GetPieces(~turn, PieceType::Bishop) | GetPieces(~turn, PieceType::Queen));
-    BB rooks   = (GetPieces(~turn, PieceType::Rook) | GetPieces(~turn, PieceType::Queen));
+    BB pawns   = GetPieces(~turn, PAWN);
+    BB knights = GetPieces(~turn, KNIGHT);
+    BB bishops = (GetPieces(~turn, BISHOP) | GetPieces(~turn, QUEEN));
+    BB rooks   = (GetPieces(~turn, ROOK) | GetPieces(~turn, QUEEN));
 
     // Checking jumpers
     if (PawnAttacks(king, turn) & pawns) return false;
-    if (Attacks(king, PieceType::Knight) & knights) return false;
+    if (Attacks(king, KNIGHT) & knights) return false;
 
     if (Ray(king, Direction::North) & rooks) [[unlikely]]
         if (First(Ray(king, Direction::North) & rooks) == First(Ray(king, Direction::North) & occ))
@@ -54,10 +54,10 @@ BB Position::GenerateAttackSquares(Color color) const {
     const BB allPieces = GetPieces();
     BB attacks         = 0;
 
-    for (BB pieces = GetPieces(color, PieceType::Pawn); pieces;)
+    for (BB pieces = GetPieces(color, PAWN); pieces;)
         attacks |= PawnAttacks(Next(pieces), color);
 
-    for (const PieceType p : NON_PAWNS) {
+    for (const Piece p : NON_PAWNS) {
         for (BB pieces = GetPieces(color, p); pieces;) {
             const Square sq = Next(pieces);
             BB attacks1     = Attacks(sq, p);

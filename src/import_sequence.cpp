@@ -9,21 +9,20 @@ void MoveSequence(Board &board, std::string moves) {
         if (moves[i] != ' ') move.push_back(moves[i]);
 
         if (moves[i] == ' ' || i == moves.length() - 1) {
-            Square fromSquare  = Utilities::GetSquare(move[0], move[1]);
-            Square toSquare    = Utilities::GetSquare(move[2], move[3]);
-            PieceType fromType = board.Pos().GetType(fromSquare);
-            PieceType toType   = board.Pos().GetType(toSquare);
-            Color fromColor    = board.Pos().GetColor(fromSquare);
+            Square fromSquare = Utilities::GetSquare(move[0], move[1]);
+            Square toSquare   = Utilities::GetSquare(move[2], move[3]);
+            Piece fromType    = board.Pos().GetType(fromSquare);
+            Piece toType      = board.Pos().GetType(toSquare);
+            Color fromColor   = board.Pos().GetColor(fromSquare);
             MoveType type;
             // Is castling?
             //// Is kingside castle
-            if (fromType == PieceType::King && (move == "e1g1" || move == "e8g8"))
-                type = MoveType::KingCastle;
+            if (fromType == KING && (move == "e1g1" || move == "e8g8")) type = MoveType::KingCastle;
             //// Is queenside castle
-            else if (fromType == PieceType::King && (move == "e1c1" || move == "e8c8"))
+            else if (fromType == KING && (move == "e1c1" || move == "e8c8"))
                 type = MoveType::QueenCastle;
 
-            else if (fromType == PieceType::Pawn) {
+            else if (fromType == PAWN) {
                 // If double pawn push
                 if (std::abs(
                         (int)Utilities::GetRowIndex(fromSquare) -
@@ -33,7 +32,7 @@ void MoveSequence(Board &board, std::string moves) {
                 // If promotion
                 else if (Utilities::GetRow(toSquare) == ((fromColor == WHITE) ? Row::Row8 : Row::Row1)) {
                     // If none capture promotion
-                    if (toType == PieceType::None) {
+                    if (toType == PIECE_NONE) {
                         if (moves.length() == 5) {
                             if (move[4] == 'r')
                                 type = MoveType::RPromotion;
@@ -55,7 +54,7 @@ void MoveSequence(Board &board, std::string moves) {
                         } else
                             type = MoveType::QPromotionCapture;
                     }
-                } else if (toType != PieceType::None)
+                } else if (toType != PIECE_NONE)
                     type = MoveType::Capture;
                 else {
                     if (Utilities::GetColumn(fromSquare) != Utilities::GetColumn(toSquare))
@@ -63,7 +62,7 @@ void MoveSequence(Board &board, std::string moves) {
                     else
                         type = MoveType::Quiet;
                 }
-            } else if (toType != PieceType::None)
+            } else if (toType != PIECE_NONE)
                 type = MoveType::Capture;
             else
                 type = MoveType::Quiet;

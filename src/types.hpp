@@ -42,13 +42,9 @@ inline Color operator~(Color color) {
     return static_cast<Color>(1 ^ static_cast<int>(color));
 }
 
-enum class PieceType : uint16_t { Pawn, Knight, Bishop, Rook, Queen, King, None };
-constexpr std::array<PieceType, PIECE_COUNT> PIECES{PieceType::Pawn,   PieceType::Knight,
-                                                    PieceType::Bishop, PieceType::Rook,
-                                                    PieceType::Queen,  PieceType::King};
-static const std::array<PieceType, PIECE_COUNT - 1> NON_PAWNS = {
-    PieceType::Knight, PieceType::Bishop, PieceType::Rook, PieceType::Queen, PieceType::King
-};
+enum Piece { PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, PIECE_NONE };
+constexpr std::array<Piece, PIECE_COUNT> PIECES{PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING};
+static const std::array<Piece, PIECE_COUNT - 1> NON_PAWNS = {KNIGHT, BISHOP, ROOK, QUEEN, KING};
 
 enum class PieceChar : char {
     PawnWhite   = 'P',

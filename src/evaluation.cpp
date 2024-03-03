@@ -52,8 +52,8 @@ std::pair<int, int> EvalPawn(const Position &pos) {
     int mg                 = 0;
     int eg                 = 0;
 
-    const BB PAWNS   = pos.GetPieces(color, PieceType::Pawn);
-    const BB PAWNS_O = pos.GetPieces(~color, PieceType::Pawn);
+    const BB PAWNS   = pos.GetPieces(color, PAWN);
+    const BB PAWNS_O = pos.GetPieces(~color, PAWN);
 
     // Doubled pawns
     for (auto column : COLUMNS)

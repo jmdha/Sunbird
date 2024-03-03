@@ -3,7 +3,6 @@
 #include "bitboard.hpp"
 #include "move_list.hpp"
 #include "types.hpp"
-#include "utilities.hpp"
 
 namespace MoveGen {
 typedef BB (*AttackFunc)(Square);
@@ -17,8 +16,8 @@ void BuildMoves(MoveList &moves, Square sq, BB targets, MoveType move_type) {
 template <GenType gType>
 void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
     constexpr Direction dirs[2] = {Direction::North, Direction::South};
-    Direction dir               = dirs[static_cast<size_t>(color)];
-    BB pieces                   = pos.GetPieces(color, PieceType::Pawn);
+    Direction dir               = dirs[color];
+    BB pieces                   = pos.GetPieces(color, PAWN);
     while (pieces) {
         const Square piece = Next(pieces);
         if constexpr (gType == GenType::All) {
@@ -40,7 +39,7 @@ void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
             BB attacks = PawnAttacks(piece, color) & pos.GetPieces(~color);
             while (attacks) {
                 const Square attack = Next(attacks);
-                assert(pos.GetType((Square)attack) != PieceType::None);
+                assert(pos.GetType((Square)attack) != PIECE_NONE);
                 if (piece & PawnRow[static_cast<size_t>(~color)])
                     for (const auto prom : PromotionCapturesMoves)
                         moves.push<MoveList::Attack>(Move(prom, piece, attack));
@@ -128,11 +127,11 @@ MoveList GenerateAll(const Position &pos, Color color) {
     const BB occ   = pos.GetPieces();
     const BB empty = ~occ;
 
-    const BB knights = pos.GetPieces(color, PieceType::Knight);
-    const BB kings   = pos.GetPieces(color, PieceType::King);
-    const BB queens  = pos.GetPieces(color, PieceType::Queen);
-    const BB bishops = pos.GetPieces(color, PieceType::Bishop) | queens;
-    const BB rooks   = pos.GetPieces(color, PieceType::Rook) | queens;
+    const BB knights = pos.GetPieces(color, KNIGHT);
+    const BB kings   = pos.GetPieces(color, KING);
+    const BB queens  = pos.GetPieces(color, QUEEN);
+    const BB bishops = pos.GetPieces(color, BISHOP) | queens;
+    const BB rooks   = pos.GetPieces(color, ROOK) | queens;
 
     GeneratePawnMoves<GenType::All>(pos, color, moves);
 
@@ -163,11 +162,11 @@ MoveList GenerateAttack(const Position &pos, Color color) {
     const BB nus = pos.GetPieces(~color);
     const BB occ = pos.GetPieces();
 
-    const BB knights = pos.GetPieces(color, PieceType::Knight);
-    const BB kings   = pos.GetPieces(color, PieceType::King);
-    const BB queens  = pos.GetPieces(color, PieceType::Queen);
-    const BB bishops = pos.GetPieces(color, PieceType::Bishop) | queens;
-    const BB rooks   = pos.GetPieces(color, PieceType::Rook) | queens;
+    const BB knights = pos.GetPieces(color, KNIGHT);
+    const BB kings   = pos.GetPieces(color, KING);
+    const BB queens  = pos.GetPieces(color, QUEEN);
+    const BB bishops = pos.GetPieces(color, BISHOP) | queens;
+    const BB rooks   = pos.GetPieces(color, ROOK) | queens;
 
     GeneratePawnMoves<GenType::Attack>(pos, color, moves);
 

@@ -13,8 +13,8 @@ Board FEN(std::string FEN) {
             if (isdigit(FEN[0]))
                 remainingSquares -= (int)FEN[0] - 48;
             else {
-                const PieceType pType = Utilities::GetPieceType((PieceChar)FEN[0]);
-                const Color pColor    = Utilities::GetPieceColor((PieceChar)FEN[0]);
+                const Piece pType  = Utilities::GetPieceType((PieceChar)FEN[0]);
+                const Color pColor = Utilities::GetPieceColor((PieceChar)FEN[0]);
                 pos.PlacePiece(
                     Utilities::GetSquare(WIDTH - (remainingSquares--), y), pType, pColor
                 );

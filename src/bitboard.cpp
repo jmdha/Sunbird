@@ -1,5 +1,4 @@
 #include "bitboard.hpp"
-#include "bit.hpp"
 #include "utilities.hpp"
 
 constexpr std::array<std::array<BB, DIRECTIONCOUNT>, SQUARE_COUNT> RAYS = [] {
@@ -44,12 +43,13 @@ constexpr BB GenerateRing(Square sq, size_t offset) {
     BB ring = 0;
 
     const std::array<Direction, 4> directions{
-        Direction::North, Direction::East, Direction::South, Direction::West};
+        Direction::North, Direction::East, Direction::South, Direction::West
+    };
     const std::array<std::array<Direction, 2>, 4> probes{
         std::array{Direction::West, Direction::East},
         std::array{Direction::North, Direction::South},
-        std::array{Direction::West, Direction::East},
-        std::array{Direction::North, Direction::South}};
+        std::array{Direction::West, Direction::East}, std::array{Direction::North, Direction::South}
+    };
 
     for (size_t i = 0; i < directions.size(); ++i) {
         BB dot = ToBB(sq);
@@ -79,27 +79,27 @@ constexpr std::array<std::array<BB, RING_COUNT>, SQUARE_COUNT> RINGS = [] {
 }();
 
 namespace {
-constexpr BB GenerateAttacks(PieceType piece, Square sq) {
+constexpr BB GenerateAttacks(Piece piece, Square sq) {
     switch (piece) {
-    case PieceType::Knight:
+    case KNIGHT:
         return Ring(sq, 2) & ~(Ray(sq, Direction::North) | Ray(sq, Direction::East) |
                                Ray(sq, Direction::South) | Ray(sq, Direction::West) |
                                Ray(sq, Direction::NorthWest) | Ray(sq, Direction::NorthEast) |
                                Ray(sq, Direction::SouthWest) | Ray(sq, Direction::SouthEast));
-    case PieceType::King: return Ring(sq, 1);
-    case PieceType::Rook:
+    case KING: return Ring(sq, 1);
+    case ROOK:
         return Ray(sq, Direction::North) | Ray(sq, Direction::East) | Ray(sq, Direction::South) |
                Ray(sq, Direction::West);
-    case PieceType::Bishop:
+    case BISHOP:
         return Ray(sq, Direction::NorthWest) | Ray(sq, Direction::NorthEast) |
                Ray(sq, Direction::SouthWest) | Ray(sq, Direction::SouthEast);
-    case PieceType::Queen:
+    case QUEEN:
         return Ray(sq, Direction::North) | Ray(sq, Direction::East) | Ray(sq, Direction::South) |
                Ray(sq, Direction::West) | Ray(sq, Direction::NorthWest) |
                Ray(sq, Direction::NorthEast) | Ray(sq, Direction::SouthWest) |
                Ray(sq, Direction::SouthEast);
-    case PieceType::Pawn:
-    case PieceType::None:
+    case PAWN:
+    case PIECE_NONE:
         throw std::invalid_argument("Cannot generate attacks for pawn or no piece type.");
     }
 }
@@ -110,8 +110,7 @@ constexpr std::array<std::array<BB, SQUARE_COUNT>, PIECE_COUNT> ATTACKS = [] {
 
     for (const auto p : PIECES)
         for (const auto sq : SQUARES)
-            if (p != PieceType::Pawn)
-                attacks[static_cast<size_t>(p)][static_cast<size_t>(sq)] = GenerateAttacks(p, sq);
+            if (p != PAWN) attacks[p][sq] = GenerateAttacks(p, sq);
 
     return attacks;
 }();
@@ -120,8 +119,7 @@ constexpr std::array<std::array<BB, SQUARE_COUNT>, PIECE_COUNT> BABS = [] {
     auto babs = decltype(BABS){};
 
     for (const auto pType : PIECES) {
-        if (pType == PieceType::Pawn || pType == PieceType::Knight || pType == PieceType::King)
-            continue;
+        if (pType == PAWN || pType == KNIGHT || pType == KING) continue;
         for (const auto sq : SQUARES) {
             BB nonEdge;
             if ((sq & EDGE) == 0)

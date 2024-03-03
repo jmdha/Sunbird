@@ -212,25 +212,29 @@ constexpr std::array<int, 64> EG = {
 inline std::array<std::array<int, 64>, 6> MG_BLACK = {
     C(Position::Pawn::MG, Material::Pawn::MG),     C(Position::Knight::MG, Material::Knight::MG),
     C(Position::Bishop::MG, Material::Bishop::MG), C(Position::Rook::MG, Material::Rook::MG),
-    C(Position::Queen::MG, Material::Queen::MG),   C(Position::King::MG, 0)};
+    C(Position::Queen::MG, Material::Queen::MG),   C(Position::King::MG, 0)
+};
 inline std::array<std::array<int, 64>, 6> MG_WHITE = {
     C(I<64>(Position::Pawn::MG), Material::Pawn::MG),
     C(I<64>(Position::Knight::MG), Material::Knight::MG),
     C(I<64>(Position::Bishop::MG), Material::Bishop::MG),
     C(I<64>(Position::Rook::MG), Material::Rook::MG),
     C(I<64>(Position::Queen::MG), Material::Queen::MG),
-    C(I<64>(Position::King::MG), 0)};
+    C(I<64>(Position::King::MG), 0)
+};
 inline std::array<std::array<int, 64>, 6> EG_BLACK = {
     C(Position::Pawn::EG, Material::Pawn::EG),     C(Position::Knight::EG, Material::Knight::EG),
     C(Position::Bishop::EG, Material::Bishop::EG), C(Position::Rook::EG, Material::Rook::EG),
-    C(Position::Queen::EG, Material::Queen::EG),   C(Position::King::EG, 0)};
+    C(Position::Queen::EG, Material::Queen::EG),   C(Position::King::EG, 0)
+};
 inline std::array<std::array<int, 64>, 6> EG_WHITE = {
     C(I<64>(Position::Pawn::EG), Material::Pawn::EG),
     C(I<64>(Position::Knight::EG), Material::Knight::EG),
     C(I<64>(Position::Bishop::EG), Material::Bishop::EG),
     C(I<64>(Position::Rook::EG), Material::Rook::EG),
     C(I<64>(Position::Queen::EG), Material::Queen::EG),
-    C(I<64>(Position::King::EG), 0)};
+    C(I<64>(Position::King::EG), 0)
+};
 inline std::array<std::array<std::array<int, 64>, 6>, 2> MG{MG_WHITE, MG_BLACK};
 inline std::array<std::array<std::array<int, 64>, 6>, 2> EG{EG_WHITE, EG_BLACK};
 } // namespace Values
