@@ -60,19 +60,12 @@ std::variant<Move, AlternativeResult> IterativeDeepening(Board &board, int timeL
         auto t1  = std::chrono::steady_clock::now();
         size_t t = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
         timeLimit -= t;
-        pv = ExtractPV(board);
-        std::cout << "info";
-        printf(" depth %d", depth);
-        printf(" score cp %d", score);
-        printf(" time %zu ms", t);
-        auto nodes = board.MoveCount() - priorMoveCount;
-        printf(" nodes %zu", nodes);
-        if (t > 0) {
-            auto nps = nodes * 1000 / t;
-            printf(" nps %zu", (size_t)nps);
-        }
-        printf(" hashfull %zu", TT::HashFull());
-        std::cout << " pv ";
+        pv                 = ExtractPV(board);
+        const size_t nodes = board.MoveCount() - priorMoveCount;
+        printf(
+            "info depth %d score cp %d time %zu ms nodes %zu nps %zu hashfull %zu pv", depth, score,
+            t, nodes, nodes * 1000 / std::max(t, (size_t)1), TT::HashFull()
+        );
         for (size_t i = 0; i < pv.size(); i++)
             std::cout << pv[i].ToString() << " ";
         std::cout << '\n';
