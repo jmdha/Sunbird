@@ -69,13 +69,13 @@ inline bool Position::AllowsCastling(Castling castling, Color color) const {
     return static_cast<int>(GetCastling(color) & castling) != 0;
 }
 inline PieceType Position::GetType(Square square) const {
-    assert(square != Square::None);
+    assert(square != SQUARE_NONE);
     for (const auto pType : PIECES)
         if (GetPieces(pType) & square) return pType;
     return PieceType::None;
 }
 inline Color Position::GetColor(Square square) const {
-    assert(square != Square::None);
+    assert(square != SQUARE_NONE);
     if (square & _colorBB[static_cast<size_t>(WHITE)])
         return WHITE;
     else if (square & _colorBB[static_cast<size_t>(BLACK)])
@@ -132,7 +132,7 @@ inline void Position::SetEP(Column column) {
 }
 
 inline void Position::PlacePiece(Square square, PieceType pType, Color color) {
-    assert(square != Square::None);
+    assert(square != SQUARE_NONE);
     assert(pType != PieceType::None);
     assert(color != COLOR_NONE);
     _pieceBB[static_cast<size_t>(pType)] |= square;
@@ -140,7 +140,7 @@ inline void Position::PlacePiece(Square square, PieceType pType, Color color) {
     _hash = Zobrist::FlipSquare(_hash, square, pType, color);
 }
 inline void Position::RemovePiece(Square square, PieceType pType, Color color) {
-    assert(square != Square::None);
+    assert(square != SQUARE_NONE);
     assert(pType != PieceType::None);
     assert(color != COLOR_NONE);
     _pieceBB[static_cast<size_t>(pType)] ^= square;

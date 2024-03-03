@@ -47,7 +47,8 @@ constexpr std::array<PieceType, PIECE_COUNT> PIECES{PieceType::Pawn,   PieceType
                                                     PieceType::Bishop, PieceType::Rook,
                                                     PieceType::Queen,  PieceType::King};
 static const std::array<PieceType, PIECE_COUNT - 1> NON_PAWNS = {
-    PieceType::Knight, PieceType::Bishop, PieceType::Rook, PieceType::Queen, PieceType::King};
+    PieceType::Knight, PieceType::Bishop, PieceType::Rook, PieceType::Queen, PieceType::King
+};
 
 enum class PieceChar : char {
     PawnWhite   = 'P',
@@ -66,7 +67,7 @@ enum class PieceChar : char {
 };
 
 // clang-format off
-enum class Square : uint16_t {
+enum Square {
     A1,B1,C1,D1,E1,F1,G1,H1,
     A2,B2,C2,D2,E2,F2,G2,H2,
     A3,B3,C3,D3,E3,F3,G3,H3,
@@ -75,7 +76,7 @@ enum class Square : uint16_t {
     A6,B6,C6,D6,E6,F6,G6,H6,
     A7,B7,C7,D7,E7,F7,G7,H7,
     A8,B8,C8,D8,E8,F8,G8,H8,
-    None
+    SQUARE_NONE
 };
 // clang-format on
 
@@ -129,11 +130,13 @@ constexpr std::array<Column, 64> COLUMN_BY_SQUARE = {
     Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H,
     Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H,
     Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H,
-    Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H};
+    Column::A, Column::B, Column::C, Column::D, Column::E, Column::F, Column::G, Column::H
+};
 
 constexpr std::array<size_t, SQUARE_COUNT> COLUMN_INDEX = {
     0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7,
-    0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7};
+    0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7
+};
 
 enum class Direction : uint16_t {
     North,
@@ -148,9 +151,10 @@ enum class Direction : uint16_t {
     None
 };
 
-constexpr std::array<Direction, 8> DIRECTIONS = {
-    Direction::North,     Direction::East,      Direction::South,     Direction::West,
-    Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest};
+constexpr std::array<Direction, 8> DIRECTIONS = {Direction::North,     Direction::East,
+                                                 Direction::South,     Direction::West,
+                                                 Direction::NorthEast, Direction::NorthWest,
+                                                 Direction::SouthEast, Direction::SouthWest};
 
 constexpr std::array<BB, 8> EDGES = {
     static_cast<BB>(Row::Row8),
@@ -161,7 +165,8 @@ constexpr std::array<BB, 8> EDGES = {
     static_cast<BB>(Row::Row8) | static_cast<BB>(Column::H),
     static_cast<BB>(Row::Row8) | static_cast<BB>(Column::A),
     static_cast<BB>(Row::Row1) | static_cast<BB>(Column::H),
-    static_cast<BB>(Row::Row1) | static_cast<BB>(Column::A)};
+    static_cast<BB>(Row::Row1) | static_cast<BB>(Column::A)
+};
 
 // NOTE: The values of MoveType are used, and should not be changed
 enum class MoveType : uint16_t {
@@ -181,10 +186,12 @@ enum class MoveType : uint16_t {
     QPromotionCapture = 15
 };
 constexpr std::array<MoveType, 4> PromotionMoves{
-    MoveType::NPromotion, MoveType::BPromotion, MoveType::RPromotion, MoveType::QPromotion};
+    MoveType::NPromotion, MoveType::BPromotion, MoveType::RPromotion, MoveType::QPromotion
+};
 constexpr std::array<MoveType, 4> PromotionCapturesMoves{
     MoveType::NPromotionCapture, MoveType::BPromotionCapture, MoveType::RPromotionCapture,
-    MoveType::QPromotionCapture};
+    MoveType::QPromotionCapture
+};
 
 #define PromotionBit 0x8
 #define CaptureBit 0x4
@@ -207,8 +214,10 @@ inline Castling operator^(Castling lhs, Castling rhs) {
 
 constexpr std::array<std::array<BB, 4>, COLOR_COUNT> CASTLING_BLOCK_SQUARES{
     std::array<BB, 4>{0x0, 0x60, 0xe, 0x6e},
-    std::array<BB, 4>{0x0, 0x6000000000000000, 0xe00000000000000, 0x6e00000000000000}};
+    std::array<BB, 4>{0x0, 0x6000000000000000, 0xe00000000000000, 0x6e00000000000000}
+};
 
 constexpr std::array<std::array<BB, 4>, COLOR_COUNT> CASTLING_ATTACK_SQUARES{
     std::array<BB, 4>{0x0, 0x70, 0x1c, 0x7c},
-    std::array<BB, 4>{0x0, 0x7000000000000000, 0x1c00000000000000, 0x7c00000000000000}};
+    std::array<BB, 4>{0x0, 0x7000000000000000, 0x1c00000000000000, 0x7c00000000000000}
+};

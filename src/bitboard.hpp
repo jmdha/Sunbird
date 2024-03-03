@@ -147,7 +147,7 @@ constexpr inline bool Multiple(BB bb) { return bb & (bb - 1); }
 // .....
 // Where o defines square and X the bits in the array
 constexpr inline BB Ray(Square sq, Direction dir) {
-    assert(sq != Square::None);
+    assert(sq != SQUARE_NONE);
     assert(dir != Direction::None);
     return RAYS[static_cast<size_t>(sq)][static_cast<size_t>(dir)];
 }
@@ -160,8 +160,8 @@ constexpr inline BB Ray(Square sq, Direction dir) {
 // ......    .....
 // Where "f" is from square, t is "to" square, and X are enabled bits
 constexpr inline BB Ray(Square from, Square to) {
-    assert(from != Square::None);
-    assert(to != Square::None);
+    assert(from != SQUARE_NONE);
+    assert(to != SQUARE_NONE);
     assert(from != to);
     return SQRAYS[static_cast<size_t>(from)][static_cast<size_t>(to)];
 }
@@ -174,13 +174,13 @@ constexpr inline BB Ray(Square from, Square to) {
 // .....
 // Where f defines "from" square t defines "to" square and X defines enabled bits
 constexpr inline BB XRay(Square from, Square to) {
-    assert(from != Square::None);
-    assert(to != Square::None);
+    assert(from != SQUARE_NONE);
+    assert(to != SQUARE_NONE);
     return XRAYS[static_cast<size_t>(from)][static_cast<size_t>(to)];
 }
 
 constexpr inline BB BAndB(Square sq, PieceType pType) {
-    assert(sq != Square::None);
+    assert(sq != SQUARE_NONE);
     assert(pType != PieceType::None);
     assert(pType != PieceType::Pawn);
     return BABS[static_cast<size_t>(pType)][static_cast<size_t>(sq)];
@@ -194,7 +194,7 @@ constexpr inline BB BAndB(Square sq, PieceType pType) {
 // ..... offset 2 -> XXXXX
 // Where p is the square and X is the bits in the ring at a given offset
 constexpr inline BB Ring(Square sq, size_t offset) {
-    assert(sq != Square::None);
+    assert(sq != SQUARE_NONE);
     assert(offset > 0 && offset < 8);
     return RINGS[static_cast<size_t>(sq)][offset];
 }
@@ -224,17 +224,17 @@ constexpr inline BB Attacks(Square sq, PieceType pType) {
 
 // The available moves on a clear board for pawns
 constexpr inline BB PawnAttacks(Square sq, Color color) {
-    assert(sq != Square::None);
+    assert(sq != SQUARE_NONE);
     assert(color != COLOR_NONE);
     return PAWN_ATTACKS[static_cast<size_t>(color)][static_cast<size_t>(sq)];
 }
 
 constexpr inline BB PawnPassMask(Square sq, Color color) {
-    assert(sq != Square::None);
+    assert(sq != SQUARE_NONE);
     assert(color != COLOR_NONE);
     return PAWN_PASS[static_cast<size_t>(color)][static_cast<size_t>(sq)];
 }
 constexpr inline BB PawnIsolationMask(Square sq) {
-    assert(sq != Square::None);
+    assert(sq != SQUARE_NONE);
     return PAWN_ISOLATION[static_cast<size_t>(sq)];
 }
