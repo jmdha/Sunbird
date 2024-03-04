@@ -1,4 +1,5 @@
 #include "bitboard.hpp"
+#include "types.hpp"
 #include "utilities.hpp"
 
 constexpr std::array<std::array<BB, DIRECTIONCOUNT>, SQUARE_COUNT> RAYS = [] {
@@ -42,13 +43,10 @@ namespace {
 constexpr BB GenerateRing(Square sq, size_t offset) {
     BB ring = 0;
 
-    const std::array<Direction, 4> directions{
-        Direction::North, Direction::East, Direction::South, Direction::West
-    };
+    const std::array<Direction, 4> directions{NORTH, EAST, SOUTH, WEST};
     const std::array<std::array<Direction, 2>, 4> probes{
-        std::array{Direction::West, Direction::East},
-        std::array{Direction::North, Direction::South},
-        std::array{Direction::West, Direction::East}, std::array{Direction::North, Direction::South}
+        std::array{WEST, EAST}, std::array{NORTH, SOUTH}, std::array{WEST, EAST},
+        std::array{NORTH, SOUTH}
     };
 
     for (size_t i = 0; i < directions.size(); ++i) {
@@ -82,22 +80,18 @@ namespace {
 constexpr BB GenerateAttacks(Piece piece, Square sq) {
     switch (piece) {
     case KNIGHT:
-        return Ring(sq, 2) & ~(Ray(sq, Direction::North) | Ray(sq, Direction::East) |
-                               Ray(sq, Direction::South) | Ray(sq, Direction::West) |
-                               Ray(sq, Direction::NorthWest) | Ray(sq, Direction::NorthEast) |
-                               Ray(sq, Direction::SouthWest) | Ray(sq, Direction::SouthEast));
+        return Ring(sq, 2) & ~(Ray(sq, NORTH) | Ray(sq, EAST) | Ray(sq, SOUTH) | Ray(sq, WEST) |
+                               Ray(sq, NORTH_WEST) | Ray(sq, NORTH_EAST) | Ray(sq, SOUTH_WEST) |
+                               Ray(sq, SOUTH_EAST));
     case KING: return Ring(sq, 1);
-    case ROOK:
-        return Ray(sq, Direction::North) | Ray(sq, Direction::East) | Ray(sq, Direction::South) |
-               Ray(sq, Direction::West);
+    case ROOK: return Ray(sq, NORTH) | Ray(sq, EAST) | Ray(sq, SOUTH) | Ray(sq, WEST);
     case BISHOP:
-        return Ray(sq, Direction::NorthWest) | Ray(sq, Direction::NorthEast) |
-               Ray(sq, Direction::SouthWest) | Ray(sq, Direction::SouthEast);
+        return Ray(sq, NORTH_WEST) | Ray(sq, NORTH_EAST) | Ray(sq, Direction::SOUTH_WEST) |
+               Ray(sq, SOUTH_EAST);
     case QUEEN:
-        return Ray(sq, Direction::North) | Ray(sq, Direction::East) | Ray(sq, Direction::South) |
-               Ray(sq, Direction::West) | Ray(sq, Direction::NorthWest) |
-               Ray(sq, Direction::NorthEast) | Ray(sq, Direction::SouthWest) |
-               Ray(sq, Direction::SouthEast);
+        return Ray(sq, NORTH) | Ray(sq, EAST) | Ray(sq, SOUTH) | Ray(sq, WEST) |
+               Ray(sq, NORTH_WEST) | Ray(sq, NORTH_EAST) | Ray(sq, SOUTH_WEST) |
+               Ray(sq, SOUTH_EAST);
     case PAWN:
     case PIECE_NONE:
         throw std::invalid_argument("Cannot generate attacks for pawn or no piece type.");
@@ -148,9 +142,9 @@ constexpr std::array<std::array<BB, SQUARE_COUNT>, COLOR_COUNT> PAWN_ATTACKS = [
 
     for (const auto color : {WHITE, BLACK})
         for (const auto sq : SQUARES) {
-            const BB rays                                                = (color == WHITE)
-                                                                               ? (Ray(sq, Direction::NorthEast) | Ray(sq, Direction::NorthWest))
-                                                                               : (Ray(sq, Direction::SouthEast) | Ray(sq, Direction::SouthWest));
+            const BB rays = (color == WHITE) ? (Ray(sq, NORTH_EAST) | Ray(sq, NORTH_WEST))
+                                             : (Ray(sq, SOUTH_EAST) | Ray(sq, SOUTH_WEST));
+
             attacks[static_cast<size_t>(color)][static_cast<size_t>(sq)] = Ring(sq, 1) & rays;
         }
 
@@ -162,17 +156,17 @@ constexpr std::array<std::array<BB, SQUARE_COUNT>, COLOR_COUNT> PAWN_PASS = [] {
 
     for (const auto color : {WHITE, BLACK})
         for (const auto square : SQUARES) {
-            const Direction dir[2] = {Direction::North, Direction::South};
+            const Direction dir[2] = {NORTH, SOUTH};
             BB bb                  = 0;
 
             bb |= Ray(square, dir[static_cast<size_t>(color)]);
             if ((Column::A & square) == 0) {
-                BB b     = Shift<Direction::West>(ToBB(square));
+                BB b     = Shift<WEST>(ToBB(square));
                 Square n = First(b);
                 bb |= Ray(n, dir[static_cast<size_t>(color)]);
             }
             if ((Column::H & square) == 0) {
-                BB b     = Shift<Direction::East>(ToBB(square));
+                BB b     = Shift<EAST>(ToBB(square));
                 Square n = First(b);
                 bb |= Ray(n, dir[static_cast<size_t>(color)]);
             }

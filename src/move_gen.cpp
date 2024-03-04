@@ -15,7 +15,7 @@ void BuildMoves(MoveList &moves, Square sq, BB targets, Move::Type move_type) {
 // HACK: This needs to be refactored
 template <GenType gType>
 void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
-    constexpr Direction dirs[2] = {Direction::North, Direction::South};
+    constexpr Direction dirs[2] = {NORTH, SOUTH};
     Direction dir               = dirs[color];
     BB pieces                   = pos.GetPieces(color, PAWN);
     while (pieces) {

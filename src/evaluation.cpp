@@ -48,7 +48,7 @@ std::pair<int, int> EvalPieceSquare(const Position &pos) {
 template <Color color>
 std::pair<int, int> EvalPawn(const Position &pos) {
     const size_t colorI    = static_cast<size_t>(color);
-    static Direction UP[2] = {Direction::North, Direction::South};
+    static Direction UP[2] = {NORTH, SOUTH};
     int mg                 = 0;
     int eg                 = 0;
 

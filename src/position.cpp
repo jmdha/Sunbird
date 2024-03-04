@@ -1,4 +1,5 @@
 #include "position.hpp"
+#include "types.hpp"
 
 bool Position::IsKingSafe(Color turn) const {
     Square king = GetKing(turn);
@@ -13,38 +14,32 @@ bool Position::IsKingSafe(Color turn) const {
     if (PawnAttacks(king, turn) & pawns) return false;
     if (Attacks(king, KNIGHT) & knights) return false;
 
-    if (Ray(king, Direction::North) & rooks) [[unlikely]]
-        if (First(Ray(king, Direction::North) & rooks) == First(Ray(king, Direction::North) & occ))
-            [[unlikely]]
+    if (Ray(king, NORTH) & rooks) [[unlikely]]
+        if (First(Ray(king, NORTH) & rooks) == First(Ray(king, NORTH) & occ)) [[unlikely]]
             return false;
-    if (Ray(king, Direction::East) & rooks) [[unlikely]]
-        if (First(Ray(king, Direction::East) & rooks) == First(Ray(king, Direction::East) & occ))
-            [[unlikely]]
+    if (Ray(king, EAST) & rooks) [[unlikely]]
+        if (First(Ray(king, EAST) & rooks) == First(Ray(king, EAST) & occ)) [[unlikely]]
             return false;
-    if (Ray(king, Direction::South) & rooks) [[unlikely]]
-        if (Last(Ray(king, Direction::South) & rooks) == Last(Ray(king, Direction::South) & occ))
-            [[unlikely]]
+    if (Ray(king, SOUTH) & rooks) [[unlikely]]
+        if (Last(Ray(king, SOUTH) & rooks) == Last(Ray(king, SOUTH) & occ)) [[unlikely]]
             return false;
-    if (Ray(king, Direction::West) & rooks) [[unlikely]]
-        if (Last(Ray(king, Direction::West) & rooks) == Last(Ray(king, Direction::West) & occ))
-            [[unlikely]]
+    if (Ray(king, WEST) & rooks) [[unlikely]]
+        if (Last(Ray(king, WEST) & rooks) == Last(Ray(king, WEST) & occ)) [[unlikely]]
             return false;
 
-    if (Ray(king, Direction::NorthEast) & bishops) [[unlikely]]
-        if (First(Ray(king, Direction::NorthEast) & bishops) ==
-            First(Ray(king, Direction::NorthEast) & occ)) [[unlikely]]
+    if (Ray(king, NORTH_EAST) & bishops) [[unlikely]]
+        if (First(Ray(king, NORTH_EAST) & bishops) == First(Ray(king, NORTH_EAST) & occ))
+            [[unlikely]]
             return false;
-    if (Ray(king, Direction::NorthWest) & bishops) [[unlikely]]
-        if (First(Ray(king, Direction::NorthWest) & bishops) ==
-            First(Ray(king, Direction::NorthWest) & occ)) [[unlikely]]
+    if (Ray(king, NORTH_WEST) & bishops) [[unlikely]]
+        if (First(Ray(king, NORTH_WEST) & bishops) == First(Ray(king, NORTH_WEST) & occ))
+            [[unlikely]]
             return false;
-    if (Ray(king, Direction::SouthEast) & bishops) [[unlikely]]
-        if (Last(Ray(king, Direction::SouthEast) & bishops) ==
-            Last(Ray(king, Direction::SouthEast) & occ)) [[unlikely]]
+    if (Ray(king, SOUTH_EAST) & bishops) [[unlikely]]
+        if (Last(Ray(king, SOUTH_EAST) & bishops) == Last(Ray(king, SOUTH_EAST) & occ)) [[unlikely]]
             return false;
-    if (Ray(king, Direction::SouthWest) & bishops) [[unlikely]]
-        if (Last(Ray(king, Direction::SouthWest) & bishops) ==
-            Last(Ray(king, Direction::SouthWest) & occ)) [[unlikely]]
+    if (Ray(king, SOUTH_WEST) & bishops) [[unlikely]]
+        if (Last(Ray(king, SOUTH_WEST) & bishops) == Last(Ray(king, SOUTH_WEST) & occ)) [[unlikely]]
             return false;
 
     return true;

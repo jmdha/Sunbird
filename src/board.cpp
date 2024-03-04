@@ -51,9 +51,9 @@ void Board::MakeMove(const Move &move) noexcept {
     case Move::EPCapture:
         capturedPiece = PAWN;
         if (turn == WHITE)
-            captureTo = (Square)lsb(Shift<Direction::South>(ToBB(captureTo)));
+            captureTo = (Square)lsb(Shift<SOUTH>(ToBB(captureTo)));
         else
-            captureTo = (Square)lsb(Shift<Direction::North>(ToBB(captureTo)));
+            captureTo = (Square)lsb(Shift<NORTH>(ToBB(captureTo)));
     case Move::Capture:
     CAPTURE_PROMOTION:
         pos.RemovePiece(from, pType, turn);

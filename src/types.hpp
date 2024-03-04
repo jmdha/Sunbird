@@ -44,7 +44,7 @@ inline Color operator~(Color color) {
 }
 
 enum Piece { PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, PIECE_NONE };
-constexpr std::array<Piece, PIECE_COUNT> PIECES{PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING};
+static const std::array<Piece, PIECE_COUNT> PIECES{PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING};
 static const std::array<Piece, PIECE_COUNT - 1> NON_PAWNS = {KNIGHT, BISHOP, ROOK, QUEEN, KING};
 static const std::string PIECE_CHARS[COLOR_COUNT]         = {"PNBRQK", "pnbrqk"};
 
@@ -136,23 +136,21 @@ constexpr std::array<size_t, SQUARE_COUNT> COLUMN_INDEX = {
     0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7
 };
 
-enum class Direction : uint16_t {
-    North,
-    East,
-    South,
-    West,
+enum Direction {
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST,
 
-    NorthEast,
-    NorthWest,
-    SouthEast,
-    SouthWest,
-    None
+    NORTH_EAST,
+    NORTH_WEST,
+    SOUTH_EAST,
+    SOUTH_WEST,
+    DIRECTION_NONE
 };
 
-constexpr std::array<Direction, 8> DIRECTIONS = {Direction::North,     Direction::East,
-                                                 Direction::South,     Direction::West,
-                                                 Direction::NorthEast, Direction::NorthWest,
-                                                 Direction::SouthEast, Direction::SouthWest};
+constexpr std::array<Direction, 8> DIRECTIONS = {NORTH,      EAST,       SOUTH,      WEST,
+                                                 NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST};
 
 constexpr std::array<BB, 8> EDGES = {
     static_cast<BB>(Row::Row8),

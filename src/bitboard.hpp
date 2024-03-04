@@ -80,21 +80,21 @@ constexpr inline BB operator^(Row r, Column c) { return c ^ r; }
 
 template <Direction D>
 constexpr inline BB Shift(BB bb) {
-    if constexpr (D == Direction::North)
+    if constexpr (D == NORTH)
         return bb << 8;
-    else if constexpr (D == Direction::East)
+    else if constexpr (D == EAST)
         return bb << 1;
-    else if constexpr (D == Direction::South)
+    else if constexpr (D == SOUTH)
         return bb >> 8;
-    else if constexpr (D == Direction::West)
+    else if constexpr (D == WEST)
         return bb >> 1;
-    else if constexpr (D == Direction::NorthEast)
+    else if constexpr (D == NORTH_EAST)
         return bb << 9;
-    else if constexpr (D == Direction::NorthWest)
+    else if constexpr (D == NORTH_WEST)
         return bb << 7;
-    else if constexpr (D == Direction::SouthEast)
+    else if constexpr (D == SOUTH_EAST)
         return bb >> 7;
-    else if constexpr (D == Direction::SouthWest)
+    else if constexpr (D == SOUTH_WEST)
         return bb >> 9;
     else
         return bb;
@@ -106,19 +106,17 @@ constexpr inline BB ShiftM(BB &bb) {
 }
 
 constexpr inline BB Shift(BB bb, Direction dir) {
-    // clang-format off
     switch (dir) {
-        case Direction::North:     return Shift<Direction::North>(bb);
-        case Direction::East:      return Shift<Direction::East>(bb);
-        case Direction::South:     return Shift<Direction::South>(bb);
-        case Direction::West:      return Shift<Direction::West>(bb);
-        case Direction::NorthEast: return Shift<Direction::NorthEast>(bb);
-        case Direction::NorthWest: return Shift<Direction::NorthWest>(bb);
-        case Direction::SouthEast: return Shift<Direction::SouthEast>(bb);
-        case Direction::SouthWest: return Shift<Direction::SouthWest>(bb);
-        case Direction::None:      return Shift<Direction::None>(bb);
+    case NORTH: return Shift<NORTH>(bb);
+    case EAST: return Shift<EAST>(bb);
+    case SOUTH: return Shift<SOUTH>(bb);
+    case WEST: return Shift<WEST>(bb);
+    case NORTH_EAST: return Shift<NORTH_EAST>(bb);
+    case NORTH_WEST: return Shift<NORTH_WEST>(bb);
+    case SOUTH_EAST: return Shift<SOUTH_EAST>(bb);
+    case SOUTH_WEST: return Shift<SOUTH_WEST>(bb);
+    case DIRECTION_NONE: return Shift<DIRECTION_NONE>(bb);
     }
-    // clang-format on
     throw std::invalid_argument("Invalid control flow.");
 }
 
@@ -148,7 +146,7 @@ constexpr inline bool Multiple(BB bb) { return bb & (bb - 1); }
 // Where o defines square and X the bits in the array
 constexpr inline BB Ray(Square sq, Direction dir) {
     assert(sq != SQUARE_NONE);
-    assert(dir != Direction::None);
+    assert(dir != DIRECTION_NONE);
     return RAYS[sq][static_cast<size_t>(dir)];
 }
 

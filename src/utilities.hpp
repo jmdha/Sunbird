@@ -82,23 +82,23 @@ inline std::string GetSquareString(Square sq) {
 constexpr Direction GetDirection(Square from, Square to) {
     if (GetRowIndex(from) < GetRowIndex(to)) {
         if (GetColumnIndex(from) < GetColumnIndex(to))
-            return Direction::NorthEast;
+            return NORTH_EAST;
         else if (GetColumnIndex(from) > GetColumnIndex(to))
-            return Direction::NorthWest;
+            return NORTH_WEST;
         else
-            return Direction::North;
+            return NORTH;
     } else if (GetRowIndex(from) > GetRowIndex(to)) {
         if (GetColumnIndex(from) < GetColumnIndex(to))
-            return Direction::SouthEast;
+            return SOUTH_EAST;
         else if (GetColumnIndex(from) > GetColumnIndex(to))
-            return Direction::SouthWest;
+            return SOUTH_WEST;
         else
-            return Direction::South;
+            return SOUTH;
     } else {
         if (GetColumnIndex(from) < GetColumnIndex(to))
-            return Direction::East;
+            return EAST;
         else if (GetColumnIndex(from) > GetColumnIndex(to))
-            return Direction::West;
+            return WEST;
     }
     throw std::invalid_argument("GetDirection called with same from and to");
 }
