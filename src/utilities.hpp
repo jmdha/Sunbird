@@ -5,51 +5,6 @@
 #include <strings.h>
 
 namespace Utilities {
-constexpr PieceChar GetPieceChar(char c) { return static_cast<PieceChar>(c); }
-
-constexpr PieceChar GetPieceChar(Piece type, Color color) {
-    switch (type) {
-    case BISHOP: return (color == WHITE) ? PieceChar::BishopWhite : PieceChar::BishopBlack;
-    case KING: return (color == WHITE) ? PieceChar::KingWhite : PieceChar::KingBlack;
-    case KNIGHT: return (color == WHITE) ? PieceChar::KnightWhite : PieceChar::KnightBlack;
-    case PAWN: return (color == WHITE) ? PieceChar::PawnWhite : PieceChar::PawnBlack;
-    case QUEEN: return (color == WHITE) ? PieceChar::QueenWhite : PieceChar::QueenBlack;
-    case ROOK: return (color == WHITE) ? PieceChar::RookWhite : PieceChar::RookBlack;
-    default: return PieceChar::None;
-    }
-}
-
-constexpr Piece GetPieceType(PieceChar pieceChar) {
-    switch (pieceChar) {
-    case PieceChar::BishopBlack:
-    case PieceChar::BishopWhite: return BISHOP;
-
-    case PieceChar::KingBlack:
-    case PieceChar::KingWhite: return KING;
-
-    case PieceChar::KnightBlack:
-    case PieceChar::KnightWhite: return KNIGHT;
-
-    case PieceChar::PawnBlack:
-    case PieceChar::PawnWhite: return PAWN;
-
-    case PieceChar::QueenBlack:
-    case PieceChar::QueenWhite: return QUEEN;
-
-    case PieceChar::RookBlack:
-    case PieceChar::RookWhite: return ROOK;
-
-    default: return PIECE_NONE;
-    }
-}
-
-constexpr Color GetPieceColor(PieceChar pieceChar) {
-    if (std::isupper(static_cast<char>(pieceChar)))
-        return WHITE;
-    else
-        return BLACK;
-}
-
 constexpr Square GetSquare(int x, int y) { return static_cast<Square>(x + 8 * y); }
 
 constexpr Square GetSquare(char row, char column) { return GetSquare(row - 97, column - 49); }

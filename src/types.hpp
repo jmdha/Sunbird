@@ -48,22 +48,6 @@ constexpr std::array<Piece, PIECE_COUNT> PIECES{PAWN, KNIGHT, BISHOP, ROOK, QUEE
 static const std::array<Piece, PIECE_COUNT - 1> NON_PAWNS = {KNIGHT, BISHOP, ROOK, QUEEN, KING};
 static const std::string PIECE_CHARS[COLOR_COUNT]         = {"PNBRQK", "pnbrqk"};
 
-enum class PieceChar : char {
-    PawnWhite   = 'P',
-    PawnBlack   = 'p',
-    KnightWhite = 'N',
-    KnightBlack = 'n',
-    BishopWhite = 'B',
-    BishopBlack = 'b',
-    RookWhite   = 'R',
-    RookBlack   = 'r',
-    QueenWhite  = 'Q',
-    QueenBlack  = 'q',
-    KingWhite   = 'K',
-    KingBlack   = 'k',
-    None        = 'O'
-};
-
 // clang-format off
 enum Square {
     A1,B1,C1,D1,E1,F1,G1,H1,
@@ -206,3 +190,19 @@ constexpr std::array<std::array<BB, 4>, COLOR_COUNT> CASTLING_ATTACK_SQUARES{
     std::array<BB, 4>{0x0, 0x70, 0x1c, 0x7c},
     std::array<BB, 4>{0x0, 0x7000000000000000, 0x1c00000000000000, 0x7c00000000000000}
 };
+
+// Converts a character to its corresponding piece
+static inline Piece ToPiece(char c) {
+    c = tolower(c);
+    switch (c) {
+    case 'p': return PAWN;
+    case 'n': return KNIGHT;
+    case 'b': return BISHOP;
+    case 'r': return ROOK;
+    case 'q': return QUEEN;
+    case 'k': return KING;
+    default: return PIECE_NONE;
+    }
+}
+
+static inline Color ToColor(char c) { return ~static_cast<Color>(!islower(c)); }

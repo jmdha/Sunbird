@@ -25,7 +25,7 @@ Move::Move(BB occ, BB kings, BB pawns, const std::string &move) noexcept {
         else
             *this = Move(ori, dst, Quiet);
     } else {
-        const Piece piece = Utilities::GetPieceType(Utilities::GetPieceChar(move[4]));
+        const Piece piece = ToPiece(move[4]);
         if (capture)
             *this = Move(ori, dst, static_cast<Type>((int)NPromotionCapture + piece - KNIGHT));
         else
