@@ -19,23 +19,11 @@ extern const std::array<std::array<BB, SQUARE_COUNT>, COLOR_COUNT> PAWN_ATTACKS;
 extern const std::array<std::array<BB, SQUARE_COUNT>, COLOR_COUNT> PAWN_PASS;
 extern const std::array<BB, SQUARE_COUNT> PAWN_ISOLATION;
 
-constexpr inline BB ToBB(Square sq) { return (static_cast<BB>(1) << static_cast<int>(sq)); }
 constexpr inline Square First(BB bb) { return static_cast<Square>(lsb(bb)); }
 constexpr inline Square Last(BB bb) { return static_cast<Square>(msb(bb)); }
 constexpr inline Square Next(BB &bb) { return static_cast<Square>(lsb_pop(bb)); }
 
 // clang-format off
-
-constexpr inline BB operator&(BB bb, Square sq) { return bb & ToBB(sq); }
-constexpr inline BB operator|(BB bb, Square sq) { return bb | ToBB(sq); }
-constexpr inline BB operator^(BB bb, Square sq) { return bb ^ ToBB(sq); }
-constexpr inline BB &operator&=(BB &bb, Square sq) { return bb &= ToBB(sq); }
-constexpr inline BB &operator|=(BB &bb, Square sq) { return bb |= ToBB(sq); }
-constexpr inline BB &operator^=(BB &bb, Square sq) { return bb ^= ToBB(sq); }
-
-constexpr inline BB operator&(Square sq, BB bb) { return bb & sq; }
-constexpr inline BB operator|(Square sq, BB bb) { return bb | sq; }
-constexpr inline BB operator^(Square sq, BB bb) { return bb ^ sq; }
 
 constexpr inline BB operator&(Column l, Column r) { return static_cast<BB>(l) & static_cast<BB>(r); }
 constexpr inline BB operator|(Column l, Column r) { return static_cast<BB>(l) | static_cast<BB>(r); }

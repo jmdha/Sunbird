@@ -6,6 +6,8 @@
 #include <cstdint>
 #include <string>
 
+static const std::string START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
 // A bitmask of a chess board, where a one corresponds to the index of the square
 using BB = uint64_t;
 
@@ -188,6 +190,17 @@ constexpr std::array<std::array<BB, 4>, COLOR_COUNT> CASTLING_ATTACK_SQUARES{
     std::array<BB, 4>{0x0, 0x70, 0x1c, 0x7c},
     std::array<BB, 4>{0x0, 0x7000000000000000, 0x1c00000000000000, 0x7c00000000000000}
 };
+
+constexpr inline BB ToBB(Square sq) { return (static_cast<BB>(1) << static_cast<int>(sq)); }
+constexpr static inline BB operator&(BB bb, Square sq) { return bb & ToBB(sq); }
+constexpr static inline BB operator|(BB bb, Square sq) { return bb | ToBB(sq); }
+constexpr static inline BB operator^(BB bb, Square sq) { return bb ^ ToBB(sq); }
+constexpr static inline BB operator&(Square sq, BB bb) { return bb & sq; }
+constexpr static inline BB operator|(Square sq, BB bb) { return bb | sq; }
+constexpr static inline BB operator^(Square sq, BB bb) { return bb ^ sq; }
+constexpr static inline BB &operator&=(BB &bb, Square sq) { return bb &= ToBB(sq); }
+constexpr static inline BB &operator|=(BB &bb, Square sq) { return bb |= ToBB(sq); }
+constexpr static inline BB &operator^=(BB &bb, Square sq) { return bb ^= ToBB(sq); }
 
 // Converts a character to its corresponding piece
 static inline Piece ToPiece(char c) {
