@@ -10,7 +10,7 @@
 
 int main(int argc, char **argv) {
     TT::Init();
-    Board board = Import::MoveSequence("");
+    Board board = Import::FEN();
 
     std::string command;
     std::string token;
