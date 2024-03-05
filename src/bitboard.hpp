@@ -1,6 +1,5 @@
 #pragma once
 
-#include "bit.hpp"
 #include "types.hpp"
 #include <stdexcept>
 
@@ -18,10 +17,6 @@ extern const std::array<std::array<BB, SQUARE_COUNT>, PIECE_COUNT> ATTACKS;
 extern const std::array<std::array<BB, SQUARE_COUNT>, COLOR_COUNT> PAWN_ATTACKS;
 extern const std::array<std::array<BB, SQUARE_COUNT>, COLOR_COUNT> PAWN_PASS;
 extern const std::array<BB, SQUARE_COUNT> PAWN_ISOLATION;
-
-constexpr inline Square First(BB bb) { return static_cast<Square>(lsb(bb)); }
-constexpr inline Square Last(BB bb) { return static_cast<Square>(msb(bb)); }
-constexpr inline Square Next(BB &bb) { return static_cast<Square>(lsb_pop(bb)); }
 
 // clang-format off
 

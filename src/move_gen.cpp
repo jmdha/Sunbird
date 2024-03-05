@@ -19,7 +19,7 @@ void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
     Direction dir               = dirs[color];
     BB pieces                   = pos.GetPieces(color, PAWN);
     while (pieces) {
-        const Square piece = Next(pieces);
+        const Square piece = lsb_pop(pieces);
         if constexpr (gType == GenType::All) {
             Square to = static_cast<Square>(lsb(Ray(piece, dir) & Ring(piece, 1)));
             if (!(to & pos.GetPieces())) {
@@ -31,7 +31,7 @@ void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
                 } else
                     moves.push<MoveList::Quiet>(Move(piece, to, Move::Quiet));
                 if (ToBB(piece) & PawnRow[static_cast<size_t>(color)]) {
-                    to = First(Ray(piece, dir) & Ring(piece, 2));
+                    to = lsb(Ray(piece, dir) & Ring(piece, 2));
                     if (!(to & pos.GetPieces()))
                         moves.push<MoveList::Quiet>(Move(piece, to, Move::DoublePawnPush));
                 }
@@ -40,7 +40,7 @@ void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
         if constexpr (gType == GenType::Attack || gType == GenType::All) {
             BB attacks = PawnAttacks(piece, color) & pos.GetPieces(~color);
             while (attacks) {
-                const Square attack = Next(attacks);
+                const Square attack = lsb_pop(attacks);
                 assert(pos.GetType((Square)attack) != PIECE_NONE);
                 if (piece & PawnRow[static_cast<size_t>(~color)]) {
                     moves.push<MoveList::Attack>(Move(piece, attack, Move::NPromotionCapture));
@@ -53,7 +53,7 @@ void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
             BB attack = PawnAttacks(piece, color) & ((color == WHITE) ? Row::Row6 : Row::Row3) &
                         pos.GetEP();
             if (attack) {
-                const Square sq = Next(attack);
+                const Square sq = lsb_pop(attack);
                 moves.push<MoveList::Attack>(Move(piece, sq, Move::EPCapture));
             }
         }
@@ -62,7 +62,7 @@ void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
 
 void SliderAttack(MoveList &moves, AttackFunc F, BB pieces, BB occ, BB nus) {
     while (pieces) {
-        const Square piece = Next(pieces);
+        const Square piece = lsb_pop(pieces);
         BB unblocked       = F(piece);
         for (size_t offset = 1; offset < 8; ++offset) {
             BB ring     = Ring(piece, offset);
@@ -78,7 +78,7 @@ void SliderAttack(MoveList &moves, AttackFunc F, BB pieces, BB occ, BB nus) {
 
 void SliderAll(MoveList &moves, AttackFunc F, BB pieces, BB occ, BB nus) {
     while (pieces) {
-        const Square piece = Next(pieces);
+        const Square piece = lsb_pop(pieces);
         BB unblocked       = F(piece);
         for (size_t offset = 1; offset < 8; ++offset) {
             BB ring          = Ring(piece, offset);

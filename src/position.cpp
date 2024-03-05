@@ -15,31 +15,29 @@ bool Position::IsKingSafe(Color turn) const {
     if (Attacks(king, KNIGHT) & knights) return false;
 
     if (Ray(king, NORTH) & rooks) [[unlikely]]
-        if (First(Ray(king, NORTH) & rooks) == First(Ray(king, NORTH) & occ)) [[unlikely]]
+        if (lsb(Ray(king, NORTH) & rooks) == lsb(Ray(king, NORTH) & occ)) [[unlikely]]
             return false;
     if (Ray(king, EAST) & rooks) [[unlikely]]
-        if (First(Ray(king, EAST) & rooks) == First(Ray(king, EAST) & occ)) [[unlikely]]
+        if (lsb(Ray(king, EAST) & rooks) == lsb(Ray(king, EAST) & occ)) [[unlikely]]
             return false;
     if (Ray(king, SOUTH) & rooks) [[unlikely]]
-        if (Last(Ray(king, SOUTH) & rooks) == Last(Ray(king, SOUTH) & occ)) [[unlikely]]
+        if (msb(Ray(king, SOUTH) & rooks) == msb(Ray(king, SOUTH) & occ)) [[unlikely]]
             return false;
     if (Ray(king, WEST) & rooks) [[unlikely]]
-        if (Last(Ray(king, WEST) & rooks) == Last(Ray(king, WEST) & occ)) [[unlikely]]
+        if (msb(Ray(king, WEST) & rooks) == msb(Ray(king, WEST) & occ)) [[unlikely]]
             return false;
 
     if (Ray(king, NORTH_EAST) & bishops) [[unlikely]]
-        if (First(Ray(king, NORTH_EAST) & bishops) == First(Ray(king, NORTH_EAST) & occ))
-            [[unlikely]]
+        if (lsb(Ray(king, NORTH_EAST) & bishops) == lsb(Ray(king, NORTH_EAST) & occ)) [[unlikely]]
             return false;
     if (Ray(king, NORTH_WEST) & bishops) [[unlikely]]
-        if (First(Ray(king, NORTH_WEST) & bishops) == First(Ray(king, NORTH_WEST) & occ))
-            [[unlikely]]
+        if (lsb(Ray(king, NORTH_WEST) & bishops) == lsb(Ray(king, NORTH_WEST) & occ)) [[unlikely]]
             return false;
     if (Ray(king, SOUTH_EAST) & bishops) [[unlikely]]
-        if (Last(Ray(king, SOUTH_EAST) & bishops) == Last(Ray(king, SOUTH_EAST) & occ)) [[unlikely]]
+        if (msb(Ray(king, SOUTH_EAST) & bishops) == msb(Ray(king, SOUTH_EAST) & occ)) [[unlikely]]
             return false;
     if (Ray(king, SOUTH_WEST) & bishops) [[unlikely]]
-        if (Last(Ray(king, SOUTH_WEST) & bishops) == Last(Ray(king, SOUTH_WEST) & occ)) [[unlikely]]
+        if (msb(Ray(king, SOUTH_WEST) & bishops) == msb(Ray(king, SOUTH_WEST) & occ)) [[unlikely]]
             return false;
 
     return true;
@@ -50,15 +48,15 @@ BB Position::GenerateAttackSquares(Color color) const {
     BB attacks         = 0;
 
     for (BB pieces = GetPieces(color, PAWN); pieces;)
-        attacks |= PawnAttacks(Next(pieces), color);
+        attacks |= PawnAttacks(lsb_pop(pieces), color);
 
     for (const Piece p : NON_PAWNS) {
         for (BB pieces = GetPieces(color, p); pieces;) {
-            const Square sq = Next(pieces);
+            const Square sq = lsb_pop(pieces);
             BB attacks1     = Attacks(sq, p);
 
             for (BB b = allPieces & BAndB(sq, p); b != 0; b &= (b - 1))
-                attacks1 &= ~XRay(sq, First(b));
+                attacks1 &= ~XRay(sq, lsb(b));
 
             attacks |= attacks1;
         }

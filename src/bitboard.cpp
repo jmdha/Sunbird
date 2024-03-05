@@ -1,4 +1,5 @@
 #include "bitboard.hpp"
+#include "bit.hpp"
 #include "types.hpp"
 #include "utilities.hpp"
 
@@ -162,12 +163,12 @@ constexpr std::array<std::array<BB, SQUARE_COUNT>, COLOR_COUNT> PAWN_PASS = [] {
             bb |= Ray(square, dir[static_cast<size_t>(color)]);
             if ((Column::A & square) == 0) {
                 BB b     = Shift<WEST>(ToBB(square));
-                Square n = First(b);
+                Square n = lsb(b);
                 bb |= Ray(n, dir[static_cast<size_t>(color)]);
             }
             if ((Column::H & square) == 0) {
                 BB b     = Shift<EAST>(ToBB(square));
-                Square n = First(b);
+                Square n = lsb(b);
                 bb |= Ray(n, dir[static_cast<size_t>(color)]);
             }
 
