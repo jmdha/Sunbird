@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
             is >> std::skipws >> token;
             std::string fen;
             if (token == "startpos")
-                fen = START_FEN;
+                fen = FEN_START;
             else if (token == "fen") {
                 fen = "";
                 for (int i = 0; i < 6; i++) {

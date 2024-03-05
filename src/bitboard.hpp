@@ -1,14 +1,17 @@
 #pragma once
 
 #include "types.hpp"
+#include <cassert>
 #include <stdexcept>
 
 /**
  * Contains various functions and overloads related to bitboards
  */
 #define RING_COUNT 8
+#define EDGE 0xff818181818181ff
+#define CORNER 0x8100000000000081
 
-extern const std::array<std::array<BB, DIRECTIONCOUNT>, SQUARE_COUNT> RAYS;
+extern const std::array<std::array<BB, DIRECTION_COUNT>, SQUARE_COUNT> RAYS;
 extern const std::array<std::array<BB, SQUARE_COUNT>, SQUARE_COUNT> SQRAYS;
 extern const std::array<std::array<BB, SQUARE_COUNT>, SQUARE_COUNT> XRAYS;
 extern const std::array<std::array<BB, SQUARE_COUNT>, PIECE_COUNT> BABS;

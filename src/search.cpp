@@ -1,7 +1,5 @@
 #include "search.hpp"
-#include "evaluation.hpp"
 #include "move_gen.hpp"
-#include "move_ordering.hpp"
 #include "pv.hpp"
 #include "tt.hpp"
 #include "types.hpp"
@@ -38,7 +36,7 @@ Move IterativeDeepening(Board &board, int timeLimit) {
     int alpha                   = -Values::INF;
     int beta                    = Values::INF;
     const size_t priorMoveCount = board.MoveCount();
-    for (int depth = 1; depth < MAX_SEARCH_DEPTH && !setjmp(exitBuffer); depth++) {
+    for (size_t depth = 1; depth < MAX_PLY && !setjmp(exitBuffer); depth++) {
         auto t0   = std::chrono::steady_clock::now();
         int score = Internal::Negamax(board, alpha, beta, depth, 0, pv, &limit);
         if ((score <= alpha) || (score >= beta)) {
@@ -55,7 +53,7 @@ Move IterativeDeepening(Board &board, int timeLimit) {
         pv                 = ExtractPV(board);
         const size_t nodes = board.MoveCount() - priorMoveCount;
         printf(
-            "info depth %d score cp %d time %zu ms nodes %zu nps %zu hashfull %zu pv ", depth,
+            "info depth %zu score cp %d time %zu ms nodes %zu nps %zu hashfull %zu pv ", depth,
             score, t, nodes, nodes * 1000 / std::max(t, (size_t)1), TT::HashFull()
         );
         for (size_t i = 0; i < pv.size(); i++)

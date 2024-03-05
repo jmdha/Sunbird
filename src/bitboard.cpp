@@ -3,7 +3,7 @@
 #include "types.hpp"
 #include "utilities.hpp"
 
-constexpr std::array<std::array<BB, DIRECTIONCOUNT>, SQUARE_COUNT> RAYS = [] {
+constexpr std::array<std::array<BB, DIRECTION_COUNT>, SQUARE_COUNT> RAYS = [] {
     auto rays = decltype(RAYS){};
     for (const auto sq : SQUARES)
         for (const auto dir : DIRECTIONS) {
