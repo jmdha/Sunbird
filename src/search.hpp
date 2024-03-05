@@ -4,10 +4,8 @@
 #include "move.hpp"
 #include "pv.hpp"
 #include "search_limit.hpp"
-#include <variant>
 
 namespace Search {
-enum class AlternativeResult { Draw, Checkmate };
 namespace Internal {
 /*
  * From a given position, searches all non-quiet moves
@@ -21,6 +19,6 @@ int Negamax(
     SearchLimit *limit = nullptr
 );
 }; // namespace Internal
-std::variant<Move, AlternativeResult> GetBestMoveDepth(Board &board, int depth);
-std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit);
+Move GetBestMoveDepth(Board &board, int depth);
+Move GetBestMoveTime(Board &board, int timeLimit);
 } // namespace Search

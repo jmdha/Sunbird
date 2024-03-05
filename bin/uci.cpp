@@ -114,7 +114,7 @@ int main(int argc, char **argv) {
                     searchTime = std::stoi(tokens[i + 1]);
             }
 
-            Move move = std::get<Move>(Search::GetBestMoveTime(board, searchTime));
+            Move move = Search::GetBestMoveTime(board, searchTime);
             std::cout << "bestmove " << move.Export() << '\n';
 
             break;

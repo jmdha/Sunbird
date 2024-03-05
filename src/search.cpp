@@ -15,14 +15,6 @@
 
 namespace Search {
 namespace {
-std::optional<AlternativeResult> IsTerminal(const Position &pos) {
-    const MoveList moves = MoveGen::GenerateAll(pos, pos.GetTurn());
-    if (moves.empty())
-        return Evaluation::Eval(pos) == 0 ? AlternativeResult::Draw : AlternativeResult::Checkmate;
-    else
-        return {};
-}
-
 PV ExtractPV(Board board) {
     const size_t ply = board.Ply();
     std::vector<Move> moves;
@@ -38,7 +30,7 @@ PV ExtractPV(Board board) {
     return PV(ply, moves);
 }
 
-std::variant<Move, AlternativeResult> IterativeDeepening(Board &board, int timeLimit) {
+Move IterativeDeepening(Board &board, int timeLimit) {
     std::jmp_buf exitBuffer;
     SearchLimit limit = SearchLimit(exitBuffer, timeLimit);
 
@@ -63,8 +55,8 @@ std::variant<Move, AlternativeResult> IterativeDeepening(Board &board, int timeL
         pv                 = ExtractPV(board);
         const size_t nodes = board.MoveCount() - priorMoveCount;
         printf(
-            "info depth %d score cp %d time %zu ms nodes %zu nps %zu hashfull %zu pv ", depth, score,
-            t, nodes, nodes * 1000 / std::max(t, (size_t)1), TT::HashFull()
+            "info depth %d score cp %d time %zu ms nodes %zu nps %zu hashfull %zu pv ", depth,
+            score, t, nodes, nodes * 1000 / std::max(t, (size_t)1), TT::HashFull()
         );
         for (size_t i = 0; i < pv.size(); i++)
             std::cout << pv[i].Export() << " ";
@@ -84,10 +76,7 @@ std::variant<Move, AlternativeResult> IterativeDeepening(Board &board, int timeL
 }
 } // namespace
 
-std::variant<Move, AlternativeResult> GetBestMoveDepth(Board &board, int depth) {
-    if (auto terminal = IsTerminal(board.Pos()); terminal.has_value()) return terminal.value();
-    assert(depth > 0);
-
+Move GetBestMoveDepth(Board &board, int depth) {
     std::optional<std::pair<Move, int>> bestMove;
     for (auto move : MoveGen::GenerateAll(board.Pos(), board.Pos().GetTurn())) {
         board.MakeMove(move);
@@ -99,8 +88,7 @@ std::variant<Move, AlternativeResult> GetBestMoveDepth(Board &board, int depth) 
     return bestMove.value().first;
 }
 
-std::variant<Move, AlternativeResult> GetBestMoveTime(Board &board, int timeLimit) {
-    if (auto terminal = IsTerminal(board.Pos()); terminal.has_value()) return terminal.value();
+Move GetBestMoveTime(Board &board, int timeLimit) {
     if (auto moves = MoveGen::GenerateAll(board.Pos(), board.Pos().GetTurn()); moves.size() == 1)
         return moves[0];
 
