@@ -1,8 +1,10 @@
 #pragma once
 
 #include <array>
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
+#include <stdexcept>
 #include <string>
 
 // CONSTANTS
@@ -72,7 +74,10 @@ enum Square {
 
 // CONVERSIONS
 
-static constexpr BB ToBB(Square sq) { return (static_cast<BB>(1) << static_cast<int>(sq)); }
+static constexpr BB ToBB(Square sq) {
+    assert(sq != SQUARE_NONE);
+    return (static_cast<BB>(1) << static_cast<int>(sq));
+}
 static constexpr Color ToColor(char c) { return static_cast<Color>(!!islower(c)); }
 static constexpr Piece ToPiece(char c) {
     c = tolower(c);
@@ -89,25 +94,79 @@ static constexpr Piece ToPiece(char c) {
 
 // OVERRIDES
 
-static constexpr BB operator&(BB bb, Square sq) { return bb & ToBB(sq); }
-static constexpr BB operator|(BB bb, Square sq) { return bb | ToBB(sq); }
-static constexpr BB operator^(BB bb, Square sq) { return bb ^ ToBB(sq); }
-static constexpr BB operator&(Square sq, BB bb) { return bb & sq; }
-static constexpr BB operator|(Square sq, BB bb) { return bb | sq; }
-static constexpr BB operator^(Square sq, BB bb) { return bb ^ sq; }
-static constexpr BB &operator&=(BB &bb, Square sq) { return bb &= ToBB(sq); }
-static constexpr BB &operator|=(BB &bb, Square sq) { return bb |= ToBB(sq); }
-static constexpr BB &operator^=(BB &bb, Square sq) { return bb ^= ToBB(sq); }
+static constexpr BB operator&(BB bb, Square sq) {
+    assert(sq != SQUARE_NONE);
+    return bb & ToBB(sq);
+}
+static constexpr BB operator|(BB bb, Square sq) {
+    assert(sq != SQUARE_NONE);
+    return bb | ToBB(sq);
+}
+static constexpr BB operator^(BB bb, Square sq) {
+    assert(sq != SQUARE_NONE);
+    return bb ^ ToBB(sq);
+}
+static constexpr BB operator&(Square sq, BB bb) {
+    assert(sq != SQUARE_NONE);
+    return bb & sq;
+}
+static constexpr BB operator|(Square sq, BB bb) {
+    assert(sq != SQUARE_NONE);
+    return bb | sq;
+}
+static constexpr BB operator^(Square sq, BB bb) {
+    assert(sq != SQUARE_NONE);
+    return bb ^ sq;
+}
+static constexpr BB &operator&=(BB &bb, Square sq) {
+    assert(sq != SQUARE_NONE);
+    return bb &= ToBB(sq);
+}
+static constexpr BB &operator|=(BB &bb, Square sq) {
+    assert(sq != SQUARE_NONE);
+    return bb |= ToBB(sq);
+}
+static constexpr BB &operator^=(BB &bb, Square sq) {
+    assert(sq != SQUARE_NONE);
+    return bb ^= ToBB(sq);
+}
 static constexpr Color operator~(Color color) {
+    assert(color == WHITE || color == BLACK);
     return static_cast<Color>(1 ^ static_cast<size_t>(color));
 }
-static constexpr Castling operator~(Castling v) {
-    return static_cast<Castling>(~static_cast<uint16_t>(v));
+static constexpr Castling operator~(Castling val) {
+    assert(
+        val == Castling::None || val == Castling::King || val == Castling::Queen ||
+        val == Castling::All
+    );
+    switch (val) {
+    case Castling::None: return Castling::All;
+    case Castling::King: return Castling::Queen;
+    case Castling::Queen: return Castling::King;
+    case Castling::All: return Castling::None;
+    }
+    throw std::logic_error("Cannot happen (tm)");
 }
 static constexpr Castling operator&(Castling lhs, Castling rhs) {
+    assert(
+        lhs == Castling::None || lhs == Castling::King || lhs == Castling::Queen ||
+        lhs == Castling::All
+    );
+    assert(
+        rhs == Castling::None || rhs == Castling::King || rhs == Castling::Queen ||
+        rhs == Castling::All
+    );
     return static_cast<Castling>(static_cast<int>(lhs) & static_cast<int>(rhs));
 }
 static constexpr Castling operator^(Castling lhs, Castling rhs) {
+    assert(
+        lhs == Castling::None || lhs == Castling::King || lhs == Castling::Queen ||
+        lhs == Castling::All
+    );
+    assert(
+        rhs == Castling::None || rhs == Castling::King || rhs == Castling::Queen ||
+        rhs == Castling::All
+    );
     return static_cast<Castling>((static_cast<int>(lhs) ^ static_cast<int>(rhs)));
 }
 

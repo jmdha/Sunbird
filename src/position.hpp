@@ -1,40 +1,35 @@
 #pragma once
 
-#include "bit.hpp"
-#include "bitboard.hpp"
 #include "types.hpp"
-#include "zobrist.hpp"
 
 struct Position {
 public:
     // access
 
-    inline uint64_t GetHash() const;
-    inline Color GetTurn() const;
-    inline Column GetEP() const;
-    inline Castling GetCastling(Color color) const;
-    inline bool AllowsCastling(Castling castling, Color color) const;
-
-    inline Piece GetType(Square square) const;
-    inline Color GetColor(Square square) const;
-    inline int GetPieceCount(Color color, Piece pType) const;
-    inline BB GetPieces() const;
-    inline BB GetPieces(Piece pType) const;
-    inline BB GetPieces(Color color) const;
-    inline BB GetPieces(Color color, Piece pType) const;
-    inline Square GetKing(Color color) const;
-
-    bool IsKingSafe(Color turn) const;
-
-    BB GenerateAttackSquares(Color color) const;
+    uint64_t GetHash() const noexcept;
+    Color GetTurn() const noexcept;
+    Column GetEP() const noexcept;
+    Castling GetCastling(Color color) const noexcept;
+    bool AllowsCastling(Castling castling, Color color) const noexcept;
+    Piece GetType(Square square) const noexcept;
+    Color GetColor(Square square) const noexcept;
+    int GetPieceCount(Color color, Piece pType) const noexcept;
+    BB GetPieces() const noexcept;
+    BB GetPieces(Piece pType) const noexcept;
+    BB GetPieces(Color color) const noexcept;
+    BB GetPieces(Color color, Piece pType) const noexcept;
+    Square GetKing(Color color) const noexcept;
+    bool IsKingSafe(Color turn) const noexcept;
+    BB GenerateAttackSquares(Color color) const noexcept;
 
     // modifiers
 
-    inline void SetTurn(Color color);
-    inline void DisallowCastling(Castling castling, Color color);
-    inline void SetEP(Column column);
-    inline void PlacePiece(Square square, Piece pType, Color color);
-    inline void RemovePiece(Square square, Piece pType, Color color);
+    void SetTurn(Color color) noexcept;
+    void DisallowCastling(Castling castling, Color color) noexcept;
+    void SetCastling(Castling castling, Color color) noexcept;
+    void SetEP(Column column) noexcept;
+    void PlacePiece(Square square, Piece pType, Color color) noexcept;
+    void RemovePiece(Square square, Piece pType, Color color) noexcept;
 
 private:
     uint64_t _hash = 0;
@@ -47,103 +42,4 @@ private:
      * column)
      */
     uint16_t _misc = 30;
-    inline void SetCastling(Castling castling, Color color);
 };
-
-inline uint64_t Position::GetHash() const { return _hash; }
-inline Color Position::GetTurn() const { return static_cast<Color>(_misc & 0x1); }
-inline Column Position::GetEP() const {
-    const size_t index = (_misc >> 5) & 0xf;
-    if (index == 0)
-        return Column::None;
-    else
-        return COLUMNS[index - 1];
-}
-inline Castling Position::GetCastling(Color color) const {
-    return static_cast<Castling>(
-        ((_misc >> 1) & (0x3 << (2 * static_cast<uint16_t>(color)))) >>
-        (2 * static_cast<uint16_t>(color))
-    );
-}
-inline bool Position::AllowsCastling(Castling castling, Color color) const {
-    return static_cast<int>(GetCastling(color) & castling) != 0;
-}
-inline Piece Position::GetType(Square square) const {
-    assert(square != SQUARE_NONE);
-    for (const auto pType : PIECES)
-        if (GetPieces(pType) & square) return pType;
-    return PIECE_NONE;
-}
-inline Color Position::GetColor(Square square) const {
-    assert(square != SQUARE_NONE);
-    if (square & _colorBB[static_cast<size_t>(WHITE)])
-        return WHITE;
-    else if (square & _colorBB[static_cast<size_t>(BLACK)])
-        return BLACK;
-    else
-        return COLOR_NONE;
-}
-inline int Position::GetPieceCount(Color color, Piece pType) const {
-    assert(color != COLOR_NONE);
-    assert(pType != PIECE_NONE);
-    return popcount(GetPieces(color, pType));
-}
-inline BB Position::GetPieces() const { return _colorBB[0] | _colorBB[1]; }
-inline BB Position::GetPieces(Piece pType) const {
-    assert(pType != PIECE_NONE);
-    return _pieceBB[pType];
-}
-inline BB Position::GetPieces(Color color) const {
-    assert(color != COLOR_NONE);
-    return _colorBB[color];
-}
-inline BB Position::GetPieces(Color color, Piece pType) const {
-    assert(color != COLOR_NONE);
-    assert(pType != PIECE_NONE);
-    return _colorBB[color] & _pieceBB[pType];
-}
-inline Square Position::GetKing(Color color) const {
-    assert(color != COLOR_NONE);
-    return static_cast<Square>(lsb(GetPieces(color, KING)));
-}
-inline void Position::SetTurn(Color color) {
-    if (color != GetTurn()) _hash = Zobrist::FlipColor(_hash);
-    _misc &= ~0x1;
-    _misc |= static_cast<int>(color) & 0x1;
-}
-inline void Position::SetCastling(Castling castling, Color color) {
-    _hash = Zobrist::FlipCastling(_hash, color, castling);
-    _misc &= ~((0x3 << (2 * static_cast<uint16_t>(color))) << 1);
-    _misc |= (static_cast<uint16_t>(castling) << (2 * static_cast<uint16_t>(color))) << 1;
-}
-inline void Position::DisallowCastling(Castling castling, Color color) {
-    const Castling priorCastling = GetCastling(color);
-    SetCastling(priorCastling & ~castling, color);
-    if (priorCastling != GetCastling(color)) _hash = Zobrist::FlipCastling(_hash, color, castling);
-}
-inline void Position::SetEP(Column column) {
-    if (auto EP = GetEP(); column != EP) _hash = Zobrist::FlipEnPassant(_hash, EP);
-    _misc &= static_cast<uint16_t>(~0x1e0);
-    if (column == Column::None) [[likely]]
-        return;
-    const int index = lsb(static_cast<BB>(column)) + 1;
-    _misc |= (index & 0xf) << 5;
-    _hash = Zobrist::FlipEnPassant(_hash, column);
-}
-
-inline void Position::PlacePiece(Square square, Piece pType, Color color) {
-    assert(square != SQUARE_NONE);
-    assert(pType != PIECE_NONE);
-    assert(color != COLOR_NONE);
-    _pieceBB[pType] |= square;
-    _colorBB[color] |= square;
-    _hash = Zobrist::FlipSquare(_hash, square, pType, color);
-}
-inline void Position::RemovePiece(Square square, Piece pType, Color color) {
-    assert(square != SQUARE_NONE);
-    assert(pType != PIECE_NONE);
-    assert(color != COLOR_NONE);
-    _pieceBB[pType] ^= square;
-    _colorBB[color] ^= square;
-    _hash = Zobrist::FlipSquare(_hash, square, pType, color);
-}

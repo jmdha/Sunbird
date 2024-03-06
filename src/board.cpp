@@ -1,5 +1,6 @@
 #include "board.hpp"
 #include "bit.hpp"
+#include "bitboard.hpp"
 #include "utilities.hpp"
 #include <stdexcept>
 
