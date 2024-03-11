@@ -3,7 +3,7 @@
 #include "move.hpp"
 
 namespace TT {
-#define DEFAULT_HASH_SIZE 128
+#define DEFAULT_HASH_SIZE 16
 
 static const int ProbeFail  = -1;
 static const int ProbeExact = 0;

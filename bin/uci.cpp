@@ -1,15 +1,16 @@
-#include "board.hpp"
-#include "search.hpp"
-#include "tt.hpp"
+#include <board.hpp>
+#include <import.hpp>
 #include <ios>
 #include <iostream>
 #include <ostream>
+#include <search.hpp>
 #include <sstream>
 #include <string>
+#include <tt.hpp>
 
 int main(int argc, char **argv) {
     TT::Init();
-    Board board = Board();
+    Board board = Import::FEN();
 
     std::string command;
     std::string token;
@@ -33,7 +34,7 @@ int main(int argc, char **argv) {
             is >> std::skipws >> token;
             std::string fen;
             if (token == "startpos")
-                fen = START_FEN;
+                fen = FEN_START;
             else if (token == "fen") {
                 fen = "";
                 for (int i = 0; i < 6; i++) {
@@ -41,21 +42,22 @@ int main(int argc, char **argv) {
                     fen += token + " ";
                 }
             }
-            board = Board(fen);
+            board = Import::FEN(fen);
             is >> std::skipws >> token;
             if (token == "moves") {
-                while (is >> token)
-                    board.ApplyMove(
-                        Move(board.Pieces(), board.Pieces(KING), board.Pieces(PAWN), token)
-                    );
+                while (is >> std::skipws >> token)
+                    board.MakeMove(Move(
+                        board.Pos().GetPieces(), board.Pos().GetPieces(KING),
+                        board.Pos().GetPieces(PAWN), token
+                    ));
             }
         } else if (token == "go") {
             std::size_t time = 60000000;
             is >> std::skipws >> token;
             while (token != "endl") {
                 if (token == "wtime" || token == "btime") {
-                    if ((board.Turn() == WHITE && token == "wtime") ||
-                        (board.Turn() == BLACK && token == "btime")) {
+                    if ((board.Pos().GetTurn() == WHITE && token == "wtime") ||
+                        (board.Pos().GetTurn() == BLACK && token == "btime")) {
                         is >> std::skipws >> token;
                         time = 0.05 * std::stoi(token);
                     } else {
@@ -70,7 +72,7 @@ int main(int argc, char **argv) {
                 }
                 token = "endl";
             }
-            const Move move = Search(board, time);
+            const Move move = Search::GetBestMoveTime(board, time);
             std::cout << "bestmove " << move.Export() << std::endl;
         }
     }

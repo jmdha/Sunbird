@@ -20,7 +20,6 @@ constexpr std::array<int, s> I(std::array<int, s> array) {
 } // namespace
 constexpr int PHASE_INC[6] = {0, 1, 1, 2, 4, 0};
 constexpr int INF          = 99999;
-constexpr int CHECKMATE    = INF - 1;
 namespace Structure {
 namespace DoubledPawn {
 constexpr int MG = -20;
