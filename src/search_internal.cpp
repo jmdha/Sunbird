@@ -6,8 +6,6 @@
 #include "tt.hpp"
 #include <cstring>
 
-using namespace MoveGen;
-
 namespace Search::Internal {
 namespace {
 bool AB(int score, int &alpha, int beta) {
@@ -20,7 +18,7 @@ int Quiesce(Board &board, int alpha, int beta, const PV &pv) {
     int standPat = Evaluation::Eval(board.Pos());
     if (AB(standPat, alpha, beta)) return beta;
 
-    MoveList moves = GenerateAttack(board.Pos(), board.Pos().GetTurn());
+    MoveList moves = GenerateMovesTactical(board.Pos(), board.Pos().GetTurn());
     MoveOrdering::MVVLVA(board, moves);
     MoveOrdering::PVPrioity(board, pv, moves);
     for (auto move : moves) {
@@ -57,7 +55,7 @@ int Negamax(
     if (tt.score != TT::ProbeFail) return tt.score;
 
     int ttBound    = TT::ProbeUpper;
-    MoveList moves = GenerateAll(board.Pos(), board.Pos().GetTurn());
+    MoveList moves = GenerateMovesAll(board.Pos(), board.Pos().GetTurn());
     if (moves.empty()) return Evaluation::EvalNoMove(board.Pos());
 
     if (Move killer_move = killer_moves[searchDepth]; killer_move.IsDefined())

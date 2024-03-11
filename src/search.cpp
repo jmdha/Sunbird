@@ -76,7 +76,7 @@ Move IterativeDeepening(Board &board, int timeLimit) {
 
 Move GetBestMoveDepth(Board &board, int depth) {
     std::optional<std::pair<Move, int>> bestMove;
-    for (auto move : MoveGen::GenerateAll(board.Pos(), board.Pos().GetTurn())) {
+    for (auto move : GenerateMovesAll(board.Pos(), board.Pos().GetTurn())) {
         board.MakeMove(move);
         int value = -Internal::Negamax(board, -Values::INF, Values::INF, depth - 1, 0, PV());
         board.UndoMove();
@@ -87,7 +87,7 @@ Move GetBestMoveDepth(Board &board, int depth) {
 }
 
 Move GetBestMoveTime(Board &board, int timeLimit) {
-    if (auto moves = MoveGen::GenerateAll(board.Pos(), board.Pos().GetTurn()); moves.size() == 1)
+    if (auto moves = GenerateMovesAll(board.Pos(), board.Pos().GetTurn()); moves.size() == 1)
         return moves[0];
 
     return IterativeDeepening(board, timeLimit);

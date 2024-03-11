@@ -4,7 +4,6 @@
 #include "move_list.hpp"
 #include "types.hpp"
 
-namespace MoveGen {
 typedef BB (*AttackFunc)(Square);
 enum class GenType { Attack, All };
 template <MoveList::Type t>
@@ -117,7 +116,7 @@ void GenerateCastlingMoves(MoveList &moves, Castling castling, Color turn, BB oc
         );
 }
 
-MoveList GenerateAll(const Position &pos, Color color) {
+MoveList GenerateMovesAll(const Position &pos, Color color) {
     MoveList moves;
 
     const BB nus   = pos.GetPieces(~color);
@@ -149,7 +148,7 @@ MoveList GenerateAll(const Position &pos, Color color) {
     return moves;
 }
 
-MoveList GenerateAttack(const Position &pos, Color color) {
+MoveList GenerateMovesTactical(const Position &pos, Color color) {
     MoveList moves;
 
     const BB nus = pos.GetPieces(~color);
@@ -172,4 +171,3 @@ MoveList GenerateAttack(const Position &pos, Color color) {
 
     return moves;
 }
-} // namespace MoveGen

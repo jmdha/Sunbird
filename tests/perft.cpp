@@ -7,7 +7,7 @@
 
 size_t Perft(Board &board, int depth) {
     if (depth == 0) return 1;
-    MoveList moves = MoveGen::GenerateAll(board.Pos(), board.Pos().GetTurn());
+    MoveList moves = GenerateMovesAll(board.Pos(), board.Pos().GetTurn());
 
     size_t nodes = 0;
 

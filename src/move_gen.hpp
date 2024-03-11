@@ -4,7 +4,5 @@
 #include "position.hpp"
 #include "types.hpp"
 
-namespace MoveGen {
-MoveList GenerateAll(const Position &pos, Color color);
-MoveList GenerateAttack(const Position &pos, Color color);
-} // namespace MoveGen
+MoveList GenerateMovesAll(const Position &pos, Color color);
+MoveList GenerateMovesTactical(const Position &pos, Color color);
