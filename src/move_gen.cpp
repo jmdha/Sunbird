@@ -50,12 +50,8 @@ void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
                 } else
                     moves.push<MoveList::Attack>(Move(piece, attack, Move::Capture));
             }
-            BB attack = PawnAttacks(piece, color) & ((color == WHITE) ? Row::Row6 : Row::Row3) &
-                        pos.GetEP();
-            if (attack) {
-                const Square sq = lsb_pop(attack);
+            if (const Square sq = pos.GetEP(); sq != SQUARE_NONE && PawnAttacks(piece, color) & sq)
                 moves.push<MoveList::Attack>(Move(piece, sq, Move::EPCapture));
-            }
         }
     }
 }

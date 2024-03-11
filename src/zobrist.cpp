@@ -1,5 +1,4 @@
 #include "zobrist.hpp"
-#include "utilities.hpp"
 #include <array>
 
 constexpr int SQUARE_HASH_COUNT = 2 * 6 * 64;
@@ -29,7 +28,7 @@ uint64_t Zobrist::FlipCastling(uint64_t hash, Color col, Castling side) {
     return hash ^ HASHES[SQUARE_HASH_COUNT + 2 * (int)col + (int)side];
 }
 
-uint64_t Zobrist::FlipEnPassant(uint64_t hash, Column col) {
-    return hash ^ HASHES[SQUARE_HASH_COUNT + 4 + Utilities::GetColumnIndex(col)];
+uint64_t Zobrist::FlipEnPassant(uint64_t hash, Square sq) {
+    return hash ^ HASHES[SQUARE_HASH_COUNT + 4 + sq];
 }
 uint64_t Zobrist::FlipColor(uint64_t hash) { return hash ^ 0xaa55aa55aa55aa55; }

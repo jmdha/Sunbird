@@ -8,7 +8,7 @@ public:
 
     uint64_t GetHash() const noexcept;
     Color GetTurn() const noexcept;
-    Column GetEP() const noexcept;
+    Square GetEP() const noexcept;
     Castling GetCastling(Color color) const noexcept;
     bool AllowsCastling(Castling castling, Color color) const noexcept;
     Piece GetType(Square square) const noexcept;
@@ -27,7 +27,7 @@ public:
     void SetTurn(Color color) noexcept;
     void DisallowCastling(Castling castling, Color color) noexcept;
     void SetCastling(Castling castling, Color color) noexcept;
-    void SetEP(Column column) noexcept;
+    void SetEP(Square sq) noexcept;
     void PlacePiece(Square square, Piece pType, Color color) noexcept;
     void RemovePiece(Square square, Piece pType, Color color) noexcept;
 
@@ -35,11 +35,12 @@ private:
     uint64_t _hash = 0;
     BB _pieceBB[PIECE_COUNT]{0};
     BB _colorBB[COLOR_COUNT]{0};
-    /*
-     * 1 bit - [1]:   Turn
-     * 4 bit - [2-5]: Castling rights
-     * 4 bit - [6,9]: EP
-     * column)
-     */
+    // A move is encoded in 16 bits
+    //
+    //  1 bit: Turn
+    //  4 bits: Castling rights
+    //  6 bits: EP square
+    //
+    // Where Move=0 is an undefined move
     uint16_t _misc = 30;
 };

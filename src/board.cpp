@@ -23,7 +23,7 @@ void Board::MakeMove(const Move &move) noexcept {
     Piece newPType      = pType;
     Piece capturedPiece = pos.GetType(move.Destination());
     Square captureTo    = to;
-    Column ep           = Column::None;
+    Square ep           = SQUARE_NONE;
     switch (move.GetType()) {
     case Move::KingCastle:
     case Move::QueenCastle: {
@@ -39,7 +39,7 @@ void Board::MakeMove(const Move &move) noexcept {
     case Move::BPromotion: newPType = BISHOP; goto QUIET_PROMOTION;
     case Move::RPromotion: newPType = ROOK; goto QUIET_PROMOTION;
     case Move::QPromotion: newPType = QUEEN; goto QUIET_PROMOTION;
-    case Move::DoublePawnPush: ep = Utilities::GetColumn(from);
+    case Move::DoublePawnPush: ep = static_cast<Square>((turn == WHITE) ? from + 8 : from - 8);
     case Move::Quiet:
     QUIET_PROMOTION:
         pos.RemovePiece(from, pType, turn);

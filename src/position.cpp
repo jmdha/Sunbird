@@ -8,12 +8,10 @@
 
 uint64_t Position::GetHash() const noexcept { return _hash; }
 Color Position::GetTurn() const noexcept { return static_cast<Color>(_misc & 0x1); }
-Column Position::GetEP() const noexcept {
-    const size_t index = (_misc >> 5) & 0xf;
-    if (index == 0)
-        return Column::None;
-    else
-        return COLUMNS[index - 1];
+Square Position::GetEP() const noexcept {
+    const Square sq = static_cast<Square>((_misc >> 5) & 0x7f);
+    assert(sq >= A1 && sq <= SQUARE_NONE);
+    return sq;
 }
 Castling Position::GetCastling(Color color) const noexcept {
     assert(color == WHITE || color == BLACK);
@@ -160,14 +158,11 @@ void Position::SetCastling(Castling castling, Color color) noexcept {
     _misc &= ~((0x3 << (2 * static_cast<uint16_t>(color))) << 1);
     _misc |= (static_cast<uint16_t>(castling) << (2 * static_cast<uint16_t>(color))) << 1;
 }
-void Position::SetEP(Column column) noexcept {
-    if (auto EP = GetEP(); column != EP) _hash = Zobrist::FlipEnPassant(_hash, EP);
-    _misc &= static_cast<uint16_t>(~0x1e0);
-    if (column == Column::None) [[likely]]
-        return;
-    const int index = lsb(static_cast<BB>(column)) + 1;
-    _misc |= (index & 0xf) << 5;
-    _hash = Zobrist::FlipEnPassant(_hash, column);
+void Position::SetEP(Square sq) noexcept {
+    assert(sq >= A1 && sq <= SQUARE_NONE);
+    _hash = Zobrist::FlipEnPassant(_hash, sq);
+    _misc &= ~0xfe0;
+    _misc |= (static_cast<uint16_t>(sq) & 0x7f) << 5;
 }
 
 void Position::PlacePiece(Square square, Piece pType, Color color) noexcept {

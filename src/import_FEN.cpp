@@ -47,14 +47,6 @@ Board FEN(std::string FEN) {
             pos.DisallowCastling(Castling::Queen, color);
     }
 
-    // import en-passant
-    if (FEN.size() > 0 && FEN[0] != '-' && FEN[0] != ' ') {
-        auto sq = Utilities::GetSquare(FEN[0], FEN[1]);
-        pos.SetEP(Utilities::GetColumn(sq));
-    } else {
-        pos.SetEP(Column::None);
-    }
-
     return Board(pos);
 }
 } // namespace Import
