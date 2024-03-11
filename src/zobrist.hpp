@@ -1,10 +1,14 @@
 #pragma once
 
 #include "types.hpp"
+#include <array>
+#include <cstddef>
 
-namespace Zobrist {
-uint64_t FlipSquare(uint64_t hash, Square square, Piece type, Color color);
-uint64_t FlipCastling(uint64_t hash, Color col, Castling side);
-uint64_t FlipEnPassant(uint64_t hash, Square sq);
-uint64_t FlipColor(uint64_t hash);
-} // namespace Zobrist
+// Consists of turn key, castling rights, EP squares, Piece squares
+constexpr int HASH_COUNT = 2 * 6 * 64;
+extern const std::array<Hash, HASH_COUNT> HASHES;
+
+void FlipTurn(Hash &hash);
+void FlipCastle(Hash &hash, Color color, Castling castling);
+void FlipEnpassant(Hash &hash, Square sq);
+void FlipSquare(Hash &hash, Color color, Piece piece_type, Square square);

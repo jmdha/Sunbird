@@ -1,9 +1,10 @@
 #pragma once
 
 #include "types.hpp"
-#include <string>
+#include <cstdint>
 
 // A chess move. Includes information regarding origin square, destination square and type of move.
+// However, does not include the type of piece moved, nor captured.
 class Move {
 public:
     enum Type {
@@ -23,25 +24,29 @@ public:
         QPromotionCapture = 15
     };
 
-    Move() noexcept = default;
-    Move(Square origin, Square destination, Type type) noexcept;
+    Move() = default;
+    Move(Square origin, Square destination, Type type);
     // Creates a move from a string in smith notation
-    Move(BB occ, BB kings, BB pawns, const std::string &move) noexcept;
+    // Requires occupancy mask to check for captures
+    Move(BB occ, BB kings, BB pawns, const std::string &move);
 
-    Square Origin() const noexcept;
-    Square Destination() const noexcept;
-    Type GetType() const noexcept;
-    bool IsDefined() const noexcept;
-    bool IsCapture() const noexcept;
-    bool IsPromotion() const noexcept;
-    bool IsEnPassant() const noexcept;
-    bool IsDouble() const noexcept;
-    bool IsKingCastle() const noexcept;
-    bool IsQueenCastle() const noexcept;
-    bool IsCastle() const noexcept;
-    Piece PromotionPiece() const noexcept;
-    std::string Export() const noexcept;
-    bool operator==(const Move &move) const noexcept;
+    Square Origin() const;
+    Square Destination() const;
+
+    Type GetType() const;
+    bool IsDefined() const;
+    bool IsCapture() const;
+    bool IsPromotion() const;
+    bool IsEnPassant() const;
+    bool IsDouble() const;
+    bool IsKingCastle() const;
+    bool IsQueenCastle() const;
+    bool IsCastle() const;
+    Piece PromotionPiece() const;
+
+    std::string Export() const;
+
+    bool operator==(const Move &move) const;
 
 private:
     // A move is encoded in 16 bits
