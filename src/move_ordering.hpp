@@ -2,7 +2,6 @@
 
 #include "board.hpp"
 #include "move_list.hpp"
-#include "position.hpp"
 #include "pv.hpp"
 
 namespace MoveOrdering {

@@ -1,5 +1,4 @@
 #include <board.hpp>
-#include <import.hpp>
 #include <ios>
 #include <iostream>
 #include <ostream>
@@ -10,7 +9,7 @@
 
 int main(int argc, char **argv) {
     TT::Init();
-    Board board = Import::FEN();
+    Board board = Board();
 
     std::string command;
     std::string token;
@@ -42,22 +41,21 @@ int main(int argc, char **argv) {
                     fen += token + " ";
                 }
             }
-            board = Import::FEN(fen);
+            board = Board(fen);
             is >> std::skipws >> token;
             if (token == "moves") {
                 while (is >> std::skipws >> token)
-                    board.MakeMove(Move(
-                        board.Pos().GetPieces(), board.Pos().GetPieces(KING),
-                        board.Pos().GetPieces(PAWN), token
-                    ));
+                    board.ApplyMove(
+                        Move(board.Pieces(), board.Pieces(KING), board.Pieces(PAWN), token)
+                    );
             }
         } else if (token == "go") {
             std::size_t time = 60000000;
             is >> std::skipws >> token;
             while (token != "endl") {
                 if (token == "wtime" || token == "btime") {
-                    if ((board.Pos().GetTurn() == WHITE && token == "wtime") ||
-                        (board.Pos().GetTurn() == BLACK && token == "btime")) {
+                    if ((board.Turn() == WHITE && token == "wtime") ||
+                        (board.Turn() == BLACK && token == "btime")) {
                         is >> std::skipws >> token;
                         time = 0.05 * std::stoi(token);
                     } else {

@@ -20,15 +20,15 @@ constexpr std::array<uint64_t, SQUARE_HASH_COUNT> HASHES = [] {
     return tempTable;
 }();
 
-uint64_t Zobrist::FlipSquare(uint64_t hash, Square square, Piece type, Color color) {
-    return hash ^ HASHES[(64 * 6) * (int)color + 64 * (int)type + (int)square];
+void Zobrist::FlipSquare(uint64_t& hash, Square square, Piece type, Color color) {
+    hash ^= HASHES[(64 * 6) * (int)color + 64 * (int)type + (int)square];
 }
 
-uint64_t Zobrist::FlipCastling(uint64_t hash, Color col, Castling side) {
-    return hash ^ HASHES[SQUARE_HASH_COUNT + 2 * (int)col + (int)side];
+void Zobrist::FlipCastling(uint64_t& hash, Color col, Castling side) {
+    hash ^= HASHES[SQUARE_HASH_COUNT + 2 * (int)col + (int)side];
 }
 
-uint64_t Zobrist::FlipEnPassant(uint64_t hash, Square sq) {
-    return hash ^ HASHES[SQUARE_HASH_COUNT + 4 + sq];
+void Zobrist::FlipEnPassant(uint64_t& hash, Square sq) {
+    hash ^= HASHES[SQUARE_HASH_COUNT + 4 + sq];
 }
-uint64_t Zobrist::FlipColor(uint64_t hash) { return hash ^ 0xaa55aa55aa55aa55; }
+void Zobrist::FlipColor(uint64_t& hash) { hash ^= 0xaa55aa55aa55aa55; }

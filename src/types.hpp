@@ -147,28 +147,18 @@ static constexpr Castling operator~(Castling val) {
     }
     throw std::logic_error("Cannot happen (tm)");
 }
-static constexpr Castling operator&(Castling lhs, Castling rhs) {
-    assert(
-        lhs == Castling::None || lhs == Castling::King || lhs == Castling::Queen ||
-        lhs == Castling::All
-    );
-    assert(
-        rhs == Castling::None || rhs == Castling::King || rhs == Castling::Queen ||
-        rhs == Castling::All
-    );
-    return static_cast<Castling>(static_cast<int>(lhs) & static_cast<int>(rhs));
+constexpr static inline Castling operator&(Castling a, Castling b) {
+    return static_cast<Castling>(static_cast<size_t>(a) & static_cast<size_t>(b));
 }
-static constexpr Castling operator^(Castling lhs, Castling rhs) {
-    assert(
-        lhs == Castling::None || lhs == Castling::King || lhs == Castling::Queen ||
-        lhs == Castling::All
-    );
-    assert(
-        rhs == Castling::None || rhs == Castling::King || rhs == Castling::Queen ||
-        rhs == Castling::All
-    );
-    return static_cast<Castling>((static_cast<int>(lhs) ^ static_cast<int>(rhs)));
+constexpr static inline Castling operator|(Castling a, Castling b) {
+    return static_cast<Castling>(static_cast<size_t>(a) | static_cast<size_t>(b));
 }
+constexpr static inline Castling operator^(Castling a, Castling b) {
+    return static_cast<Castling>(static_cast<size_t>(a) ^ static_cast<size_t>(b));
+}
+constexpr static inline Castling &operator&=(Castling &a, Castling b) { return a = a & b; }
+constexpr static inline Castling &operator|=(Castling &a, Castling b) { return a = a | b; }
+constexpr static inline Castling &operator^=(Castling &a, Castling b) { return a = a ^ b; }
 
 // COLLECTIONS
 

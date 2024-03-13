@@ -11,9 +11,6 @@ Move::Move(BB occ, BB kings, BB pawns, const std::string &move) noexcept {
     const Square ori   = Utilities::GetSquare(move[0], move[1]);
     const Square dst   = Utilities::GetSquare(move[2], move[3]);
     const bool capture = occ & dst;
-    printf("Occ: %zu\n", occ);
-    printf("Kings: %zu\n", kings);
-    printf("Pawns: %zu\n", pawns);
 
     if (move.size() == 4) {
         if (capture)

@@ -1,36 +1,77 @@
 #pragma once
 
 #include "move.hpp"
-#include "position.hpp"
 #include "types.hpp"
 
-// Class representing the current, and historic, state of a game of chess
 class Board {
 public:
-    // constuctor
+    // CONSTRUCTOR
 
-    Board(Position position);
+    // Creates a board equvilant to the given FEN string
+    Board(std::string FEN = FEN_START) noexcept;
+    // Creates a board from a FEN string, then applies a sequence of moves
+    Board(const std::string &FEN, const std::string &moves) noexcept;
 
-    // access
+    // ACCESS
 
-    inline size_t MoveCount() const noexcept;
-    inline size_t Ply() const noexcept;
-    inline const Position &Pos() const noexcept;
-    bool IsThreefoldRepetition() const noexcept;
+    // Returns the number of moves applied in total
+    size_t MoveCount() const noexcept;
+    // Returns the number of moves currently applied
+    size_t Ply() const noexcept;
+    // Returns the color whose turn it is
+    Color Turn() const noexcept;
+    // Returns the square upon which EP capture is legal
+    // In case that no such square exists, SQUARE_NONE is returned
+    Square EP() const noexcept;
+    // Returns the castling rights of the color
+    Castling GetCastling(Color color) const noexcept;
+    // Returns the current position's hash
+    uint64_t GetHash() const noexcept;
+    // Returns all pieces
+    BB Pieces() const noexcept;
+    // Returns pieces of type
+    BB Pieces(Piece piece) const noexcept;
+    // Returns pieces of color
+    BB Pieces(Color color) const noexcept;
+    // Returns pieces of type and color
+    BB Pieces(Color color, Piece piece) const noexcept;
+    // Returns the type of piece on given square
+    Piece SquarePiece(Square square) const noexcept;
+    // Returns the color of piece on given square
+    Color SquareColor(Square square) const noexcept;
+    // Returns whether the king of a color is under attack
+    bool IsKingSafe(Color color) const noexcept;
+    // Returns an attack bitboard
+    BB GenerateAttacks(Color color) const noexcept;
+    bool IsThreefold() const noexcept;
 
-    // modifiers
+    // MODIFIERS
 
-    void MakeMove(const Move &move) noexcept;
-    void UndoMove() noexcept;
+    // Resets board to an empty state
+    void ClearBoard();
+    // Modifies board to a state where a piece of given color is on square
+    void PlacePiece(Color color, Piece piece, Square square) noexcept;
+    // Modifies board to a state where no piece of color is on square
+    void RemovePiece(Color color, Piece piece, Square square) noexcept;
+    // Modifies board to a state where the move is applied
+    void ApplyMove(Move move) noexcept;
+    // Modifies board to a state where the move is undone
+    void UndoMove(Move move) noexcept;
 
 private:
-    std::array<Position, MAX_PLY> positions; // The current, and prior, state of the board
-    size_t current_ply = 0;                  // How many moves deep the current game is
-    size_t _moves; // How many moves have been applied to the board, including those that are undone
+    struct PlyInfo {
+        uint64_t hash;
+        Square ep;
+        std::array<Castling, COLOR_COUNT> castling;
+        Piece captured;
+    };
+    BB pieces[PIECE_COUNT];
+    BB colors[COLOR_COUNT];
+    Piece square_pieces[SQUARE_COUNT];
+    Color turn;
+    size_t move_count;
+    size_t ply;
+    PlyInfo history[MAX_PLY];
+
+    void FlipPiece(Color color, Piece piece, Square square) noexcept;
 };
-
-inline size_t Board::MoveCount() const noexcept { return _moves; }
-
-inline size_t Board::Ply() const noexcept { return current_ply; }
-
-inline const Position &Board::Pos() const noexcept { return positions.at(current_ply - 1); }

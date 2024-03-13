@@ -20,12 +20,10 @@ set(sources
     src/bitboard.hpp
     src/board.hpp
     src/evaluation.hpp
-    src/import.hpp
     src/move.hpp
     src/move_gen.hpp
     src/move_list.hpp
     src/move_ordering.hpp
-    src/position.hpp
     src/pv.hpp
     src/search.hpp
     src/search_limit.hpp
@@ -37,11 +35,9 @@ set(sources
     src/bitboard.cpp
     src/board.cpp
     src/evaluation.cpp
-    src/import_FEN.cpp
     src/move.cpp
     src/move_gen.cpp
     src/move_ordering.cpp
-    src/position.cpp
     src/search.cpp
     src/search_internal.cpp
     src/tt.cpp

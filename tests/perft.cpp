@@ -1,5 +1,4 @@
 #include "board.hpp"
-#include "import.hpp"
 #include "move_gen.hpp"
 #include "move_list.hpp"
 #include "third_party/doctest.h"
@@ -7,13 +6,13 @@
 
 size_t Perft(Board &board, int depth) {
     if (depth == 0) return 1;
-    MoveList moves = GenerateMovesAll(board.Pos(), board.Pos().GetTurn());
+    MoveList moves = GenerateMovesAll(board, board.Turn());
 
     size_t nodes = 0;
     for (const auto &move : moves) {
-        board.MakeMove(move);
-        if (board.Pos().IsKingSafe(~board.Pos().GetTurn())) nodes += Perft(board, depth - 1);
-        board.UndoMove();
+        board.ApplyMove(move);
+        if (board.IsKingSafe(~board.Turn())) nodes += Perft(board, depth - 1);
+        board.UndoMove(move);
     }
 
     return nodes;
@@ -66,7 +65,7 @@ TEST_CASE("PERFT") {
     };
 
     for (const auto &instance : instances) {
-        Board board = Import::FEN(instance.FEN);
+        Board board = Board(instance.FEN);
 
         const auto t1     = std::chrono::high_resolution_clock::now();
         const auto nodes  = Perft(board, instance.depth);

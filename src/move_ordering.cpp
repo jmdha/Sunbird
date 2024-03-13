@@ -17,13 +17,12 @@ void Killer(MoveList &moves, Move killerMove) {
 }
 
 void MVVLVA(const Board &board, MoveList &moves) {
-    const Position &pos = board.Pos();
-    std::sort(moves.begin(), &moves[moves.attacks()], [pos](Move lhs, Move rhs) {
-        const int leftCapture  = static_cast<int>(pos.GetType(lhs.Destination()));
-        const int rightCapture = static_cast<int>(pos.GetType(rhs.Destination()));
+    std::sort(moves.begin(), &moves[moves.attacks()], [&board](Move lhs, Move rhs) {
+        const int leftCapture  = static_cast<int>(board.SquarePiece(lhs.Destination()));
+        const int rightCapture = static_cast<int>(board.SquarePiece(rhs.Destination()));
         if (leftCapture > rightCapture) return true;
-        const int leftPiece  = static_cast<int>(pos.GetType(lhs.Origin()));
-        const int rightPiece = static_cast<int>(pos.GetType(rhs.Origin()));
+        const int leftPiece  = static_cast<int>(board.SquarePiece(lhs.Origin()));
+        const int rightPiece = static_cast<int>(board.SquarePiece(rhs.Origin()));
         if (leftCapture == rightCapture && leftPiece < rightPiece) return true;
         return false;
     });

@@ -13,15 +13,15 @@ void BuildMoves(MoveList &moves, Square sq, BB targets, Move::Type move_type) {
 }
 // HACK: This needs to be refactored
 template <GenType gType>
-void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
+void GeneratePawnMoves(const Board &board, Color color, MoveList &moves) {
     constexpr Direction dirs[2] = {NORTH, SOUTH};
     Direction dir               = dirs[color];
-    BB pieces                   = pos.GetPieces(color, PAWN);
+    BB pieces                   = board.Pieces(color, PAWN);
     while (pieces) {
         const Square piece = lsb_pop(pieces);
         if constexpr (gType == GenType::All) {
             Square to = static_cast<Square>(lsb(Ray(piece, dir) & Ring(piece, 1)));
-            if (!(to & pos.GetPieces())) {
+            if (!(to & board.Pieces())) {
                 if (ToBB(piece) & PawnRow[static_cast<size_t>(~color)]) {
                     moves.push<MoveList::Quiet>(Move(piece, to, Move::NPromotion));
                     moves.push<MoveList::Quiet>(Move(piece, to, Move::BPromotion));
@@ -31,16 +31,16 @@ void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
                     moves.push<MoveList::Quiet>(Move(piece, to, Move::Quiet));
                 if (ToBB(piece) & PawnRow[static_cast<size_t>(color)]) {
                     to = lsb(Ray(piece, dir) & Ring(piece, 2));
-                    if (!(to & pos.GetPieces()))
+                    if (!(to & board.Pieces()))
                         moves.push<MoveList::Quiet>(Move(piece, to, Move::DoublePawnPush));
                 }
             }
         }
         if constexpr (gType == GenType::Attack || gType == GenType::All) {
-            BB attacks = PawnAttacks(piece, color) & pos.GetPieces(~color);
+            BB attacks = PawnAttacks(piece, color) & board.Pieces(~color);
             while (attacks) {
                 const Square attack = lsb_pop(attacks);
-                assert(pos.GetType((Square)attack) != PIECE_NONE);
+                assert(board.SquarePiece((Square)attack) != PIECE_NONE);
                 if (piece & PawnRow[static_cast<size_t>(~color)]) {
                     moves.push<MoveList::Attack>(Move(piece, attack, Move::NPromotionCapture));
                     moves.push<MoveList::Attack>(Move(piece, attack, Move::BPromotionCapture));
@@ -49,7 +49,7 @@ void GeneratePawnMoves(const Position &pos, Color color, MoveList &moves) {
                 } else
                     moves.push<MoveList::Attack>(Move(piece, attack, Move::Capture));
             }
-            if (const Square sq = pos.GetEP(); sq != SQUARE_NONE && PawnAttacks(piece, color) & sq)
+            if (const Square sq = board.EP(); sq != SQUARE_NONE && PawnAttacks(piece, color) & sq)
                 moves.push<MoveList::Attack>(Move(piece, sq, Move::EPCapture));
         }
     }
@@ -116,20 +116,20 @@ void GenerateCastlingMoves(MoveList &moves, Castling castling, Color turn, BB oc
         );
 }
 
-MoveList GenerateMovesAll(const Position &pos, Color color) {
+MoveList GenerateMovesAll(const Board &board, Color color) {
     MoveList moves;
 
-    const BB nus   = pos.GetPieces(~color);
-    const BB occ   = pos.GetPieces();
+    const BB nus   = board.Pieces(~color);
+    const BB occ   = board.Pieces();
     const BB empty = ~occ;
 
-    const BB knights = pos.GetPieces(color, KNIGHT);
-    const BB kings   = pos.GetPieces(color, KING);
-    const BB queens  = pos.GetPieces(color, QUEEN);
-    const BB bishops = pos.GetPieces(color, BISHOP) | queens;
-    const BB rooks   = pos.GetPieces(color, ROOK) | queens;
+    const BB knights = board.Pieces(color, KNIGHT);
+    const BB kings   = board.Pieces(color, KING);
+    const BB queens  = board.Pieces(color, QUEEN);
+    const BB bishops = board.Pieces(color, BISHOP) | queens;
+    const BB rooks   = board.Pieces(color, ROOK) | queens;
 
-    GeneratePawnMoves<GenType::All>(pos, color, moves);
+    GeneratePawnMoves<GenType::All>(board, color, moves);
 
     SliderAll(moves, BishopAttacks, bishops, occ, nus);
     SliderAll(moves, RookAttacks, rooks, occ, nus);
@@ -137,36 +137,36 @@ MoveList GenerateMovesAll(const Position &pos, Color color) {
     BuildJumperMoves<MoveList::Attack>(moves, KnightAttacks, knights, nus, Move::Capture);
     BuildJumperMoves<MoveList::Quiet>(moves, KnightAttacks, knights, empty, Move::Quiet);
 
-    BB attacks = pos.GenerateAttackSquares(~color);
+    BB attacks = board.GenerateAttacks(~color);
     BuildJumperMoves<MoveList::Attack>(moves, KingAttacks, kings, nus & (~attacks), Move::Capture);
     BuildJumperMoves<MoveList::Quiet>(moves, KingAttacks, kings, empty & (~attacks), Move::Quiet);
 
     if (!(attacks & kings))
-        GenerateCastlingMoves(moves, pos.GetCastling(color), color, occ, attacks);
+        GenerateCastlingMoves(moves, board.GetCastling(color), color, occ, attacks);
 
     moves.finish();
     return moves;
 }
 
-MoveList GenerateMovesTactical(const Position &pos, Color color) {
+MoveList GenerateMovesTactical(const Board &board, Color color) {
     MoveList moves;
 
-    const BB nus = pos.GetPieces(~color);
-    const BB occ = pos.GetPieces();
+    const BB nus = board.Pieces(~color);
+    const BB occ = board.Pieces();
 
-    const BB knights = pos.GetPieces(color, KNIGHT);
-    const BB kings   = pos.GetPieces(color, KING);
-    const BB queens  = pos.GetPieces(color, QUEEN);
-    const BB bishops = pos.GetPieces(color, BISHOP) | queens;
-    const BB rooks   = pos.GetPieces(color, ROOK) | queens;
+    const BB knights = board.Pieces(color, KNIGHT);
+    const BB kings   = board.Pieces(color, KING);
+    const BB queens  = board.Pieces(color, QUEEN);
+    const BB bishops = board.Pieces(color, BISHOP) | queens;
+    const BB rooks   = board.Pieces(color, ROOK) | queens;
 
-    GeneratePawnMoves<GenType::Attack>(pos, color, moves);
+    GeneratePawnMoves<GenType::Attack>(board, color, moves);
 
     SliderAttack(moves, BishopAttacks, bishops, occ, nus);
     SliderAttack(moves, RookAttacks, rooks, occ, nus);
 
     BuildJumperMoves<MoveList::Attack>(moves, KnightAttacks, knights, nus, Move::Capture);
-    BB attacks = pos.GenerateAttackSquares(~color);
+    BB attacks = board.GenerateAttacks(~color);
     BuildJumperMoves<MoveList::Attack>(moves, KingAttacks, kings, nus & (~attacks), Move::Capture);
 
     return moves;

@@ -17,10 +17,10 @@ PV ExtractPV(Board board) {
     const size_t ply = board.Ply();
     std::vector<Move> moves;
     while (moves.size() < 8) {
-        const Move move = TT::ProbeMove(board.Pos().GetHash());
+        const Move move = TT::ProbeMove(board.GetHash());
         if (move.IsDefined()) {
             moves.push_back(move);
-            board.MakeMove(move);
+            board.ApplyMove(move);
         } else {
             break;
         }
@@ -76,10 +76,10 @@ Move IterativeDeepening(Board &board, int timeLimit) {
 
 Move GetBestMoveDepth(Board &board, int depth) {
     std::optional<std::pair<Move, int>> bestMove;
-    for (auto move : GenerateMovesAll(board.Pos(), board.Pos().GetTurn())) {
-        board.MakeMove(move);
+    for (auto move : GenerateMovesAll(board, board.Turn())) {
+        board.ApplyMove(move);
         int value = -Internal::Negamax(board, -Values::INF, Values::INF, depth - 1, 0, PV());
-        board.UndoMove();
+        board.UndoMove(move);
         if (!bestMove.has_value() || value > bestMove.value().second) bestMove = {move, value};
     }
 
@@ -87,8 +87,7 @@ Move GetBestMoveDepth(Board &board, int depth) {
 }
 
 Move GetBestMoveTime(Board &board, int timeLimit) {
-    if (auto moves = GenerateMovesAll(board.Pos(), board.Pos().GetTurn()); moves.size() == 1)
-        return moves[0];
+    if (auto moves = GenerateMovesAll(board, board.Turn()); moves.size() == 1) return moves[0];
 
     return IterativeDeepening(board, timeLimit);
 }

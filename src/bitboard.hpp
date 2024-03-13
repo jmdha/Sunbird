@@ -11,6 +11,9 @@
 #define EDGE 0xff818181818181ff
 #define CORNER 0x8100000000000081
 
+constexpr std::array<Square, 2> CORNER_A = {A1, A8};
+constexpr std::array<Square, 2> CORNER_H = {H1, H8};
+
 extern const std::array<std::array<BB, DIRECTION_COUNT>, SQUARE_COUNT> RAYS;
 extern const std::array<std::array<BB, SQUARE_COUNT>, SQUARE_COUNT> SQRAYS;
 extern const std::array<std::array<BB, SQUARE_COUNT>, SQUARE_COUNT> XRAYS;
